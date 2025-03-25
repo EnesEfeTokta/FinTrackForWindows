@@ -1,0 +1,39 @@
+{
+  "slides": [
+    {
+      "title": "Welcome to FinTrack!",
+      "content": "A modern solution that simplifies your financial management.",
+      "image": "/FirstWelcome/Images/hello.png"
+    },
+    {
+      "title": "Track Your Income and Expenses Easily!",
+      "content": "You can track your daily expenses and income.",
+      "image": "/FirstWelcome/Images/note.png"
+    },
+    {
+      "title": "Plan and Control Your Budget!",
+      "content": "You can keep your spending under control by setting a monthly limit.",
+      "image": "/FirstWelcome/Images/piggy-bank.png"
+    },
+    {
+      "title": "Save Money and Achieve Your Goals!",
+      "content": "How much should you set aside to save 10,000 TL per month?",
+      "image": "/FirstWelcome/Images/payment.png"
+    },
+    {
+      "title": "Visualize Your Financial Analysis!",
+      "content": "You can view graphs of data such as income-expenditure balance, spending habits.",
+      "image": "/FirstWelcome/Images/increase.png"
+    },
+    {
+      "title": "Add targets for your economy.",
+      "content": "Targets for economic developments can be added.",
+      "image": "/FirstWelcome/Images/targets.png"
+    },
+    {
+      "title": "Ready to Discover FinTrack?",
+      "content": "If you want more information about the app, you can use the Help/Support tab.",
+      "image": "/FirstWelcome/Images/rocket.png"
+    }
+  ]
+ }

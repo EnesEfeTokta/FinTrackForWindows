@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="FinTrack Budgeting" Height="650" Width="1400"
         WindowStartupLocation="CenterScreen">
-    <Grid Background="#FF272537">
+    <Grid Background="#0D1117">
         <!-- Ana Grid: Sol menü ve sağ içerik alanı -->
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200"/>
@@ -15,7 +15,7 @@
         </Grid.ColumnDefinitions>
 
         <!-- Sol Menü -->
-        <Border Background="#FF2D3E50" Grid.Column="0">
+        <Border Background="#161B22" Grid.Column="0">
             <StackPanel>
                 <!-- Kullanıcı Bilgisi -->
                 <Border Margin="10" CornerRadius="50" Width="100" Height="100" Background="White">
@@ -25,15 +25,15 @@
                         </Ellipse.Fill>
                     </Ellipse>
                 </Border>
-                <TextBlock Text="ENES EFE TOKTA" HorizontalAlignment="Center" Foreground="White" FontSize="16" FontWeight="Bold" Margin="0,5,0,20"/>
+                <TextBlock Text="ENES EFE TOKTA" HorizontalAlignment="Center" Foreground="#C9D1D9" FontSize="16" FontWeight="Bold" Margin="0,5,0,20"/>
 
                 <!-- Menü Öğeleri -->
-                <Button Content="🏠 Dashboard" Background="Transparent" Foreground="White" BorderThickness="0" Padding="10" HorizontalContentAlignment="Left" FontSize="14"/>
-                <Button Content="📊 Accounting" Background="Transparent" Foreground="White" BorderThickness="0" Padding="10" HorizontalContentAlignment="Left" FontSize="14"/>
-                <Button Content="💰 Budgeting" Background="Transparent" Foreground="White" BorderThickness="0" Padding="10" HorizontalContentAlignment="Left" FontSize="14"/>
-                <Button Content="🎯 Targets" Background="Transparent" Foreground="White" BorderThickness="0" Padding="10" HorizontalContentAlignment="Left" FontSize="14"/>
-                <Button Content="📋 Reports" Background="Transparent" Foreground="White" BorderThickness="0" Padding="10" HorizontalContentAlignment="Left" FontSize="14"/>
-                <Button Content="👤 Account" Background="Transparent" Foreground="White" BorderThickness="0" Padding="10" HorizontalContentAlignment="Left" FontSize="14"/>
+                <Button Content="🏠 Dashboard" Background="Transparent" Foreground="#C9D1D9" BorderThickness="0" Padding="10" HorizontalContentAlignment="Left" FontSize="14"/>
+                <Button Content="📊 Accounting" Background="Transparent" Foreground="#C9D1D9" BorderThickness="0" Padding="10" HorizontalContentAlignment="Left" FontSize="14"/>
+                <Button Content="💰 Budgeting" Background="Transparent" Foreground="#C9D1D9" BorderThickness="0" Padding="10" HorizontalContentAlignment="Left" FontSize="14"/>
+                <Button Content="🎯 Targets" Background="Transparent" Foreground="#C9D1D9" BorderThickness="0" Padding="10" HorizontalContentAlignment="Left" FontSize="14"/>
+                <Button Content="📋 Reports" Background="Transparent" Foreground="#C9D1D9" BorderThickness="0" Padding="10" HorizontalContentAlignment="Left" FontSize="14"/>
+                <Button Content="👤 Account" Background="Transparent" Foreground="#C9D1D9" BorderThickness="0" Padding="10" HorizontalContentAlignment="Left" FontSize="14"/>
             </StackPanel>
         </Border>
 
@@ -50,24 +50,24 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" FontSize="24" FontWeight="Bold" Foreground="White" Margin="0,0,0,20" VerticalAlignment="Center"><Run Language="tr-tr" Text="BUDGETING"/></TextBlock>
+                <TextBlock Grid.Column="0" FontSize="24" FontWeight="Bold" Foreground="#C9D1D9" Margin="0,0,0,20" VerticalAlignment="Center"><Run Language="tr-tr" Text="BUDGETING"/></TextBlock>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button Content="🔔" Background="Transparent" Foreground="White" BorderThickness="0" FontSize="20" Margin="0,0,10,0" ToolTip="Bildirimler">
+                    <Button Content="🔔" Background="#21262D" Foreground="#C9D1D9" BorderThickness="0" FontSize="20" Margin="0,0,10,0" ToolTip="Bildirimler">
                         <Button.ContentTemplate>
                             <DataTemplate>
                                 <Grid>
                                     <TextBlock Text="🔔" FontSize="20"/>
-                                    <Ellipse Width="16" Height="16" Fill="Red" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-5,-5,0">
+                                    <Ellipse Width="16" Height="16" Fill="#F85149" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-5,-5,0">
                                         <Ellipse.Effect>
                                             <DropShadowEffect BlurRadius="5" ShadowDepth="2"/>
                                         </Ellipse.Effect>
                                     </Ellipse>
-                                    <TextBlock Text="3" Foreground="White" FontSize="10" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-4,0,0"/>
+                                    <TextBlock Text="3" Foreground="#C9D1D9" FontSize="10" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-4,0,0"/>
                                 </Grid>
                             </DataTemplate>
                         </Button.ContentTemplate>
                     </Button>
-                    <Button Content="⚙️" Background="Transparent" Foreground="White" BorderThickness="0" FontSize="20" ToolTip="Ayarlar"/>
+                    <Button Content="⚙️" Background="#21262D" Foreground="#C9D1D9" BorderThickness="0" FontSize="20" ToolTip="Ayarlar"/>
                 </StackPanel>
             </Grid>
 
@@ -84,59 +84,59 @@
                 </Grid.ColumnDefinitions>
 
                 <!-- Kutucuk 1: Yeni Bütçe Oluştur -->
-                <Border Grid.Row="0" Grid.Column="0" Background="#FF4DA8DA" CornerRadius="10" Padding="15" Margin="0,0,10,10">
+                <Border Grid.Row="0" Grid.Column="0" Background="#161B22" CornerRadius="10" Padding="15" Margin="0,0,10,10">
                     <Border.Effect>
                         <DropShadowEffect BlurRadius="10" ShadowDepth="3" Opacity="0.3"/>
                     </Border.Effect>
                     <StackPanel>
-                        <TextBlock Text="Yeni Bütçe Oluştur" Foreground="White" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center"/>
-                        <TextBlock Text="Bütçe İsmi:" Foreground="White" Margin="0,10,0,0"/>
-                        <TextBox x:Name="BudgetNameInput" Width="200" Margin="0,5,0,0" Text="Mart 2025 Bütçesi" Foreground="Gray" HorizontalAlignment="Left"/>
-                        <TextBlock Text="Harcama Kategorileri:" Foreground="White" Margin="0,10,0,0"/>
+                        <TextBlock Text="Yeni Bütçe Oluştur" Foreground="#C9D1D9" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Bütçe İsmi:" Foreground="#C9D1D9" Margin="0,10,0,0"/>
+                        <TextBox x:Name="BudgetNameInput" Width="200" Margin="0,5,0,0" Text="Mart 2025 Bütçesi" Foreground="#8B949E" HorizontalAlignment="Left"/>
+                        <TextBlock Text="Harcama Kategorileri:" Foreground="#C9D1D9" Margin="0,10,0,0"/>
                         <ComboBox x:Name="CategoryComboBox" Width="200" Margin="0,5,0,0" HorizontalAlignment="Left">
                             <ComboBoxItem Content="Gıda"/>
                             <ComboBoxItem Content="Eğlence"/>
                             <ComboBoxItem Content="Ulaşım"/>
                             <ComboBoxItem Content="Diğer"/>
                         </ComboBox>
-                        <TextBlock Text="Hedef Miktar:" Foreground="White" Margin="0,10,0,0"/>
-                        <TextBox x:Name="TargetAmountInput" Width="200" Margin="0,5,0,0" Text="2000 TL" Foreground="Gray" HorizontalAlignment="Left"/>
-                        <Button x:Name="CreateBudgetButton" Content="➕ Oluştur" Background="#FFEF476F" Foreground="White" Width="176" VerticalAlignment="Bottom" Margin="0,24.1,0,0"/>
+                        <TextBlock Text="Hedef Miktar:" Foreground="#C9D1D9" Margin="0,10,0,0"/>
+                        <TextBox x:Name="TargetAmountInput" Width="200" Margin="0,5,0,0" Text="2000 TL" Foreground="#8B949E" HorizontalAlignment="Left"/>
+                        <Button x:Name="CreateBudgetButton" Content="➕ Oluştur" Background="#238636" Foreground="#C9D1D9" Width="176" VerticalAlignment="Bottom" Margin="0,24.1,0,0"/>
                     </StackPanel>
                 </Border>
 
                 <!-- Kutucuk 2: Bütçe Listesi ve Harcama Durumu -->
-                <Border Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Background="#FF4DA8DA" CornerRadius="10" Padding="15" Margin="10,0,10,0">
+                <Border Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Background="#161B22" CornerRadius="10" Padding="15" Margin="10,0,10,0">
                     <Border.Effect>
                         <DropShadowEffect BlurRadius="10" ShadowDepth="3" Opacity="0.3"/>
                     </Border.Effect>
                     <StackPanel>
-                        <TextBlock Text="Bütçe Listesi ve Harcama Durumu" Foreground="White" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Bütçe Listesi ve Harcama Durumu" Foreground="#C9D1D9" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center"/>
                         <ListBox x:Name="BudgetList" Height="400" Margin="0,10,0,0" Background="Transparent" BorderThickness="0">
                             <ListBoxItem>
                                 <StackPanel>
-                                    <Border Background="#FFEF476F" CornerRadius="5" Padding="5" Margin="0,0,0,5" Width="60" HorizontalAlignment="Left" ToolTip="Bütçe aşıldı!">
-                                        <TextBlock Text="Aşıldı" Foreground="White" FontSize="10" TextAlignment="Center"/>
+                                    <Border Background="#F85149" CornerRadius="5" Padding="5" Margin="0,0,0,5" Width="60" HorizontalAlignment="Left" ToolTip="Bütçe aşıldı!">
+                                        <TextBlock Text="Aşıldı" Foreground="#C9D1D9" FontSize="10" TextAlignment="Center"/>
                                     </Border>
                                     <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
                                         <StackPanel Width="300">
-                                            <TextBlock Text="Mart 2025 Bütçesi - Gıda: 2.000 TL" Foreground="White"/>
-                                            <TextBlock Text="Harcanan: 1.500 TL" Foreground="White" FontSize="12" Margin="0,5,0,0"/>
-                                            <ProgressBar Value="75" Maximum="100" Width="200" Height="10" Margin="0,5,0,0" Background="#FF2D3E50" Foreground="#FFEF476F" HorizontalAlignment="Left"/>
+                                            <TextBlock Text="Mart 2025 Bütçesi - Gıda: 2.000 TL" Foreground="#C9D1D9"/>
+                                            <TextBlock Text="Harcanan: 1.500 TL" Foreground="#C9D1D9" FontSize="12" Margin="0,5,0,0"/>
+                                            <ProgressBar Value="75" Maximum="100" Width="200" Height="10" Margin="0,5,0,0" Background="#30363D" Foreground="#238636" HorizontalAlignment="Left"/>
                                         </StackPanel>
                                     </StackPanel>
                                 </StackPanel>
                             </ListBoxItem>
                             <ListBoxItem>
                                 <StackPanel>
-                                    <Border Background="#FF2ECC71" CornerRadius="5" Padding="5" Margin="0,0,0,5" Width="60" HorizontalAlignment="Left" ToolTip="Bütçe aşılmadı!">
-                                        <TextBlock Text="Aşılmadı" Foreground="White" FontSize="10" TextAlignment="Center"/>
+                                    <Border Background="#238636" CornerRadius="5" Padding="5" Margin="0,0,0,5" Width="60" HorizontalAlignment="Left" ToolTip="Bütçe aşılmadı!">
+                                        <TextBlock Text="Aşılmadı" Foreground="#C9D1D9" FontSize="10" TextAlignment="Center"/>
                                     </Border>
                                     <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
                                         <StackPanel Width="300">
-                                            <TextBlock Text="Mart 2025 Bütçesi - Eğlence: 500 TL" Foreground="White"/>
-                                            <TextBlock Text="Harcanan: 400 TL" Foreground="White" FontSize="12" Margin="0,5,0,0"/>
-                                            <ProgressBar Value="80" Maximum="100" Width="200" Height="10" Margin="0,5,0,0" Background="#FF2D3E50" Foreground="#FFEF476F" HorizontalAlignment="Left"/>
+                                            <TextBlock Text="Mart 2025 Bütçesi - Eğlence: 500 TL" Foreground="#C9D1D9"/>
+                                            <TextBlock Text="Harcanan: 400 TL" Foreground="#C9D1D9" FontSize="12" Margin="0,5,0,0"/>
+                                            <ProgressBar Value="80" Maximum="100" Width="200" Height="10" Margin="0,5,0,0" Background="#30363D" Foreground="#238636" HorizontalAlignment="Left"/>
                                         </StackPanel>
                                     </StackPanel>
                                 </StackPanel>
@@ -146,30 +146,30 @@
                 </Border>
 
                 <!-- Kutucuk 3: Bütçe Düzenle/Sil -->
-                <Border Grid.Row="0" Grid.Column="2" Background="#FF4DA8DA" CornerRadius="10" Padding="15" Margin="10,0,0,10">
+                <Border Grid.Row="0" Grid.Column="2" Background="#161B22" CornerRadius="10" Padding="15" Margin="10,0,0,10">
                     <Border.Effect>
                         <DropShadowEffect BlurRadius="10" ShadowDepth="3" Opacity="0.3"/>
                     </Border.Effect>
                     <StackPanel>
-                        <TextBlock Text="Bütçe Düzenle/Sil" Foreground="White" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Bütçe Düzenle/Sil" Foreground="#C9D1D9" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center"/>
                         <ComboBox x:Name="BudgetSelectComboBox" Width="200" Margin="0,10,0,0" HorizontalAlignment="Left">
                             <ComboBoxItem Content="Mart 2025 Bütçesi - Gıda"/>
                             <ComboBoxItem Content="Mart 2025 Bütçesi - Eğlence"/>
                         </ComboBox>
-                        <TextBlock Text="Bütçe İsmi:" Foreground="White" Margin="0,10,0,0"/>
-                        <TextBox x:Name="EditBudgetNameInput" Width="200" Margin="0,5,0,0" Text="Mart 2025 Bütçesi" Foreground="Gray" HorizontalAlignment="Left"/>
-                        <TextBlock Text="Harcama Kategorileri:" Foreground="White" Margin="0,10,0,0"/>
+                        <TextBlock Text="Bütçe İsmi:" Foreground="#C9D1D9" Margin="0,10,0,0"/>
+                        <TextBox x:Name="EditBudgetNameInput" Width="200" Margin="0,5,0,0" Text="Mart 2025 Bütçesi" Foreground="#8B949E" HorizontalAlignment="Left"/>
+                        <TextBlock Text="Harcama Kategorileri:" Foreground="#C9D1D9" Margin="0,10,0,0"/>
                         <ComboBox x:Name="EditCategoryComboBox" Width="200" Margin="0,5,0,0" HorizontalAlignment="Left">
                             <ComboBoxItem Content="Gıda"/>
                             <ComboBoxItem Content="Eğlence"/>
                             <ComboBoxItem Content="Ulaşım"/>
                             <ComboBoxItem Content="Diğer"/>
                         </ComboBox>
-                        <TextBlock Text="Hedef Miktar:" Foreground="White" Margin="0,10,0,0"/>
-                        <TextBox x:Name="EditTargetAmountInput" Width="200" Margin="0,5,0,0" Text="2000 TL" Foreground="Gray" HorizontalAlignment="Left"/>
+                        <TextBlock Text="Hedef Miktar:" Foreground="#C9D1D9" Margin="0,10,0,0"/>
+                        <TextBox x:Name="EditTargetAmountInput" Width="200" Margin="0,5,0,0" Text="2000 TL" Foreground="#8B949E" HorizontalAlignment="Left"/>
                         <StackPanel Orientation="Horizontal" Margin="0,10,0,0" HorizontalAlignment="Center">
-                            <Button x:Name="UpdateBudgetButton" Content="✔️ Güncelle" Background="#FFEF476F" Foreground="White" Margin="0,0,10,0" Width="88" FontSize="10"/>
-                            <Button x:Name="DeleteBudgetButton" Content="🗑️ Sil" Background="#FFEF476F" Foreground="White" Width="67" FontSize="10"/>
+                            <Button x:Name="UpdateBudgetButton" Content="✔️ Güncelle" Background="#238636" Foreground="#C9D1D9" Margin="0,0,10,0" Width="88" FontSize="10"/>
+                            <Button x:Name="DeleteBudgetButton" Content="🗑️ Sil" Background="#F85149" Foreground="#C9D1D9" Width="67" FontSize="10"/>
                         </StackPanel>
                     </StackPanel>
                 </Border>

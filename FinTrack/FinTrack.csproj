@@ -8,4 +8,32 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Images\Icons\conversation.png" />
+    <None Remove="Images\Icons\email.png" />
+    <None Remove="Images\Icons\eyeclose.png" />
+    <None Remove="Images\Icons\eyeopen.png" />
+    <None Remove="Images\Icons\padlock.png" />
+    <None Remove="Images\Icons\tick.png" />
+    <None Remove="Images\Icons\user.png" />
+    <None Remove="Images\Icons\verify.png" />
+    <None Remove="Images\Icons\x.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\Icons\conversation.png" />
+    <Resource Include="Images\Icons\email.png" />
+    <Resource Include="Images\Icons\eyeclose.png" />
+    <Resource Include="Images\Icons\eyeopen.png" />
+    <Resource Include="Images\Icons\padlock.png" />
+    <Resource Include="Images\Icons\tick.png" />
+    <Resource Include="Images\Icons\user.png" />
+    <Resource Include="Images\Icons\verify.png" />
+    <Resource Include="Images\Icons\x.png" />
+  </ItemGroup>
+
 </Project>
