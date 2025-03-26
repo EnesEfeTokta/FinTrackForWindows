@@ -9,6 +9,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="FirstWelcome\Images\analytics.png" />
+    <None Remove="FirstWelcome\Images\document.png" />
+    <None Remove="FirstWelcome\Images\hello.png" />
+    <None Remove="FirstWelcome\Images\increase.png" />
+    <None Remove="FirstWelcome\Images\investment.png" />
+    <None Remove="FirstWelcome\Images\money.png" />
+    <None Remove="FirstWelcome\Images\note.png" />
+    <None Remove="FirstWelcome\Images\payment.png" />
+    <None Remove="FirstWelcome\Images\piggy-bank.png" />
+    <None Remove="FirstWelcome\Images\promotion.png" />
+    <None Remove="FirstWelcome\Images\start-up.png" />
+    <None Remove="FirstWelcome\Images\statistic.png" />
+    <None Remove="FirstWelcome\Images\targets.png" />
+    <None Remove="FirstWelcome\Images\task.png" />
     <None Remove="Images\Icons\conversation.png" />
     <None Remove="Images\Icons\email.png" />
     <None Remove="Images\Icons\eyeclose.png" />
@@ -25,6 +39,48 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="FirstWelcome\Images\analytics.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="FirstWelcome\Images\document.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="FirstWelcome\Images\hello.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="FirstWelcome\Images\increase.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="FirstWelcome\Images\investment.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="FirstWelcome\Images\money.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="FirstWelcome\Images\note.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="FirstWelcome\Images\payment.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="FirstWelcome\Images\piggy-bank.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="FirstWelcome\Images\promotion.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="FirstWelcome\Images\start-up.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="FirstWelcome\Images\statistic.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="FirstWelcome\Images\targets.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="FirstWelcome\Images\task.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Images\Icons\conversation.png" />
     <Resource Include="Images\Icons\email.png" />
     <Resource Include="Images\Icons\eyeclose.png" />
@@ -34,6 +90,12 @@
     <Resource Include="Images\Icons\user.png" />
     <Resource Include="Images\Icons\verify.png" />
     <Resource Include="Images\Icons\x.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="FirstWelcome\DB\SlideDocument.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

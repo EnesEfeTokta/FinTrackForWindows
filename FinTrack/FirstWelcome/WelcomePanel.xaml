@@ -8,38 +8,20 @@
       d:DesignHeight="500" d:DesignWidth="612"
       Title="WelcomePanel">
 
-    <Page.Resources>
-        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
-    </Page.Resources>
-
     <Grid Background="#0D1117">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- İçerik -->
-        <StackPanel Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center">
-            <Image x:Name="SlideImage" 
-                   Source="/FirstWelcome/Images/hello.png" 
-                   Width="100" 
-                   Height="100" 
-                   Margin="0,0,0,20"/>
-            <TextBlock x:Name="SlideHead" 
-                       Text="Welcome to FinTrack!" 
-                       Foreground="#C9D1D9" 
-                       FontSize="36" 
-                       FontWeight="Bold" 
-                       HorizontalAlignment="Center"/>
-            <TextBlock x:Name="SlideBody"
-                       Text="A modern solution that simplifies your financial management." 
-                       Foreground="#8B949E" 
-                       FontSize="18" 
-                       HorizontalAlignment="Center" 
-                       Margin="0,20,0,0" 
-                       TextWrapping="Wrap" 
-                       TextAlignment="Center"/>
-        </StackPanel>
+        <Grid Grid.Row="0" HorizontalAlignment="Center" Width="550">
+            <!-- İçerik -->
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                <Image x:Name="SlideImage" Source="/FirstWelcome/Images/hello.png" Width="100" Height="100" Margin="0,0,0,20"/>
+                <TextBlock x:Name="SlideHead" Text="Head" Foreground="#C9D1D9" FontSize="30" FontWeight="Bold" HorizontalAlignment="Center"/>
+                <TextBlock x:Name="SlideBody" Text="Body" Foreground="#8B949E" FontSize="18" HorizontalAlignment="Center" Margin="0,20,0,0" TextWrapping="Wrap" TextAlignment="Center"/>
+            </StackPanel>
+        </Grid>
 
         <!-- İleri Butonu -->
         <Button x:Name="SlideForwardButton" 
@@ -47,26 +29,10 @@
                 Content="Forward" 
                 Background="#238636" 
                 Foreground="#C9D1D9" 
-                Width="150" 
-                Height="40" 
+                Width="150" Height="40" 
                 Margin="20" 
-                HorizontalAlignment="Right" 
-                Click="SlideForward_Click"
-                Visibility="{Binding IsSlideForwardButtonVisible, Converter={StaticResource BoolToVis}}">
-            <Button.Style>
-                <Style TargetType="Button">
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="Button">
-                                <Border Background="{TemplateBinding Background}" CornerRadius="5">
-                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                </Border>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </Button.Style>
-        </Button>
+                HorizontalAlignment="Right"
+                Click="SlideForwardButton_Click"/>
 
         <!-- Geri Butonu -->
         <Button x:Name="SlideBackButton" 
@@ -74,52 +40,20 @@
                 Content="Back" 
                 Background="#238636" 
                 Foreground="#C9D1D9" 
-                Width="150" 
-                Height="40" 
+                Width="150" Height="40" 
                 Margin="20" 
-                HorizontalAlignment="Left" 
-                Click="SlideBack_Click"
-                Visibility="{Binding IsSlideBackButtonVisible, Converter={StaticResource BoolToVis}}">
-            <Button.Style>
-                <Style TargetType="Button">
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="Button">
-                                <Border Background="{TemplateBinding Background}" CornerRadius="5">
-                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                </Border>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </Button.Style>
-        </Button>
+                HorizontalAlignment="Left"
+                Click="SlideBackButton_Click"/>
 
-        <!-- İptal Butonu -->
-        <Button x:Name="SlideSkipButton"
+        <!-- Atla Butonu -->
+        <Button x:Name="SlideSkipButton" 
                 Grid.Row="1" 
                 Content="Skip" 
                 Background="#FF862323" 
                 Foreground="#C9D1D9" 
-                Width="150" 
-                Height="40" 
+                Width="150" Height="40" 
                 Margin="20" 
-                HorizontalAlignment="Center" 
-                Click="SlideSkip_Click"
-                Visibility="{Binding IsSlideSkipButtonVisible, Converter={StaticResource BoolToVis}}">
-            <Button.Style>
-                <Style TargetType="Button">
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="Button">
-                                <Border Background="{TemplateBinding Background}" CornerRadius="5">
-                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                </Border>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </Button.Style>
-        </Button>
+                HorizontalAlignment="Center"
+                Click="SlideSkipButton_Click"/>
     </Grid>
 </Page>
