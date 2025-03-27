@@ -1,0 +1,137 @@
+﻿<Page x:Class="FinTrack.Panels.AccountingPanel"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:FinTrack.Panels"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="AccountingPanel">
+
+    <Grid>
+        <!-- İçerik Alanı: TabControl -->
+        <Border CornerRadius="10" Background="#161B22" Margin="10">
+            <TabControl Background="#161B22" BorderThickness="0">
+                <!-- Giderler Sekmesi -->
+                <TabItem Header="Giderler" Margin="9,1,-13,-3" FontWeight="Bold" Foreground="#C9D1D9">
+                    <TabItem.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}" Foreground="#C9D1D9" FontWeight="Bold"/>
+                        </DataTemplate>
+                    </TabItem.HeaderTemplate>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Filtreleme Kutucuğu -->
+                        <Border Grid.Row="0" Background="#161B22" CornerRadius="10" Padding="10" Margin="5">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="🔍 Filtreler" Foreground="#C9D1D9" FontSize="16" FontWeight="Bold" Margin="0,0,10,0"/>
+                                <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
+                                    <TextBlock Text="Kategori:" Foreground="#C9D1D9" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                    <ComboBox x:Name="CategoryFilter" Width="150" Margin="5" Foreground="#C9D1D9" Background="#21262D" BorderBrush="#30363D">
+                                        <ComboBoxItem Content="Tümü" IsSelected="True"/>
+                                        <ComboBoxItem Content="Gıda"/>
+                                        <ComboBoxItem Content="Barınma"/>
+                                        <ComboBoxItem Content="Giyisi"/>
+                                        <ComboBoxItem Content="Spor"/>
+                                        <ComboBoxItem Content="Ulaşım"/>
+                                        <ComboBoxItem Content="Eğlence"/>
+                                        <ComboBoxItem Content="Tıbbi"/>
+                                        <ComboBoxItem Content="Diğer"/>
+                                    </ComboBox>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
+                                    <TextBlock Text="Tarih Aralığı:" Foreground="#C9D1D9" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                    <ComboBox x:Name="DateFilter" Width="150" Margin="5" Foreground="#C9D1D9" Background="#21262D" BorderBrush="#30363D">
+                                        <ComboBoxItem Content="Son 1 Gün"/>
+                                        <ComboBoxItem Content="Son 1 Hafta"/>
+                                        <ComboBoxItem Content="Son 1 Ay" IsSelected="True"/>
+                                        <ComboBoxItem Content="Son 3 Ay"/>
+                                    </ComboBox>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Gider Listesi Kutucuğu -->
+                        <Border Grid.Row="1" Background="#161B22" CornerRadius="10" Padding="10" Margin="5">
+                            <StackPanel>
+                                <TextBlock Text="📋 Gider Listesi" Foreground="#C9D1D9" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+                                <DataGrid AutoGenerateColumns="False" IsReadOnly="True" Background="Transparent" BorderThickness="0" RowBackground="Transparent" AlternatingRowBackground="#21262D" Foreground="#C9D1D9">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Tutar" Width="100" Binding="{Binding Amount}" Foreground="#C9D1D9"/>
+                                        <DataGridTextColumn Header="Tarih" Width="150" Binding="{Binding Date}" Foreground="#C9D1D9"/>
+                                        <DataGridTextColumn Header="Fiyat" Width="100" Binding="{Binding Price}" Foreground="#C9D1D9"/>
+                                        <DataGridTextColumn Header="Kategori" Width="*" Binding="{Binding Category}" Foreground="#C9D1D9"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Çizgi Grafiği Kutucuğu -->
+                        <Border Grid.Row="2" Background="#161B22" CornerRadius="10" Padding="10" Margin="5" Height="200">
+                            <StackPanel>
+                                <TextBlock Text="📊 Kategorilere Göre Harcamalar" Foreground="#C9D1D9" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+                                <TextBlock Text="Çizgi Grafiği Placeholder" Foreground="#8B949E" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </TabItem>
+
+                <!-- Gelirler Sekmesi -->
+                <TabItem Header="Gelirler" Margin="17,1,-21,-3" FontWeight="Bold" Foreground="#C9D1D9">
+                    <TabItem.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}" Foreground="#C9D1D9" FontWeight="Bold"/>
+                        </DataTemplate>
+                    </TabItem.HeaderTemplate>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Border Grid.Row="0" Background="#161B22" CornerRadius="10" Padding="10" Margin="5">
+                            <TextBlock Text="🔍 Filtreleme seçenekleri buraya eklenebilir" Foreground="#8B949E" FontSize="14"/>
+                        </Border>
+                        <Border Grid.Row="1" Background="#161B22" CornerRadius="10" Padding="10" Margin="5">
+                            <StackPanel>
+                                <TextBlock Text="📋 Gelir Listesi" Foreground="#C9D1D9" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+                                <DataGrid AutoGenerateColumns="False" IsReadOnly="True" Background="Transparent" BorderThickness="0" RowBackground="Transparent" AlternatingRowBackground="#21262D" Foreground="#C9D1D9">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Tutar" Width="100" Binding="{Binding Amount}" Foreground="#C9D1D9"/>
+                                        <DataGridTextColumn Header="Tarih" Width="150" Binding="{Binding Date}" Foreground="#C9D1D9"/>
+                                        <DataGridTextColumn Header="Kaynak" Width="*" Binding="{Binding Source}" Foreground="#C9D1D9"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </TabItem>
+
+                <!-- Kalanlar Sekmesi -->
+                <TabItem Header="Kalanlar" Margin="25,1,-29,-3" FontWeight="Bold" Foreground="#C9D1D9">
+                    <TabItem.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}" Foreground="#C9D1D9" FontWeight="Bold"/>
+                        </DataTemplate>
+                    </TabItem.HeaderTemplate>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Border Grid.Row="0" Background="#161B22" CornerRadius="10" Padding="10" Margin="5">
+                            <TextBlock Text="💰 Kalan Bakiye Özeti" Foreground="#C9D1D9" FontSize="16" FontWeight="Bold"/>
+                        </Border>
+                        <Border Grid.Row="1" Background="#161B22" CornerRadius="10" Padding="10" Margin="5">
+                            <TextBlock Text="Kalan bakiye detayları buraya gelecek" Foreground="#8B949E" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </Grid>
+                </TabItem>
+            </TabControl>
+        </Border>
+    </Grid>
+</Page>

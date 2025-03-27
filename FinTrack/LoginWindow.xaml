@@ -8,10 +8,14 @@
         Title="FinTrack" Height="500" Width="612"
         WindowStartupLocation="CenterScreen">
     <Grid>
-        <Grid Background="#0D1117" Visibility="Hidden">
-            <Image Source="/Images/Icons/conversation.png" 
+        <Grid Background="#0D1117" Visibility="Visible">
+            <Button 
                Width="40" 
-               HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="40" />
+               HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="40" BorderBrush="{x:Null}" Margin="0,0,5,5" >
+                <Button.Background>
+                    <ImageBrush ImageSource="/Images/Icons/conversation.png"/>
+                </Button.Background>
+            </Button>
 
             <Grid x:Name="Login" Visibility="Hidden">
                 <Grid.ColumnDefinitions>
@@ -620,7 +624,7 @@
         </Grid>
 
         <Grid Visibility="Visible">
-            <Frame x:Name="FirstWelcomePanelFrame" NavigationUIVisibility="Visible"/>
+            <Frame x:Name="FirstWelcomePanelFrame" NavigationUIVisibility="Hidden" Navigated="FirstWelcomePanelFrame_Navigated"/>
         </Grid>
     </Grid>
 </Window>

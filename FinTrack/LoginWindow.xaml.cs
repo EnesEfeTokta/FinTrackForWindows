@@ -10,7 +10,7 @@ namespace FinTrack
             InitializeComponent();
 
             var viewModel = new FirstWelcomeSlideViewModel();
-            DataContext = viewModel; // Window’un DataContext’i
+            DataContext = viewModel;
             FirstWelcomePanelFrame.Navigate(new WelcomePanel());
         }
     }

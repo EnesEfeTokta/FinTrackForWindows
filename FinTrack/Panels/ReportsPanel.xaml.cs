@@ -10,16 +10,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace FinTrack
+namespace FinTrack.Panels
 {
     /// <summary>
-    /// Interaction logic for AccountingDemo.xaml
+    /// Interaction logic for ReportsPanel.xaml
     /// </summary>
-    public partial class AccountingDemo : Window
+    public partial class ReportsPanel : Page
     {
-        public AccountingDemo()
+        public ReportsPanel()
         {
             InitializeComponent();
         }
