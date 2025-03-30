@@ -75,7 +75,8 @@
                                 </TextBox.Background>
                             </TextBox>
                         </Grid>
-
+                        
+                        <!-- Şifre Girdisi -->
                         <Grid Grid.Row="2" Margin="20,10" Width="300">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -84,16 +85,46 @@
                             <Image Source="/Images/Icons/padlock.png" 
                                    Width="20" Height="20" 
                                    Margin="5" />
-                            <PasswordBox Grid.Column="1" 
-                                         BorderThickness="1" 
-                                         BorderBrush="#30363D" 
-                                         Padding="5" 
-                                         Password="Enes Efe Tokta" 
-                                         Foreground="#C9D1D9">
+                            
+                            <!-- Maskeli şifre için PasswordBox -->
+                            <PasswordBox Grid.Column="1"
+                                         BorderThickness="1"
+                                         BorderBrush="#30363D"
+                                         Padding="5"
+                                         Foreground="#C9D1D9"
+                                         Visibility="{Binding IsPasswordVisible, Converter={StaticResource BoolToCollapsedConverter}}"
+                                         local:PasswordBoxAssistant.BindPassword="True"
+                                         local:PasswordBoxAssistant.BoundPassword="{Binding InputPassword, Mode=TwoWay}">
                                 <PasswordBox.Background>
                                     <SolidColorBrush Color="White" Opacity="0"/>
                                 </PasswordBox.Background>
                             </PasswordBox>
+
+                            <!-- Görünür şifre için TextBox -->
+                            <TextBox Grid.Column="1"
+                                     BorderThickness="1"
+                                     BorderBrush="#30363D"
+                                     Padding="5"
+                                     Text="{Binding InputPassword, Mode=TwoWay}"
+                                     Foreground="#C9D1D9"
+                                     Visibility="{Binding IsPasswordVisible, Converter={StaticResource BoolToVisibilityConverter}}">
+                                <TextBox.Background>
+                                    <SolidColorBrush Color="White" Opacity="0"/>
+                                </TextBox.Background>
+                            </TextBox>
+
+                            <!-- Göz butonu -->
+                            <Button Grid.Column="1" 
+                                    Width="20" Height="20" 
+                                    Margin="5" 
+                                    HorizontalAlignment="Right" 
+                                    Foreground="{x:Null}" 
+                                    BorderBrush="{x:Null}" 
+                                    Command="{Binding TogglePasswordVisibilityCommand}">
+                                <Button.Background>
+                                    <ImageBrush ImageSource="{Binding EyeIconSource}" />
+                                </Button.Background>
+                            </Button>
                         </Grid>
 
                         <Grid Grid.Row="3" Margin="20,10" Width="300">
@@ -522,7 +553,7 @@
                                      BorderThickness="1" 
                                      BorderBrush="#30363D" 
                                      Padding="5" 
-                                     Text="Enter Code" 
+                                     Text="{Binding InputCode}" 
                                      Foreground="#C9D1D9">
                                 <TextBox.Background>
                                     <SolidColorBrush Color="White" Opacity="0"/>
@@ -558,7 +589,10 @@
                             </Button.Style>
                         </Button>
 
-                        <TextBlock Grid.Row="2" Text="05:00" Foreground="#F85149" FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <TextBlock Grid.Row="2" 
+                                   Text="{Binding CounterText}"
+                                   Foreground="#F85149" FontSize="15" 
+                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
                     </Grid>
                 </Border>
             </Grid>

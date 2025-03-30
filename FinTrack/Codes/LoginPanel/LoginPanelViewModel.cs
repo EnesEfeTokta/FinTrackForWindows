@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Timers;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
@@ -20,6 +19,12 @@ namespace FinTrack.Codes.LoginPanel
 
         private string inputName { get; set; } = "";
 
+        private string inputCode { get; set; }
+        private int codeTimer = 300;
+        private bool codeTimerRunning = true;
+        private bool codeTimerExpired = false;
+        private string counterText { get; set; } = "5:00";
+
         #region Commands
         public ICommand ShowLoginCommand { get; }
         public ICommand ShowRegisterCommand { get; }
@@ -35,9 +40,11 @@ namespace FinTrack.Codes.LoginPanel
         public ICommand TogglePasswordVisibilityCommand { get; }
         #endregion
 
+        private System.Timers.Timer timer;
+
         public LoginPanelViewModel()
         {
-            currentView = LoginPanelView.Register;
+            currentView = LoginPanelView.Forgot;
             showWelcomePanel = false;
 
             ShowLoginCommand = new RelayCommand(o => CurrentView = LoginPanelView.Login);
@@ -50,6 +57,11 @@ namespace FinTrack.Codes.LoginPanel
             RegisterCommand = new RelayCommand(o => OnRegister());
 
             TogglePasswordVisibilityCommand = new RelayCommand(o => TogglePasswordVisibility());
+
+            timer = new System.Timers.Timer(1000);
+            timer.Elapsed += CodeTimer;
+            timer.AutoReset = true;
+            timer.Enabled = true;
         }
 
         #region Navigating Between Panels
@@ -218,8 +230,8 @@ namespace FinTrack.Codes.LoginPanel
         {
             get
             {
-                string uri = IsPasswordVisible 
-                    ? "pack://application:,,,/Images/Icons/eyeopen.png" 
+                string uri = IsPasswordVisible
+                    ? "pack://application:,,,/Images/Icons/eyeopen.png"
                     : "pack://application:,,,/Images/Icons/eyeclose.png";
 
                 return new BitmapImage(new Uri(uri));
@@ -232,12 +244,56 @@ namespace FinTrack.Codes.LoginPanel
         }
         #endregion
 
+        #region Code Verification
+        public string InputCode
+        {
+            get => inputCode;
+            set
+            {
+                inputCode = value;
+                OnPropertyChanged();
+            }
+        }
 
+        public string CounterText
+        {
+            get => counterText;
+            set
+            {
+                counterText = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private void CodeTimer(object sender, ElapsedEventArgs e)
+        {
+            if (codeTimerRunning)
+            {
+                codeTimer--;
+                CounterText = $"{codeTimer / 60}:{codeTimer % 60}";
+                if (codeTimer == 0)
+                {
+                    codeTimerRunning = false;
+                    codeTimerExpired = true;
+                    CodeTimerExpired();
+                }
+                OnPropertyChanged(nameof(CodeTimer));
+            }
+        }
+
+        public void CodeTimerExpired()
+        {
+            MessageBox.Show("Code has expired. Please request a new one.");
+        }
+        #endregion
+
+        #region INotifyPropertyChanged Implementation
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+        #endregion
     }
 
     public enum LoginPanelView
