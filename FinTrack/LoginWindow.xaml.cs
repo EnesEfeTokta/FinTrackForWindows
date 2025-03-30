@@ -1,5 +1,8 @@
-﻿using FinTrack.FirstWelcome;
+﻿using FinTrack.Codes.LoginPanel;
+using FinTrack.FirstWelcome;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Navigation;
 
 namespace FinTrack
 {
@@ -8,10 +11,10 @@ namespace FinTrack
         public LoginWindow()
         {
             InitializeComponent();
-
-            var viewModel = new FirstWelcomeSlideViewModel();
-            DataContext = viewModel;
+            DataContext = new LoginPanelViewModel();
             FirstWelcomePanelFrame.Navigate(new WelcomePanel());
         }
+
+        private void FirstWelcomePanelFrame_Navigated(object sender, NavigationEventArgs e) { }
     }
 }

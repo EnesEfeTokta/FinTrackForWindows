@@ -4,26 +4,33 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FinTrack"
+        xmlns:login="clr-namespace:FinTrack.Codes.LoginPanel"
         mc:Ignorable="d"
         Title="FinTrack" Height="500" Width="612"
         WindowStartupLocation="CenterScreen">
+
+    <Window.Resources>
+        <local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <local:BoolToCollapsedConverter x:Key="BoolToCollapsedConverter"/>
+    </Window.Resources>
+
     <Grid>
-        <Grid Background="#0D1117" Visibility="Visible">
+        <Grid x:Name="MainGrid" Background="#0D1117">
             <Button 
-               Width="40" 
-               HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="40" BorderBrush="{x:Null}" Margin="0,0,5,5" >
+                Width="40" 
+                HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="40" BorderBrush="{x:Null}" Margin="0,0,5,5">
                 <Button.Background>
                     <ImageBrush ImageSource="/Images/Icons/conversation.png"/>
                 </Button.Background>
             </Button>
 
-            <Grid x:Name="Login" Visibility="Hidden">
+            <!-- Login Grid -->
+            <Grid x:Name="Login" Visibility="{Binding LoginVisibility}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="47*"/>
                     <ColumnDefinition Width="518*"/>
                     <ColumnDefinition Width="47*"/>
                 </Grid.ColumnDefinitions>
-
                 <Grid.RowDefinitions>
                     <RowDefinition Height="9*"/>
                     <RowDefinition Height="102*"/>
@@ -37,101 +44,95 @@
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
-                            <!-- User Icon -->
                             <RowDefinition Height="Auto" />
-                            <!-- Username -->
                             <RowDefinition Height="Auto" />
-                            <!-- Password -->
                             <RowDefinition Height="Auto" />
-                            <!-- Options -->
                             <RowDefinition Height="Auto" />
-                            <!-- Buton -->
                         </Grid.RowDefinitions>
 
-                        <!-- User Icon -->
                         <Image Source="/Images/Icons/login.png" 
-                           Width="136" 
-                           Grid.Row="0" 
-                           HorizontalAlignment="Center" 
-                           Margin="0,20,0,10" />
+                               Width="136" 
+                               Grid.Row="0" 
+                               HorizontalAlignment="Center" 
+                               Margin="0,20,0,10" />
 
-                        <!-- Username Input -->
                         <Grid Grid.Row="1" Margin="20,10" Width="300">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <Image Source="/Images/Icons/user.png" 
-                               Width="20" Height="20" 
-                               Margin="5" />
+                                   Width="20" Height="20" 
+                                   Margin="5" />
                             <TextBox Grid.Column="1" 
-                                 BorderThickness="1" 
-                                 BorderBrush="#30363D" 
-                                 Padding="5" 
-                                 Text="Username/Email" 
-                                 Foreground="#C9D1D9">
+                                     BorderThickness="1" 
+                                     BorderBrush="#30363D" 
+                                     Padding="5" 
+                                     Text="Username/Email" 
+                                     Foreground="#C9D1D9">
                                 <TextBox.Background>
                                     <SolidColorBrush Color="White" Opacity="0"/>
                                 </TextBox.Background>
                             </TextBox>
                         </Grid>
 
-                        <!-- Password Input -->
                         <Grid Grid.Row="2" Margin="20,10" Width="300">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <Image Source="/Images/Icons/padlock.png" 
-                               Width="20" Height="20" 
-                               Margin="5" />
+                                   Width="20" Height="20" 
+                                   Margin="5" />
                             <PasswordBox Grid.Column="1" 
-                                     BorderThickness="1" 
-                                     BorderBrush="#30363D" 
-                                     Padding="5" 
-                                     Password="Enes Efe Tokta" 
-                                     Foreground="#C9D1D9">
+                                         BorderThickness="1" 
+                                         BorderBrush="#30363D" 
+                                         Padding="5" 
+                                         Password="Enes Efe Tokta" 
+                                         Foreground="#C9D1D9">
                                 <PasswordBox.Background>
                                     <SolidColorBrush Color="White" Opacity="0"/>
                                 </PasswordBox.Background>
                             </PasswordBox>
                         </Grid>
 
-                        <!-- Options: Remember me ve Forgot password -->
                         <Grid Grid.Row="3" Margin="20,10" Width="300">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <CheckBox Content="Remember me" 
-                                  Foreground="#8B949E" />
-                            <TextBlock Grid.Column="1" 
-                                   Text="Forgot password?" 
-                                   Foreground="#8B949E" 
-                                   HorizontalAlignment="Right" 
-                                   TextDecorations="Underline" />
+                                      Foreground="#8B949E" />
+                            <Button Grid.Column="1" 
+                                    Content="Forgot password?" 
+                                    Foreground="#8B949E" 
+                                    VerticalAlignment="Top"
+                                    HorizontalAlignment="Right" 
+                                    Background="{x:Null}" 
+                                    BorderBrush="{x:Null}" 
+                                    FontStyle="Italic"
+                                    Command="{Binding ShowForgotCommand}" />
                         </Grid>
 
-                        <!-- Login Butonu -->
                         <Button Content="Login" 
-                            Grid.Row="4" 
-                            Margin="20,10" 
-                            Background="#238636" 
-                            Foreground="#C9D1D9" 
-                            FontWeight="Bold" 
-                            HorizontalAlignment="Center"
-                            Width="200"
-                            Height="20"
-                            Padding="10">
+                                Grid.Row="4" 
+                                Margin="20,10" 
+                                Background="#238636" 
+                                Foreground="#C9D1D9" 
+                                FontWeight="Bold" 
+                                HorizontalAlignment="Center"
+                                Width="200"
+                                Height="20"
+                                Padding="10">
                             <Button.Style>
                                 <Style TargetType="Button">
                                     <Setter Property="Template">
                                         <Setter.Value>
                                             <ControlTemplate TargetType="Button">
                                                 <Border Background="{TemplateBinding Background}" 
-                                                    CornerRadius="5">
+                                                        CornerRadius="5">
                                                     <ContentPresenter HorizontalAlignment="Center" 
-                                                                  VerticalAlignment="Center" />
+                                                                      VerticalAlignment="Center" />
                                                 </Border>
                                             </ControlTemplate>
                                         </Setter.Value>
@@ -143,13 +144,13 @@
                 </Border>
             </Grid>
 
-            <Grid x:Name="Register" Visibility="Visible">
+            <!-- Register Grid -->
+            <Grid x:Name="Register" Visibility="{Binding RegisterVisibility}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="47*"/>
                     <ColumnDefinition Width="518*"/>
                     <ColumnDefinition Width="47*"/>
                 </Grid.ColumnDefinitions>
-
                 <Grid.RowDefinitions>
                     <RowDefinition Height="9*"/>
                     <RowDefinition Height="102*"/>
@@ -163,35 +164,32 @@
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
-                            <!-- User Icon -->
                             <RowDefinition Height="Auto" />
-                            <!-- Username -->
                             <RowDefinition Height="Auto" />
-                            <!-- Email -->
                             <RowDefinition Height="Auto" />
-                            <!-- Password -->
                             <RowDefinition Height="Auto" />
-                            <!-- Options -->
                             <RowDefinition Height="Auto" />
-                            <!-- Buton -->
                         </Grid.RowDefinitions>
 
-                        <!-- User Icon -->
                         <Image Source="/Images/Icons/add.png" 
-                           Width="136" 
-                           Grid.Row="0" 
-                           HorizontalAlignment="Center" 
-                           Margin="0,20,0,10" />
+                               Width="136" 
+                               Grid.Row="0" 
+                               HorizontalAlignment="Center" 
+                               Margin="0,20,0,10" />
 
-                        <TextBlock Grid.Row="0" 
-                               Text="Go To Back" 
-                               Foreground="#C9D1D9" 
-                               FontSize="15"
-                               HorizontalAlignment="Left" 
-                               VerticalAlignment="Top"
-                               TextDecorations="Underline" Margin="10,10,0,0" />
+                        <Button Grid.Row="0" 
+                                Content="Go To Back" 
+                                Foreground="#C9D1D9" 
+                                FontSize="15"
+                                HorizontalAlignment="Left" 
+                                VerticalAlignment="Top"
+                                Background="{x:Null}" 
+                                BorderBrush="{x:Null}" 
+                                
+                                Margin="10,10,0,0"
+                                Command="{Binding ShowLoginCommand}" />
 
-                        <!-- Username Input -->
+                        <!-- Kullanıcı Adı -->
                         <Grid Grid.Row="1" Margin="20,10" Width="300">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -199,23 +197,30 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <Image Source="/Images/Icons/user.png" 
-                               Width="20" Height="20" 
-                               Margin="5" />
+                                   Width="20" Height="20" 
+                                   Margin="5" />
+
+                            <!-- Kullanıcı Adı Girdisi -->
                             <TextBox Grid.Column="1" 
-                                 Width="240"
-                                 BorderThickness="1" 
-                                 BorderBrush="#30363D" 
-                                 Padding="5" 
-                                 Text="Username" 
-                                 Foreground="#C9D1D9">
+                                     Width="240"
+                                     BorderThickness="1" 
+                                     BorderBrush="#30363D" 
+                                     Padding="5" 
+                                     Text="{Binding InputUsername, UpdateSourceTrigger=PropertyChanged}"
+                                     Foreground="#C9D1D9">
                                 <TextBox.Background>
                                     <SolidColorBrush Color="White" Opacity="0"/>
                                 </TextBox.Background>
                             </TextBox>
-                            <Image Grid.Column="2" Source="/Images/Icons/x.png" Width="20" Height="20" Margin="5" HorizontalAlignment="Right" />
-                        </Grid>
 
-                        <!-- Email Input -->
+                            <!-- Onay ikonu -->
+                            <Image Grid.Column="2" 
+                                   Source="{Binding UsernameApprovalIconSource}" 
+                                   Width="20" Height="20" Margin="5" 
+                                   HorizontalAlignment="Right" />
+                        </Grid>
+                        
+                        <!-- Eposta -->
                         <Grid Grid.Row="2" Margin="20,10" Width="300">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -223,23 +228,30 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <Image Source="/Images/Icons/email.png" 
-                               Width="20" Height="20" 
-                               Margin="5" />
+                                   Width="20" Height="20" 
+                                   Margin="5" />
+
+                            <!-- Email Girdisi -->
                             <TextBox Grid.Column="1" 
-                                 Width="240"
-                                 BorderThickness="1" 
-                                 BorderBrush="#30363D" 
-                                 Padding="5" 
-                                 Text="Email" 
-                                 Foreground="#C9D1D9">
+                                     Width="240"
+                                     BorderThickness="1" 
+                                     BorderBrush="#30363D" 
+                                     Padding="5" 
+                                     Text="{Binding InputEmail, UpdateSourceTrigger=PropertyChanged}"
+                                     Foreground="#C9D1D9">
                                 <TextBox.Background>
                                     <SolidColorBrush Color="White" Opacity="0"/>
                                 </TextBox.Background>
                             </TextBox>
-                            <Image Grid.Column="2" Source="/Images/Icons/x.png" Width="20" Height="20" Margin="5" HorizontalAlignment="Right" />
+                            
+                            <!-- Onay ikonu -->
+                            <Image Grid.Column="2" 
+                                   Source="{Binding EmailApprovalIconSource}" 
+                                   Width="20" Height="20" 
+                                   Margin="5" HorizontalAlignment="Right" />
                         </Grid>
-
-                        <!-- Password Input -->
+                        
+                        <!-- Şifre Girdisi -->
                         <Grid Grid.Row="3" Margin="20,10" Width="300">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -247,54 +259,89 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <Image Source="/Images/Icons/padlock.png" 
-                               Width="20" Height="20" 
-                               Margin="5" />
-                            <PasswordBox Grid.Column="1" 
-                                     BorderThickness="1" 
-                                     BorderBrush="#30363D" 
-                                     Width="240"
-                                     Padding="5" 
-                                     Password="Enes Efe Tokta" 
-                                     Foreground="#C9D1D9">
+                                   Width="20" Height="20" 
+                                   Margin="5" />
+                            
+                            <!-- Maskeli şifre için PasswordBox -->
+                            <PasswordBox Grid.Column="1"
+                                         BorderThickness="1"
+                                         BorderBrush="#30363D"
+                                         Width="240"
+                                         Padding="5"
+                                         Foreground="#C9D1D9"
+                                         Visibility="{Binding IsPasswordVisible, Converter={StaticResource BoolToCollapsedConverter}}"
+                                         local:PasswordBoxAssistant.BindPassword="True"
+                                         local:PasswordBoxAssistant.BoundPassword="{Binding InputPassword, Mode=TwoWay}">
                                 <PasswordBox.Background>
                                     <SolidColorBrush Color="White" Opacity="0"/>
                                 </PasswordBox.Background>
                             </PasswordBox>
-                            <Image Grid.Column="1" Source="/Images/Icons/eyeopen.png" Width="20" Height="20" Margin="5" HorizontalAlignment="Right" />
-                            <Image Grid.Column="2" Source="/Images/Icons/tick.png" Width="20" Height="20" Margin="5" HorizontalAlignment="Right" />
+
+                            <!-- Görünür şifre için TextBox -->
+                            <TextBox Grid.Column="1"
+                                     BorderThickness="1"
+                                     BorderBrush="#30363D"
+                                     Width="240"
+                                     Padding="5"
+                                     Text="{Binding InputPassword, Mode=TwoWay}"
+                                     Foreground="#C9D1D9"
+                                     Visibility="{Binding IsPasswordVisible, Converter={StaticResource BoolToVisibilityConverter}}">
+                                <TextBox.Background>
+                                    <SolidColorBrush Color="White" Opacity="0"/>
+                                </TextBox.Background>
+                            </TextBox>
+
+                            <!-- Göz butonu -->
+                            <Button Grid.Column="1" 
+                                    Width="20" Height="20" 
+                                    Margin="5" 
+                                    HorizontalAlignment="Right" 
+                                    Foreground="{x:Null}" 
+                                    BorderBrush="{x:Null}" 
+                                    Command="{Binding TogglePasswordVisibilityCommand}">
+                                <Button.Background>
+                                    <ImageBrush ImageSource="{Binding EyeIconSource}" />
+                                </Button.Background>
+                            </Button>
+
+                            <!-- Onay ikonu -->
+                            <Image Grid.Column="2" 
+                                   Source="{Binding PasswordApprovalIconSource}" 
+                                   Width="20" Height="20" 
+                                   Margin="5" 
+                                   HorizontalAlignment="Right" />
                         </Grid>
 
-                        <!-- Options: I approve -->
                         <Grid Grid.Row="4" Margin="257,10,107,10" HorizontalAlignment="Right">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <CheckBox Content="I approve." 
-                                  Foreground="#8B949E" 
-                                  HorizontalAlignment="Right"/>
+                                      Foreground="#8B949E" 
+                                      HorizontalAlignment="Right"/>
                         </Grid>
 
-                        <!-- Register Button -->
                         <Button Content="Register" 
-                            Grid.Row="5" 
-                            Margin="20,10" 
-                            Background="#238636" 
-                            Foreground="#C9D1D9" 
-                            FontWeight="Bold" 
-                            HorizontalAlignment="Center"
-                            Width="200"
-                            Height="20"
-                            Padding="10">
+                                Grid.Row="5" 
+                                Margin="20,10" 
+                                Background="#238636" 
+                                Foreground="#C9D1D9" 
+                                FontWeight="Bold" 
+                                HorizontalAlignment="Center"
+                                Width="200"
+                                Height="20"
+                                Padding="10"
+                                Command="{Binding RegisterCommand}">
                             <Button.Style>
                                 <Style TargetType="Button">
                                     <Setter Property="Template">
                                         <Setter.Value>
                                             <ControlTemplate TargetType="Button">
                                                 <Border Background="{TemplateBinding Background}" 
-                                                    CornerRadius="5">
+                                                        CornerRadius="5">
                                                     <ContentPresenter HorizontalAlignment="Center" 
-                                                                  VerticalAlignment="Center" />
+                                                                      VerticalAlignment="Center" />
                                                 </Border>
                                             </ControlTemplate>
                                         </Setter.Value>
@@ -306,13 +353,13 @@
                 </Border>
             </Grid>
 
-            <Grid x:Name="Forgot" Visibility="Hidden">
+            <!-- Forgot Grid -->
+            <Grid x:Name="Forgot" Visibility="{Binding ForgotVisibility}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="47*"/>
                     <ColumnDefinition Width="518*"/>
                     <ColumnDefinition Width="47*"/>
                 </Grid.ColumnDefinitions>
-
                 <Grid.RowDefinitions>
                     <RowDefinition Height="9*"/>
                     <RowDefinition Height="102*"/>
@@ -326,92 +373,89 @@
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
-                            <!-- User Icon -->
                             <RowDefinition Height="Auto" />
-                            <!-- Username -->
                             <RowDefinition Height="Auto" />
-                            <!-- Email -->
                             <RowDefinition Height="Auto" />
-                            <!-- Buton -->
                         </Grid.RowDefinitions>
 
-                        <!-- User Icon -->
                         <Image Source="/Images/Icons/message.png" 
-                           Width="136" 
-                           Grid.Row="0" 
-                           HorizontalAlignment="Center" 
-                           Margin="0,20,0,10" />
+                               Width="136" 
+                               Grid.Row="0" 
+                               HorizontalAlignment="Center" 
+                               Margin="0,20,0,10" />
 
-                        <TextBlock Grid.Row="0" 
-                               Text="Go To Back" 
-                               Foreground="#C9D1D9" 
-                               FontSize="15"
-                               HorizontalAlignment="Left" 
-                               VerticalAlignment="Top"
-                               TextDecorations="Underline" Margin="10,10,0,0" />
+                        <Button Grid.Row="0" 
+                                Content="Go To Back" 
+                                Foreground="#C9D1D9" 
+                                FontSize="15"
+                                HorizontalAlignment="Left" 
+                                VerticalAlignment="Top"
+                                Background="{x:Null}" 
+                                BorderBrush="{x:Null}" 
+                                
+                                Margin="10,10,0,0"
+                                Command="{Binding ShowLoginCommand}" />
 
-                        <!-- Username Input -->
                         <Grid Grid.Row="1" Margin="20,10" Width="300">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <Image Source="/Images/Icons/user.png" 
-                               Width="20" Height="20" 
-                               Margin="5" />
+                                   Width="20" Height="20" 
+                                   Margin="5" />
                             <TextBox Grid.Column="1" 
-                                 BorderThickness="1" 
-                                 BorderBrush="#30363D" 
-                                 Padding="5" 
-                                 Text="Username" 
-                                 Foreground="#C9D1D9">
+                                     BorderThickness="1" 
+                                     BorderBrush="#30363D" 
+                                     Padding="5" 
+                                     Text="Username" 
+                                     Foreground="#C9D1D9">
                                 <TextBox.Background>
                                     <SolidColorBrush Color="White" Opacity="0"/>
                                 </TextBox.Background>
                             </TextBox>
                         </Grid>
 
-                        <!-- Email Input -->
                         <Grid Grid.Row="2" Margin="20,10" Width="300">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <Image Source="/Images/Icons/email.png" 
-                               Width="20" Height="20" 
-                               Margin="5" />
+                                   Width="20" Height="20" 
+                                   Margin="5" />
                             <TextBox Grid.Column="1" 
-                                 BorderThickness="1" 
-                                 BorderBrush="#30363D" 
-                                 Padding="5" 
-                                 Text="Email" 
-                                 Foreground="#C9D1D9">
+                                     BorderThickness="1" 
+                                     BorderBrush="#30363D" 
+                                     Padding="5" 
+                                     Text="Email" 
+                                     Foreground="#C9D1D9">
                                 <TextBox.Background>
                                     <SolidColorBrush Color="White" Opacity="0"/>
                                 </TextBox.Background>
                             </TextBox>
                         </Grid>
 
-                        <!-- Forgot Button -->
                         <Button Content="Send Code" 
-                            Grid.Row="3" 
-                            Margin="20,10" 
-                            Background="#238636" 
-                            Foreground="#C9D1D9" 
-                            FontWeight="Bold" 
-                            HorizontalAlignment="Center"
-                            Width="200"
-                            Height="20"
-                            Padding="10">
+                                Grid.Row="3" 
+                                Margin="20,10" 
+                                Background="#238636" 
+                                Foreground="#C9D1D9" 
+                                FontWeight="Bold" 
+                                HorizontalAlignment="Center"
+                                Width="200"
+                                Height="20"
+                                Padding="10"
+                                Command="{Binding ShowCodeVerificationCommand}">
                             <Button.Style>
                                 <Style TargetType="Button">
                                     <Setter Property="Template">
                                         <Setter.Value>
                                             <ControlTemplate TargetType="Button">
                                                 <Border Background="{TemplateBinding Background}" 
-                                                    CornerRadius="5">
+                                                        CornerRadius="5">
                                                     <ContentPresenter HorizontalAlignment="Center" 
-                                                                  VerticalAlignment="Center" />
+                                                                      VerticalAlignment="Center" />
                                                 </Border>
                                             </ControlTemplate>
                                         </Setter.Value>
@@ -423,13 +467,13 @@
                 </Border>
             </Grid>
 
-            <Grid x:Name="CodeVerification" Visibility="Hidden">
+            <!-- CodeVerification Grid -->
+            <Grid x:Name="CodeVerification" Visibility="{Binding CodeVerificationVisibility}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="47*"/>
                     <ColumnDefinition Width="518*"/>
                     <ColumnDefinition Width="47*"/>
                 </Grid.ColumnDefinitions>
-
                 <Grid.RowDefinitions>
                     <RowDefinition Height="9*"/>
                     <RowDefinition Height="102*"/>
@@ -443,71 +487,69 @@
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
-                            <!-- User Icon -->
                             <RowDefinition Height="Auto" />
-                            <!-- Code -->
                             <RowDefinition Height="Auto" />
-                            <!-- Options -->
                             <RowDefinition Height="Auto" />
-                            <!-- Buton -->
                         </Grid.RowDefinitions>
 
-                        <!-- Panel Icon -->
                         <Image Source="/Images/Icons/done.png" 
-                           Width="136" 
-                           Grid.Row="0" 
-                           HorizontalAlignment="Center" 
-                           Margin="0,20,0,10" />
+                               Width="136" 
+                               Grid.Row="0" 
+                               HorizontalAlignment="Center" 
+                               Margin="0,20,0,10" />
 
-                        <TextBlock Grid.Row="0" 
-                               Text="Go To Back" 
-                               Foreground="#C9D1D9" 
-                               FontSize="15"
-                               HorizontalAlignment="Left" 
-                               VerticalAlignment="Top"
-                               TextDecorations="Underline" Margin="10,10,0,0" />
+                        <Button Grid.Row="0" 
+                                Content="Go To Back" 
+                                Foreground="#C9D1D9" 
+                                FontSize="15"
+                                HorizontalAlignment="Left" 
+                                VerticalAlignment="Top"
+                                Background="{x:Null}" 
+                                BorderBrush="{x:Null}" 
+                                
+                                Margin="10,10,0,0"
+                                Command="{Binding ShowLoginCommand}" />
 
-                        <!-- Code Input -->
                         <Grid Grid.Row="1" Margin="20,10" Width="300">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <Image Source="/Images/Icons/verify.png" 
-                               Width="20" Height="20" 
-                               Margin="5" />
+                                   Width="20" Height="20" 
+                                   Margin="5" />
                             <TextBox Grid.Column="1" 
-                                 BorderThickness="1" 
-                                 BorderBrush="#30363D" 
-                                 Padding="5" 
-                                 Text="Enter Code" 
-                                 Foreground="#C9D1D9">
+                                     BorderThickness="1" 
+                                     BorderBrush="#30363D" 
+                                     Padding="5" 
+                                     Text="Enter Code" 
+                                     Foreground="#C9D1D9">
                                 <TextBox.Background>
                                     <SolidColorBrush Color="White" Opacity="0"/>
                                 </TextBox.Background>
                             </TextBox>
                         </Grid>
 
-                        <!-- Forgot Button -->
                         <Button Content="Send Code" 
-                            Grid.Row="3" 
-                            Margin="20,10" 
-                            Background="#238636" 
-                            Foreground="#C9D1D9" 
-                            FontWeight="Bold" 
-                            HorizontalAlignment="Center"
-                            Width="200"
-                            Height="20"
-                            Padding="10">
+                                Grid.Row="3" 
+                                Margin="20,10" 
+                                Background="#238636" 
+                                Foreground="#C9D1D9" 
+                                FontWeight="Bold" 
+                                HorizontalAlignment="Center"
+                                Width="200"
+                                Height="20"
+                                Padding="10"
+                                Command="{Binding ShowResetPasswordCommand}">
                             <Button.Style>
                                 <Style TargetType="Button">
                                     <Setter Property="Template">
                                         <Setter.Value>
                                             <ControlTemplate TargetType="Button">
                                                 <Border Background="{TemplateBinding Background}" 
-                                                    CornerRadius="5">
+                                                        CornerRadius="5">
                                                     <ContentPresenter HorizontalAlignment="Center" 
-                                                                  VerticalAlignment="Center" />
+                                                                      VerticalAlignment="Center" />
                                                 </Border>
                                             </ControlTemplate>
                                         </Setter.Value>
@@ -516,19 +558,18 @@
                             </Button.Style>
                         </Button>
 
-                        <!-- Timer -->
                         <TextBlock Grid.Row="2" Text="05:00" Foreground="#F85149" FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Center" />
                     </Grid>
                 </Border>
             </Grid>
 
-            <Grid x:Name="PasswordChange" Visibility="Hidden">
+            <!-- ResetPassword Grid -->
+            <Grid x:Name="ResetPassword" Visibility="{Binding ResetPasswordVisibility}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="47*"/>
                     <ColumnDefinition Width="518*"/>
                     <ColumnDefinition Width="47*"/>
                 </Grid.ColumnDefinitions>
-
                 <Grid.RowDefinitions>
                     <RowDefinition Height="9*"/>
                     <RowDefinition Height="102*"/>
@@ -542,31 +583,28 @@
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
-                            <!-- User Icon -->
                             <RowDefinition Height="Auto" />
-                            <!-- Password -->
                             <RowDefinition Height="Auto" />
-                            <!-- Options -->
                             <RowDefinition Height="Auto" />
-                            <!-- Buton -->
                         </Grid.RowDefinitions>
 
-                        <!-- Panel Icon -->
                         <Image Source="/Images/Icons/passwordpanel.png" 
-                           Width="136" 
-                           Grid.Row="0" 
-                           HorizontalAlignment="Center" 
-                           Margin="0,20,0,10" />
+                   Width="136" 
+                   Grid.Row="0" 
+                   HorizontalAlignment="Center" 
+                   Margin="0,20,0,10" />
 
-                        <TextBlock Grid.Row="0" 
-                               Text="Go To Back" 
-                               Foreground="#C9D1D9" 
-                               FontSize="15"
-                               HorizontalAlignment="Left" 
-                               VerticalAlignment="Top"
-                               TextDecorations="Underline" Margin="10,10,0,0" />
+                        <Button Grid.Row="0" 
+                    Content="Go To Back" 
+                    Foreground="#C9D1D9" 
+                    FontSize="15"
+                    HorizontalAlignment="Left" 
+                    VerticalAlignment="Top"
+                    Background="{x:Null}" 
+                    BorderBrush="{x:Null}" 
+                    Margin="10,10,0,0"
+                    Command="{Binding ShowLoginCommand}" />
 
-                        <!-- Password Input -->
                         <Grid Grid.Row="2" Margin="20,10" Width="300">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -574,43 +612,79 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <Image Source="/Images/Icons/padlock.png" 
-                               Width="20" Height="20" 
-                               Margin="5" />
-                            <PasswordBox Grid.Column="1" 
-                                     BorderThickness="1" 
-                                     BorderBrush="#30363D" 
-                                     Width="240"
-                                     Padding="5" 
-                                     Password="Enes Efe Tokta" 
-                                     Foreground="#C9D1D9">
-                                <PasswordBox.Background>
-                                    <SolidColorBrush Color="White" Opacity="0"/>
-                                </PasswordBox.Background>
+                                Width="20" Height="20" 
+                                Margin="5" />
+
+                            <!-- Maskeli şifre için PasswordBox -->
+                            <PasswordBox Grid.Column="1"
+                                         BorderThickness="1"
+                                         BorderBrush="#30363D"
+                                         Width="240"
+                                         Padding="5"
+                                         Foreground="#C9D1D9"
+                                         Visibility="{Binding IsPasswordVisible, Converter={StaticResource BoolToCollapsedConverter}}"
+                                         local:PasswordBoxAssistant.BindPassword="True"
+                                         local:PasswordBoxAssistant.BoundPassword="{Binding InputPassword, Mode=TwoWay}">
+                                     <PasswordBox.Background>
+                                        <SolidColorBrush Color="White" Opacity="0"/>
+                                     </PasswordBox.Background>
                             </PasswordBox>
-                            <Image Grid.Column="1" Source="/Images/Icons/eyeopen.png" Width="20" Height="20" Margin="5" HorizontalAlignment="Right" />
-                            <Image Grid.Column="2" Source="/Images/Icons/tick.png" Width="20" Height="20" Margin="5" HorizontalAlignment="Right" />
+
+                            <!-- Görünür şifre için TextBox -->
+                            <TextBox Grid.Column="1"
+                                     BorderThickness="1"
+                                     BorderBrush="#30363D"
+                                     Width="240"
+                                     Padding="5"
+                                     Text="{Binding InputPassword, Mode=TwoWay}"
+                                     Foreground="#C9D1D9"
+                                     Visibility="{Binding IsPasswordVisible, Converter={StaticResource BoolToVisibilityConverter}}">
+                                <TextBox.Background>
+                                    <SolidColorBrush Color="White" Opacity="0"/>
+                                </TextBox.Background>
+                            </TextBox>
+
+                            <!-- Göz butonu -->
+                            <Button Grid.Column="1" 
+                                    Width="20" Height="20" 
+                                    Margin="5" 
+                                    HorizontalAlignment="Right" 
+                                    Foreground="{x:Null}" 
+                                    BorderBrush="{x:Null}" 
+                                    Command="{Binding TogglePasswordVisibilityCommand}">
+                                <Button.Background>
+                                    <ImageBrush ImageSource="{Binding EyeIconSource}" />
+                                </Button.Background>
+                            </Button>
+
+                            <!-- Onay ikonu -->
+                            <Image Grid.Column="2" 
+                                   Source="{Binding PasswordApprovalIconSource}" 
+                                   Width="20" Height="20" 
+                                   Margin="5" 
+                                   HorizontalAlignment="Right" />
                         </Grid>
 
-                        <!-- Forgot Button -->
                         <Button Content="Change" 
-                            Grid.Row="3" 
-                            Margin="20,10" 
-                            Background="#238636" 
-                            Foreground="#C9D1D9" 
-                            FontWeight="Bold" 
-                            HorizontalAlignment="Center"
-                            Width="200"
-                            Height="20"
-                            Padding="10">
+                    Grid.Row="3" 
+                    Margin="20,10" 
+                    Background="#238636" 
+                    Foreground="#C9D1D9" 
+                    FontWeight="Bold" 
+                    HorizontalAlignment="Center"
+                    Width="200"
+                    Height="20"
+                    Padding="10"
+                    Command="{Binding ShowLoginCommand}">
                             <Button.Style>
                                 <Style TargetType="Button">
                                     <Setter Property="Template">
                                         <Setter.Value>
                                             <ControlTemplate TargetType="Button">
                                                 <Border Background="{TemplateBinding Background}" 
-                                                    CornerRadius="5">
+                                            CornerRadius="5">
                                                     <ContentPresenter HorizontalAlignment="Center" 
-                                                                  VerticalAlignment="Center" />
+                                                          VerticalAlignment="Center" />
                                                 </Border>
                                             </ControlTemplate>
                                         </Setter.Value>
@@ -623,7 +697,7 @@
             </Grid>
         </Grid>
 
-        <Grid Visibility="Visible">
+        <Grid x:Name="WelcomeGrid" Visibility="{Binding WelcomeVisibility}">
             <Frame x:Name="FirstWelcomePanelFrame" NavigationUIVisibility="Hidden" Navigated="FirstWelcomePanelFrame_Navigated"/>
         </Grid>
     </Grid>

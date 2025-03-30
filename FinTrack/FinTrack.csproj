@@ -23,11 +23,16 @@
     <None Remove="FirstWelcome\Images\statistic.png" />
     <None Remove="FirstWelcome\Images\targets.png" />
     <None Remove="FirstWelcome\Images\task.png" />
+    <None Remove="Images\Icons\add.png" />
     <None Remove="Images\Icons\conversation.png" />
+    <None Remove="Images\Icons\done.png" />
     <None Remove="Images\Icons\email.png" />
     <None Remove="Images\Icons\eyeclose.png" />
     <None Remove="Images\Icons\eyeopen.png" />
+    <None Remove="Images\Icons\login.png" />
+    <None Remove="Images\Icons\message.png" />
     <None Remove="Images\Icons\padlock.png" />
+    <None Remove="Images\Icons\passwordpanel.png" />
     <None Remove="Images\Icons\tick.png" />
     <None Remove="Images\Icons\user.png" />
     <None Remove="Images\Icons\verify.png" />
@@ -81,21 +86,58 @@
     <Resource Include="FirstWelcome\Images\task.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Images\Icons\conversation.png" />
-    <Resource Include="Images\Icons\email.png" />
-    <Resource Include="Images\Icons\eyeclose.png" />
-    <Resource Include="Images\Icons\eyeopen.png" />
-    <Resource Include="Images\Icons\padlock.png" />
-    <Resource Include="Images\Icons\tick.png" />
-    <Resource Include="Images\Icons\user.png" />
-    <Resource Include="Images\Icons\verify.png" />
-    <Resource Include="Images\Icons\x.png" />
+    <Resource Include="Images\Icons\add.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\Icons\conversation.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\Icons\done.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\Icons\email.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\Icons\eyeclose.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\Icons\eyeopen.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\Icons\login.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\Icons\message.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\Icons\padlock.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\Icons\passwordpanel.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\Icons\tick.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\Icons\user.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\Icons\verify.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\Icons\x.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
   <ItemGroup>
     <None Update="FirstWelcome\DB\SlideDocument.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Codes\Verifications\" />
   </ItemGroup>
 
 </Project>
