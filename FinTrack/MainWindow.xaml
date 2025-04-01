@@ -9,6 +9,11 @@
         Title="FinTrack Dashboard" Height="650" Width="1400"
         WindowStartupLocation="CenterScreen"
         Background="#0D1117">
+
+    <Window.DataContext>
+        <local:MainWindowViewModel/>
+    </Window.DataContext>
+
     <Grid>
         <!-- Ana Grid: Sol menü ve sağ içerik alanı -->
         <Grid.ColumnDefinitions>
@@ -30,12 +35,12 @@
                 <TextBlock Text="ENES EFE TOKTA" HorizontalAlignment="Center" Foreground="#C9D1D9" FontSize="16" FontWeight="Bold" Margin="0,5,0,20"/>
 
                 <!-- Menü Öğeleri -->
-                <Button Content="🏠 Dashboard" Background="Transparent" Foreground="#C9D1D9" BorderThickness="0" Padding="10" HorizontalContentAlignment="Left" FontSize="14"/>
-                <Button Content="📊 Accounting" Background="Transparent" Foreground="#C9D1D9" BorderThickness="0" Padding="10" HorizontalContentAlignment="Left" FontSize="14"/>
-                <Button Content="💰 Budgeting" Background="Transparent" Foreground="#C9D1D9" BorderThickness="0" Padding="10" HorizontalContentAlignment="Left" FontSize="14"/>
-                <Button Content="🎯 Targets" Background="Transparent" Foreground="#C9D1D9" BorderThickness="0" Padding="10" HorizontalContentAlignment="Left" FontSize="14"/>
-                <Button Content="📋 Reports" Background="Transparent" Foreground="#C9D1D9" BorderThickness="0" Padding="10" HorizontalContentAlignment="Left" FontSize="14"/>
-                <Button Content="👤 Account" Background="Transparent" Foreground="#C9D1D9" BorderThickness="0" Padding="10" HorizontalContentAlignment="Left" FontSize="14"/>
+                <Button Command="{Binding NavigateCommand}" CommandParameter="Dashboard" Content="🏠 Dashboard" Background="Transparent" Foreground="#C9D1D9" BorderThickness="0" Padding="10" HorizontalContentAlignment="Left" FontSize="14"/>
+                <Button Command="{Binding NavigateCommand}" CommandParameter="Accounting" Content="📊 Accounting" Background="Transparent" Foreground="#C9D1D9" BorderThickness="0" Padding="10" HorizontalContentAlignment="Left" FontSize="14"/>
+                <Button Command="{Binding NavigateCommand}" CommandParameter="Budgeting" Content="💰 Budgeting" Background="Transparent" Foreground="#C9D1D9" BorderThickness="0" Padding="10" HorizontalContentAlignment="Left" FontSize="14"/>
+                <Button Command="{Binding NavigateCommand}" CommandParameter="Targets" Content="🎯 Targets" Background="Transparent" Foreground="#C9D1D9" BorderThickness="0" Padding="10" HorizontalContentAlignment="Left" FontSize="14"/>
+                <Button Command="{Binding NavigateCommand}" CommandParameter="Reports" Content="📋 Reports" Background="Transparent" Foreground="#C9D1D9" BorderThickness="0" Padding="10" HorizontalContentAlignment="Left" FontSize="14"/>
+                <Button Command="{Binding NavigateCommand}" CommandParameter="Account" Content="👤 Account" Background="Transparent" Foreground="#C9D1D9" BorderThickness="0" Padding="10" HorizontalContentAlignment="Left" FontSize="14"/>
             </StackPanel>
         </Border>
 
@@ -52,7 +57,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock x:Name="PageTitle" Text="DASHBOARD" Grid.Column="0" FontSize="24" FontWeight="Bold" Foreground="#C9D1D9" Margin="0,0,0,20" VerticalAlignment="Center"/>
+                <TextBlock x:Name="PageTitle" Text="{Binding PanelHeadText}" Grid.Column="0" FontSize="24" FontWeight="Bold" Foreground="#C9D1D9" Margin="0,0,0,20" VerticalAlignment="Center"/>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
                     <Button Content="🔔" Background="#21262D" Foreground="#C9D1D9" BorderThickness="0" FontSize="20" Margin="0,0,10,0" ToolTip="Bildirimler">
                         <Button.ContentTemplate>
@@ -88,7 +93,7 @@
             </Grid>
 
             <!-- Frame: Paneller burada gösterilecek -->
-            <Frame x:Name="DashboardPanelFrame" Grid.Row="1" NavigationUIVisibility="Hidden"/>
+            <Frame x:Name="DashboardPanelFrame" Grid.Row="1" NavigationUIVisibility="Hidden" Source="{Binding CurrentPage}"/>
         </Grid>
     </Grid>
 </Window>

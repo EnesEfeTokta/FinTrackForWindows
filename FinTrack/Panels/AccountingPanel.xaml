@@ -8,7 +8,24 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="AccountingPanel">
 
-    <Grid>
+    <Page.Resources>
+        <Storyboard x:Key="PanelInstallationAnimation">
+            <DoubleAnimation
+                Storyboard.TargetName="panelGrid"
+                Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                From="50" To="0" Duration="0:0:0.3"
+                AccelerationRatio="0.3" DecelerationRatio="0.7"/>
+            <DoubleAnimation
+                Storyboard.TargetName="panelGrid"
+                Storyboard.TargetProperty="Opacity"
+                From="0" To="1" Duration="0:0:0.3"/>
+        </Storyboard>
+    </Page.Resources>
+
+    <Grid x:Name="panelGrid" RenderTransformOrigin="0.5,1" Opacity="0">
+        <Grid.RenderTransform>
+            <TranslateTransform Y="50"/>
+        </Grid.RenderTransform>
         <!-- İçerik Alanı: TabControl -->
         <Border CornerRadius="10" Background="#161B22" Margin="10">
             <TabControl Background="#161B22" BorderThickness="0">
@@ -134,4 +151,10 @@
             </TabControl>
         </Border>
     </Grid>
+    
+    <Page.Triggers>
+        <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+            <BeginStoryboard Storyboard="{StaticResource PanelInstallationAnimation}"/>
+        </EventTrigger>
+    </Page.Triggers>
 </Page>

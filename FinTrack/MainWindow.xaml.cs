@@ -20,6 +20,6 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        DashboardPanelFrame.Navigate(new TargetsPanel());
+        DataContext = new MainWindowViewModel(); ;
     }
 }

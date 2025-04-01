@@ -23,6 +23,7 @@ namespace FinTrack.Panels
         public DashboardPanel()
         {
             InitializeComponent();
+            //DataContext = new TransitionBetweenPanelsViewModel();
         }
     }
 }
