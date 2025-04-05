@@ -4,6 +4,9 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
+using FinTrack.Codes.DataAccess;
+using FinTrack.Codes.Session;
+using System.Threading.Tasks;
 
 namespace FinTrack.Codes.LoginPanel
 {
@@ -38,6 +41,8 @@ namespace FinTrack.Codes.LoginPanel
         public ICommand ShowPasswordInputTextBoxCommand { get; }
         public ICommand ShowPasswordInputPasswordBoxCommand { get; }
         public ICommand TogglePasswordVisibilityCommand { get; }
+
+        public ICommand LoginButton_Click { get; }
         #endregion
 
         private System.Timers.Timer timer;
@@ -57,6 +62,8 @@ namespace FinTrack.Codes.LoginPanel
             RegisterCommand = new RelayCommand(o => OnRegister());
 
             TogglePasswordVisibilityCommand = new RelayCommand(o => TogglePasswordVisibility());
+
+            LoginButton_Click = new RelayCommand(o => LoginButtonClick());
 
             timer = new System.Timers.Timer(1000);
             timer.Elapsed += CodeTimer;
@@ -284,6 +291,23 @@ namespace FinTrack.Codes.LoginPanel
         public void CodeTimerExpired()
         {
             MessageBox.Show("Code has expired. Please request a new one.");
+        }
+        #endregion
+
+        #region Login Button Click
+        private async Task LoginButtonClick()
+        {
+            // Call the login method from the UserRepository
+            var user = await UserRepository.Instance.LoginUser(InputEmail, InputPassword);
+            if (user != null)
+            {
+                SessionManager.Instance.Login(user);
+                MessageBox.Show("Login successful!");
+            }
+            else
+            {
+                MessageBox.Show("Invalid email or password.");
+            }
         }
         #endregion
 

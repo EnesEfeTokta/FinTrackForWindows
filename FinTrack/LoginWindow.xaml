@@ -68,7 +68,7 @@
                                      BorderThickness="1" 
                                      BorderBrush="#30363D" 
                                      Padding="5" 
-                                     Text="Username/Email" 
+                                     Text="{Binding InputEmail}" 
                                      Foreground="#C9D1D9">
                                 <TextBox.Background>
                                     <SolidColorBrush Color="White" Opacity="0"/>
@@ -154,7 +154,8 @@
                                 HorizontalAlignment="Center"
                                 Width="200"
                                 Height="20"
-                                Padding="10">
+                                Padding="10"
+                                Command="{Binding LoginButton_Click}">
                             <Button.Style>
                                 <Style TargetType="Button">
                                     <Setter Property="Template">

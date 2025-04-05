@@ -1,6 +1,6 @@
 ﻿using System.Reflection.Metadata;
 
-namespace FinTrack.Codes.DB
+namespace FinTrack.Codes.DataAccess
 {
     // This class defines the database schema for a financial tracking application.
     // It includes classes for users, transactions, categories, budgets, targets, goals, reports, and settings.
@@ -24,11 +24,11 @@ namespace FinTrack.Codes.DB
     // The users class represents a user of the financial tracking application.
     public class users
     {
-        public int user_id { get; set; } // Primary Key
+        public Guid user_id { get; set; } // Primary Key
         public string full_name { get; set; } // User's full name.
         public string email { get; set; } // User's email address.
         public string password_hash { get; set; } // Hashed password for security.
-        public Blob profile_picture { get; set; } // User's profile picture.
+        public byte[] profile_picture { get; set; } // User's profile picture.
         public DateTime created_at { get; set; } // Account creation date.
     }
 
