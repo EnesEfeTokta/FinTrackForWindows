@@ -43,6 +43,9 @@ namespace FinTrack.Codes.LoginPanel
         public ICommand TogglePasswordVisibilityCommand { get; }
 
         public ICommand LoginButton_Click { get; }
+        public ICommand RegisterButton_Click { get; }
+        public ICommand CodeVerificationButton_Click { get; }
+        public ICommand ResetPasswordButton_Click { get; }
         #endregion
 
         private System.Timers.Timer timer;
@@ -63,13 +66,15 @@ namespace FinTrack.Codes.LoginPanel
 
             TogglePasswordVisibilityCommand = new RelayCommand(o => TogglePasswordVisibility());
 
-            LoginButton_Click = new RelayCommand(o => LoginButtonClick());
+            LoginButton_Click = new RelayCommand(async o => await UserLogin());
+            RegisterButton_Click = new RelayCommand(async o => await RegisterUser());
 
             timer = new System.Timers.Timer(1000);
             timer.Elapsed += CodeTimer;
             timer.AutoReset = true;
             timer.Enabled = true;
         }
+
 
         #region Navigating Between Panels
         public LoginPanelView CurrentView
@@ -295,7 +300,7 @@ namespace FinTrack.Codes.LoginPanel
         #endregion
 
         #region Login Button Click
-        private async Task LoginButtonClick()
+        private async Task UserLogin()
         {
             // Call the login method from the UserRepository
             var user = await UserRepository.Instance.LoginUser(InputEmail, InputPassword);
@@ -308,6 +313,29 @@ namespace FinTrack.Codes.LoginPanel
             {
                 MessageBox.Show("Invalid email or password.");
             }
+        }
+        #endregion
+
+        #region Register Button Click
+        private async Task RegisterUser()
+        {
+            if (!IsEmailValid(InputEmail) || !IsPasswordValid(InputPassword) || !IsNameValid(InputUsername))
+            {
+                MessageBox.Show("Please fill in all fields correctly.");
+                return;
+            }
+
+            //// Call the register method from the UserRepository
+            //var user = await UserRepository.Instance.RegisterUser(InputEmail, InputPassword, InputUsername);
+            //if (user != null)
+            //{
+            //    MessageBox.Show("Registration successful!");
+            //    CurrentView = LoginPanelView.Login;
+            //}
+            //else
+            //{
+            //    MessageBox.Show("Registration failed.");
+            //}
         }
         #endregion
 

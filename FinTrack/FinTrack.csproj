@@ -145,8 +145,4 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Codes\Verifications\" />
-  </ItemGroup>
-
 </Project>
