@@ -10,18 +10,20 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace FinTrack
+namespace FinTrack.Panels
 {
     /// <summary>
-    /// Interaction logic for BudgetingDemo.xaml
+    /// Interaction logic for DashboardPanel.xaml
     /// </summary>
-    public partial class BudgetingDemo : Window
+    public partial class DashboardPanel : Page
     {
-        public BudgetingDemo()
+        public DashboardPanel()
         {
             InitializeComponent();
+            //DataContext = new TransitionBetweenPanelsViewModel();
         }
     }
 }

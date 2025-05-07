@@ -1,116 +1,97 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Runtime.CompilerServices;
+using System.Windows;
 
 namespace FinTrack.FirstWelcome
 {
     public class FirstWelcomeSlideViewModel : INotifyPropertyChanged
     {
-        private ObservableCollection<FirstWelcomeSlideModel> _slides = new ObservableCollection<FirstWelcomeSlideModel>();
+        private ObservableCollection<FirstWelcomeSlideModel> slides = new ObservableCollection<FirstWelcomeSlideModel>();
         private int activeSlideIndex;
-
-        private bool isSlideForwardButtonVisible;
-        private bool isSlideBackButtonVisible;
-        private bool isSlideSkipButtonVisible;
 
         public ObservableCollection<FirstWelcomeSlideModel> Slides
         {
-            get => _slides;
-            set
-            {
-                _slides = value;
-                OnPropertyChanged();
+            get => slides;
+            set 
+            { 
+                slides = value; 
+                OnPropertyChanged(); 
             }
         }
 
         public int ActiveSlideIndex
         {
             get => activeSlideIndex;
-            set
-            {
-                activeSlideIndex = value;
-                OnPropertyChanged();
+            set 
+            { 
+                activeSlideIndex = value; 
+                OnPropertyChanged(); 
+                UpdateUI(); 
             }
         }
 
-        #region Page Navigation
-        public bool SlideForwardButtonVisible
+        public FirstWelcomeSlideModel ActiveSlide => activeSlideIndex >= 0 && activeSlideIndex < Slides.Count ? Slides[activeSlideIndex] : null;
+
+        public bool CanGoForward => activeSlideIndex < slides.Count - 1;
+        public bool CanGoBack => activeSlideIndex > 0;
+        public bool CanSkip => activeSlideIndex < slides.Count - 1;
+
+        public FirstWelcomeSlideViewModel()
         {
-            get => isSlideForwardButtonVisible;
-            set
-            {
-                if (isSlideForwardButtonVisible != value)
-                {
-                    isSlideForwardButtonVisible = value;
-                    OnPropertyChanged(nameof(isSlideForwardButtonVisible));
-                }
-            }
+            LoadSlidesFromJson();
+            ActiveSlideIndex = 0;
         }
 
-        public bool SlideBackButtonVisible
+        public void GoForward()
         {
-            get => isSlideBackButtonVisible;
-            set
-            {
-                if (isSlideBackButtonVisible != value)
-                {
-                    isSlideBackButtonVisible = value;
-                    OnPropertyChanged(nameof(isSlideBackButtonVisible));
-                }
-            }
-        }
-
-        public bool SlideSkipButtonVisible
-        {
-            get => isSlideSkipButtonVisible;
-            set
-            {
-                if (isSlideSkipButtonVisible != value)
-                {
-                    isSlideSkipButtonVisible = value;
-                    OnPropertyChanged(nameof(isSlideSkipButtonVisible));
-                }
-            }
-        }
-        #endregion
-
-        public FirstWelcomeSlideModel? ActiveSlide => ActiveSlideIndex >= 0 && ActiveSlideIndex <
-            Slides.Count ? Slides[ActiveSlideIndex] : null;
-
-        public void GoToNextSlide()
-        {
-            if (activeSlideIndex < _slides.Count - 1)
+            if (CanGoForward)
             {
                 ActiveSlideIndex++;
             }
         }
 
-        public void GoToPreviousSlide()
+        public void GoBack()
         {
-            if (activeSlideIndex > 0)
+            if (CanGoBack)
             {
                 ActiveSlideIndex--;
             }
         }
 
-        public void SkipSlide(int index)
+        public void Skip()
         {
-            if (index >= 0 && index < _slides.Count)
-                activeSlideIndex = index;
+            if (CanSkip)
+            {
+                ActiveSlideIndex = slides.Count - 1;
+            }
         }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
+        private void UpdateUI()
+        {
+            // UI’yı güncellemek için gerekliyse burada ek mantık olabilir
+        }
 
+        private void LoadSlidesFromJson()
+        {
+            // JSON dosyasını oku
+            string jsonPath = Path.Combine(Directory.GetCurrentDirectory(), "FirstWelcome", "DB", "SlideDocument.json");
+            string jsonContent = File.ReadAllText(jsonPath);
+
+            // JSON’u deserialize et
+            var slides = JsonConvert.DeserializeObject<ObservableCollection<FirstWelcomeSlideModel>>(jsonContent);
+            if (slides != null)
+            {
+                Slides = slides;
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        public void ReadJsonData()
-        {
-            var json = System.IO.File.ReadAllText("/FirstWelcome/DB/SlideDocument.json");
-            Slides = JsonConvert.DeserializeObject<ObservableCollection<FirstWelcomeSlideModel>>(json) ?? new ObservableCollection<FirstWelcomeSlideModel>();
         }
     }
 }

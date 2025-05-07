@@ -1,0 +1,242 @@
+﻿<Page x:Class="FinTrack.Panels.ReportsPanel"
+         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+         xmlns:local="clr-namespace:FinTrack.Panels"
+         mc:Ignorable="d"
+         d:DesignHeight="450" d:DesignWidth="800"
+         Title="ReportsPanel">
+
+    <Page.Resources>
+        <Storyboard x:Key="PanelInstallationAnimation">
+            <DoubleAnimation
+                Storyboard.TargetName="panelGrid"
+                Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                From="50" To="0" Duration="0:0:0.3"
+                AccelerationRatio="0.3" DecelerationRatio="0.7"/>
+            <DoubleAnimation
+                Storyboard.TargetName="panelGrid"
+                Storyboard.TargetProperty="Opacity"
+                From="0" To="1" Duration="0:0:0.3"/>
+        </Storyboard>
+    </Page.Resources>
+
+    <Grid x:Name="panelGrid" RenderTransformOrigin="0.5,1" Opacity="0">
+        <Grid.RenderTransform>
+            <TranslateTransform Y="50"/>
+        </Grid.RenderTransform>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Border x:Name="ReportSummaryBox" Grid.Column="0" Background="#161B22" CornerRadius="10" Padding="15" Margin="0,0,10,10" RenderTransformOrigin="0.5,0.5">
+                <Border.RenderTransform>
+                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                </Border.RenderTransform>
+                <StackPanel>
+                    <TextBlock Text="Rapor Özeti" Foreground="#C9D1D9" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Toplam Gelir: 150.000 TL" Foreground="#C9D1D9" FontSize="18" Margin="0,5,0,0"/>
+                    <TextBlock Text="Toplam Gider: 90.000 TL" Foreground="#C9D1D9" FontSize="16" Margin="0,5,0,0"/>
+                    <TextBlock Text="Net Durum: 60.000 TL" Foreground="#C9D1D9" FontSize="16" Margin="0,5,0,0"/>
+                    <TextBlock Text="Son Güncelleme: 18/03/2025" Foreground="#C9D1D9" FontSize="14" Margin="0,5,0,0"/>
+                </StackPanel>
+                <Border.Triggers>
+                    <EventTrigger RoutedEvent="MouseEnter">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetName="ReportSummaryBox"
+                                                 Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                                 To="1.03" Duration="0:0:0.15"/>
+                                <DoubleAnimation Storyboard.TargetName="ReportSummaryBox"
+                                                 Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                                                 To="1.03" Duration="0:0:0.15"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                    <EventTrigger RoutedEvent="MouseLeave">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetName="ReportSummaryBox"
+                                                 Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                                 To="1" Duration="0:0:0.15"/>
+                                <DoubleAnimation Storyboard.TargetName="ReportSummaryBox"
+                                                 Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                                                 To="1" Duration="0:0:0.15"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Border.Triggers>
+            </Border>
+            <Border x:Name="SendReportBox" Grid.Column="1" Background="#161B22" CornerRadius="10" Padding="15" Margin="10,0,0,10" RenderTransformOrigin="0.5,0.5">
+                <Border.RenderTransform>
+                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                </Border.RenderTransform>
+                <StackPanel>
+                    <TextBlock Text="Rapor Gönder" Foreground="#C9D1D9" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center"/>
+                    <ComboBox Width="200" Margin="0,10,0,0" HorizontalAlignment="Center" SelectedIndex="0" ToolTip="Gönderilecek rapor türünü seçin">
+                        <ComboBoxItem Content="Seçiniz..." IsEnabled="False"/>
+                        <ComboBoxItem Content="Aylık Rapor"/>
+                        <ComboBoxItem Content="Yıllık Rapor"/>
+                        <ComboBoxItem Content="Kategoriye Göre Rapor"/>
+                        <ComboBoxItem Content="Gelir-Gider Karşılaştırması"/>
+                    </ComboBox>
+                    <TextBox Width="200" Margin="0,10,0,0" Padding="5" Text="E-posta Adresi" Foreground="#8B949E" HorizontalAlignment="Center"/>
+                    <Button Content="Raporu Gönder" Background="#238636" Foreground="#C9D1D9" Width="150" Margin="0,10,0,0" Padding="5" HorizontalAlignment="Center"/>
+                </StackPanel>
+                <Border.Triggers>
+                    <EventTrigger RoutedEvent="MouseEnter">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetName="SendReportBox"
+                                                 Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                                 To="1.03" Duration="0:0:0.15"/>
+                                <DoubleAnimation Storyboard.TargetName="SendReportBox"
+                                                 Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                                                 To="1.03" Duration="0:0:0.15"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                    <EventTrigger RoutedEvent="MouseLeave">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetName="SendReportBox"
+                                                 Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                                 To="1" Duration="0:0:0.15"/>
+                                <DoubleAnimation Storyboard.TargetName="SendReportBox"
+                                                 Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                                                 To="1" Duration="0:0:0.15"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Border.Triggers>
+            </Border>
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Border x:Name="ReportDetailsBox" Grid.Column="0" Background="#161B22" CornerRadius="10" Padding="15" Margin="0,10,10,0" RenderTransformOrigin="0.5,0.5">
+                <Border.RenderTransform>
+                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                </Border.RenderTransform>
+                <StackPanel>
+                    <TextBlock Text="Rapor Detayları" Foreground="#C9D1D9" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center"/>
+                    <Grid Margin="0,10,0,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Text="Kullanılabilir Rapor Türleri" Foreground="#C9D1D9" FontSize="14" HorizontalAlignment="Center"/>
+                        <ListBox Grid.Row="1" Margin="0,10,0,0" Background="Transparent" BorderThickness="0">
+                            <ListBoxItem Margin="0,0,0,10">
+                                <StackPanel>
+                                    <TextBlock Text="Aylık Rapor" Foreground="#C9D1D9" FontSize="14"/>
+                                    <TextBlock Text="Mart 2025: Gelir 50.000 TL, Gider 30.000 TL, Net 20.000 TL" Foreground="#C9D1D9" FontSize="12" Margin="0,5,0,0"/>
+                                </StackPanel>
+                            </ListBoxItem>
+                            <ListBoxItem Margin="0,0,0,10">
+                                <StackPanel>
+                                    <TextBlock Text="Yıllık Rapor" Foreground="#C9D1D9" FontSize="14"/>
+                                    <TextBlock Text="2025: Gelir 150.000 TL, Gider 90.000 TL, Net 60.000 TL" Foreground="#C9D1D9" FontSize="12" Margin="0,5,0,0"/>
+                                </StackPanel>
+                            </ListBoxItem>
+                            <ListBoxItem Margin="0,0,0,10">
+                                <StackPanel>
+                                    <TextBlock Text="Kategoriye Göre Rapor" Foreground="#C9D1D9" FontSize="14"/>
+                                    <TextBlock Text="Gıda: 20.000 TL, Ulaşım: 15.000 TL" Foreground="#C9D1D9" FontSize="12" Margin="0,5,0,0"/>
+                                </StackPanel>
+                            </ListBoxItem>
+                            <ListBoxItem Margin="0,0,0,10">
+                                <StackPanel>
+                                    <TextBlock Text="Gelir-Gider Karşılaştırması" Foreground="#C9D1D9" FontSize="14"/>
+                                    <TextBlock Text="Gelir: 150.000 TL, Gider: 90.000 TL" Foreground="#C9D1D9" FontSize="12" Margin="0,5,0,0"/>
+                                </StackPanel>
+                            </ListBoxItem>
+                        </ListBox>
+                    </Grid>
+                </StackPanel>
+                <Border.Triggers>
+                    <EventTrigger RoutedEvent="MouseEnter">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetName="ReportDetailsBox"
+                                                 Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                                 To="1.03" Duration="0:0:0.15"/>
+                                <DoubleAnimation Storyboard.TargetName="ReportDetailsBox"
+                                                 Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                                                 To="1.03" Duration="0:0:0.15"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                    <EventTrigger RoutedEvent="MouseLeave">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetName="ReportDetailsBox"
+                                                 Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                                 To="1" Duration="0:0:0.15"/>
+                                <DoubleAnimation Storyboard.TargetName="ReportDetailsBox"
+                                                 Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                                                 To="1" Duration="0:0:0.15"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Border.Triggers>
+            </Border>
+            <Border x:Name="ReportPreviewBox" Grid.Column="1" Background="#161B22" CornerRadius="10" Padding="15" Margin="10,10,0,0" RenderTransformOrigin="0.5,0.5">
+                <Border.RenderTransform>
+                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                </Border.RenderTransform>
+                <StackPanel>
+                    <TextBlock Text="Rapor Önizleme" Foreground="#C9D1D9" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Seçilen Rapor: Aylık Rapor (Mart 2025)" Foreground="#C9D1D9" FontSize="14" Margin="0,10,0,0" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Gelir: 50.000 TL" Foreground="#C9D1D9" FontSize="12" Margin="0,5,0,0"/>
+                    <TextBlock Text="Gider: 30.000 TL" Foreground="#C9D1D9" FontSize="12" Margin="0,5,0,0"/>
+                    <TextBlock Text="Net: 20.000 TL" Foreground="#C9D1D9" FontSize="12" Margin="0,5,0,0"/>
+                    <ProgressBar Value="60" Maximum="100" Height="20" Margin="0,10,0,0" Background="#30363D" Foreground="#238636"/>
+                    <Button Content="Raporu Dışa Aktar (PDF/Excel)" Background="#238636" Foreground="#C9D1D9" Width="200" Margin="0,10,0,0" Padding="5" HorizontalAlignment="Center"/>
+                </StackPanel>
+                <Border.Triggers>
+                    <EventTrigger RoutedEvent="MouseEnter">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetName="ReportPreviewBox"
+                                                 Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                                 To="1.03" Duration="0:0:0.15"/>
+                                <DoubleAnimation Storyboard.TargetName="ReportPreviewBox"
+                                                 Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                                                 To="1.03" Duration="0:0:0.15"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                    <EventTrigger RoutedEvent="MouseLeave">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetName="ReportPreviewBox"
+                                                 Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                                 To="1" Duration="0:0:0.15"/>
+                                <DoubleAnimation Storyboard.TargetName="ReportPreviewBox"
+                                                 Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                                                 To="1" Duration="0:0:0.15"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Border.Triggers>
+            </Border>
+        </Grid>
+    </Grid>
+
+    <Page.Triggers>
+        <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+            <BeginStoryboard Storyboard="{StaticResource PanelInstallationAnimation}"/>
+        </EventTrigger>
+    </Page.Triggers>
+</Page>

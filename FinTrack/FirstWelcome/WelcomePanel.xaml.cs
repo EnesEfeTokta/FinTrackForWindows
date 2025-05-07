@@ -1,37 +1,52 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace FinTrack.FirstWelcome
 {
-    /// <summary>
-    /// Interaction logic for WelcomePanel.xaml
-    /// </summary>
     public partial class WelcomePanel : Page
     {
+        private readonly FirstWelcomeSlideViewModel viewModel;
+
         public WelcomePanel()
         {
             InitializeComponent();
-
-            Start();
+            viewModel = new FirstWelcomeSlideViewModel();
+            UpdateUI();
         }
 
-        private void Start()
+        private void SlideForwardButton_Click(object sender, RoutedEventArgs e)
         {
-            DataContext = new FirstWelcomeSlideViewModel { SlideForwardButtonVisible = true };
-            DataContext = new FirstWelcomeSlideViewModel { SlideBackButtonVisible = false };
-            DataContext = new FirstWelcomeSlideViewModel { SlideSkipButtonVisible = true };
+            viewModel.GoForward();
+            UpdateUI();
+        }
+
+        private void SlideBackButton_Click(object sender, RoutedEventArgs e)
+        {
+            viewModel.GoBack();
+            UpdateUI();
+        }
+
+        private void SlideSkipButton_Click(object sender, RoutedEventArgs e)
+        {
+            viewModel.Skip();
+            UpdateUI();
+        }
+
+        private void UpdateUI()
+        {
+            if (viewModel.ActiveSlide != null)
+            {
+                BitmapImage newImage = new BitmapImage(new Uri($"pack://application:,,,/{viewModel.ActiveSlide.ImagePath}", UriKind.Absolute));
+                newImage.CacheOption = BitmapCacheOption.OnLoad;
+                SlideImage.Source = newImage;
+
+
+                SlideHead.Text = viewModel.ActiveSlide.Header;
+                SlideBody.Text = viewModel.ActiveSlide.Body;
+            }
+            SlideForwardButton.IsEnabled = viewModel.ActiveSlideIndex < viewModel.Slides.Count - 1;
         }
     }
 }
