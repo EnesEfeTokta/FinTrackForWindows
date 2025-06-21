@@ -13,14 +13,11 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace FinTrack.Panels
+namespace FinTrack.Views
 {
-    /// <summary>
-    /// Interaction logic for AccountPanel.xaml
-    /// </summary>
-    public partial class AccountPanel : Page
+    public partial class RegisterView : UserControl
     {
-        public AccountPanel()
+        public RegisterView()
         {
             InitializeComponent();
         }

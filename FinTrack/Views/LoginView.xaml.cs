@@ -13,17 +13,13 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace FinTrack.Panels
+namespace FinTrack.Views
 {
-    /// <summary>
-    /// Interaction logic for DashboardPanel.xaml
-    /// </summary>
-    public partial class DashboardPanel : Page
+    public partial class LoginView : UserControl
     {
-        public DashboardPanel()
+        public LoginView()
         {
             InitializeComponent();
-            //DataContext = new TransitionBetweenPanelsViewModel();
         }
     }
 }

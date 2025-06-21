@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace FinTrack.Panels
+namespace FinTrack.Views
 {
     /// <summary>
-    /// Interaction logic for BudgetingPanel.xaml
+    /// Interaction logic for OtpVerification.xaml
     /// </summary>
-    public partial class BudgetingPanel : Page
+    public partial class OtpVerification : UserControl
     {
-        public BudgetingPanel()
+        public OtpVerification()
         {
             InitializeComponent();
         }

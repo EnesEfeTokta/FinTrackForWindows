@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace FinTrack
+namespace FinTrack.Core
 {
     public class RelayCommand : ICommand
     {

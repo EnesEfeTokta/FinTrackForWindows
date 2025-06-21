@@ -9,34 +9,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="FirstWelcome\Images\analytics.png" />
-    <None Remove="FirstWelcome\Images\document.png" />
-    <None Remove="FirstWelcome\Images\hello.png" />
-    <None Remove="FirstWelcome\Images\increase.png" />
-    <None Remove="FirstWelcome\Images\investment.png" />
-    <None Remove="FirstWelcome\Images\money.png" />
-    <None Remove="FirstWelcome\Images\note.png" />
-    <None Remove="FirstWelcome\Images\payment.png" />
-    <None Remove="FirstWelcome\Images\piggy-bank.png" />
-    <None Remove="FirstWelcome\Images\promotion.png" />
-    <None Remove="FirstWelcome\Images\start-up.png" />
-    <None Remove="FirstWelcome\Images\statistic.png" />
-    <None Remove="FirstWelcome\Images\targets.png" />
-    <None Remove="FirstWelcome\Images\task.png" />
-    <None Remove="Images\Icons\add.png" />
-    <None Remove="Images\Icons\conversation.png" />
-    <None Remove="Images\Icons\done.png" />
-    <None Remove="Images\Icons\email.png" />
-    <None Remove="Images\Icons\eyeclose.png" />
-    <None Remove="Images\Icons\eyeopen.png" />
-    <None Remove="Images\Icons\login.png" />
-    <None Remove="Images\Icons\message.png" />
-    <None Remove="Images\Icons\padlock.png" />
-    <None Remove="Images\Icons\passwordpanel.png" />
-    <None Remove="Images\Icons\tick.png" />
-    <None Remove="Images\Icons\user.png" />
-    <None Remove="Images\Icons\verify.png" />
-    <None Remove="Images\Icons\x.png" />
+    <None Remove="Assets\Images\Icons\conversation.png" />
+    <None Remove="Assets\Images\Icons\done.png" />
+    <None Remove="Assets\Images\Icons\email.png" />
+    <None Remove="Assets\Images\Icons\eyeclose.png" />
+    <None Remove="Assets\Images\Icons\eyeopen.png" />
+    <None Remove="Assets\Images\Icons\login.png" />
+    <None Remove="Assets\Images\Icons\message.png" />
+    <None Remove="Assets\Images\Icons\padlock.png" />
+    <None Remove="Assets\Images\Icons\passwordpanel.png" />
+    <None Remove="Assets\Images\Icons\tick.png" />
+    <None Remove="Assets\Images\Icons\user.png" />
+    <None Remove="Assets\Images\Icons\verify.png" />
+    <None Remove="Assets\Images\Icons\x.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -50,88 +35,88 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="FirstWelcome\Images\analytics.png">
+    <Resource Include="Assets\Images\analytics.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="FirstWelcome\Images\document.png">
+    <Resource Include="Assets\Images\document.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="FirstWelcome\Images\hello.png">
+    <Resource Include="Assets\Images\hello.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="FirstWelcome\Images\increase.png">
+    <Resource Include="Assets\Images\increase.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="FirstWelcome\Images\investment.png">
+    <Resource Include="Assets\Images\investment.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="FirstWelcome\Images\money.png">
+    <Resource Include="Assets\Images\money.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="FirstWelcome\Images\note.png">
+    <Resource Include="Assets\Images\note.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="FirstWelcome\Images\payment.png">
+    <Resource Include="Assets\Images\payment.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="FirstWelcome\Images\piggy-bank.png">
+    <Resource Include="Assets\Images\piggy-bank.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="FirstWelcome\Images\promotion.png">
+    <Resource Include="Assets\Images\promotion.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="FirstWelcome\Images\start-up.png">
+    <Resource Include="Assets\Images\start-up.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="FirstWelcome\Images\statistic.png">
+    <Resource Include="Assets\Images\statistic.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="FirstWelcome\Images\targets.png">
+    <Resource Include="Assets\Images\targets.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="FirstWelcome\Images\task.png">
+    <Resource Include="Assets\Images\task.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Images\Icons\add.png">
+    <Resource Include="Assets\Images\Icons\register.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Images\Icons\conversation.png">
+    <Resource Include="Assets\Images\Icons\conversation.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Images\Icons\done.png">
+    <Resource Include="Assets\Images\Icons\done.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Images\Icons\email.png">
+    <Resource Include="Assets\Images\Icons\email.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Images\Icons\eyeclose.png">
+    <Resource Include="Assets\Images\Icons\eyeclose.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Images\Icons\eyeopen.png">
+    <Resource Include="Assets\Images\Icons\eyeopen.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Images\Icons\login.png">
+    <Resource Include="Assets\Images\Icons\login.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Images\Icons\message.png">
+    <Resource Include="Assets\Images\Icons\message.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Images\Icons\padlock.png">
+    <Resource Include="Assets\Images\Icons\padlock.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Images\Icons\passwordpanel.png">
+    <Resource Include="Assets\Images\Icons\passwordpanel.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Images\Icons\tick.png">
+    <Resource Include="Assets\Images\Icons\tick.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Images\Icons\user.png">
+    <Resource Include="Assets\Images\Icons\user.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Images\Icons\verify.png">
+    <Resource Include="Assets\Images\Icons\verify.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Images\Icons\x.png">
+    <Resource Include="Assets\Images\Icons\x.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
@@ -140,9 +125,10 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="FirstWelcome\DB\SlideDocument.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="Styles\" />
+	</ItemGroup>
 
 </Project>
