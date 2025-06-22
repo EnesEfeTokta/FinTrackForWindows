@@ -6,25 +6,42 @@ namespace FinTrack.ViewModels
 {
     public partial class RegisterViewModel : ObservableObject
     {
-        // ... Kayıt için gerekli özellikler (Username, Email, Password vs.)
-        [ObservableProperty] private string _username;
-        [ObservableProperty] private string _email;
-        [ObservableProperty] private string _password;
+        [ObservableProperty]
+        private string? fullName_RegisterView_TextBox;
 
-        // "Giriş Yap" ekranına geri dönmek için olay.
-        public event Action NavigateToLoginRequested;
+        [ObservableProperty]
+        private string? email_RegisterView_TextBox;
+
+        [ObservableProperty]
+        private string? password_RegisterView_TextBox;
+
+        [ObservableProperty]
+        private bool isPasswordVisible_RegisterView_PasswordBoxAndTextBox = false;
+
+        [ObservableProperty]
+        private string eyeIconSource_RegisterView_Image = "/Assets/Images/Icons/eyeclose.png";
+
+        public event Action? NavigateToLoginRequested;
 
         [RelayCommand]
-        private void Register()
+        private void Register_RegisterView_Button()
         {
-            // TODO: Kayıt olma mantığı burada işlenecek.
             Console.WriteLine("Register denendi.");
         }
 
         [RelayCommand]
-        private void NavigateToLogin()
+        private void TogglePasswordVisibility_RegisterView_Button()
         {
-            // "Giriş ekranına geri dönmek istiyorum" diye haber salıyoruz.
+            IsPasswordVisible_RegisterView_PasswordBoxAndTextBox = !IsPasswordVisible_RegisterView_PasswordBoxAndTextBox;
+
+            EyeIconSource_RegisterView_Image = IsPasswordVisible_RegisterView_PasswordBoxAndTextBox
+                ? "/Assets/Images/Icons/eyeopen.png"
+                : "/Assets/Images/Icons/eyeclose.png";
+        }
+
+        [RelayCommand]
+        private void NavigateToLogin_RegisterView_Button()
+        {
             NavigateToLoginRequested?.Invoke();
         }
     }

@@ -52,8 +52,8 @@
                          Visibility="{Binding IsPasswordVisible_LoginView_PasswordBoxAndTextBox, Converter={StaticResource BoolToVisibilityConverter}}"/>
 
                 <Button Grid.Column="1" 
-                        Style="{StaticResource LinkButtonStyle}"
-                        Command="{Binding TogglePasswordVisibilityCommand_LoginView_Button}"
+                        Style="{StaticResource EyeButtonStyle}"
+                        Command="{Binding TogglePasswordVisibility_LoginView_ButtonCommand}"
                         Width="30" Height="30"
                         VerticalAlignment="Center" 
                         Margin="5,0,0,0">
@@ -67,11 +67,11 @@
                     Style="{StaticResource LinkButtonStyle}" 
                     HorizontalAlignment="Right"
                     Margin="0,5,0,20"
-                    Command="{Binding NavigateToForgotPasswordCommand_LoginView_Button}"/>
+                    Command="{Binding NavigateToForgotPassword_LoginView_ButtonCommand}"/>
 
             <Button Content="LOGIN" 
                     Style="{StaticResource PrimaryButtonStyle}"
-                    Command="{Binding LoginCommand_LoginView_Button}"/>
+                    Command="{Binding Login_LoginView_ButtonCommand}"/>
 
             <StackPanel Orientation="Horizontal" 
                         HorizontalAlignment="Center" 
@@ -81,7 +81,7 @@
                 
                 <Button Content="Sign Up" 
                         Style="{StaticResource LinkButtonStyle}" 
-                        Command="{Binding NavigateToRegisterCommand_LoginView_Button}"/>
+                        Command="{Binding NavigateToRegister_LoginView_ButtonCommand}"/>
             </StackPanel>
         </StackPanel>
     </Border>
