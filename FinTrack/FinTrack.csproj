@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\Images\chatbot.png" />
     <None Remove="Assets\Images\Icons\conversation.png" />
     <None Remove="Assets\Images\Icons\done.png" />
     <None Remove="Assets\Images\Icons\email.png" />
@@ -39,6 +40,7 @@
     <Resource Include="Assets\Images\analytics.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Assets\Images\chatbot.png" />
     <Resource Include="Assets\Images\document.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>

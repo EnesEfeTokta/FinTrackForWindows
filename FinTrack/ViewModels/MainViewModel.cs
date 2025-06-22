@@ -11,6 +11,7 @@ namespace FinTrack.ViewModels
         private readonly RegisterViewModel _registerViewModel;
         private readonly OtpVerificationViewModel _otpVerificationViewModel;
         private readonly ForgotPasswordViewModel _forgotPasswordViewModel;
+        private readonly ApplicationRecognizeSlideViewModel _applicationRecognizeSlideViewModel;
 
         public MainViewModel()
         {
@@ -18,6 +19,9 @@ namespace FinTrack.ViewModels
             _registerViewModel = new RegisterViewModel();
             _otpVerificationViewModel = new OtpVerificationViewModel();
             _forgotPasswordViewModel = new ForgotPasswordViewModel();
+            _applicationRecognizeSlideViewModel = new ApplicationRecognizeSlideViewModel();
+
+            _applicationRecognizeSlideViewModel.NavigateToLoginRequested += () => CurrentViewModel = _loginViewModel;
 
             _loginViewModel.NavigateToRegisterRequested += () => CurrentViewModel = _registerViewModel;
             _loginViewModel.NavigateToForgotPasswordRequested += () => CurrentViewModel = _forgotPasswordViewModel;
@@ -28,7 +32,7 @@ namespace FinTrack.ViewModels
 
             _forgotPasswordViewModel.NavigateToLoginRequested += () => CurrentViewModel = _loginViewModel;
 
-            CurrentViewModel = _loginViewModel;
+            CurrentViewModel = _applicationRecognizeSlideViewModel;
         }
     }
 }

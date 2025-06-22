@@ -15,6 +15,9 @@
         ResizeMode="NoResize">
 
     <Window.Resources>
+        <DataTemplate DataType="{x:Type viewmodels:ApplicationRecognizeSlideViewModel}">
+            <views:ApplicationRecognizeSlideView/>
+        </DataTemplate>
         <DataTemplate DataType="{x:Type viewmodels:LoginViewModel}">
             <views:LoginView/>
         </DataTemplate>
