@@ -7,7 +7,7 @@
              xmlns:viewmodels="clr-namespace:FinTrack.ViewModels"
              mc:Ignorable="d"  
              d:DataContext="{d:DesignInstance Type=viewmodels:OtpVerificationViewModel, IsDesignTimeCreatable=True}" 
-             d:DesignWidth="350" Height="450">
+             d:DesignWidth="350" Height="465">
 
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>

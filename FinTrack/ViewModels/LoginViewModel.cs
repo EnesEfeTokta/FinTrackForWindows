@@ -28,12 +28,6 @@ namespace FinTrack.ViewModels
         }
 
         [RelayCommand]
-        private void NavigateToRegister_LoginView_Button()
-        {
-            NavigateToRegisterRequested?.Invoke();
-        }
-
-        [RelayCommand]
         private void TogglePasswordVisibility_LoginView_Button()
         {
             IsPasswordVisible_LoginView_PasswordBoxAndTextBox = !IsPasswordVisible_LoginView_PasswordBoxAndTextBox;
@@ -41,6 +35,12 @@ namespace FinTrack.ViewModels
             EyeIconSource_LoginView_Image = IsPasswordVisible_LoginView_PasswordBoxAndTextBox
                 ? "/Assets/Images/Icons/eyeopen.png"
                 : "/Assets/Images/Icons/eyeclose.png";
+        }
+
+        [RelayCommand]
+        private void NavigateToRegister_LoginView_Button()
+        {
+            NavigateToRegisterRequested?.Invoke();
         }
 
         [RelayCommand]

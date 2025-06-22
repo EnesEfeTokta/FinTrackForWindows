@@ -21,6 +21,9 @@
         <DataTemplate DataType="{x:Type viewmodels:RegisterViewModel}">
             <views:RegisterView/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:ForgotPasswordViewModel}">
+            <views:ForgotPasswordView/>
+        </DataTemplate>
     </Window.Resources>
 
     <Border Background="{StaticResource BackgroundBrush}" 
