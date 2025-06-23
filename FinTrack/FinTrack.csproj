@@ -10,6 +10,8 @@
 
   <ItemGroup>
     <None Remove="Assets\Images\chatbot.png" />
+    <None Remove="Assets\Images\Icons\add.png" />
+    <None Remove="Assets\Images\Icons\bell.png" />
     <None Remove="Assets\Images\Icons\conversation.png" />
     <None Remove="Assets\Images\Icons\done.png" />
     <None Remove="Assets\Images\Icons\email.png" />
@@ -19,6 +21,8 @@
     <None Remove="Assets\Images\Icons\message.png" />
     <None Remove="Assets\Images\Icons\padlock.png" />
     <None Remove="Assets\Images\Icons\passwordpanel.png" />
+    <None Remove="Assets\Images\Icons\settings.png" />
+    <None Remove="Assets\Images\Icons\sync.png" />
     <None Remove="Assets\Images\Icons\tick.png" />
     <None Remove="Assets\Images\Icons\user.png" />
     <None Remove="Assets\Images\Icons\verify.png" />
@@ -47,6 +51,10 @@
     <Resource Include="Assets\Images\hello.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Assets\Images\Icons\add.png" />
+    <Resource Include="Assets\Images\Icons\bell.png" />
+    <Resource Include="Assets\Images\Icons\settings.png" />
+    <Resource Include="Assets\Images\Icons\sync.png" />
     <Resource Include="Assets\Images\increase.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>

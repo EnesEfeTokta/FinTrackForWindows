@@ -12,10 +12,19 @@
     <SolidColorBrush x:Key="SecondaryTextBrush" Color="#8B949E"/>
     <SolidColorBrush x:Key="ErrorBrush" Color="#F85149"/>
     <SolidColorBrush x:Key="AccentBrush" Color="#58A6FF"/>
+
+    <SolidColorBrush x:Key="MainBackgroundBrush" Color="#1E203B"/>
+
+    <!-- Renk Fırçaları -->
+    <SolidColorBrush x:Key="TopBarBackgroundBrush" Color="#2A2D4D"/>
+    <SolidColorBrush x:Key="TopBarTextPrimaryBrush" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="TopBarTextSecondaryBrush" Color="#A8A9B5"/>
+    <SolidColorBrush x:Key="TopBarAccentBrush" Color="#00E0C6"/> <!-- Neon Teal -->
     
     <FontFamily x:Key="DefaultFont">Segoe UI</FontFamily>
     <CornerRadius x:Key="DefaultCornerRadius">6</CornerRadius>
     <Thickness x:Key="DefaultPadding" Left="15" Top="8" Right="15" Bottom="8"/>
+
     <!-- Ana Başlık Stili -->
     <Style x:Key="HeaderTextStyle" TargetType="TextBlock">
         <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
@@ -25,6 +34,12 @@
         <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="Margin" Value="0,0,0,5"/>
     </Style>
+
+    <!-- Üyelik Tipi için Gradyan Fırçası -->
+    <LinearGradientBrush x:Key="NeonGradientBrush" StartPoint="0,0.5" EndPoint="1,0.5">
+        <GradientStop Color="#00E0C6" Offset="0.0" />
+        <GradientStop Color="#39A7FF" Offset="1.0" />
+    </LinearGradientBrush>
 
     <!-- Alt Başlık/Açıklama Stili -->
     <Style x:Key="SubHeaderTextStyle" TargetType="TextBlock">
@@ -112,6 +127,135 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+            <!-- Sadece İkon İçeren Buton Stili -->
+        <Style x:Key="TopBarIconButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Width" Value="36"/>
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="18">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#3D4060"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Vurgulu, Ana Eylem Butonu Stili -->
+<Style x:Key="AccentButtonStyle" TargetType="Button">
+    <Setter Property="Background" Value="{StaticResource TopBarAccentBrush}"/>
+    <Setter Property="Foreground" Value="{StaticResource TopBarBackgroundBrush}"/>
+    <Setter Property="FontWeight" Value="Bold"/>
+    <Setter Property="FontSize" Value="14"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="Padding" Value="20,10"/>
+    <Setter Property="Template">
+        <Setter.Value>
+            <ControlTemplate TargetType="Button">
+                <Border x:Name="border" 
+                        Background="{TemplateBinding Background}"
+                        CornerRadius="18">
+                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Border>
+                <ControlTemplate.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter TargetName="border" Property="Opacity" Value="0.85"/>
+                    </Trigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+        </Setter.Value>
+    </Setter>
+</Style>
+
+            <!-- Navigasyon Butonu Stili (Seçili olunca altı çizgili) -->
+<Style x:Key="NavigationRadioButtonStyle" TargetType="RadioButton">
+    <Setter Property="Foreground" Value="{StaticResource TopBarTextSecondaryBrush}"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="FontSize" Value="14"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="Padding" Value="10,0"/>
+    <Setter Property="Template">
+        <Setter.Value>
+            <ControlTemplate TargetType="RadioButton">
+                <Grid x:Name="RootGrid">
+                    <Grid.RenderTransform>
+                        <ScaleTransform ScaleX="1.0" ScaleY="1.0" CenterX="0.5" CenterY="0.5"/>
+                    </Grid.RenderTransform>
+                    
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    
+                    <TextBlock x:Name="Text" Grid.Row="0" Text="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,8"/>
+                    <Border x:Name="Indicator" Grid.Row="1" Height="3" Width="{Binding ActualWidth, ElementName=Text}" CornerRadius="1.5" Background="{StaticResource TopBarAccentBrush}" Visibility="Collapsed"/>
+                </Grid>
+                
+                <ControlTemplate.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter TargetName="Text" Property="Foreground" Value="{StaticResource TopBarTextPrimaryBrush}"/>
+                        <Trigger.EnterActions>
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetName="RootGrid"
+                                                     Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                                     To="1.1" Duration="0:0:0.2">
+                                        <DoubleAnimation.EasingFunction>
+                                            <CubicEase EasingMode="EaseOut"/>
+                                        </DoubleAnimation.EasingFunction>
+                                    </DoubleAnimation>
+                                    <DoubleAnimation Storyboard.TargetName="RootGrid"
+                                                     Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                                                     To="1.1" Duration="0:0:0.2">
+                                        <DoubleAnimation.EasingFunction>
+                                            <CubicEase EasingMode="EaseOut"/>
+                                        </DoubleAnimation.EasingFunction>
+                                    </DoubleAnimation>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </Trigger.EnterActions>
+                        <Trigger.ExitActions>
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetName="RootGrid"
+                                                     Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                                     To="1.0" Duration="0:0:0.2">
+                                        <DoubleAnimation.EasingFunction>
+                                            <CubicEase EasingMode="EaseOut"/>
+                                        </DoubleAnimation.EasingFunction>
+                                    </DoubleAnimation>
+                                    <DoubleAnimation Storyboard.TargetName="RootGrid"
+                                                     Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                                                     To="1.0" Duration="0:0:0.2">
+                                        <DoubleAnimation.EasingFunction>
+                                            <CubicEase EasingMode="EaseOut"/>
+                                        </DoubleAnimation.EasingFunction>
+                                    </DoubleAnimation>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </Trigger.ExitActions>
+                    </Trigger>
+                    
+                    <Trigger Property="IsChecked" Value="True">
+                        <Setter TargetName="Text" Property="Foreground" Value="{StaticResource TopBarTextPrimaryBrush}"/>
+                        <Setter TargetName="Indicator" Property="Visibility" Value="Visible"/>
+                    </Trigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+        </Setter.Value>
+    </Setter>
+</Style>
 
     <!-- Ana Buton Stili (Animasyonsuz, Trigger tabanlı) -->
     <Style x:Key="PrimaryButtonStyle" TargetType="Button">
