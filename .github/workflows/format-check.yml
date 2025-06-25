@@ -22,4 +22,4 @@ jobs:
 
       - name: Check formatting
         working-directory: ./FinTrack 
-        run: dotnet format --verify-no-changes
+        run: dotnet format FinTrack.sln --verify-no-changes
