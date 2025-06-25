@@ -24,9 +24,12 @@
         </Grid.RowDefinitions>
 
         <views:TopBarView Grid.Row="0"/>
+        
+        <!--
+        <ContentControl Grid.Row="1" Content="{Binding CurrentCenterViewModel}"/>
+        -->
 
-        <ContentControl Grid.Row="1"
-                        Content="{Binding CurrentCenterViewModel}"/>
+        <views:DashboardView Grid.Row="1"/>
 
         <views:BottomBarView Grid.Row="2"/>
     </Grid>
