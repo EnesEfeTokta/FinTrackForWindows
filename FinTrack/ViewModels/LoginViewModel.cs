@@ -7,45 +7,44 @@ namespace FinTrack.ViewModels
     public partial class LoginViewModel : ObservableObject
     {
         [ObservableProperty]
-        private string? _email;
+        private string? email_LoginView_TextBox;
 
         [ObservableProperty]
-        private string? _password;
+        private string? password_LoginView_TextBox;
 
         [ObservableProperty]
-        private bool _isPasswordVisible = false;
+        private bool isPasswordVisible_LoginView_PasswordBoxAndTextBox = false;
 
         [ObservableProperty]
-        private string _eyeIconSource = "/Assets/Images/Icons/eyeclose.png";
+        private string eyeIconSource_LoginView_Image = "/Assets/Images/Icons/eyeclose.png";
 
         public event Action? NavigateToRegisterRequested;
         public event Action? NavigateToForgotPasswordRequested;
 
         [RelayCommand]
-        private async Task Login()
+        private void Login_LoginView_Button()
         {
-            MessageBox.Show($"Giriş yapılıyor: Email={Email}, Password={Password}");
-            await Task.Delay(1000);
+            MessageBox.Show($"Giriş yapılıyor: Email={Email_LoginView_TextBox}, Password={Password_LoginView_TextBox}");
         }
 
         [RelayCommand]
-        private void NavigateToRegister()
+        private void TogglePasswordVisibility_LoginView_Button()
         {
-            NavigateToRegisterRequested?.Invoke();
-        }
+            IsPasswordVisible_LoginView_PasswordBoxAndTextBox = !IsPasswordVisible_LoginView_PasswordBoxAndTextBox;
 
-        [RelayCommand]
-        private void TogglePasswordVisibility()
-        {
-            IsPasswordVisible = !IsPasswordVisible;
-
-            EyeIconSource = IsPasswordVisible
+            EyeIconSource_LoginView_Image = IsPasswordVisible_LoginView_PasswordBoxAndTextBox
                 ? "/Assets/Images/Icons/eyeopen.png"
                 : "/Assets/Images/Icons/eyeclose.png";
         }
 
         [RelayCommand]
-        private void NavigateToForgotPassword()
+        private void NavigateToRegister_LoginView_Button()
+        {
+            NavigateToRegisterRequested?.Invoke();
+        }
+
+        [RelayCommand]
+        private void NavigateToForgotPassword_LoginView_Button()
         {
             NavigateToForgotPasswordRequested?.Invoke();
         }

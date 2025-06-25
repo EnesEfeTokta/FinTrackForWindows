@@ -6,7 +6,7 @@ on:
 
 jobs:
   check-formatting:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
       - name: Checkout code
@@ -20,5 +20,10 @@ jobs:
       - name: Install dotnet-format tool
         run: dotnet tool install -g dotnet-format
 
+      - name: Restore dependencies
+        working-directory: ./FinTrack
+        run: dotnet restore FinTrack.sln
+
       - name: Check formatting
-        run: dotnet format .FinTrack.sln --verify-no-changes
+        working-directory: ./FinTrack
+        run: dotnet format FinTrack.sln --no-restore --verify-no-changes

@@ -1,0 +1,77 @@
+﻿<UserControl x:Class="FinTrack.Views.TopBarView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:viewmodels="clr-namespace:FinTrack.ViewModels"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel, IsDesignTimeCreatable=True}"
+             d:DesignWidth="1920">
+
+    <Border Background="{StaticResource TopBarBackgroundBrush}" MinHeight="100" Padding="0,10" CornerRadius="25,25,0,0">
+        <Border.Effect>
+            <DropShadowEffect ShadowDepth="4" Direction="270" Color="Black" Opacity="0.2" BlurRadius="15"/>
+        </Border.Effect>
+        
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock Text="FinTrack" 
+                           VerticalAlignment="Center"
+                           Foreground="{StaticResource TopBarTextPrimaryBrush}"
+                           FontSize="24" FontWeight="Bold" Margin="30,0,0,0"/>
+
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="30,0,0,0">
+                    <Border BorderBrush="#4A4E7A" BorderThickness="2" CornerRadius="26" Width="52" Height="52">
+                        <Ellipse Width="48" Height="48">
+                            <Ellipse.Fill>
+                                <ImageBrush ImageSource="{Binding CurrentUser.Avatar, FallbackValue='/Assets/Images/Icons/default_user.png'}"/>
+                            </Ellipse.Fill>
+                        </Ellipse>
+                    </Border>
+                    <StackPanel VerticalAlignment="Center" Margin="15,0,0,0">
+                        <TextBlock Text="{Binding CurrentUser.FullName, FallbackValue='Welcome back, Marco Yates!'}"
+                                   Foreground="{StaticResource TopBarTextPrimaryBrush}"
+                                   FontSize="16" FontWeight="SemiBold"/>
+                        <TextBlock Text="{Binding CurrentUser.Email, FallbackValue='marco.yates@example.com'}"
+                                   Foreground="{StaticResource TopBarTextSecondaryBrush}"
+                                   FontSize="12" Margin="0,2,0,2"/>
+                        <TextBlock Text="{Binding CurrentUser.MembershipType, FallbackValue='Intermediate Level'}"
+                                   FontSize="13" FontWeight="Bold"
+                                   Foreground="{StaticResource NeonGradientBrush}"/>
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,30,0">
+                <Button Style="{StaticResource TopBarIconButtonStyle}" ToolTip="Uyarı/Şikayet">
+                    <Image Source="/Assets/Images/Icons/warning.png" Width="20" Height="20"/>
+                </Button>
+                <Button Style="{StaticResource TopBarIconButtonStyle}" ToolTip="Bildirimler" Margin="5,0">
+                    <Image Source="/Assets/Images/Icons/bell.png" Width="20" Height="20"/>
+                </Button>
+                <Button Style="{StaticResource TopBarIconButtonStyle}" ToolTip="Ayarlar">
+                    <Image Source="/Assets/Images/Icons/settings.png" Width="20" Height="20"/>
+                </Button>
+            </StackPanel>
+
+            <DockPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <StackPanel Orientation="Horizontal">
+                    <RadioButton Content="Dashboard" GroupName="TopNav" Style="{StaticResource NavigationRadioButtonStyle}" Margin="15,0" IsChecked="True"/>
+                    <RadioButton Content="Transactions" GroupName="TopNav" Style="{StaticResource NavigationRadioButtonStyle}" Margin="15,0"/>
+                    <RadioButton Content="Reports" GroupName="TopNav" Style="{StaticResource NavigationRadioButtonStyle}" Margin="15,0"/>
+                    <RadioButton Content="Budgets" GroupName="TopNav" Style="{StaticResource NavigationRadioButtonStyle}" Margin="15,0"/>
+                    <RadioButton Content="Accounts" GroupName="TopNav" Style="{StaticResource NavigationRadioButtonStyle}" Margin="15,0"/>
+                    <RadioButton Content="Currencies" GroupName="TopNav" Style="{StaticResource NavigationRadioButtonStyle}" Margin="15,0"/>
+                    <RadioButton Content="Debt" GroupName="TopNav" Style="{StaticResource NavigationRadioButtonStyle}" Margin="15,0"/>
+                </StackPanel>
+            </DockPanel>
+
+        </Grid>
+    </Border>
+</UserControl>

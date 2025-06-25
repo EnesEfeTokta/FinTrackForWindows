@@ -1,0 +1,66 @@
+﻿<UserControl x:Class="FinTrack.Views.BottomBarView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:viewmodels="clr-namespace:FinTrack.ViewModels"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance Type=viewmodels:BottomBarViewModel, IsDesignTimeCreatable=True}"
+             d:DesignWidth="1920" Height="60">
+
+    <Border Background="{StaticResource TopBarBackgroundBrush}" CornerRadius="0,0,25,25"
+            BorderBrush="#4A4E7A"
+            BorderThickness="0,1,0,0">
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <StackPanel Grid.Column="0" 
+                        Orientation="Horizontal" 
+                        VerticalAlignment="Center" 
+                        HorizontalAlignment="Left"
+                        Margin="20,0,0,0">
+                <TextBlock Text="© 2024 FinTrack"
+                           Foreground="{StaticResource TopBarTextSecondaryBrush}"
+                           FontSize="12"/>
+                <TextBlock Text="|" 
+                           Foreground="{StaticResource TopBarTextSecondaryBrush}"
+                           Margin="10,0"/>
+                <TextBlock Foreground="{StaticResource TopBarTextSecondaryBrush}" FontSize="12">
+                    <Run Text="Version"/>
+                    <Run Text="{Binding AppVersion, FallbackValue='1.0.0'}"/>
+                </TextBlock>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1" 
+                        Orientation="Horizontal" 
+                        VerticalAlignment="Center">
+                <Image Source="/Assets/Images/Icons/sync.png" Width="14" Height="14" Opacity="0.7"/>
+                <TextBlock Text="{Binding LastSyncStatus, FallbackValue='Last sync: Just now'}"
+                           Foreground="{StaticResource TopBarTextSecondaryBrush}"
+                           FontSize="12"
+                           VerticalAlignment="Center"
+                           Margin="8,0,0,0"/>
+            </StackPanel>
+
+            <StackPanel Grid.Column="2" 
+                        HorizontalAlignment="Right" 
+                        VerticalAlignment="Center"
+                        Margin="0,0,20,0">
+
+                <Button Style="{StaticResource AccentButtonStyle}"
+                        Command="{Binding AddNewTransactionCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/Assets/Images/Icons/add.png" Width="16" Height="16" Margin="0,0,8,0"/>
+                        <TextBlock Text="ADD TRANSACTION"/>
+                    </StackPanel>
+                </Button>
+
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>
