@@ -1,0 +1,88 @@
+﻿<UserControl x:Class="FinTrack.Views.FeedbackView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="800" d:DesignWidth="1200"
+             Background="{StaticResource MainBackgroundBrush}">
+
+    <Grid Margin="40">
+        <Grid.ColumnDefinitions>
+            <!-- Sol Sütun: Form Alanı -->
+            <ColumnDefinition Width="1.8*"/>
+            <!-- Sağ Sütun: Bilgilendirme ve SSS -->
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- SOL SÜTUN: DESTEK FORMU -->
+        <Border Grid.Column="0" Style="{StaticResource DashboardCardStyle}" Margin="0,0,20,0">
+            <StackPanel>
+                <TextBlock Text="Teknik Destek ve Geri Bildirim" Style="{StaticResource CardTitleTextStyle}"/>
+                <TextBlock Text="Bir sorun mu yaşıyorsunuz veya bir öneriniz mi var? Aşağıdaki formu kullanarak bize ulaşın." 
+                           Foreground="{StaticResource TopBarTextSecondaryBrush}" TextWrapping="Wrap" Margin="0,5,0,0"/>
+                <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,15,0,20" Opacity="0.5"/>
+
+                <TextBlock Text="KONU" Style="{StaticResource LabelTextStyle}"/>
+                <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="Uygulama yavaş çalışıyor" Margin="0,0,0,15"/>
+
+                <TextBlock Text="BİLDİRİ TÜRÜ" Style="{StaticResource LabelTextStyle}"/>
+                <!-- Gerçek uygulamada burası ComboBox olmalı -->
+                <ComboBox Style="{StaticResource ModernComboBoxStyle}" SelectedIndex="0" Margin="0,0,0,15">
+                    <ComboBoxItem Content="Hata Bildirimi (Bug Report)"/>
+                    <ComboBoxItem Content="Özellik İsteği (Feature Request)"/>
+                    <ComboBoxItem Content="Genel Geri Bildirim"/>
+                    <ComboBoxItem Content="Hesap Sorunu"/>
+                </ComboBox>
+
+                <TextBlock Text="AÇIKLAMA" Style="{StaticResource LabelTextStyle}"/>
+                <TextBox Style="{StaticResource ModernTextBoxStyle}" 
+                         TextWrapping="Wrap" AcceptsReturn="True"
+                         Height="150" VerticalContentAlignment="Top"
+                         Text="Uygulamayı başlattıktan sonra dashboard ekranının yüklenmesi yaklaşık 10 saniye sürüyor. Özellikle istatistikler kartı geç geliyor."
+                         Margin="0,0,0,20"/>
+
+                <TextBlock Text="DOSYA EKLE (İsteğe Bağlı)" Style="{StaticResource LabelTextStyle}"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto" MinWidth="93"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Column="0" Style="{StaticResource ModernTextBoxStyle}" IsReadOnly="True" Text="screenshot-2024-05-21.png"/>
+                    <Button Grid.Column="1" Content="Gözat..." Style="{StaticResource SecondaryButtonStyle}" Margin="10,0,0,0"/>
+                </Grid>
+
+                <Button Content="GÖNDER" Style="{StaticResource PrimaryButtonStyle}" HorizontalAlignment="Right" Margin="0,30,0,0" Padding="30,10" Width="90"/>
+            </StackPanel>
+        </Border>
+
+        <!-- SAĞ SÜTUN: BİLGİLENDİRME VE SSS -->
+        <Border Grid.Column="1" Style="{StaticResource DashboardCardStyle}" Margin="20,0,0,0">
+            <StackPanel>
+                <TextBlock Text="Bilmeniz Gerekenler" Style="{StaticResource CardTitleTextStyle}"/>
+                <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,20" Opacity="0.5"/>
+
+                <TextBlock Text="Hızlı Çözümler İçin:" FontWeight="SemiBold" Foreground="{StaticResource TopBarTextPrimaryBrush}" FontSize="14"/>
+                <TextBlock Text="Sorun yaşamadan önce lütfen Sıkça Sorulan Sorular (SSS) bölümümüzü kontrol edin. Aradığınız çözüm orada olabilir." 
+                           Foreground="{StaticResource TopBarTextSecondaryBrush}" TextWrapping="Wrap" Margin="0,5,0,20"/>
+
+                <TextBlock Text="Sıkça Sorulan Sorular" FontWeight="SemiBold" Foreground="{StaticResource TopBarTextPrimaryBrush}" FontSize="14"/>
+                <!-- Gerçek uygulamada burası bir ItemsControl ile doldurulabilir -->
+                <StackPanel Margin="0,10,0,0">
+                    <TextBlock Margin="0,5"><Hyperlink NavigateUri="#" Foreground="{StaticResource AccentBlueBrush}">- Şifremi nasıl sıfırlarım?</Hyperlink></TextBlock>
+                    <TextBlock Margin="0,5"><Hyperlink NavigateUri="#" Foreground="{StaticResource AccentBlueBrush}">- Banka hesabımı senkronize edemiyorum.</Hyperlink></TextBlock>
+                    <TextBlock Margin="0,5"><Hyperlink NavigateUri="#" Foreground="{StaticResource AccentBlueBrush}">- Raporları dışa aktarırken hata alıyorum.</Hyperlink></TextBlock>
+                    <TextBlock Margin="0,5"><Hyperlink NavigateUri="#" Foreground="{StaticResource AccentBlueBrush}">- Üyelik planımı nasıl değiştiririm?</Hyperlink></TextBlock>
+                </StackPanel>
+
+                <Border Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10" Padding="15" Margin="0,30,0,0">
+                    <StackPanel>
+                        <TextBlock Text="Destek Yanıt Süresi" FontWeight="SemiBold" Foreground="White"/>
+                        <TextBlock Text="Taleplerinize genellikle 24 saat içinde yanıt veriyoruz. Anlayışınız için teşekkür ederiz." TextWrapping="Wrap" Foreground="{StaticResource TopBarTextSecondaryBrush}" Margin="0,5,0,0"/>
+                    </StackPanel>
+                </Border>
+
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>
