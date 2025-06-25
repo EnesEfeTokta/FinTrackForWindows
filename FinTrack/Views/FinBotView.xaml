@@ -1,0 +1,124 @@
+﻿<UserControl x:Class="FinTrack.Views.FinBotView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="800" d:DesignWidth="1200"
+             Background="{StaticResource MainBackgroundBrush}">
+
+    <UserControl.Resources>
+        <!-- Kullanıcı Mesaj Balonu Stili -->
+        <Style x:Key="UserMessageBorderStyle" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource PrimaryAccentBrush}"/>
+            <!-- Mor tonu -->
+            <Setter Property="CornerRadius" Value="20,20,5,20"/>
+            <Setter Property="Padding" Value="15"/>
+            <Setter Property="Margin" Value="80,5,5,5"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="MaxWidth" Value="450"/>
+        </Style>
+
+        <!-- FinBot Mesaj Balonu Stili -->
+        <Style x:Key="BotMessageBorderStyle" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource CardDarkerBackgroundBrush}"/>
+            <Setter Property="CornerRadius" Value="20,20,20,5"/>
+            <Setter Property="Padding" Value="15"/>
+            <Setter Property="Margin" Value="5,5,80,5"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="MaxWidth" Value="450"/>
+        </Style>
+
+        <!-- Hızlı Eylem Buton Stili -->
+        <Style x:Key="QuickActionButtonStyle" TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
+            <Setter Property="Background" Value="{StaticResource CardDarkerBackgroundBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TopBarTextSecondaryBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource ProgressBarBackgroundBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="15,10"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Margin="50">
+        <Border Style="{StaticResource DashboardCardStyle}" Padding="0">
+            <DockPanel>
+                <!-- ÜST BAR: BOT BİLGİSİ -->
+                <Border DockPanel.Dock="Top" Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="20,20,0,0" Padding="20">
+                    <StackPanel Orientation="Horizontal">
+                        <Border Background="{StaticResource DebtAccentGradientBrush}" CornerRadius="20" Width="40" Height="40">
+                            <Image Source="/Assets/Images/chatbot.png" Width="22" Height="22"/>
+                        </Border>
+                        <StackPanel Margin="15,0,0,0" VerticalAlignment="Center">
+                            <TextBlock Text="FinBot" FontSize="18" FontWeight="Bold" Foreground="White"/>
+                            <TextBlock Foreground="{StaticResource StatusGreenBrush}">
+                                <Ellipse Fill="{StaticResource StatusGreenBrush}" Width="8" Height="8" Margin="0,0,5,0"/>
+                                Çevrimiçi
+                            </TextBlock>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- ALT BAR: MESAJ GİRİŞ ALANI -->
+                <Border DockPanel.Dock="Bottom" Padding="15" BorderBrush="{StaticResource ProgressBarBackgroundBrush}" BorderThickness="0,1,0,0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Text="Bir mesaj yazınız..." Grid.Column="0" Style="{StaticResource ModernTextBoxStyle}" Tag="Bir mesaj yazın..." VerticalContentAlignment="Center" FontSize="14" BorderThickness="2" BorderBrush="{StaticResource TopBarAccentBrush}"/>
+                        <Button Grid.Column="1" Style="{StaticResource AccentButtonStyle}" Width="45" Height="45" Margin="10,0,0,0">
+                            <Image Source="/Assets/Images/Icons/send-message.png" Width="22" Height="22"/>
+                        </Button>
+                    </Grid>
+                </Border>
+
+                <!-- ORTA BÖLÜM: SOHBET GEÇMİŞİ -->
+                <ScrollViewer x:Name="ChatScrollViewer" VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="20">
+                        <!-- Örnek Sohbet Başlangıcı -->
+                        <Border Style="{StaticResource BotMessageBorderStyle}">
+                            <TextBlock Text="Merhaba! Ben FinBot, kişisel finans asistanınız. Size nasıl yardımcı olabilirim?" TextWrapping="Wrap" Foreground="White"/>
+                        </Border>
+
+                        <!-- Örnek Kullanıcı Mesajı -->
+                        <Border Style="{StaticResource UserMessageBorderStyle}">
+                            <TextBlock Text="Son işlemimi nasıl görebilirim?" TextWrapping="Wrap" Foreground="White"/>
+                        </Border>
+
+                        <!-- Örnek Bot Cevabı -->
+                        <Border Style="{StaticResource BotMessageBorderStyle}">
+                            <StackPanel>
+                                <TextBlock Text="Elbette! Son işleminiz 'Aylık Kira Ödemesi' olarak görünüyor. İşte detayları:" TextWrapping="Wrap" Foreground="White"/>
+                                <Border Background="#1A1C2C" CornerRadius="8" Padding="10" Margin="0,10,0,0">
+                                    <TextBlock Foreground="{StaticResource TopBarTextSecondaryBrush}">
+                                        <Run Text="Tutar:"/> <Run Text="$1.500" FontWeight="Bold" Foreground="{StaticResource StatusRedBrush}"/><LineBreak/>
+                                        <Run Text="Tarih:"/> <Run Text="05 Mayıs 2024" FontWeight="Bold"/><LineBreak/>
+                                        <Run Text="Hesap:"/> <Run Text="QNB Bank" FontWeight="Bold"/>
+                                    </TextBlock>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Örnek Bot Mesajı (Hızlı Eylemlerle) -->
+                        <Border Style="{StaticResource BotMessageBorderStyle}">
+                            <StackPanel>
+                                <TextBlock Text="Başka bir konuda yardımcı olabilir miyim? Aşağıdaki seçeneklerden birini seçebilir veya sorunuzu yazabilirsiniz." TextWrapping="Wrap" Foreground="White"/>
+                                <WrapPanel Margin="0,10,0,0">
+                                    <Button Content="Yeni Bütçe Oluştur" Style="{StaticResource QuickActionButtonStyle}"/>
+                                    <Button Content="Hesap Bakiyem" Style="{StaticResource QuickActionButtonStyle}"/>
+                                    <Button Content="Rapor Oluştur" Style="{StaticResource QuickActionButtonStyle}"/>
+                                </WrapPanel>
+                            </StackPanel>
+                        </Border>
+                        <!-- Örnek Kullanıcı Mesajı -->
+                        <Border Style="{StaticResource UserMessageBorderStyle}">
+                            <TextBlock Text="Teşekkürler, bu kadar." TextWrapping="Wrap" Foreground="White"/>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+
+            </DockPanel>
+        </Border>
+    </Grid>
+</UserControl>

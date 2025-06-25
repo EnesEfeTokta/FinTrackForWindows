@@ -1,0 +1,148 @@
+﻿<UserControl x:Class="FinTrack.Views.DebtView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="850" d:DesignWidth="1600"
+             Background="{StaticResource MainBackgroundBrush}">
+
+    <Grid Margin="30">
+        <Grid.ColumnDefinitions>
+            <!-- Sol Sütun: Eylem Alanları -->
+            <ColumnDefinition Width="1.2*"/>
+            <!-- Sağ Sütun: Ana Liste (daha geniş) -->
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- SOL SÜTUN: TEKLİF OLUŞTURMA VE GELEN TEKLİFLER -->
+        <StackPanel Grid.Column="0" Margin="0,0,20,0">
+            <!-- Borç Teklifi Oluşturma Kartı -->
+            <Border Style="{StaticResource DashboardCardStyle}">
+                <StackPanel>
+                    <TextBlock Text="Yeni Borç Teklifi Oluştur" Style="{StaticResource CardTitleTextStyle}"/>
+                    <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,15" Opacity="0.5"/>
+                    <TextBlock Text="BORÇ ALANIN E-POSTASI" Style="{StaticResource LabelTextStyle}"/>
+                    <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="ornek.kullanici@email.com" Margin="0,0,0,15"/>
+                    <TextBlock Text="BORÇ MİKTARI" Style="{StaticResource LabelTextStyle}"/>
+                    <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="5000" Margin="0,0,0,15"/>
+                    <TextBlock Text="SON ÖDEME TARİHİ" Style="{StaticResource LabelTextStyle}"/>
+                    <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="31.12.2024" Margin="0,0,0,25"/>
+                    <Button Content="TEKLİF GÖNDER" Style="{StaticResource PrimaryButtonStyle}"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Bana Gelen Teklifler Kartı -->
+            <Border Style="{StaticResource DashboardCardStyle}" Margin="0,20,0,0">
+                <StackPanel>
+                    <TextBlock Text="Onayımı Bekleyen Teklifler" Style="{StaticResource CardTitleTextStyle}"/>
+                    <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,15" Opacity="0.5"/>
+                    <!-- Örnek Gelen Teklif -->
+                    <Border Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10" Padding="15">
+                        <Grid>
+                            <StackPanel>
+                                <TextBlock Foreground="White"><Run Text="Ahmet Yılmaz" FontWeight="Bold"/> size bir borç teklifi gönderdi.</TextBlock>
+                                <TextBlock Text="Tutar: 500 TRY | Son Ödeme: 15.06.2024" Foreground="{StaticResource TopBarTextSecondaryBrush}" Margin="0,5,0,10"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Content="Onayla" Style="{StaticResource PrimaryButtonStyle}" Background="{StaticResource StatusGreenBrush}" Padding="15,8" Margin="10,0,0,0" Width="60"/>
+                                    <Button Content="Reddet" Style="{StaticResource PrimaryButtonStyle}" Background="{StaticResource StatusRedBrush}" Padding="15,8" Margin="10,0,0,0" Width="60"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                    <!-- ... Diğer gelen teklifler ... -->
+                </StackPanel>
+            </Border>
+        </StackPanel>
+
+        <!-- SAĞ SÜTUN: TÜM BORÇLARIM LİSTESİ -->
+        <Border Grid.Column="1" Style="{StaticResource DashboardCardStyle}" Margin="20,0,0,0">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Top" Text="Tüm Borçlarım (Verilen ve Alınan)" Style="{StaticResource CardTitleTextStyle}"/>
+                <Border DockPanel.Dock="Top" BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,15" Opacity="0.5"/>
+
+                <ListView Background="Transparent" BorderThickness="0" ItemContainerStyle="{StaticResource CleanListViewItemStyle}">
+                    <!-- Örnek 1: Video Yüklenmesi Beklenen Borç -->
+                    <ListViewItem>
+                        <Border Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10" Padding="15">
+                            <StackPanel>
+                                <Grid>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="/Assets/Images/Icons/user-green.png" Width="25" Height="25"/>
+                                        <TextBlock Text="Size olan borç: Eylül Korkmaz" Foreground="White" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                                    </StackPanel>
+                                    <TextBlock Text="2.500 TRY" Foreground="White" FontSize="16" FontWeight="SemiBold" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                                </Grid>
+                                <Separator Margin="0,10" Background="{StaticResource ProgressBarBackgroundBrush}"/>
+                                <Grid>
+                                    <TextBlock Text="Durum: Video Onayı Bekleniyor" Foreground="{StaticResource AccentBlueBrush}" VerticalAlignment="Center"/>
+                                    <Button Content="Onay Videosu Yükle" HorizontalAlignment="Right" Style="{StaticResource PrimaryButtonStyle}" Background="{StaticResource AccentBlueBrush}" Padding="10,5" ToolTip="Bu butona sadece borç alan (Eylül) tıklayabilir." Width="180"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                    </ListViewItem>
+
+                    <!-- Örnek 2: Aktif Borç -->
+                    <ListViewItem>
+                        <Border Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10" Padding="15">
+                            <StackPanel>
+                                <Grid>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="/Assets/Images/Icons/user-red.png" Width="25" Height="25"/>
+                                        <TextBlock Text="Borcunuz: Sinem Berçem" Foreground="White" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                                    </StackPanel>
+                                    <TextBlock Text="30.000 TRY" Foreground="White" FontSize="16" FontWeight="SemiBold" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                                </Grid>
+                                <Separator Margin="0,10" Background="{StaticResource ProgressBarBackgroundBrush}"/>
+                                <Grid>
+                                    <TextBlock Text="Durum: Aktif - Yürürlükte" Foreground="{StaticResource StatusGreenBrush}" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Son Ödeme: 31.08.2024" HorizontalAlignment="Right" Foreground="{StaticResource TopBarTextSecondaryBrush}"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                    </ListViewItem>
+
+                    <!-- Örnek 3: Operatör Onayı Bekleyen Borç -->
+                    <ListViewItem>
+                        <Border Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10" Padding="15">
+                            <StackPanel>
+                                <Grid>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="/Assets/Images/Icons/user-red.png" Width="25" Height="25"/>
+                                        <TextBlock Text="Size olan borç: Ali Veli" Foreground="White" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                                    </StackPanel>
+                                    <TextBlock Text="800.000 TRY" Foreground="White" FontSize="16" FontWeight="SemiBold" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                                </Grid>
+                                <Separator Margin="0,10" Background="{StaticResource ProgressBarBackgroundBrush}"/>
+                                <Grid>
+                                    <TextBlock Text="Durum: FinTrack Operatör Onayı Bekliyor" Foreground="Orange" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Video Yüklendi" HorizontalAlignment="Right" Foreground="{StaticResource TopBarTextSecondaryBrush}"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                    </ListViewItem>
+
+                    <!-- Örnek 4: Reddedilmiş Borç -->
+                    <ListViewItem>
+                        <Border Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10" Padding="15" Opacity="0.6">
+                            <StackPanel>
+                                <Grid>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="/Assets/Images/Icons/user-red.png" Width="25" Height="25"/>
+                                        <TextBlock Text="Size olan borç: Canan Aslan" Foreground="White" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                                    </StackPanel>
+                                    <TextBlock Text="1.000 TRY" Foreground="White" FontSize="16" FontWeight="SemiBold" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                                </Grid>
+                                <Separator Margin="0,10" Background="{StaticResource ProgressBarBackgroundBrush}"/>
+                                <Grid>
+                                    <TextBlock Text="Durum: Operatör Tarafından Reddedildi" Foreground="{StaticResource StatusRedBrush}" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Sebep: Video Yetersiz" HorizontalAlignment="Right" Foreground="{StaticResource TopBarTextSecondaryBrush}"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                    </ListViewItem>
+                </ListView>
+            </DockPanel>
+        </Border>
+    </Grid>
+</UserControl>

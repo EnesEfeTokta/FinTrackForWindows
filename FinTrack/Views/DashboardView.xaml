@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:viewmodels="clr-namespace:FinTrack.ViewModels"
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance Type=viewmodels:DashboardViewModel, IsDesignTimeCreatable=True}"
              Background="{StaticResource MainBackgroundBrush}"
@@ -376,7 +375,7 @@
                         <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,20" Opacity="0.5"/>
 
                         <UniformGrid Columns="2">
-                            <Border Style="{StaticResource SubCardStyle}">
+                            <Border Style="{StaticResource BudgetSubCardStyle}">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
@@ -400,7 +399,7 @@
                             </Border>
 
                             <!-- Rapor Kartı: Hesaplar -->
-                            <Border Style="{StaticResource SubCardStyle}">
+                            <Border Style="{StaticResource BudgetSubCardStyle}">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
@@ -422,7 +421,7 @@
                             </Border>
 
                             <!-- Rapor Kartı: İşlemler -->
-                            <Border Style="{StaticResource SubCardStyle}">
+                            <Border Style="{StaticResource BudgetSubCardStyle}">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
@@ -444,7 +443,7 @@
                             </Border>
 
                             <!-- Ekle Kartı -->
-                            <Border Style="{StaticResource SubCardStyle}">
+                            <Border Style="{StaticResource BudgetSubCardStyle}">
                                 <TextBlock Text="Ekle" FontSize="20" FontWeight="SemiBold" 
                                            HorizontalAlignment="Center" VerticalAlignment="Center" 
                                            Foreground="{StaticResource TopBarTextSecondaryBrush}" Opacity="0.8"/>

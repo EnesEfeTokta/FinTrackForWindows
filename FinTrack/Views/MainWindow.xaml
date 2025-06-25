@@ -29,7 +29,7 @@
         <ContentControl Grid.Row="1" Content="{Binding CurrentCenterViewModel}"/>
         -->
 
-        <views:DashboardView Grid.Row="1"/>
+        <views:SettingsView Grid.Row="1"/>
 
         <views:BottomBarView Grid.Row="2"/>
     </Grid>

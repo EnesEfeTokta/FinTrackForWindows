@@ -11,17 +11,22 @@
   <ItemGroup>
     <None Remove="Assets\Images\chatbot.png" />
     <None Remove="Assets\Images\Icons\add.png" />
+    <None Remove="Assets\Images\Icons\bank.png" />
     <None Remove="Assets\Images\Icons\bell.png" />
     <None Remove="Assets\Images\Icons\conversation.png" />
+    <None Remove="Assets\Images\Icons\delete.png" />
     <None Remove="Assets\Images\Icons\done.png" />
+    <None Remove="Assets\Images\Icons\edit.png" />
     <None Remove="Assets\Images\Icons\email.png" />
     <None Remove="Assets\Images\Icons\eyeclose.png" />
     <None Remove="Assets\Images\Icons\eyeopen.png" />
     <None Remove="Assets\Images\Icons\login.png" />
     <None Remove="Assets\Images\Icons\message.png" />
+    <None Remove="Assets\Images\Icons\money.png" />
     <None Remove="Assets\Images\Icons\padlock.png" />
     <None Remove="Assets\Images\Icons\passwordpanel.png" />
     <None Remove="Assets\Images\Icons\report.png" />
+    <None Remove="Assets\Images\Icons\send-message.png" />
     <None Remove="Assets\Images\Icons\settings.png" />
     <None Remove="Assets\Images\Icons\sync.png" />
     <None Remove="Assets\Images\Icons\tick.png" />
@@ -56,8 +61,13 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\Images\Icons\add.png" />
+    <Resource Include="Assets\Images\Icons\bank.png" />
     <Resource Include="Assets\Images\Icons\bell.png" />
+    <Resource Include="Assets\Images\Icons\delete.png" />
+    <Resource Include="Assets\Images\Icons\edit.png" />
+    <Resource Include="Assets\Images\Icons\money.png" />
     <Resource Include="Assets\Images\Icons\report.png" />
+    <Resource Include="Assets\Images\Icons\send-message.png" />
     <Resource Include="Assets\Images\Icons\settings.png" />
     <Resource Include="Assets\Images\Icons\sync.png" />
     <Resource Include="Assets\Images\Icons\user-green.png" />
