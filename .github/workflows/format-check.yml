@@ -21,4 +21,5 @@ jobs:
         run: dotnet tool install -g dotnet-format
 
       - name: Check formatting
+        working-directory: ./FinTrack 
         run: dotnet format --verify-no-changes
