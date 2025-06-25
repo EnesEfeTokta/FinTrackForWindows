@@ -20,13 +20,13 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: Restore dependencies
-        working-directory: ./FinTrackWebApi 
+        working-directory: ./FinTrack
         run: dotnet restore
 
       - name: Build
-        working-directory: ./FinTrackWebApi
+        working-directory: ./FinTrack
         run: dotnet build --no-restore --configuration Release
 
       - name: Run Tests
-        working-directory: ./FinTrackWebApi
+        working-directory: ./FinTrack
         run: dotnet test --no-build --configuration Release --verbosity normal
