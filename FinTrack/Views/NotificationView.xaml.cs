@@ -3,11 +3,11 @@
 namespace FinTrack.Views
 {
     /// <summary>
-    /// Interaction logic for TopBarView.xaml
+    /// Interaction logic for NotificationView.xaml
     /// </summary>
-    public partial class TopBarView : UserControl
+    public partial class NotificationView : UserControl
     {
-        public TopBarView()
+        public NotificationView()
         {
             InitializeComponent();
         }

@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using FinTrack.Core;
+using FinTrack.Services;
 using System.Windows;
 
 namespace FinTrack.ViewModels
@@ -21,10 +23,30 @@ namespace FinTrack.ViewModels
         public event Action? NavigateToRegisterRequested;
         public event Action? NavigateToForgotPasswordRequested;
 
-        [RelayCommand]
-        private void Login_LoginView_Button()
+        private readonly AuthService _authService;
+
+        public LoginViewModel()
         {
-            MessageBox.Show($"Giriş yapılıyor: Email={Email_LoginView_TextBox}, Password={Password_LoginView_TextBox}");
+            _authService = new AuthService();
+        }
+
+        [RelayCommand]
+        private async Task Login_LoginView_Button()
+        {
+            if (string.IsNullOrEmpty(Email_LoginView_TextBox) || string.IsNullOrEmpty(Password_LoginView_TextBox))
+            {
+                MessageBox.Show("Lütfen e-posta ve şifre alanlarını doldurun.", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            string token = await _authService.LoginAsync(Email_LoginView_TextBox, Password_LoginView_TextBox);
+            if (string.IsNullOrEmpty(token))
+            {
+                MessageBox.Show("Giriş başarısız oldu. Lütfen e-posta ve şifrenizi kontrol edin.", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            SessionManager.SetToken(token);
+            MessageBox.Show("Giriş başarılı!", "Bilgi", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         [RelayCommand]
