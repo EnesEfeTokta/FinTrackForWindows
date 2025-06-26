@@ -2,7 +2,7 @@
 {
     public static class SessionManager
     {
-        public static string CurrentToken { get; private set; } 
+        public static string CurrentToken { get; private set; }
 
         public static void SetToken(string token)
         {
