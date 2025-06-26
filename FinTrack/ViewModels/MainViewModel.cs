@@ -27,8 +27,10 @@ namespace FinTrack.ViewModels
             _loginViewModel.NavigateToForgotPasswordRequested += () => CurrentViewModel = _forgotPasswordViewModel;
 
             _registerViewModel.NavigateToLoginRequested += () => CurrentViewModel = _loginViewModel;
+            _registerViewModel.NavigateToOtpVerificationRequested += () => CurrentViewModel = _otpVerificationViewModel;
 
-            _otpVerificationViewModel.NavigateToHomeRequested += () => CurrentViewModel = _loginViewModel;
+            _otpVerificationViewModel.NavigateToLoginRequested += () => CurrentViewModel = _loginViewModel;
+            _otpVerificationViewModel.NavigateToRegisterRequested += () => CurrentViewModel = _registerViewModel;
 
             _forgotPasswordViewModel.NavigateToLoginRequested += () => CurrentViewModel = _loginViewModel;
 

@@ -11,15 +11,15 @@ namespace FinTrack.Models
         public int Id { get; set; }
 
         [Required]
-        [Column("Budget")]
+        [Column("BudgetId")]
         public int BudgetId { get; set; }
-        [ForeignKey("Budget")]
+        [ForeignKey("BudgetId")]
         public virtual BudgetModel Budget { get; set; } = null!;
 
         [Required]
-        [Column("Category")]
+        [Column("CategoryId")]
         public int CategoryId { get; set; }
-        [ForeignKey("Category")]
+        [ForeignKey("CategoryId")]
         public virtual CategoryModel Category { get; set; } = null!;
 
         [Required]

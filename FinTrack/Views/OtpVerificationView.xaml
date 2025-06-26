@@ -98,11 +98,11 @@
                     Style="{StaticResource LinkButtonStyle}" 
                     HorizontalAlignment="Right"
                     Margin="0,5,0,20"
-                    Command="{Binding CodeNotFoundCommand_OtpVerificationView_Button}"/>
+                    Command="{Binding CodeNotFound_OtpVerificationView_ButtonCommand}"/>
 
             <Button Content="VERIFY" 
                     Style="{StaticResource PrimaryButtonStyle}"
-                    Command="{Binding VerifyOtpCodeCommand_OtpVerificationView_Button}"/>
+                    Command="{Binding VerifyOtpCode_OtpVerificationView_ButtonCommand}"/>
 
             <StackPanel Orientation="Horizontal" 
                         HorizontalAlignment="Center" 
@@ -112,7 +112,7 @@
 
                 <Button Content="Sign Up" 
                         Style="{StaticResource LinkButtonStyle}" 
-                        Command="{Binding NavigateToRegisterCommand_OtpVerificationView_Button}"/>
+                        Command="{Binding NavigateToRegister_OtpVerificationView_ButtonCommand}"/>
             </StackPanel>
         </StackPanel>
     </Border>

@@ -11,9 +11,9 @@ namespace FinTrack.Models
         public string NotificationId { get; set; } = string.Empty;
 
         [Required]
-        [Column("User")]
+        [Column("UserId")]
         public int UserId { get; set; }
-        [ForeignKey("User")]
+        [ForeignKey("UserId")]
         public virtual UserModel User { get; set; } = null!;
 
         [Required]

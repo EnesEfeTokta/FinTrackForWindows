@@ -27,6 +27,9 @@
         <DataTemplate DataType="{x:Type viewmodels:ForgotPasswordViewModel}">
             <views:ForgotPasswordView/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:OtpVerificationViewModel}">
+            <views:OtpVerificationView/>
+        </DataTemplate>
     </Window.Resources>
 
     <Border Background="{StaticResource BackgroundBrush}" 
