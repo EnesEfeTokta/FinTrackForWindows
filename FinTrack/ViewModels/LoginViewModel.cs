@@ -1,8 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System.Windows;
 using FinTrack.Core;
 using FinTrack.Services;
+using System.Windows;
 
 namespace FinTrack.ViewModels
 {

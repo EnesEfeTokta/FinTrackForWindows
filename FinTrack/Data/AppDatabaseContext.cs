@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using FinTrack.Models;
+﻿using FinTrack.Models;
+using Microsoft.EntityFrameworkCore;
 using System.IO;
 
 namespace FinTrack.Data

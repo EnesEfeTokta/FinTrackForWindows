@@ -2,7 +2,6 @@
 using CommunityToolkit.Mvvm.Input;
 using FinTrack.Core;
 using FinTrack.Services;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace FinTrack.ViewModels
