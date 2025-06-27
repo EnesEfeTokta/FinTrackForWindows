@@ -4,12 +4,12 @@ using System.Windows.Input;
 
 namespace FinTrack
 {
-    public partial class LoginWindow : Window
+    public partial class AuthenticatorWindow : Window
     {
-        public LoginWindow()
+        public AuthenticatorWindow()
         {
             InitializeComponent();
-            this.DataContext = new MainViewModel();
+            this.DataContext = new AuthenticatorViewModel();
         }
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

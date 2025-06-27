@@ -7,7 +7,7 @@ namespace FinTrack
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            new LoginWindow().Show();
+            new AuthenticatorWindow().Show();
         }
     }
 }
