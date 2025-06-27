@@ -38,5 +38,9 @@ namespace FinTrack.Models
         [Column("EntryDate")]
         [DataType(DataType.DateTime)]
         public DateTime EntryDate { get; set; } = DateTime.UtcNow;
+
+        [Required]
+        [Column("IsSynced")]
+        public bool IsSynced { get; set; } = false;
     }
 }

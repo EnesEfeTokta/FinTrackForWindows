@@ -26,5 +26,9 @@ namespace FinTrack.Models
         [Column("AllocatedAmount", TypeName = "decimal(18, 2)")]
         [Range(0.00, (double)decimal.MaxValue)]
         public decimal AllocatedAmount { get; set; }
+
+        [Required]
+        [Column("IsSynced")]
+        public bool IsSynced { get; set; } = false;
     }
 }
