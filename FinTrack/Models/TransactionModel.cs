@@ -58,5 +58,9 @@ namespace FinTrack.Models
         [Column("UpdatedAt")]
         [DataType(DataType.DateTime)]
         public DateTime? UpdatedAtUtc { get; set; }
+
+        [Required]
+        [Column("IsSynced")]
+        public bool IsSynced { get; set; } = false;
     }
 }

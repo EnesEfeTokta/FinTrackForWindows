@@ -24,6 +24,10 @@ namespace FinTrack.Models
         [Column("CategoryType")]
         public CategoryType Type { get; set; }
 
+        [Required]
+        [Column("IsSynced")]
+        public bool IsSynced { get; set; } = false;
+
         public virtual ICollection<BudgetCategoryModel> BudgetAllocations { get; set; } = new List<BudgetCategoryModel>();
         public virtual ICollection<TransactionModel> Transactions { get; set; } = new List<TransactionModel>();
     }

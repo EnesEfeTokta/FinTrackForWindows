@@ -42,6 +42,10 @@ namespace FinTrack.Models
         [Column("UpdateAt")]
         public DateTime? UpdatedAtUtc { get; set; }
 
+        [Required]
+        [Column("IsSynced")]
+        public bool IsSynced { get; set; } = false;
+
         public virtual ICollection<TransactionModel> Transactions { get; set; } = new List<TransactionModel>();
     }
 

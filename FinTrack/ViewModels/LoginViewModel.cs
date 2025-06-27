@@ -28,6 +28,19 @@ namespace FinTrack.ViewModels
         public LoginViewModel()
         {
             _authService = new AuthService();
+
+            RegisteredTokenLogin();
+        }
+
+        private void RegisteredTokenLogin()
+        {
+            SecureTokenStorage secureTokenStorage = new SecureTokenStorage();
+            string? token = secureTokenStorage.GetToken();
+            if (!string.IsNullOrEmpty(token))
+            {
+                SessionManager.SetToken(token);
+                MessageBox.Show("Giriş başarılı! Token kullanıldı.", "Bilgi", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
         }
 
         [RelayCommand]
@@ -45,7 +58,12 @@ namespace FinTrack.ViewModels
                 MessageBox.Show("Giriş başarısız oldu. Lütfen e-posta ve şifrenizi kontrol edin.", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
+
             SessionManager.SetToken(token);
+
+            SecureTokenStorage secureTokenStorage = new SecureTokenStorage();
+            secureTokenStorage.SaveToken(token);
+
             MessageBox.Show("Giriş başarılı!", "Bilgi", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 

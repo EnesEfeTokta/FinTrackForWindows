@@ -45,6 +45,10 @@ namespace FinTrack.Models
         [Column("UpdatedAtUtc")]
         public DateTime? UpdatedAtUtc { get; set; }
 
+        [Required]
+        [Column("IsSynced")]
+        public bool IsSynced { get; set; } = false;
+
         public virtual ICollection<BudgetCategoryModel> BudgetCategories { get; set; } = new List<BudgetCategoryModel>();
     }
 }

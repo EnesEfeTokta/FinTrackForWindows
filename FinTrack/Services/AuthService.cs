@@ -13,7 +13,7 @@ namespace FinTrack.Services
         {
             _httpClient = new HttpClient
             {
-                BaseAddress = new Uri("http://localhost:5246/")
+                BaseAddress = new Uri("http://localhost:5000/")
             };
 
             _httpClient.DefaultRequestHeaders.Accept.Clear();
