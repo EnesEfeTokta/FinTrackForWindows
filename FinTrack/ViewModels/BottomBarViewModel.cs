@@ -1,6 +1,8 @@
-﻿namespace FinTrack.ViewModels
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+
+namespace FinTrack.ViewModels
 {
-    internal class BottomBarViewModel
+    public partial class BottomBarViewModel : ObservableObject
     {
     }
 }

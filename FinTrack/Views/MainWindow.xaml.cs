@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using FinTrack.ViewModels;
+using System.Windows;
 
 namespace FinTrack.Views
 {
@@ -7,6 +8,7 @@ namespace FinTrack.Views
         public MainWindow()
         {
             InitializeComponent();
+            this.DataContext = new MainViewModel();
         }
     }
 }

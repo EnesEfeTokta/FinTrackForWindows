@@ -1,6 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using FinTrack.Core;
+using FinTrack.Messages;
 using FinTrack.Services;
 using System.Windows;
 
@@ -28,11 +30,10 @@ namespace FinTrack.ViewModels
         public LoginViewModel()
         {
             _authService = new AuthService();
-
-            RegisteredTokenLogin();
+            SavedTokenLogin();
         }
 
-        private void RegisteredTokenLogin()
+        private void SavedTokenLogin()
         {
             SecureTokenStorage secureTokenStorage = new SecureTokenStorage();
             string? token = secureTokenStorage.GetToken();
@@ -40,12 +41,14 @@ namespace FinTrack.ViewModels
             {
                 SessionManager.SetToken(token);
                 MessageBox.Show("Giriş başarılı! Token kullanıldı.", "Bilgi", MessageBoxButton.OK, MessageBoxImage.Information);
+                WeakReferenceMessenger.Default.Send(new LoginSuccessMessage());
             }
         }
 
         [RelayCommand]
         private async Task Login_LoginView_Button()
         {
+            WeakReferenceMessenger.Default.Send(new LoginSuccessMessage());
             if (string.IsNullOrEmpty(Email_LoginView_TextBox) || string.IsNullOrEmpty(Password_LoginView_TextBox))
             {
                 MessageBox.Show("Lütfen e-posta ve şifre alanlarını doldurun.", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -65,6 +68,8 @@ namespace FinTrack.ViewModels
             secureTokenStorage.SaveToken(token);
 
             MessageBox.Show("Giriş başarılı!", "Bilgi", MessageBoxButton.OK, MessageBoxImage.Information);
+
+            WeakReferenceMessenger.Default.Send(new LoginSuccessMessage());
         }
 
         [RelayCommand]

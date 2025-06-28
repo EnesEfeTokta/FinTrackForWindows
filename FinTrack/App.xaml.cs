@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using FinTrack.Views;
+using System.Windows;
 
 namespace FinTrack
 {
@@ -7,7 +8,7 @@ namespace FinTrack
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            new AuthenticatorWindow().Show();
+            new MainWindow().Show(); // Şimdlik böyle olsun
         }
     }
 }

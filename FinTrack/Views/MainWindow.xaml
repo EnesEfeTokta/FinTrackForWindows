@@ -16,6 +16,62 @@
         <viewmodels:MainViewModel/>
     </Window.DataContext>
 
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type viewmodels:TopBarViewModel}">
+            <views:TopBarView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewmodels:BottomBarViewModel}">
+            <views:BottomBarView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewmodels:DashboardViewModel}">
+            <views:DashboardView/>
+        </DataTemplate>
+        
+        <DataTemplate DataType="{x:Type viewmodels:AccountViewModel}">
+            <views:AccountView/>
+        </DataTemplate>
+        
+        <DataTemplate DataType="{x:Type viewmodels:BudgetViewModel}">
+            <views:BudgetView/>
+        </DataTemplate>
+        
+        <DataTemplate DataType="{x:Type viewmodels:TransactionsViewModel}">
+            <views:TransactionsView/>
+        </DataTemplate>
+        
+        <DataTemplate DataType="{x:Type viewmodels:DebtViewModel}">
+            <views:DebtView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewmodels:ReportsViewModel}">
+            <views:ReportsView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewmodels:CurrenciesViewModel}">
+            <views:CurrenciesView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewmodels:FinBotViewModel}">
+            <views:FinBotView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewmodels:NotificationViewModel}">
+            <views:NotificationView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewmodels:FeedbackViewModel}">
+            <views:FeedbackView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewmodels:SettingsViewModel}">
+            <views:SettingsView/>
+        </DataTemplate>
+
+    </Window.Resources>
+
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -23,10 +79,10 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <views:TopBarView Grid.Row="0"/>
+        <ContentControl Grid.Row="0" Content="{Binding TopBarViewModel}"/>
 
         <ContentControl Grid.Row="1" Content="{Binding CurrentCenterViewModel}"/>
 
-        <views:BottomBarView Grid.Row="2"/>
+        <ContentControl Grid.Row="2" Content="{Binding BottomBarViewModel}"/>
     </Grid>
 </Window>
