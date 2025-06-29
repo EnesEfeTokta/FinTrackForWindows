@@ -39,6 +39,14 @@ namespace FinTrack.ViewModels
             string? token = secureTokenStorage.GetToken();
             if (!string.IsNullOrEmpty(token))
             {
+                bool isValid = TokenValidator.IsTokenValid(token);
+                if (!isValid)
+                {
+                    MessageBox.Show("Token geçersiz. Lütfen tekrar giriş yapın.", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
+                    SessionManager.ClearToken();
+                    secureTokenStorage.ClearToken();
+                }
+
                 SessionManager.SetToken(token);
                 MessageBox.Show("Giriş başarılı! Token kullanıldı.", "Bilgi", MessageBoxButton.OK, MessageBoxImage.Information);
                 WeakReferenceMessenger.Default.Send(new LoginSuccessMessage());
