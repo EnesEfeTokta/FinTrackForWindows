@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.Extensions.Logging;
 
 namespace FinTrack.ViewModels
 {
@@ -13,13 +14,13 @@ namespace FinTrack.ViewModels
         private readonly ForgotPasswordViewModel _forgotPasswordViewModel;
         private readonly ApplicationRecognizeSlideViewModel _applicationRecognizeSlideViewModel;
 
-        public AuthenticatorViewModel()
+        public AuthenticatorViewModel(
+            LoginViewModel loginViewModel,
+            RegisterViewModel registerViewModel,
+            OtpVerificationViewModel otpVerificationViewModel,
+            ForgotPasswordViewModel forgotPasswordViewModel,
+            ApplicationRecognizeSlideViewModel applicationRecognizeSlideViewModel)
         {
-            _loginViewModel = new LoginViewModel();
-            _registerViewModel = new RegisterViewModel();
-            _otpVerificationViewModel = new OtpVerificationViewModel();
-            _forgotPasswordViewModel = new ForgotPasswordViewModel();
-            _applicationRecognizeSlideViewModel = new ApplicationRecognizeSlideViewModel();
 
             _applicationRecognizeSlideViewModel.NavigateToLoginRequested += () => CurrentViewModel = _loginViewModel;
 

@@ -1,4 +1,7 @@
-﻿using FinTrack.Views;
+﻿using FinTrack.Core;
+using FinTrack.Services;
+using FinTrack.ViewModels;
+using FinTrack.Views;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -33,9 +36,29 @@ namespace FinTrack
             services.AddSingleton<MainWindow>();
             services.AddTransient<AuthenticatorWindow>();
 
-            // Diğer servisleriniz ve ViewModel'larınız da buraya eklenecek
-            // services.AddTransient<MainViewModel>();
-            // services.AddSingleton<IApiService, ApiService>();
+            services.AddTransient<MainViewModel>();
+            services.AddTransient<LoginViewModel>();
+            services.AddTransient<RegisterViewModel>();
+            services.AddTransient<OtpVerificationViewModel>();
+            services.AddTransient<ForgotPasswordViewModel>();
+            services.AddTransient<ApplicationRecognizeSlideViewModel>();
+            services.AddTransient<AuthenticatorViewModel>();
+            services.AddTransient<TopBarViewModel>();
+            services.AddTransient<BottomBarViewModel>();
+            services.AddTransient<DashboardViewModel>();
+            services.AddTransient<BudgetViewModel>();
+            services.AddTransient<AccountViewModel>();
+            services.AddTransient<TransactionsViewModel>();
+            services.AddTransient<ReportsViewModel>();
+            services.AddTransient<FinBotViewModel>();
+            services.AddTransient<CurrenciesViewModel>();
+            services.AddTransient<DebtView>();
+            services.AddTransient<SettingsViewModel>();
+            services.AddTransient<FeedbackViewModel>();
+            services.AddTransient<NotificationViewModel>();
+
+            services.AddSingleton<IAuthService, AuthService>();
+            services.AddSingleton<ISecureTokenStorage, SecureTokenStorage>();
         }
 
         protected override async void OnStartup(StartupEventArgs e)

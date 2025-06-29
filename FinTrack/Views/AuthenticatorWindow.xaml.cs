@@ -2,6 +2,7 @@
 using FinTrack.Messages;
 using FinTrack.ViewModels;
 using FinTrack.Views;
+using Microsoft.Extensions.Hosting;
 using System.Windows;
 using System.Windows.Input;
 
@@ -9,11 +10,11 @@ namespace FinTrack
 {
     public partial class AuthenticatorWindow : Window, IRecipient<LoginSuccessMessage>
     {
-        public AuthenticatorWindow()
+        public AuthenticatorWindow(AuthenticatorViewModel viewModel, IHost host)
         {
             InitializeComponent();
 
-            this.DataContext = new AuthenticatorViewModel();
+            this.DataContext = viewModel;
 
             WeakReferenceMessenger.Default.Register<LoginSuccessMessage>(this);
 

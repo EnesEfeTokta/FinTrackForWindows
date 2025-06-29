@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using FinTrack.Core;
 using FinTrack.Messages;
 using FinTrack.Services;
+using Microsoft.Extensions.Logging;
 using System.Windows;
 
 namespace FinTrack.ViewModels
@@ -25,11 +26,14 @@ namespace FinTrack.ViewModels
         public event Action? NavigateToRegisterRequested;
         public event Action? NavigateToForgotPasswordRequested;
 
-        private readonly AuthService _authService;
+        private readonly IAuthService _authService;
 
-        public LoginViewModel()
+        private readonly ILogger<LoginViewModel> _logger;
+
+        public LoginViewModel(IAuthService authService, ILogger<LoginViewModel> logger)
         {
-            _authService = new AuthService();
+            _authService = authService;
+            _logger = logger;
             SavedTokenLogin();
         }
 
@@ -43,12 +47,14 @@ namespace FinTrack.ViewModels
                 if (!isValid)
                 {
                     MessageBox.Show("Token geçersiz. Lütfen tekrar giriş yapın.", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
+                    _logger.LogWarning("Geçersiz token bulundu. Kullanıcıdan yeni giriş yapması istendi.");
                     SessionManager.ClearToken();
                     secureTokenStorage.ClearToken();
                 }
 
                 SessionManager.SetToken(token);
                 MessageBox.Show("Giriş başarılı! Token kullanıldı.", "Bilgi", MessageBoxButton.OK, MessageBoxImage.Information);
+                _logger.LogInformation("Kullanıcı zaten giriş yapmış. Token kullanıldı.");
                 WeakReferenceMessenger.Default.Send(new LoginSuccessMessage());
             }
         }
@@ -56,10 +62,13 @@ namespace FinTrack.ViewModels
         [RelayCommand]
         private async Task Login_LoginView_Button()
         {
+            _logger.LogInformation("Kullanıcı giriş yapmaya çalışıyor. E-posta: {Email}", Email_LoginView_TextBox);
+
             WeakReferenceMessenger.Default.Send(new LoginSuccessMessage());
             if (string.IsNullOrEmpty(Email_LoginView_TextBox) || string.IsNullOrEmpty(Password_LoginView_TextBox))
             {
                 MessageBox.Show("Lütfen e-posta ve şifre alanlarını doldurun.", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
+                _logger.LogWarning("Kullanıcı giriş yapmaya çalıştı ancak e-posta veya şifre alanları boş.");
                 return;
             }
 
@@ -67,6 +76,7 @@ namespace FinTrack.ViewModels
             if (string.IsNullOrEmpty(token))
             {
                 MessageBox.Show("Giriş başarısız oldu. Lütfen e-posta ve şifrenizi kontrol edin.", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
+                _logger.LogError("Kullanıcı giriş yapmaya çalıştı ancak token alınamadı. E-posta veya şifre hatalı olabilir.");
                 return;
             }
 
@@ -76,6 +86,7 @@ namespace FinTrack.ViewModels
             secureTokenStorage.SaveToken(token);
 
             MessageBox.Show("Giriş başarılı!", "Bilgi", MessageBoxButton.OK, MessageBoxImage.Information);
+            _logger.LogInformation("Kullanıcı giriş yaptı ve token kaydedildi.");
 
             WeakReferenceMessenger.Default.Send(new LoginSuccessMessage());
         }
@@ -88,18 +99,21 @@ namespace FinTrack.ViewModels
             EyeIconSource_LoginView_Image = IsPasswordVisible_LoginView_PasswordBoxAndTextBox
                 ? "/Assets/Images/Icons/eyeopen.png"
                 : "/Assets/Images/Icons/eyeclose.png";
+            _logger.LogInformation("Şifre görünürlüğü değiştirildi. Şifre {0}.", IsPasswordVisible_LoginView_PasswordBoxAndTextBox ? "görünür" : "gizli");
         }
 
         [RelayCommand]
         private void NavigateToRegister_LoginView_Button()
         {
             NavigateToRegisterRequested?.Invoke();
+            _logger.LogInformation("Kullanıcı kayıt sayfasına yönlendirildi.");
         }
 
         [RelayCommand]
         private void NavigateToForgotPassword_LoginView_Button()
         {
             NavigateToForgotPasswordRequested?.Invoke();
+            _logger.LogInformation("Kullanıcı şifremi unuttum sayfasına yönlendirildi.");
         }
     }
 }
