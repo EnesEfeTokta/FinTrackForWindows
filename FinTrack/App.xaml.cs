@@ -34,7 +34,7 @@ namespace FinTrack
         private void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<MainWindow>();
-            services.AddTransient<AuthenticatorWindow>();
+            services.AddSingleton<AuthenticatorWindow>();
 
             services.AddTransient<MainViewModel>();
             services.AddTransient<LoginViewModel>();
@@ -68,7 +68,7 @@ namespace FinTrack
             var logger = _host.Services.GetRequiredService<ILogger<App>>();
             logger.LogInformation("Uygulama başlatıldı ve Host çalışıyor.");
 
-            var mainWindow = _host.Services.GetRequiredService<MainWindow>();
+            var mainWindow = _host.Services.GetRequiredService<AuthenticatorWindow>();
             mainWindow.Show();
 
             base.OnStartup(e);

@@ -21,6 +21,12 @@ namespace FinTrack.ViewModels
             ForgotPasswordViewModel forgotPasswordViewModel,
             ApplicationRecognizeSlideViewModel applicationRecognizeSlideViewModel)
         {
+            _loginViewModel = loginViewModel;
+            _registerViewModel = registerViewModel;
+            _otpVerificationViewModel = otpVerificationViewModel;
+            _forgotPasswordViewModel = forgotPasswordViewModel;
+            _applicationRecognizeSlideViewModel = applicationRecognizeSlideViewModel;
+            _currentViewModel = _applicationRecognizeSlideViewModel;
 
             _applicationRecognizeSlideViewModel.NavigateToLoginRequested += () => CurrentViewModel = _loginViewModel;
 

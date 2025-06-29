@@ -27,20 +27,24 @@ namespace FinTrack.ViewModels
         public event Action? NavigateToForgotPasswordRequested;
 
         private readonly IAuthService _authService;
+        private readonly ISecureTokenStorage _secureTokenStorage;
 
         private readonly ILogger<LoginViewModel> _logger;
 
-        public LoginViewModel(IAuthService authService, ILogger<LoginViewModel> logger)
+        public LoginViewModel(
+            IAuthService authService,
+            ILogger<LoginViewModel> logger,
+            ISecureTokenStorage secureTokenStorage)
         {
             _authService = authService;
             _logger = logger;
+            _secureTokenStorage = secureTokenStorage;
             SavedTokenLogin();
         }
 
         private void SavedTokenLogin()
         {
-            SecureTokenStorage secureTokenStorage = new SecureTokenStorage();
-            string? token = secureTokenStorage.GetToken();
+            string? token = _secureTokenStorage.GetToken();
             if (!string.IsNullOrEmpty(token))
             {
                 bool isValid = TokenValidator.IsTokenValid(token);
@@ -49,7 +53,7 @@ namespace FinTrack.ViewModels
                     MessageBox.Show("Token geçersiz. Lütfen tekrar giriş yapın.", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
                     _logger.LogWarning("Geçersiz token bulundu. Kullanıcıdan yeni giriş yapması istendi.");
                     SessionManager.ClearToken();
-                    secureTokenStorage.ClearToken();
+                    _secureTokenStorage.ClearToken();
                 }
 
                 SessionManager.SetToken(token);
@@ -82,8 +86,7 @@ namespace FinTrack.ViewModels
 
             SessionManager.SetToken(token);
 
-            SecureTokenStorage secureTokenStorage = new SecureTokenStorage();
-            secureTokenStorage.SaveToken(token);
+            _secureTokenStorage.SaveToken(token);
 
             MessageBox.Show("Giriş başarılı!", "Bilgi", MessageBoxButton.OK, MessageBoxImage.Information);
             _logger.LogInformation("Kullanıcı giriş yaptı ve token kaydedildi.");
