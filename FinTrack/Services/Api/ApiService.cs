@@ -43,7 +43,7 @@ namespace FinTrack.Services.Api
             }
         }
 
-        public async Task<T> DeleteAsync<T>(string endpoint)
+        public async Task<T?> DeleteAsync<T>(string endpoint)
         {
             _logger.LogInformation("DELETE isteği başlatılıyor: {Endpoint}", endpoint);
             if (string.IsNullOrWhiteSpace(endpoint))
@@ -77,7 +77,7 @@ namespace FinTrack.Services.Api
             }
         }
 
-        public async Task<T> GetAsync<T>(string endpoint)
+        public async Task<T?> GetAsync<T>(string endpoint)
         {
             _logger.LogInformation("GET isteği başlatılıyor: {Endpoint}", endpoint);
             try
@@ -110,7 +110,7 @@ namespace FinTrack.Services.Api
             }
         }
 
-        public async Task<T> PostAsync<T>(string endpoint, object data)
+        public async Task<T?> PostAsync<T>(string endpoint, object data)
         {
             _logger.LogInformation("POST isteği başlatılıyor: {Endpoint}", endpoint);
             if (string.IsNullOrWhiteSpace(endpoint))
@@ -152,7 +152,7 @@ namespace FinTrack.Services.Api
             }
         }
 
-        public async Task<T> PutAsync<T>(string endpoint, object data)
+        public async Task<T?> PutAsync<T>(string endpoint, object data)
         {
             _logger.LogInformation("PUT isteği başlatılıyor: {Endpoint}", endpoint);
             if (string.IsNullOrWhiteSpace(endpoint))

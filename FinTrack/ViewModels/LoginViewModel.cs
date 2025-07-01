@@ -68,7 +68,7 @@ namespace FinTrack.ViewModels
         {
             _logger.LogInformation("Kullanıcı giriş yapmaya çalışıyor. E-posta: {Email}", Email_LoginView_TextBox);
 
-            WeakReferenceMessenger.Default.Send(new LoginSuccessMessage());
+            WeakReferenceMessenger.Default.Send(new LoginSuccessMessage()); // TODO: [TEST]
             if (string.IsNullOrEmpty(Email_LoginView_TextBox) || string.IsNullOrEmpty(Password_LoginView_TextBox))
             {
                 MessageBox.Show("Lütfen e-posta ve şifre alanlarını doldurun.", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);

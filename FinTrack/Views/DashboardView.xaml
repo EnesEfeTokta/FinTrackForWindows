@@ -23,38 +23,35 @@
                 <Border Style="{StaticResource DashboardCardStyle}">
                     <StackPanel>
                         <TextBlock Text="Bütçeler" Style="{StaticResource CardTitleTextStyle}" Margin="0,0,0,15"/>
-
                         <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,20" Opacity="0.5"/>
-                        
-                        <UniformGrid Columns="2">
-                            <Border Style="{StaticResource BudgetSubCardStyle}" BorderBrush="{StaticResource StatusGreenBrush}" BorderThickness="1">
-                                <StackPanel>
-                                    <TextBlock Text="Tasarruf" Foreground="{StaticResource TopBarTextPrimaryBrush}" FontSize="14" FontWeight="SemiBold"/>
-                                    <TextBlock Text="15.02.2025" FontSize="12" Foreground="{StaticResource TopBarTextSecondaryBrush}" Margin="0,5,0,0"/>
-                                    <TextBlock Text="6.000$" Foreground="{StaticResource AccentGreenBrush}" FontWeight="Bold" FontSize="16"/>
-                                    <TextBlock Text="15 gün kaldı" FontSize="12" Foreground="{StaticResource TopBarTextSecondaryBrush}" Margin="0,5,0,0"/>
-                                </StackPanel>
-                            </Border>
-                            <Border Style="{StaticResource BudgetSubCardStyle}" BorderBrush="{StaticResource StatusRedBrush}" BorderThickness="1">
-                                <StackPanel>
-                                    <TextBlock Text="Harcama" Foreground="{StaticResource TopBarTextPrimaryBrush}" FontSize="14" FontWeight="SemiBold"/>
-                                    <TextBlock Text="20.02.2025" FontSize="12" Foreground="{StaticResource TopBarTextSecondaryBrush}" Margin="0,5,0,0"/>
-                                    <TextBlock Text="2.000$" Foreground="{StaticResource StatusRedBrush}" FontWeight="Bold" FontSize="16"/>
-                                    <TextBlock Text="10 gün kaldı" FontSize="12" Foreground="{StaticResource TopBarTextSecondaryBrush}" Margin="0,5,0,0"/>
-                                </StackPanel>
-                            </Border>
-                            <Border Style="{StaticResource BudgetSubCardStyle}" BorderBrush="{StaticResource StatusGreenBrush}" BorderThickness="1">
-                                <StackPanel>
-                                    <TextBlock Text="Yatırım" Foreground="{StaticResource TopBarTextPrimaryBrush}" FontSize="14" FontWeight="SemiBold"/>
-                                    <TextBlock Text="10.03.2025" FontSize="12" Foreground="{StaticResource TopBarTextSecondaryBrush}" Margin="0,5,0,0"/>
-                                    <TextBlock Text="10.000$" Foreground="{StaticResource AccentGreenBrush}" FontWeight="Bold" FontSize="16"/>
-                                    <TextBlock Text="30 gün kaldı" FontSize="12" Foreground="{StaticResource TopBarTextSecondaryBrush}" Margin="0,5,0,0"/>
-                                </StackPanel>
-                            </Border>
+
+                            <!-- ItemsControl ile dinamik bütçe listesi -->
+                            <ItemsControl ItemsSource="{Binding Budgets_DashboardView_ItemsControl}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <UniformGrid Columns="2"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Style="{StaticResource BudgetSubCardStyle}" BorderBrush="{Binding StatusBrush}" BorderThickness="1">
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding Name}" Foreground="{StaticResource TopBarTextPrimaryBrush}" FontSize="14" FontWeight="SemiBold"/>
+                                                <TextBlock Text="{Binding DueDate}" FontSize="12" Foreground="{StaticResource TopBarTextSecondaryBrush}" Margin="0,5,0,0"/>
+                                                <TextBlock Text="{Binding Amount}" Foreground="{Binding StatusBrush}" FontWeight="Bold" FontSize="16"/>
+                                                <TextBlock Text="{Binding RemainingTime}" FontSize="12" Foreground="{StaticResource TopBarTextSecondaryBrush}" Margin="0,5,0,0"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            
+                            <!-- Ekle Butonu -->
+                            <!--
                             <Border Style="{StaticResource BudgetSubCardStyle}">
-                                <Button Style="{StaticResource AccentButtonStyle}" Content="Ekle" FontSize="14" Padding="10,5"/>
+                                <Button Style="{StaticResource AccentButtonStyle}" Content="Ekle" FontSize="14" Padding="10,5" Command="{Binding AddBudget_DashboardView_ButtonCommand}"/>
                             </Border>
-                        </UniformGrid>
+                            -->
                     </StackPanel>
                 </Border>
 
@@ -62,90 +59,51 @@
                 <Border Style="{StaticResource DashboardCardStyle}">
                     <StackPanel>
                         <TextBlock Text="Kurlar" Style="{StaticResource CardTitleTextStyle}" Margin="0,0,0,15"/>
-
                         <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,20" Opacity="0.5"/>
 
-                        <!-- Kur 1: USD -> TRY -->
-                        <Border BorderBrush="{StaticResource ProgressBarBackgroundBrush}" BorderThickness="0,0,0,1" Padding="0,15">
-                            <Grid VerticalAlignment="Center">
-                                <!-- Sol Taraf (USD) -->
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                                    <Image Source="https://currencyfreaks.com/photos/flags/usd.png" Width="30" Height="20" Stretch="Fill"/>
-                                    <StackPanel Margin="10,0,0,0">
-                                        <TextBlock Text="United States" Foreground="{StaticResource TopBarTextSecondaryBrush}" FontSize="12"/>
-                                        <TextBlock Text="US Dollar" Foreground="{StaticResource TopBarTextPrimaryBrush}" FontSize="14" FontWeight="SemiBold"/>
-                                        <TextBlock Text="1 USD" Foreground="{StaticResource TopBarTextSecondaryBrush}" FontSize="12"/>
-                                    </StackPanel>
-                                </StackPanel>
+                        <!-- ItemsControl ile dinamik kur listesi -->
+                        <ItemsControl ItemsSource="{Binding CurrencyRates}" AlternationCount="2147483647">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Padding="0,15">
+                                        <!-- Her son elemandan sonra çizgi eklememek için stil trigger'ı -->
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Setter Property="BorderBrush" Value="{StaticResource ProgressBarBackgroundBrush}"/>
+                                                <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource PreviousData}}" Value="{x:Null}">
+                                                        <Setter Property="BorderThickness" Value="0"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
 
-                                <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Width="1" Height="40" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,20,0"/>
+                                        <Grid VerticalAlignment="Center">
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                                <Image Source="{Binding FromCurrencyFlagUrl}" Width="30" Height="20" Stretch="Fill"/>
+                                                <StackPanel Margin="10,0,0,0">
+                                                    <TextBlock Text="{Binding FromCurrencyCountry}" Foreground="{StaticResource TopBarTextSecondaryBrush}" FontSize="12"/>
+                                                    <TextBlock Text="{Binding FromCurrencyName}" Foreground="{StaticResource TopBarTextPrimaryBrush}" FontSize="14" FontWeight="SemiBold"/>
+                                                    <TextBlock Text="{Binding FromCurrencyAmount}" Foreground="{StaticResource TopBarTextSecondaryBrush}" FontSize="12"/>
+                                                </StackPanel>
+                                            </StackPanel>
 
-                                <!-- Sağ Taraf (TRY) -->
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                    <StackPanel Margin="0,0,10,0" TextBlock.TextAlignment="Right">
-                                        <TextBlock Text="Turkey" Foreground="{StaticResource TopBarTextSecondaryBrush}" FontSize="12"/>
-                                        <TextBlock Text="Turkish Lira" Foreground="{StaticResource TopBarTextPrimaryBrush}" FontSize="14" FontWeight="SemiBold"/>
-                                        <TextBlock Text="32,25 TRY" Foreground="{StaticResource TopBarTextSecondaryBrush}" FontSize="12"/>
-                                    </StackPanel>
-                                    <Image Source="https://currencyfreaks.com/photos/flags/try.png" Width="30" Height="20" Stretch="Fill"/>
-                                </StackPanel>
-                            </Grid>
-                        </Border>
+                                            <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Width="1" Height="40" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,20,0"/>
 
-                        <!-- Kur 2: USD -> BTC -->
-                        <Border BorderBrush="{StaticResource ProgressBarBackgroundBrush}" BorderThickness="0,0,0,1" Padding="0,15">
-                            <Grid VerticalAlignment="Center">
-                                <!-- Sol Taraf (USD) -->
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                                    <Image Source="https://currencyfreaks.com/photos/flags/usd.png" Width="30" Height="20" Stretch="Fill"/>
-                                    <StackPanel Margin="10,0,0,0">
-                                        <TextBlock Text="United States" Foreground="{StaticResource TopBarTextSecondaryBrush}" FontSize="12"/>
-                                        <TextBlock Text="US Dollar" Foreground="{StaticResource TopBarTextPrimaryBrush}" FontSize="14" FontWeight="SemiBold"/>
-                                        <TextBlock Text="1 USD" Foreground="{StaticResource TopBarTextSecondaryBrush}" FontSize="12"/>
-                                    </StackPanel>
-                                </StackPanel>
-
-                                <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Width="1" Height="40" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,20,0"/>
-
-                                <!-- Sağ Taraf (BTC) -->
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                    <StackPanel Margin="0,0,10,0" TextBlock.TextAlignment="Right">
-                                        <TextBlock Text="Bitcoin" Foreground="{StaticResource TopBarTextSecondaryBrush}" FontSize="12"/>
-                                        <TextBlock Text="Bitcoin" Foreground="{StaticResource TopBarTextPrimaryBrush}" FontSize="14" FontWeight="SemiBold"/>
-                                        <TextBlock Text="0,000015 BTC" Foreground="{StaticResource TopBarTextSecondaryBrush}" FontSize="12"/>
-                                    </StackPanel>
-                                    <Image Source="https://currencyfreaks.com/photos/flags/btc.png" Width="30" Height="30" VerticalAlignment="Center"/>
-                                </StackPanel>
-                            </Grid>
-                        </Border>
-
-                        <!-- Kur 3: USD -> GBP -->
-                        <Border Padding="0,15">
-                            <Grid VerticalAlignment="Center">
-                                <!-- Sol Taraf (USD) -->
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                                    <Image Source="https://currencyfreaks.com/photos/flags/usd.png" Width="30" Height="20" Stretch="Fill"/>
-                                    <StackPanel Margin="10,0,0,0">
-                                        <TextBlock Text="United States" Foreground="{StaticResource TopBarTextSecondaryBrush}" FontSize="12"/>
-                                        <TextBlock Text="US Dollar" Foreground="{StaticResource TopBarTextPrimaryBrush}" FontSize="14" FontWeight="SemiBold"/>
-                                        <TextBlock Text="1 USD" Foreground="{StaticResource TopBarTextSecondaryBrush}" FontSize="12"/>
-                                    </StackPanel>
-                                </StackPanel>
-
-                                <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Width="1" Height="40" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,20,0"/>
-
-                                <!-- Sağ Taraf (GBP) -->
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                    <StackPanel Margin="0,0,10,0" TextBlock.TextAlignment="Right">
-                                        <TextBlock Text="United Kingdom" Foreground="{StaticResource TopBarTextSecondaryBrush}" FontSize="12"/>
-                                        <TextBlock Text="Pound Sterling" Foreground="{StaticResource TopBarTextPrimaryBrush}" FontSize="14" FontWeight="SemiBold"/>
-                                        <TextBlock Text="0,79 GBP" Foreground="{StaticResource TopBarTextSecondaryBrush}" FontSize="12"/>
-                                    </StackPanel>
-                                    <Image Source="https://currencyfreaks.com/photos/flags/gbp.png" Width="30" Height="20" Stretch="Fill"/>
-                                </StackPanel>
-                            </Grid>
-                        </Border>
-
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                                <StackPanel Margin="0,0,10,0" TextBlock.TextAlignment="Right">
+                                                    <TextBlock Text="{Binding ToCurrencyCountry}" Foreground="{StaticResource TopBarTextSecondaryBrush}" FontSize="12"/>
+                                                    <TextBlock Text="{Binding ToCurrencyName}" Foreground="{StaticResource TopBarTextPrimaryBrush}" FontSize="14" FontWeight="SemiBold"/>
+                                                    <TextBlock Text="{Binding ToCurrencyAmount}" Foreground="{StaticResource TopBarTextSecondaryBrush}" FontSize="12"/>
+                                                </StackPanel>
+                                                <Image Source="{Binding ToCurrencyFlagUrl}" Width="30" Height="{Binding ToCurrencyImageHeight}" VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
                     </StackPanel>
                 </Border>
             </StackPanel>
@@ -161,25 +119,24 @@
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="0">
                             <TextBlock Text="Hesaplar" Style="{StaticResource CardTitleTextStyle}"/>
-                            
                             <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,20" Opacity="0.5"/>
-                            
-                            <StackPanel Margin="0,15,0,0">
-                                <Grid Margin="0,5">
-                                    <TextBlock Text="ING Bank" Foreground="{StaticResource TopBarTextPrimaryBrush}" FontSize="14"/>
-                                    <ProgressBar Value="70" Height="8" Background="{StaticResource ProgressBarBackgroundBrush}" Foreground="{StaticResource AccentGreenBrush}" Margin="0,20,0,0"/>
-                                    <TextBlock Text="$5.000" HorizontalAlignment="Right" Foreground="{StaticResource TopBarTextPrimaryBrush}" FontSize="14"/>
-                                </Grid>
-                                <Grid Margin="0,5">
-                                    <TextBlock Text="QNB Bank" Foreground="{StaticResource TopBarTextPrimaryBrush}" FontSize="14"/>
-                                    <ProgressBar Value="40" Height="8" Background="{StaticResource ProgressBarBackgroundBrush}" Foreground="{StaticResource StatusRedBrush}" Margin="0,20,0,0"/>
-                                    <TextBlock Text="$45.000" HorizontalAlignment="Right" Foreground="{StaticResource TopBarTextPrimaryBrush}" FontSize="14"/>
-                                </Grid>
-                            </StackPanel>
+
+                            <!-- ItemsControl ile dinamik hesap listesi -->
+                            <ItemsControl ItemsSource="{Binding Accounts}" Margin="0,15,0,0">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="0,5">
+                                            <TextBlock Text="{Binding Name}" Foreground="{StaticResource TopBarTextPrimaryBrush}" FontSize="14"/>
+                                            <ProgressBar Value="{Binding Percentage}" Height="8" Background="{StaticResource ProgressBarBackgroundBrush}" Foreground="{Binding ProgressBarBrush}" Margin="0,20,0,0"/>
+                                            <TextBlock Text="{Binding Balance}" HorizontalAlignment="Right" Foreground="{StaticResource TopBarTextPrimaryBrush}" FontSize="14"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
                         </StackPanel>
                         <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="20,0,0,0">
                             <TextBlock Text="Toplam:" Foreground="{StaticResource TopBarTextSecondaryBrush}" HorizontalAlignment="Center" FontSize="14"/>
-                            <TextBlock Text="$50.000" Style="{StaticResource LargeMetricTextStyle}"/>
+                            <TextBlock Text="{Binding TotalBalance}" Style="{StaticResource LargeMetricTextStyle}"/>
                         </StackPanel>
                     </Grid>
                 </Border>
@@ -188,107 +145,30 @@
                 <Border Style="{StaticResource DashboardCardStyle}">
                     <StackPanel>
                         <TextBlock Text="İşlemler" Style="{StaticResource CardTitleTextStyle}"/>
-                        
                         <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,0" Opacity="0.5"/>
-                        
-                        <TextBlock Text="Gelirler: $6.800 Giderler: $2.250" Foreground="{StaticResource TopBarTextSecondaryBrush}" Margin="0,10,0,15"/>
-                        
-                        <ListView Background="Transparent" BorderThickness="0" ItemContainerStyle="{StaticResource CleanListViewItemStyle}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                            <!-- Örnek 1: Maaş -->
-                            <ListViewItem>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Border Grid.Column="0" Style="{StaticResource TransactionDateBadgeStyle}" Background="{StaticResource StatusGreenBrush}">
-                                        <TextBlock Text="1 Mayıs" Foreground="White" FontWeight="SemiBold"/>
-                                    </Border>
-                                    <TextBlock Grid.Column="1" Text="Ana iş kolundan maaş geliri." Margin="15,0" VerticalAlignment="Center" Foreground="White"/>
-                                    <TextBlock Grid.Column="2" Text="$5.500" Margin="15,0" VerticalAlignment="Center" Foreground="White"/>
-                                    <Border Grid.Column="3" Style="{StaticResource TransactionCategoryTagStyle}">
-                                        <TextBlock Text="Maaş" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#A9B1D6"/>
-                                    </Border>
-                                </Grid>
-                            </ListViewItem>
-                            <!-- Örnek 2: Kira -->
-                            <ListViewItem>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Border Grid.Column="0" Style="{StaticResource TransactionDateBadgeStyle}" Background="{StaticResource StatusRedBrush}">
-                                        <TextBlock Text="5 Mayıs" Foreground="White" FontWeight="SemiBold"/>
-                                    </Border>
-                                    <TextBlock Grid.Column="1" Text="Aylık kira ödemesi." Margin="15,0" VerticalAlignment="Center" Foreground="White"/>
-                                    <TextBlock Grid.Column="2" Text="$1.500" Margin="15,0" VerticalAlignment="Center" Foreground="White"/>
-                                    <Border Grid.Column="3" Style="{StaticResource TransactionCategoryTagStyle}">
-                                        <TextBlock Text="Kira" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#A9B1D6"/>
-                                    </Border>
-                                </Grid>
-                            </ListViewItem>
-                            <!-- Örnek 3: Mutfak Alışverişi -->
-                            <ListViewItem>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Border Grid.Column="0" Style="{StaticResource TransactionDateBadgeStyle}" Background="{StaticResource StatusRedBrush}">
-                                        <TextBlock Text="10 Mayıs" Foreground="White" FontWeight="SemiBold"/>
-                                    </Border>
-                                    <TextBlock Grid.Column="1" Text="Haftalık mutfak alışverişi." Margin="15,0" VerticalAlignment="Center" Foreground="White"/>
-                                    <TextBlock Grid.Column="2" Text="$500" Margin="15,0" VerticalAlignment="Center" Foreground="White"/>
-                                    <Border Grid.Column="3" Style="{StaticResource TransactionCategoryTagStyle}">
-                                        <TextBlock Text="Mutfak" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#A9B1D6"/>
-                                    </Border>
-                                </Grid>
-                            </ListViewItem>
-                            <!-- Örnek 4: Fatura -->
-                            <ListViewItem>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Border Grid.Column="0" Style="{StaticResource TransactionDateBadgeStyle}" Background="{StaticResource StatusRedBrush}">
-                                        <TextBlock Text="15 Mayıs" Foreground="White" FontWeight="SemiBold"/>
-                                    </Border>
-                                    <TextBlock Grid.Column="1" Text="Aylık cep/ev internet faturası." Margin="15,0" VerticalAlignment="Center" Foreground="White"/>
-                                    <TextBlock Grid.Column="2" Text="$250" Margin="15,0" VerticalAlignment="Center" Foreground="White"/>
-                                    <Border Grid.Column="3" Style="{StaticResource TransactionCategoryTagStyle}">
-                                        <TextBlock Text="Fatura" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#A9B1D6"/>
-                                    </Border>
-                                </Grid>
-                            </ListViewItem>
-                            <!-- Örnek 5: Freelancer -->
-                            <ListViewItem>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Border Grid.Column="0" Style="{StaticResource TransactionDateBadgeStyle}" Background="{StaticResource StatusGreenBrush}">
-                                        <TextBlock Text="20 Mayıs" Foreground="White" FontWeight="SemiBold"/>
-                                    </Border>
-                                    <TextBlock Grid.Column="1" Text="XYZ şirketi ile Freelancer iş." Margin="15,0" VerticalAlignment="Center" Foreground="White"/>
-                                    <TextBlock Grid.Column="2" Text="$1.300" Margin="15,0" VerticalAlignment="Center" Foreground="White"/>
-                                    <Border Grid.Column="3" Style="{StaticResource TransactionCategoryTagStyle}">
-                                        <TextBlock Text="Freelancer" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#A9B1D6"/>
-                                    </Border>
-                                </Grid>
-                            </ListViewItem>
+                        <TextBlock Text="{Binding TransactionSummary}" Foreground="{StaticResource TopBarTextSecondaryBrush}" Margin="0,10,0,15"/>
+
+                        <ListView ItemsSource="{Binding Transactions}" Background="Transparent" BorderThickness="0" ItemContainerStyle="{StaticResource CleanListViewItemStyle}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Border Grid.Column="0" Style="{StaticResource TransactionDateBadgeStyle}" Background="{Binding DateBadgeBrush}">
+                                            <TextBlock Text="{Binding DateText}" Foreground="White" FontWeight="SemiBold"/>
+                                        </Border>
+                                        <TextBlock Grid.Column="1" Text="{Binding Description}" Margin="15,0" VerticalAlignment="Center" Foreground="White"/>
+                                        <TextBlock Grid.Column="2" Text="{Binding Amount}" Margin="15,0" VerticalAlignment="Center" Foreground="White"/>
+                                        <Border Grid.Column="3" Style="{StaticResource TransactionCategoryTagStyle}">
+                                            <TextBlock Text="{Binding Category}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#A9B1D6"/>
+                                        </Border>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
                         </ListView>
                     </StackPanel>
                 </Border>
@@ -297,7 +177,6 @@
                 <Border Style="{StaticResource DashboardCardStyle}">
                     <StackPanel>
                         <TextBlock Text="Üyelik" Style="{StaticResource CardTitleTextStyle}"/>
-
                         <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,20" Opacity="0.5"/>
 
                         <Grid>
@@ -306,20 +185,20 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Border Background="{StaticResource MembershipAccentGradientBrush}" CornerRadius="15" Padding="30,20">
-                                <TextBlock Text="PLUS | AKF" FontSize="20" FontWeight="Bold" Foreground="{StaticResource TopBarTextPrimaryBrush}"/>
+                                <TextBlock Text="{Binding CurrentMembership.Level}" FontSize="20" FontWeight="Bold" Foreground="{StaticResource TopBarTextPrimaryBrush}"/>
                             </Border>
                             <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="20,0,0,0">
                                 <Grid>
                                     <TextBlock Text="Üyelik Başlangıç:" Foreground="{StaticResource TopBarTextPrimaryBrush}"/>
-                                    <TextBlock Text="15.01.2025" HorizontalAlignment="Right" Foreground="{StaticResource TopBarTextPrimaryBrush}"/>
+                                    <TextBlock Text="{Binding CurrentMembership.StartDate}" HorizontalAlignment="Right" Foreground="{StaticResource TopBarTextPrimaryBrush}"/>
                                 </Grid>
                                 <Grid Margin="0,5,0,0">
                                     <TextBlock Text="Üyelik Yenilenme:" Foreground="{StaticResource TopBarTextPrimaryBrush}"/>
-                                    <TextBlock Text="15.02.2025" HorizontalAlignment="Right" Foreground="{StaticResource TopBarTextPrimaryBrush}"/>
+                                    <TextBlock Text="{Binding CurrentMembership.RenewalDate}" HorizontalAlignment="Right" Foreground="{StaticResource TopBarTextPrimaryBrush}"/>
                                 </Grid>
                                 <Grid Margin="0,5,0,0">
                                     <TextBlock Text="Üyelik Fiyatı:" Foreground="{StaticResource TopBarTextPrimaryBrush}"/>
-                                    <TextBlock Text="$30.00" HorizontalAlignment="Right" Foreground="{StaticResource TopBarTextPrimaryBrush}"/>
+                                    <TextBlock Text="{Binding CurrentMembership.Price}" HorizontalAlignment="Right" Foreground="{StaticResource TopBarTextPrimaryBrush}"/>
                                 </Grid>
                             </StackPanel>
                         </Grid>
@@ -334,119 +213,107 @@
                     <StackPanel>
                         <TextBlock Text="Borçlar" Style="{StaticResource CardTitleTextStyle}"/>
                         <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,20" Opacity="0.5"/>
-                        
-                        <UniformGrid Columns="2">
-                            <Border Background="{StaticResource DebtAccentGradientBrush}" CornerRadius="15" Padding="20">
-                                <StackPanel>
-                                    <Grid>
-                                        <StackPanel HorizontalAlignment="Left" TextBlock.TextAlignment="Center">
-                                            <Image Source="/Assets/Images/Icons/user-green.png" Width="25" Height="25"/>
-                                            <TextBlock Text="Enes Efe Tokta" FontSize="11" Foreground="{StaticResource StatusGreenBrush}" Margin="0,5,0,0"/>
+
+                        <!-- ItemsControl ile dinamik borç listesi -->
+                        <ItemsControl ItemsSource="{Binding Debts}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <UniformGrid Columns="2"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="{StaticResource DebtAccentGradientBrush}" CornerRadius="15" Padding="20">
+                                        <StackPanel>
+                                            <Grid>
+                                                <StackPanel HorizontalAlignment="Left" TextBlock.TextAlignment="Center">
+                                                    <Image Source="{Binding LenderIconPath}" Width="25" Height="25"/>
+                                                    <TextBlock Text="{Binding LenderName}" FontSize="11" Foreground="{StaticResource StatusGreenBrush}" Margin="0,5,0,0"/>
+                                                </StackPanel>
+
+                                                <StackPanel HorizontalAlignment="Right" TextBlock.TextAlignment="Center">
+                                                    <Image Source="{Binding BorrowerIconPath}" Width="25" Height="25"/>
+                                                    <TextBlock Text="{Binding BorrowerName}" FontSize="11" Foreground="{StaticResource StatusRedBrush}" Margin="0,5,0,0"/>
+                                                </StackPanel>
+                                            </Grid>
+
+                                            <Border BorderBrush="{StaticResource StatusGreenBrush}" BorderThickness="0,0,0,2" Margin="0,15,0,15"/>
+
+                                            <StackPanel TextBlock.TextAlignment="Center">
+                                                <TextBlock Text="{Binding Status}" FontSize="12" Foreground="White" Opacity="0.8" TextAlignment="Right"/>
+                                                <TextBlock Margin="0,10,0,0" FontWeight="Bold" FontSize="28" Foreground="White" TextAlignment="Right">
+                                                    <Run Text="{Binding Amount}"/>
+                                                    <Run Text="{Binding Currency}" FontSize="20"/>
+                                                </TextBlock>
+                                            </StackPanel>
                                         </StackPanel>
-
-                                        <StackPanel HorizontalAlignment="Right" TextBlock.TextAlignment="Center">
-                                            <Image Source="/Assets/Images/Icons/user-red.png" Width="25" Height="25"/>
-                                            <TextBlock Text="Eylül Korkmaz" FontSize="11" Foreground="{StaticResource StatusRedBrush}" Margin="0,5,0,0"/>
-                                        </StackPanel>
-                                    </Grid>
-
-                                    <Border BorderBrush="{StaticResource StatusGreenBrush}" BorderThickness="0,0,0,2" Margin="0,15,0,15"/>
-
-                                    <StackPanel TextBlock.TextAlignment="Center">
-                                        <TextBlock Text="Operatör Onayı Bekliyor..." FontSize="12" Foreground="White" Opacity="0.8" TextAlignment="Right"/>
-                                        <TextBlock Margin="0,10,0,0" FontWeight="Bold" FontSize="28" Foreground="White" TextAlignment="Right">
-                                            <Run Text="800.000"/>
-                                            <Run Text="TRY" FontSize="20"/>
-                                        </TextBlock>
-                                    </StackPanel>
-                                </StackPanel>
-                            </Border>
-
-                        </UniformGrid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
                     </StackPanel>
                 </Border>
 
                 <!-- Raporlar Kartı -->
                 <Border Style="{StaticResource DashboardCardStyle}">
                     <StackPanel>
-                        <!-- Başlık Bölümü -->
-                        
                         <TextBlock Text="Raporlar" Style="{StaticResource CardTitleTextStyle}"/>
                         <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,20" Opacity="0.5"/>
 
                         <UniformGrid Columns="2">
-                            <Border Style="{StaticResource BudgetSubCardStyle}">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <Image Grid.Column="0" Source="/Assets/Images/Icons/report.png" Width="40" Height="40" VerticalAlignment="Center" Margin="0,0,15,0"/>
-
-                                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                        <TextBlock Text="Bütçeler" FontSize="16" FontWeight="SemiBold" Foreground="White"/>
-                                        <WrapPanel Margin="0,5,0,0">
-                                            <Button Content="PDF" Style="{StaticResource ReportFormatButtonStyle}"/>
-                                            <Button Content="WORD" Style="{StaticResource ReportFormatButtonStyle}"/>
-                                            <Button Content="TEXT" Style="{StaticResource ReportFormatButtonStyle}"/>
-                                            <Button Content="XML" Style="{StaticResource ReportFormatButtonStyle}"/>
-                                            <Button Content="EXCEL" Style="{StaticResource ReportFormatButtonStyle}"/>
-                                            <Button Content="MD" Style="{StaticResource ReportFormatButtonStyle}"/>
-                                        </WrapPanel>
-                                    </StackPanel>
-                                </Grid>
-                            </Border>
-
-                            <!-- Rapor Kartı: Hesaplar -->
-                            <Border Style="{StaticResource BudgetSubCardStyle}">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Image Grid.Column="0" Source="/Assets/Images/Icons/report.png" Width="40" Height="40" VerticalAlignment="Center" Margin="0,0,15,0"/>
-                                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                        <TextBlock Text="Hesaplar" FontSize="16" FontWeight="SemiBold" Foreground="White"/>
-                                        <WrapPanel Margin="0,5,0,0">
-                                            <Button Content="PDF" Style="{StaticResource ReportFormatButtonStyle}"/>
-                                            <Button Content="WORD" Style="{StaticResource ReportFormatButtonStyle}"/>
-                                            <Button Content="TEXT" Style="{StaticResource ReportFormatButtonStyle}"/>
-                                            <Button Content="XML" Style="{StaticResource ReportFormatButtonStyle}"/>
-                                            <Button Content="EXCEL" Style="{StaticResource ReportFormatButtonStyle}"/>
-                                            <Button Content="MD" Style="{StaticResource ReportFormatButtonStyle}"/>
-                                        </WrapPanel>
-                                    </StackPanel>
-                                </Grid>
-                            </Border>
-
-                            <!-- Rapor Kartı: İşlemler -->
-                            <Border Style="{StaticResource BudgetSubCardStyle}">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Image Grid.Column="0" Source="/Assets/Images/Icons/report.png" Width="40" Height="40" VerticalAlignment="Center" Margin="0,0,15,0"/>
-                                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                        <TextBlock Text="İşlemler" FontSize="16" FontWeight="SemiBold" Foreground="White"/>
-                                        <WrapPanel Margin="0,5,0,0">
-                                            <Button Content="PDF" Style="{StaticResource ReportFormatButtonStyle}"/>
-                                            <Button Content="WORD" Style="{StaticResource ReportFormatButtonStyle}"/>
-                                            <Button Content="TEXT" Style="{StaticResource ReportFormatButtonStyle}"/>
-                                            <Button Content="XML" Style="{StaticResource ReportFormatButtonStyle}"/>
-                                            <Button Content="EXCEL" Style="{StaticResource ReportFormatButtonStyle}"/>
-                                            <Button Content="MD" Style="{StaticResource ReportFormatButtonStyle}"/>
-                                        </WrapPanel>
-                                    </StackPanel>
-                                </Grid>
-                            </Border>
+                            <!-- ItemsControl ile dinamik rapor listesi -->
+                            <ItemsControl ItemsSource="{Binding Reports}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <UniformGrid Columns="2"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Style="{StaticResource BudgetSubCardStyle}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Image Grid.Column="0" Source="{Binding IconPath}" Width="40" Height="40" VerticalAlignment="Center" Margin="0,0,15,0"/>
+                                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding Name}" FontSize="16" FontWeight="SemiBold" Foreground="White"/>
+                                                    <!-- Butonlar için ayrı bir ItemsControl -->
+                                                    <ItemsControl ItemsSource="{Binding Formats}">
+                                                        <ItemsControl.ItemsPanel>
+                                                            <ItemsPanelTemplate>
+                                                                <WrapPanel Margin="0,5,0,0"/>
+                                                            </ItemsPanelTemplate>
+                                                        </ItemsControl.ItemsPanel>
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <Button Content="{Binding}" Style="{StaticResource ReportFormatButtonStyle}" 
+                                                                        Command="{Binding DataContext.GenerateReportCommand, RelativeSource={RelativeSource AncestorType=UserControl}}">
+                                                                    <Button.CommandParameter>
+                                                                        <MultiBinding StringFormat="{}{0}:{1}">
+                                                                            <Binding Path="DataContext.Name" RelativeSource="{RelativeSource AncestorType=Border, AncestorLevel=2}"/>
+                                                                            <Binding/>
+                                                                        </MultiBinding>
+                                                                    </Button.CommandParameter>
+                                                                </Button>
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
 
                             <!-- Ekle Kartı -->
                             <Border Style="{StaticResource BudgetSubCardStyle}">
-                                <TextBlock Text="Ekle" FontSize="20" FontWeight="SemiBold" 
-                                           HorizontalAlignment="Center" VerticalAlignment="Center" 
-                                           Foreground="{StaticResource TopBarTextSecondaryBrush}" Opacity="0.8"/>
+                                <Button Command="{Binding AddReportCommand}" Style="{StaticResource AccentButtonStyle}">
+                                    <TextBlock Text="Ekle" FontSize="20" FontWeight="SemiBold" 
+                                               HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                               Foreground="{StaticResource TopBarTextSecondaryBrush}" Opacity="0.8"/>
+                                </Button>
                             </Border>
                         </UniformGrid>
                     </StackPanel>

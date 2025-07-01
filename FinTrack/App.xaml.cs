@@ -75,8 +75,8 @@ namespace FinTrack
             var logger = _host.Services.GetRequiredService<ILogger<App>>();
             logger.LogInformation("Uygulama başlatıldı ve Host çalışıyor.");
 
-            var mainWindow = _host.Services.GetRequiredService<AuthenticatorWindow>();
-            mainWindow.Show();
+            var window = _host.Services.GetRequiredService<AuthenticatorWindow>();
+            window.Show();
 
             base.OnStartup(e);
         }
