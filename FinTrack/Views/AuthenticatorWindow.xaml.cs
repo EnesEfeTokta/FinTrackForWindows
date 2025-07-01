@@ -2,7 +2,9 @@
 using FinTrack.Messages;
 using FinTrack.ViewModels;
 using FinTrack.Views;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Runtime.InteropServices.JavaScript;
 using System.Windows;
 using System.Windows.Input;
 
@@ -10,11 +12,15 @@ namespace FinTrack
 {
     public partial class AuthenticatorWindow : Window, IRecipient<LoginSuccessMessage>
     {
+        private readonly IHost _host;
+
         public AuthenticatorWindow(AuthenticatorViewModel viewModel, IHost host)
         {
             InitializeComponent();
 
             this.DataContext = viewModel;
+
+            _host = host;
 
             WeakReferenceMessenger.Default.Register<LoginSuccessMessage>(this);
 
@@ -23,7 +29,7 @@ namespace FinTrack
 
         public void Receive(LoginSuccessMessage message)
         {
-            var mainWindow = new MainWindow();
+            var mainWindow = _host.Services.GetRequiredService<MainWindow>();
             mainWindow.Show();
 
             Application.Current.Dispatcher.Invoke(this.Close);

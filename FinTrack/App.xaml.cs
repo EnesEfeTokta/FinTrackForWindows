@@ -1,5 +1,7 @@
-﻿using FinTrack.Core;
+﻿using CommunityToolkit.Mvvm.Messaging;
+using FinTrack.Core;
 using FinTrack.Services;
+using FinTrack.Services.Api;
 using FinTrack.ViewModels;
 using FinTrack.Views;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,18 +35,22 @@ namespace FinTrack
 
         private void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<IMessenger>(WeakReferenceMessenger.Default);
+
             services.AddSingleton<MainWindow>();
             services.AddSingleton<AuthenticatorWindow>();
 
-            services.AddTransient<MainViewModel>();
-            services.AddTransient<LoginViewModel>();
+            services.AddSingleton<MainViewModel>();
+            services.AddSingleton<LoginViewModel>();
+
+            services.AddTransient<TopBarViewModel>();
+            services.AddTransient<BottomBarViewModel>();
+
             services.AddTransient<RegisterViewModel>();
             services.AddTransient<OtpVerificationViewModel>();
             services.AddTransient<ForgotPasswordViewModel>();
             services.AddTransient<ApplicationRecognizeSlideViewModel>();
             services.AddTransient<AuthenticatorViewModel>();
-            services.AddTransient<TopBarViewModel>();
-            services.AddTransient<BottomBarViewModel>();
             services.AddTransient<DashboardViewModel>();
             services.AddTransient<BudgetViewModel>();
             services.AddTransient<AccountViewModel>();
@@ -52,13 +58,14 @@ namespace FinTrack
             services.AddTransient<ReportsViewModel>();
             services.AddTransient<FinBotViewModel>();
             services.AddTransient<CurrenciesViewModel>();
-            services.AddTransient<DebtView>();
+            services.AddTransient<DebtViewModel>();
             services.AddTransient<SettingsViewModel>();
             services.AddTransient<FeedbackViewModel>();
             services.AddTransient<NotificationViewModel>();
 
             services.AddSingleton<IAuthService, AuthService>();
             services.AddSingleton<ISecureTokenStorage, SecureTokenStorage>();
+            services.AddSingleton<IApiService, ApiService>();
         }
 
         protected override async void OnStartup(StartupEventArgs e)

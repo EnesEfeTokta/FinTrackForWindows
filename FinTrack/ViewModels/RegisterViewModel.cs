@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using FinTrack.Core;
 using FinTrack.Services;
+using Microsoft.Extensions.Logging;
 using System.Windows;
 
 namespace FinTrack.ViewModels
@@ -26,11 +27,13 @@ namespace FinTrack.ViewModels
         public event Action? NavigateToLoginRequested;
         public event Action? NavigateToOtpVerificationRequested;
 
-        private readonly AuthService _authService;
+        private readonly ILogger<RegisterViewModel> _logger;
+        private readonly IAuthService _authService;
 
-        public RegisterViewModel()
+        public RegisterViewModel(ILogger<RegisterViewModel> logger, IAuthService authService)
         {
-            _authService = new AuthService();
+            _logger = logger;
+            _authService = authService;
         }
 
         [RelayCommand]
@@ -42,6 +45,7 @@ namespace FinTrack.ViewModels
                 string.IsNullOrEmpty(Password_RegisterView_TextBox))
             {
                 MessageBox.Show("Lütfen tüm alanları doldurun.", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
+                _logger.LogWarning("Kayıt işlemi için gerekli alanlar boş bırakıldı.");
                 return;
             }
 
@@ -49,6 +53,7 @@ namespace FinTrack.ViewModels
             if (!isValidEmail)
             {
                 MessageBox.Show("Lütfen geçerli bir e-posta adresi girin.", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
+                _logger.LogWarning("Kayıt işlemi için geçersiz e-posta adresi girildi: {Email}", Email_RegisterView_TextBox);
                 return;
             }
 
@@ -59,9 +64,11 @@ namespace FinTrack.ViewModels
             if (!isInitiateRegistration)
             {
                 MessageBox.Show("Kayıt işlemi başarısız oldu. Lütfen daha sonra tekrar deneyin.", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
+                _logger.LogError("Kayıt işlemi başarısız oldu. E-posta: {Email}", Email_RegisterView_TextBox);
                 return;
             }
             MessageBox.Show("Kayıt işlemi başarılı! Lütfen e-posta adresinize gelen doğrulama kodunu girin.", "Bilgi", MessageBoxButton.OK, MessageBoxImage.Information);
+            _logger.LogInformation("Kayıt işlemi başarılı. E-posta: {Email}", Email_RegisterView_TextBox);
 
             // Store user information in the static manager
             NewUserInformationManager.FullName = FullName_RegisterView_TextBox;
@@ -79,12 +86,14 @@ namespace FinTrack.ViewModels
             EyeIconSource_RegisterView_Image = IsPasswordVisible_RegisterView_PasswordBoxAndTextBox
                 ? "/Assets/Images/Icons/eyeopen.png"
                 : "/Assets/Images/Icons/eyeclose.png";
+            _logger.LogInformation("Şifre görünürlüğü değiştirildi. Yeni durum: {IsVisible}", IsPasswordVisible_RegisterView_PasswordBoxAndTextBox);
         }
 
         [RelayCommand]
         private void NavigateToLogin_RegisterView_Button()
         {
             NavigateToLoginRequested?.Invoke();
+            _logger.LogInformation("Kullanıcı kayıt ekranından giriş ekranına yönlendirildi.");
         }
     }
 }

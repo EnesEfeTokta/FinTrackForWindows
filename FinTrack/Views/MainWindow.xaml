@@ -12,10 +12,6 @@
         MinWidth="1280" MinHeight="720"
         Background="{StaticResource MainBackgroundBrush}">
 
-    <Window.DataContext>
-        <viewmodels:MainViewModel/>
-    </Window.DataContext>
-
     <Window.Resources>
         <DataTemplate DataType="{x:Type viewmodels:TopBarViewModel}">
             <views:TopBarView/>

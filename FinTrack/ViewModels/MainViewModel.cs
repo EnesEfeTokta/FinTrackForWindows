@@ -25,22 +25,36 @@ namespace FinTrack.ViewModels
         private readonly SettingsViewModel _settingsViewModel;
         private readonly NotificationViewModel _notificationViewModel;
 
-        public MainViewModel()
+        public MainViewModel(
+            TopBarViewModel topBarViewModel,
+            BottomBarViewModel bottomBarViewModel,
+            DashboardViewModel dashboardViewModel,
+            BudgetViewModel budgetViewModel,
+            AccountViewModel accountViewModel,
+            TransactionsViewModel transactionsViewModel,
+            CurrenciesViewModel currenciesViewModel,
+            ReportsViewModel reportsViewModel,
+            DebtViewModel debtViewModel,
+            FinBotViewModel finBotViewModel,
+            FeedbackViewModel feedbackViewModel,
+            SettingsViewModel settingsViewModel,
+            NotificationViewModel notificationViewModel
+            )
         {
-            topBarViewModel = new TopBarViewModel();
-            bottomBarViewModel = new BottomBarViewModel();
+            this.topBarViewModel = topBarViewModel;
+            this.bottomBarViewModel = bottomBarViewModel;
 
-            _dashboardViewModel = new DashboardViewModel();
-            _budgetViewModel = new BudgetViewModel();
-            _accountViewModel = new AccountViewModel();
-            _transactionsViewModel = new TransactionsViewModel();
-            _currenciesViewModel = new CurrenciesViewModel();
-            _reportsViewModel = new ReportsViewModel();
-            _debtViewModel = new DebtViewModel();
-            _finBotViewModel = new FinBotViewModel();
-            _feedbackViewModel = new FeedbackViewModel();
-            _settingsViewModel = new SettingsViewModel();
-            _notificationViewModel = new NotificationViewModel();
+            _dashboardViewModel = dashboardViewModel;
+            _budgetViewModel = budgetViewModel;
+            _accountViewModel = accountViewModel;
+            _transactionsViewModel = transactionsViewModel;
+            _currenciesViewModel = currenciesViewModel;
+            _reportsViewModel = reportsViewModel;
+            _debtViewModel = debtViewModel;
+            _finBotViewModel = finBotViewModel;
+            _feedbackViewModel = feedbackViewModel;
+            _settingsViewModel = settingsViewModel;
+            _notificationViewModel = notificationViewModel;
 
             topBarViewModel.NavigateToDashboardRequested += () => CurrentCenterViewModel = _dashboardViewModel;
             topBarViewModel.NavigateToAccountRequested += () => CurrentCenterViewModel = _accountViewModel;

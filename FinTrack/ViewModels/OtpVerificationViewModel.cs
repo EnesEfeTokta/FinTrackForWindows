@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using FinTrack.Core;
 using FinTrack.Services;
 using System.Windows;
+using Microsoft.Extensions.Logging;
 
 namespace FinTrack.ViewModels
 {
@@ -18,20 +19,25 @@ namespace FinTrack.ViewModels
 
         public event Action? NavigateToRegisterRequested;
 
-        private readonly AuthService _authService;
         private int _counter;
 
-        public OtpVerificationViewModel()
+        private readonly IAuthService _authService;
+        private readonly ILogger<OtpVerificationViewModel> _logger;
+
+        public OtpVerificationViewModel(IAuthService authService, ILogger<OtpVerificationViewModel> logger)
         {
-            _authService = new AuthService();
+            _authService = authService;
+            _logger = logger;
 
             if (NewUserInformationManager.Email != null)
             {
                 StartCounter();
+                _logger.LogInformation("OTP doğrulama başlatıldı. E-posta: {Email}", NewUserInformationManager.Email);
             }
             else
             {
                 MessageBox.Show("Lütfen önce kayıt işlemini tamamlayın.", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
+                _logger.LogWarning("OTP doğrulama için e-posta bilgisi eksik. Kullanıcı kayıt sayfasına yönlendiriliyor.");
                 NavigateToRegisterRequested?.Invoke();
             }
         }
@@ -58,6 +64,7 @@ namespace FinTrack.ViewModels
             if (string.IsNullOrWhiteSpace(VerificationCode_OtpVerificationView_TextBox) || VerificationCode_OtpVerificationView_TextBox.Length != 6)
             {
                 MessageBox.Show("Lütfen geçerli bir OTP kodu girin (6 haneli).", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                _logger.LogWarning("Geçersiz OTP kodu girişi. Kullanıcıdan tekrar denemesi istendi.");
                 return;
             }
 
@@ -65,9 +72,11 @@ namespace FinTrack.ViewModels
             if (!isVerify)
             {
                 MessageBox.Show("OTP doğrulama başarısız oldu. Lütfen kodu kontrol edin ve tekrar deneyin.", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
+                _logger.LogError("OTP doğrulama başarısız. E-posta: {Email}, Kod: {Code}", NewUserInformationManager.Email, VerificationCode_OtpVerificationView_TextBox);
                 return;
             }
             MessageBox.Show("OTP doğrulama başarılı! Hoş geldiniz!", "Bilgi", MessageBoxButton.OK, MessageBoxImage.Information);
+            _logger.LogInformation("OTP doğrulama başarılı. Kullanıcı kaydı tamamlandı. E-posta: {Email}", NewUserInformationManager.Email);
 
             NewUserInformationManager.FullName = null; // Clear the stored user information
             NewUserInformationManager.Email = null; // Clear the stored user information
@@ -89,13 +98,16 @@ namespace FinTrack.ViewModels
                 if (!isInitiateRegistration)
                 {
                     MessageBox.Show("Kayıt işlemi başarısız oldu. Lütfen daha sonra tekrar deneyin.", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
+                    _logger.LogError("Kayıt işlemi başarısız. E-posta: {Email}", NewUserInformationManager.Email);
                     return;
                 }
                 MessageBox.Show("Doğrulama kodu tekrar gönderildi.", "Bilgi", MessageBoxButton.OK, MessageBoxImage.Information);
+                _logger.LogInformation("Doğrulama kodu tekrar gönderildi. E-posta: {Email}", NewUserInformationManager.Email);
             }
             else
             {
                 MessageBox.Show("Kod gönderirken bir sorun oluştu. Bilgileri doğru giriniz.", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
+                _logger.LogWarning("Kod gönderme sırasında eksik kullanıcı bilgileri. Kullanıcı kayıt sayfasına yönlendiriliyor.");
                 NavigateToRegisterRequested?.Invoke();
             }
         }

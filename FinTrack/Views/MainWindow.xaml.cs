@@ -5,10 +5,13 @@ namespace FinTrack.Views
 {
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        private readonly MainViewModel _mainViewModel;
+
+        public MainWindow(MainViewModel mainViewModel)
         {
             InitializeComponent();
-            this.DataContext = new MainViewModel();
+            _mainViewModel = mainViewModel;
+            DataContext = _mainViewModel;
         }
     }
 }
