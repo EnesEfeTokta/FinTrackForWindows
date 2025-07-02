@@ -6,10 +6,10 @@
         xmlns:local="clr-namespace:FinTrack"
         xmlns:views="clr-namespace:FinTrack.Views"
         xmlns:viewmodels="clr-namespace:FinTrack.ViewModels"
-        mc:Ignorable="d"
-        Title="FinTrack" Height="1080" Width="1920"
+        mc:Ignorable="d" Title="FinTrack"
         WindowStartupLocation="CenterScreen"
         MinWidth="1280" MinHeight="720"
+        WindowState="Maximized"
         Background="{StaticResource MainBackgroundBrush}">
 
     <Window.Resources>
@@ -68,7 +68,7 @@
     </Window.Resources>
 
 
-    <Grid>
+    <Grid Background="{StaticResource MainBackgroundBrush}" Margin="0,0,0,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
