@@ -3,7 +3,6 @@ using Microsoft.Extensions.Logging;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
-using System.Windows;
 
 namespace FinTrack.Services.Api
 {

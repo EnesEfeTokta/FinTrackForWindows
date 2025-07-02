@@ -1,10 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using FinTrack.Models;
-using System.Collections.ObjectModel;
-using System.Windows.Media;
-using System.Windows;
-using Microsoft.Extensions.Logging;
 using FinTrack.Models.Dashboard;
+using Microsoft.Extensions.Logging;
+using System.Collections.ObjectModel;
+using System.Windows;
+using System.Windows.Media;
 
 namespace FinTrack.ViewModels
 {
@@ -89,12 +88,18 @@ namespace FinTrack.ViewModels
             CurrentMembership_DashboardView_Multiple = new MembershipDashboard { Level = "Pro | AKTF", StartDate = "01.01.2025", RenewalDate = "01.02.2025", Price = "9.99$" };
 
             // [TEST]
-            CurrentDebt_DashboardView_Multiple = new DebtDashboard 
+            CurrentDebt_DashboardView_Multiple = new DebtDashboard
             {
-                LenderName = "Ali Veli", LenderIconPath = "https://i.pinimg.com/236x/be/a3/49/bea3491915571d34a026753f4a872000.jpg", 
-                BorrowerName = "Ahmet Mehmet", BorrowerIconPath = "https://pbs.twimg.com/profile_images/1144861916734451712/D76C3ugh_400x400.jpg", 
-                Status = "Ödenmemiş", StatusBrush = "StatusGreenBrush", Amount = "1.000$" , 
-                CreationDate = "01.01.2025", DueDate = "01.02.2025", ReviewDate = "01.03.2025"
+                LenderName = "Ali Veli",
+                LenderIconPath = "https://i.pinimg.com/236x/be/a3/49/bea3491915571d34a026753f4a872000.jpg",
+                BorrowerName = "Ahmet Mehmet",
+                BorrowerIconPath = "https://pbs.twimg.com/profile_images/1144861916734451712/D76C3ugh_400x400.jpg",
+                Status = "Ödenmemiş",
+                StatusBrush = "StatusGreenBrush",
+                Amount = "1.000$",
+                CreationDate = "01.01.2025",
+                DueDate = "01.02.2025",
+                ReviewDate = "01.03.2025"
             };
 
             // [TEST]

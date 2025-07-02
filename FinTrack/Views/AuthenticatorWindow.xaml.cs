@@ -4,7 +4,6 @@ using FinTrack.ViewModels;
 using FinTrack.Views;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Runtime.InteropServices.JavaScript;
 using System.Windows;
 using System.Windows.Input;
 

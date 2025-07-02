@@ -5,7 +5,6 @@ using FinTrack.Dtos;
 using FinTrack.Messages;
 using FinTrack.Services.Api;
 using Microsoft.Extensions.Logging;
-using System.Threading.Tasks;
 
 namespace FinTrack.ViewModels
 {
@@ -56,7 +55,7 @@ namespace FinTrack.ViewModels
 
         private async Task LoadProfile()
         {
-            var userProfile = await _apiService.GetAsync<UserProfileDto>("user");   
+            var userProfile = await _apiService.GetAsync<UserProfileDto>("user");
 
             if (userProfile != null)
             {

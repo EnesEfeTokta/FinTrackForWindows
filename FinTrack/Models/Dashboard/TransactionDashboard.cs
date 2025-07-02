@@ -1,5 +1,5 @@
-﻿using System.Windows.Media;
-using FinTrack.Enums;
+﻿using FinTrack.Enums;
+using System.Windows.Media;
 
 namespace FinTrack.Models.Dashboard
 {
