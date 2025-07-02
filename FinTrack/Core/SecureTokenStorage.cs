@@ -4,7 +4,7 @@ using System.Text;
 
 namespace FinTrack.Core
 {
-    public class SecureTokenStorage
+    public class SecureTokenStorage : ISecureTokenStorage
     {
         private readonly string _filePath;
 

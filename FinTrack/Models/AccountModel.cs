@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using FinTrack.Enums;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FinTrack.Models
@@ -48,15 +49,4 @@ namespace FinTrack.Models
 
         public virtual ICollection<TransactionModel> Transactions { get; set; } = new List<TransactionModel>();
     }
-
-    public enum AccountType
-    {
-        Checking,
-        Savings,
-        CreditCard,
-        Cash,
-        Investment,
-        Loan,
-        Other,
-    } // Kontrol, Tasarruf, Kredi Kartı, Nakit, Yatırım, Kredi, Diğer
 }

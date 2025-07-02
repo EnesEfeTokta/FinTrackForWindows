@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:viewmodels="clr-namespace:FinTrack.ViewModels"
              mc:Ignorable="d" 
-             d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel, IsDesignTimeCreatable=True}"
+             d:DataContext="{d:DesignInstance Type=viewmodels:TopBarViewModel, IsDesignTimeCreatable=True}"
              d:DesignWidth="1920">
 
     <Border Background="{StaticResource TopBarBackgroundBrush}" MinHeight="100" Padding="0,10" CornerRadius="25,25,0,0">
@@ -30,18 +30,18 @@
                     <Border BorderBrush="#4A4E7A" BorderThickness="2" CornerRadius="26" Width="52" Height="52">
                         <Ellipse Width="48" Height="48">
                             <Ellipse.Fill>
-                                <ImageBrush ImageSource="{Binding CurrentUser.Avatar, FallbackValue='/Assets/Images/Icons/default_user.png'}"/>
+                                <ImageBrush ImageSource="{Binding UserAvatar_TopBarView_Image, FallbackValue='/Assets/Images/Icons/user-green.png'}"/>
                             </Ellipse.Fill>
                         </Ellipse>
                     </Border>
                     <StackPanel VerticalAlignment="Center" Margin="15,0,0,0">
-                        <TextBlock Text="{Binding CurrentUser.FullName, FallbackValue='Welcome back, Marco Yates!'}"
+                        <TextBlock Text="{Binding UserFullName_TopBarView_TextBlock, FallbackValue='Welcome back, Marco Yates!'}"
                                    Foreground="{StaticResource TopBarTextPrimaryBrush}"
                                    FontSize="16" FontWeight="SemiBold"/>
-                        <TextBlock Text="{Binding CurrentUser.Email, FallbackValue='marco.yates@example.com'}"
+                        <TextBlock Text="{Binding UserEmail_TopBarView_TextBlock, FallbackValue='marco.yates@example.com'}"
                                    Foreground="{StaticResource TopBarTextSecondaryBrush}"
                                    FontSize="12" Margin="0,2,0,2"/>
-                        <TextBlock Text="{Binding CurrentUser.MembershipType, FallbackValue='Intermediate Level'}"
+                        <TextBlock Text="{Binding UserMembershipType_TopBarView_TextBlock, FallbackValue='Intermediate Level'}"
                                    FontSize="13" FontWeight="Bold"
                                    Foreground="{StaticResource NeonGradientBrush}"/>
                     </StackPanel>
@@ -49,26 +49,50 @@
             </StackPanel>
 
             <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,30,0">
-                <Button Style="{StaticResource TopBarIconButtonStyle}" ToolTip="Uyarı/Şikayet">
+                <Button Style="{StaticResource TopBarIconButtonStyle}" ToolTip="Uyarı/Şikayet" Command="{Binding NavigateToFeedback_TopBarView_ButtonCommand}">
                     <Image Source="/Assets/Images/Icons/warning.png" Width="20" Height="20"/>
                 </Button>
-                <Button Style="{StaticResource TopBarIconButtonStyle}" ToolTip="Bildirimler" Margin="5,0">
+                <Button Style="{StaticResource TopBarIconButtonStyle}" ToolTip="Bildirimler" Margin="5,0" Command="{Binding NavigateToNotification_TopBarView_ButtonCommand}">
                     <Image Source="/Assets/Images/Icons/bell.png" Width="20" Height="20"/>
                 </Button>
-                <Button Style="{StaticResource TopBarIconButtonStyle}" ToolTip="Ayarlar">
+                <Button Style="{StaticResource TopBarIconButtonStyle}" ToolTip="Ayarlar" Command="{Binding NavigateToSettings_TopBarView_ButtonCommand}">
                     <Image Source="/Assets/Images/Icons/settings.png" Width="20" Height="20"/>
                 </Button>
             </StackPanel>
 
             <DockPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal">
-                    <RadioButton Content="Dashboard" GroupName="TopNav" Style="{StaticResource NavigationRadioButtonStyle}" Margin="15,0" IsChecked="True"/>
-                    <RadioButton Content="Transactions" GroupName="TopNav" Style="{StaticResource NavigationRadioButtonStyle}" Margin="15,0"/>
-                    <RadioButton Content="Reports" GroupName="TopNav" Style="{StaticResource NavigationRadioButtonStyle}" Margin="15,0"/>
-                    <RadioButton Content="Budgets" GroupName="TopNav" Style="{StaticResource NavigationRadioButtonStyle}" Margin="15,0"/>
-                    <RadioButton Content="Accounts" GroupName="TopNav" Style="{StaticResource NavigationRadioButtonStyle}" Margin="15,0"/>
-                    <RadioButton Content="Currencies" GroupName="TopNav" Style="{StaticResource NavigationRadioButtonStyle}" Margin="15,0"/>
-                    <RadioButton Content="Debt" GroupName="TopNav" Style="{StaticResource NavigationRadioButtonStyle}" Margin="15,0"/>
+                    <RadioButton Content="Dashboard" GroupName="TopNav" 
+                                 Style="{StaticResource NavigationRadioButtonStyle}" Margin="15,0" 
+                                 IsChecked="True" Command="{Binding NavigateToDashboard_TopBarView_ButtonCommand}"/>
+
+                    <RadioButton Content="Accounts" GroupName="TopNav" 
+                                 Style="{StaticResource NavigationRadioButtonStyle}" Margin="15,0" 
+                                 IsChecked="False" Command="{Binding NavigateToAccount_TopBarView_ButtonCommand}"/>
+
+                    <RadioButton Content="Budgets" GroupName="TopNav" 
+                                 Style="{StaticResource NavigationRadioButtonStyle}" Margin="15,0" 
+                                 IsChecked="False" Command="{Binding NavigateToBudget_TopBarView_ButtonCommand}"/>
+
+                    <RadioButton Content="Transactions" GroupName="TopNav" 
+                                 Style="{StaticResource NavigationRadioButtonStyle}" Margin="15,0" 
+                                 IsChecked="False" Command="{Binding NavigateToTransactions_TopBarView_ButtonCommand}"/>
+
+                    <RadioButton Content="Currencies" GroupName="TopNav" 
+                                 Style="{StaticResource NavigationRadioButtonStyle}" Margin="15,0" 
+                                 IsChecked="False" Command="{Binding NavigateToCurrencies_TopBarView_ButtonCommand}"/>
+
+                    <RadioButton Content="Debts" GroupName="TopNav" 
+                                 Style="{StaticResource NavigationRadioButtonStyle}" Margin="15,0" 
+                                 IsChecked="False" Command="{Binding NavigateToDebt_TopBarView_ButtonCommand}"/>
+
+                    <RadioButton Content="Reports" GroupName="TopNav" 
+                                 Style="{StaticResource NavigationRadioButtonStyle}" Margin="15,0" 
+                                 IsChecked="False" Command="{Binding NavigateToReports_TopBarView_ButtonCommand}"/>
+
+                    <RadioButton Content="FinBot" GroupName="TopNav" 
+                                 Style="{StaticResource NavigationRadioButtonStyle}" Margin="15,0" 
+                                 IsChecked="False" Command="{Binding NavigateToFinBot_TopBarView_ButtonCommand}"/>
                 </StackPanel>
             </DockPanel>
 

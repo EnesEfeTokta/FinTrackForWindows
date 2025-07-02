@@ -2,7 +2,7 @@
 
 namespace FinTrack.ViewModels
 {
-    public partial class BottomBarViewModel : ObservableObject
+    public partial class AccountViewModel : ObservableObject
     {
     }
 }

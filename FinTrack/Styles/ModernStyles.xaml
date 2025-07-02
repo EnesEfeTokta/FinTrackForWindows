@@ -66,14 +66,20 @@
 
     <!-- "Üyelik" Kartları için Gradyan -->
     <LinearGradientBrush x:Key="MembershipAccentGradientBrush" StartPoint="0,0.5" EndPoint="1,0.5">
-        <GradientStop Color="#8A2BE2" Offset="0.0" />
-        <GradientStop Color="#FF007F" Offset="1.0" />
+        <GradientStop Color="#5170FF" Offset="0.0" />
+        <GradientStop Color="#FF66C4" Offset="1.0" />
     </LinearGradientBrush>
 
     <!-- "Borçlar" Kartları için Gradyan -->
     <LinearGradientBrush x:Key="DebtAccentGradientBrush" StartPoint="0,0.5" EndPoint="1,0.5">
         <GradientStop Color="#8C52FF" Offset="0.0" />
-        <GradientStop Color="#6D0052" Offset="1.0" />
+        <GradientStop Color="#FF8585" Offset="1.0" />
+    </LinearGradientBrush>
+
+    <!-- Hesapların Toplamı için Gradyan -->
+    <LinearGradientBrush x:Key="TotalBalanceGradientBrush" StartPoint="0,0.5" EndPoint="1,0.5">
+        <GradientStop Color="#33FF00" Offset="0.0" />
+        <GradientStop Color="#FF0000" Offset="1.0" />
     </LinearGradientBrush>
 
     <!-- "İşlemler" ve "Raporlar" Etiket Stili -->
@@ -129,7 +135,7 @@
     <Setter Property="Background" Value="{StaticResource CardBackgroundBrush}"/>
     <Setter Property="CornerRadius" Value="20"/>
     <Setter Property="Margin" Value="10"/>
-    <Setter Property="Padding" Value="25"/>
+    <Setter Property="Padding" Value="15"/>
     
     <!-- 1. ADIM: Animasyonun hedef alabilmesi için bir RenderTransform ekliyoruz. -->
     <!-- Başlangıçta ölçek 1.0 (normal boyut) olarak ayarlanır. -->
@@ -534,25 +540,26 @@
 
     <!-- Rapor formatı (PDF, WORD vb.) butonları için stil -->
     <Style x:Key="ReportFormatButtonStyle" TargetType="Button">
-        <Setter Property="Background" Value="#E53935"/>
+        <Setter Property="Background" Value="#dc3545"/>
         <Setter Property="Foreground" Value="White"/>
-        <Setter Property="FontWeight" Value="SemiBold"/>
         <Setter Property="FontSize" Value="11"/>
-        <Setter Property="Cursor" Value="Hand"/>
-        <Setter Property="Padding" Value="100,5"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Padding" Value="12,5"/>
+        <Setter Property="Margin" Value="0,0,8,8"/>
         <Setter Property="Width" Value="50"/>
-        <Setter Property="Margin" Value="3"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Border x:Name="border" 
-                            Background="{TemplateBinding Background}"
-                            CornerRadius="5">
+                    <Border Background="{TemplateBinding Background}"
+                            CornerRadius="5"
+                            SnapsToDevicePixels="True">
                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="border" Property="Opacity" Value="0.85"/>
+                            <Setter Property="Background" Value="#c15c65"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -753,6 +760,68 @@
             </ControlTemplate>
         </Setter.Value>
     </Setter>
+</Style>
+
+<!-- ScrollBar -->
+<Style x:Key="ModernScrollBarThumb" TargetType="{x:Type Thumb}">
+    <Setter Property="OverridesDefaultStyle" Value="true"/>
+    <Setter Property="IsTabStop" Value="false"/>
+    <Setter Property="Template">
+        <Setter.Value>
+            <ControlTemplate TargetType="{x:Type Thumb}">
+                <Border x:Name="thumbBorder"
+                        Background="#565f89" 
+                        CornerRadius="4"
+                        SnapsToDevicePixels="True"/>
+                <ControlTemplate.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter TargetName="thumbBorder" Property="Background" Value="#7aa2f7"/>
+                    </Trigger>
+                    <Trigger Property="IsDragging" Value="True">
+                        <Setter TargetName="thumbBorder" Property="Background" Value="#7dcfff"/>
+                    </Trigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+        </Setter.Value>
+    </Setter>
+</Style>
+
+<Style TargetType="{x:Type ScrollBar}">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="Width" Value="8"/>
+    <Setter Property="Template">
+        <Setter.Value>
+            <ControlTemplate TargetType="{x:Type ScrollBar}">
+                <Grid SnapsToDevicePixels="True" Background="{TemplateBinding Background}">
+                    <Track x:Name="PART_Track"
+                           IsDirectionReversed="true">
+                        <Track.Thumb>
+                            <Thumb Style="{StaticResource ModernScrollBarThumb}"/>
+                        </Track.Thumb>
+                    </Track>
+                </Grid>
+            </ControlTemplate>
+        </Setter.Value>
+    </Setter>
+    <Style.Triggers>
+        <Trigger Property="Orientation" Value="Horizontal">
+            <Setter Property="Width" Value="Auto"/>
+            <Setter Property="Height" Value="8"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ScrollBar}">
+                        <Grid SnapsToDevicePixels="True" Background="{TemplateBinding Background}">
+                            <Track x:Name="PART_Track">
+                                <Track.Thumb>
+                                    <Thumb Style="{StaticResource ModernScrollBarThumb}"/>
+                                </Track.Thumb>
+                            </Track>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Trigger>
+    </Style.Triggers>
 </Style>
 
 </ResourceDictionary>

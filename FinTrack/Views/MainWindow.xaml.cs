@@ -1,12 +1,17 @@
-﻿using System.Windows;
+﻿using FinTrack.ViewModels;
+using System.Windows;
 
 namespace FinTrack.Views
 {
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        private readonly MainViewModel _mainViewModel;
+
+        public MainWindow(MainViewModel mainViewModel)
         {
             InitializeComponent();
+            _mainViewModel = mainViewModel;
+            DataContext = _mainViewModel;
         }
     }
 }
