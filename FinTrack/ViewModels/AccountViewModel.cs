@@ -3,11 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using FinTrack.Enums;
 using FinTrack.Models.Account;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Windows.Media;
 
 namespace FinTrack.ViewModels
 {
@@ -47,7 +43,6 @@ namespace FinTrack.ViewModels
 
         private void LoadSampleData()
         {
-            var today = DateTime.Today;
             Accounts = new ObservableCollection<AccountModel>
             {
                 new AccountModel

@@ -70,6 +70,5 @@ namespace FinTrack.Models.Account
                 return Type == AccountType.Loan ? 100 : 0;
             }
         }
-
     }
 }
