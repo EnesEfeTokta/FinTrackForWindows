@@ -62,6 +62,8 @@ namespace FinTrack
             services.AddTransient<FeedbackViewModel>();
             services.AddTransient<NotificationViewModel>();
 
+            services.AddTransient<AccountView>();
+
             services.AddSingleton<IAuthService, AuthService>();
             services.AddSingleton<ISecureTokenStorage, SecureTokenStorage>();
             services.AddSingleton<IApiService, ApiService>();

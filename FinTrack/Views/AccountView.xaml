@@ -3,8 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d"
-             Background="{StaticResource MainBackgroundBrush}">
+             xmlns:local="clr-namespace:FinTrack.Views"
+             xmlns:vm="clr-namespace:FinTrack.ViewModels"
+             mc:Ignorable="d" 
+             d:DesignHeight="800" d:DesignWidth="1400"
+             Background="{StaticResource MainBackgroundBrush}"
+             d:DataContext="{d:DesignInstance Type=vm:AccountViewModel, IsDesignTimeCreatable=True}">
 
     <Grid Margin="30">
         <Grid.ColumnDefinitions>
@@ -12,112 +16,57 @@
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- SOL SÜTUN: HESAP LİSTESİ VE İSTATİSTİKLER -->
         <StackPanel Grid.Column="0" Margin="0,0,20,0">
-            <!-- Mevcut Hesaplar Kartı -->
             <Border Style="{StaticResource DashboardCardStyle}">
                 <StackPanel>
                     <TextBlock Text="Mevcut Hesaplar" Style="{StaticResource CardTitleTextStyle}"/>
                     <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,15" Opacity="0.5"/>
-                    <ListView Background="Transparent" BorderThickness="0" ItemContainerStyle="{StaticResource CleanListViewItemStyle}" MaxHeight="350">
-                        <!-- Örnek Hesap 1: Banka Hesabı -->
-                        <ListViewItem>
-                            <Border Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10" Padding="15">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
 
-                                    <!-- Sol Taraf: İkon -->
-                                    <Border Grid.Column="0" Background="{StaticResource StatusGreenBrush}" CornerRadius="25" Width="50" Height="50">
-                                        <Image Source="/Assets/Images/Icons/bank.png" Width="25" Height="25" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                    </Border>
+                    <ListView ItemsSource="{Binding Accounts}" 
+                              Background="Transparent" BorderThickness="0" 
+                              ItemContainerStyle="{StaticResource CleanListViewItemStyle}" 
+                              MaxHeight="350">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10" Padding="15">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
 
-                                    <!-- Orta Kısım: Bilgiler -->
-                                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="15,0">
-                                        <TextBlock Text="ING Bank - Vadesiz" Foreground="White" FontSize="16" FontWeight="SemiBold"/>
-                                        <ProgressBar Value="75" Height="8" Margin="0,8,0,8" Background="{StaticResource ProgressBarBackgroundBrush}" Foreground="{StaticResource StatusGreenBrush}"/>
-                                        <TextBlock Text="$15.000 / $20.000" Foreground="{StaticResource TopBarTextSecondaryBrush}" FontSize="12"/>
-                                    </StackPanel>
+                                        <!-- Sol Taraf: İkon -->
+                                        <Border Grid.Column="0" Background="{Binding IconBackground}" CornerRadius="25" Width="50" Height="50">
+                                            <Image Source="{Binding IconPath}" Width="25" Height="25" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                        </Border>
 
-                                    <!-- Sağ Taraf: Butonlar -->
-                                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                                        <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Düzenle">
-                                            <Image Source="/Assets/Images/Icons/edit.png" Width="16" Height="16"/>
-                                        </Button>
-                                        <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Sil" Margin="5,0,0,0">
-                                            <Image Source="/Assets/Images/Icons/delete.png" Width="16" Height="16"/>
-                                        </Button>
-                                    </StackPanel>
-                                </Grid>
-                            </Border>
-                        </ListViewItem>
+                                        <!-- Orta Kısım: Bilgiler -->
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="15,0">
+                                            <TextBlock Text="{Binding Name}" Foreground="White" FontSize="16" FontWeight="SemiBold"/>
+                                            <ProgressBar Value="{Binding ProgressValue, Mode=OneWay}" Height="8" Margin="0,8,0,8" 
+                                                         Background="{StaticResource ProgressBarBackgroundBrush}" 
+                                                         Foreground="{Binding IconBackground}"/>
+                                            <TextBlock Text="{Binding BalanceText}" Foreground="{StaticResource TopBarTextSecondaryBrush}" FontSize="12"/>
+                                        </StackPanel>
 
-                        <!-- Örnek Hesap 2: Kredi Kartı -->
-                        <ListViewItem>
-                            <Border Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10" Padding="15">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <Border Grid.Column="0" Background="{StaticResource StatusRedBrush}" CornerRadius="25" Width="50" Height="50">
-                                        <Image Source="/Assets/Images/Icons/credit_card.png" Width="25" Height="25" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                    </Border>
-
-                                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="15,0">
-                                        <TextBlock Text="QNB Bank - Kredi Kartı" Foreground="White" FontSize="16" FontWeight="SemiBold"/>
-                                        <ProgressBar Value="30" Height="8" Margin="0,8,0,8" Background="{StaticResource ProgressBarBackgroundBrush}" Foreground="{StaticResource StatusRedBrush}"/>
-                                        <TextBlock Text="Kullanılan Limit: $3.000 / $10.000" Foreground="{StaticResource TopBarTextSecondaryBrush}" FontSize="12"/>
-                                    </StackPanel>
-
-                                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                                        <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Düzenle">
-                                            <Image Source="/Assets/Images/Icons/edit.png" Width="16" Height="16"/>
-                                        </Button>
-                                        <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Sil" Margin="5,0,0,0">
-                                            <Image Source="/Assets/Images/Icons/delete.png" Width="16" Height="16"/>
-                                        </Button>
-                                    </StackPanel>
-                                </Grid>
-                            </Border>
-                        </ListViewItem>
-
-                        <!-- Örnek Hesap 3: Yatırım Hesabı -->
-                        <ListViewItem>
-                            <Border Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10" Padding="15">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <Border Grid.Column="0" Background="{StaticResource AccentBlueBrush}" CornerRadius="25" Width="50" Height="50">
-                                        <Image Source="/Assets/Images/Icons/investment.png" Width="25" Height="25" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                    </Border>
-
-                                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="15,0">
-                                        <TextBlock Text="Yatırım Hesabı - Portföy" Foreground="White" FontSize="16" FontWeight="SemiBold"/>
-                                        <ProgressBar Value="90" Height="8" Margin="0,8,0,8" Background="{StaticResource ProgressBarBackgroundBrush}" Foreground="{StaticResource AccentBlueBrush}"/>
-                                        <TextBlock Text="Değer: $90.000" Foreground="{StaticResource TopBarTextSecondaryBrush}" FontSize="12"/>
-                                    </StackPanel>
-
-                                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                                        <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Düzenle">
-                                            <Image Source="/Assets/Images/Icons/edit.png" Width="16" Height="16"/>
-                                        </Button>
-                                        <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Sil" Margin="5,0,0,0">
-                                            <Image Source="/Assets/Images/Icons/delete.png" Width="16" Height="16"/>
-                                        </Button>
-                                    </StackPanel>
-                                </Grid>
-                            </Border>
-                        </ListViewItem>
+                                        <!-- Sağ Taraf: Butonlar -->
+                                        <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                                            <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Düzenle"
+                                                    Command="{Binding DataContext.PrepareToEditAccountCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                                    CommandParameter="{Binding}">
+                                                <Image Source="/Assets/Images/Icons/edit.png" Width="16" Height="16"/>
+                                            </Button>
+                                            <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Sil" Margin="5,0,0,0"
+                                                    Command="{Binding DataContext.DeleteAccountCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                                    CommandParameter="{Binding}">
+                                                <Image Source="/Assets/Images/Icons/delete.png" Width="16" Height="16"/>
+                                            </Button>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
                     </ListView>
                 </StackPanel>
             </Border>
@@ -137,19 +86,28 @@
         <!-- SAĞ SÜTUN: EKLE/DÜZENLE FORMU -->
         <Border Grid.Column="1" Style="{StaticResource DashboardCardStyle}" Margin="20,0,0,0">
             <StackPanel>
-                <TextBlock Text="Yeni Hesap Ekle" Style="{StaticResource CardTitleTextStyle}"/>
+                <TextBlock Text="{Binding FormTitle}" Style="{StaticResource CardTitleTextStyle}"/>
                 <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,20" Opacity="0.5"/>
+
                 <TextBlock Text="HESAP ADI" Style="{StaticResource LabelTextStyle}"/>
-                <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="ING Bank - Vadesiz" Margin="0,0,0,15"/>
+                <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding SelectedAccount.Name, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
+
                 <TextBlock Text="HESAP TÜRÜ" Style="{StaticResource LabelTextStyle}"/>
-                <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="Banka Hesabı" Margin="0,0,0,15"/>
+               
+                <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding SelectedAccount.Type, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
+
                 <TextBlock Text="BAKİYE / LİMİT" Style="{StaticResource LabelTextStyle}"/>
-                <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="15000" Margin="0,0,0,15"/>
+                <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding SelectedAccount.CurrentBalance, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
+
                 <TextBlock Text="HEDEF (İsteğe Bağlı)" Style="{StaticResource LabelTextStyle}"/>
-                <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="20000" Margin="0,0,0,15"/>
+                <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding SelectedAccount.TargetBalance, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
+
                 <TextBlock Text="PARA BİRİMİ" Style="{StaticResource LabelTextStyle}"/>
-                <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="USD" Margin="0,0,0,25"/>
-                <Button Content="HESAP OLUŞTUR" Style="{StaticResource PrimaryButtonStyle}"/>
+                <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding SelectedAccount.Currency, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,25"/>
+
+                <Button Content="{Binding SaveButtonText}" 
+                        Style="{StaticResource PrimaryButtonStyle}"
+                        Command="{Binding SaveAccountCommand}"/>
             </StackPanel>
         </Border>
     </Grid>

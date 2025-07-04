@@ -166,7 +166,6 @@
   </ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="Models\Account\" />
 		<Folder Include="Styles\" />
 	</ItemGroup>
 
