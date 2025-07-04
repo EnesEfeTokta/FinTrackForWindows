@@ -24,6 +24,12 @@ namespace FinTrack.Models.Account
         [ObservableProperty]
         private string currency = "USD";
 
+<<<<<<< Updated upstream
+=======
+        [ObservableProperty]
+        private List<AccountBalanceHistoryPoint> history = new();
+
+>>>>>>> Stashed changes
         public string IconPath => Type switch
         {
             AccountType.Checking => "/Assets/Images/Icons/bank.png",
@@ -69,4 +75,8 @@ namespace FinTrack.Models.Account
         }
 
     }
+<<<<<<< Updated upstream
 }
+=======
+}
+>>>>>>> Stashed changes

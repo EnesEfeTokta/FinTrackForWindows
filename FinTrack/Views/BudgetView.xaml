@@ -86,23 +86,15 @@
             <StackPanel>
                 <TextBlock x:Name="FormTitle" Text="Yeni Bütçe Ekle" Style="{StaticResource CardTitleTextStyle}"/>
                 <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,20" Opacity="0.5"/>
-
                 <TextBlock Text="BÜTÇE ADI" Style="{StaticResource LabelTextStyle}"/>
                 <TextBox Style="{StaticResource ModernTextBoxStyle}" Tag="Örn: Mutfak Giderleri" Margin="0,0,0,15"/>
-
                 <TextBlock Text="HEDEF TUTAR" Style="{StaticResource LabelTextStyle}"/>
                 <TextBox Style="{StaticResource ModernTextBoxStyle}" Tag="Örn: 2000" Margin="0,0,0,15"/>
-
                 <TextBlock Text="KATEGORİ" Style="{StaticResource LabelTextStyle}"/>
-                <!-- Gerçek uygulamada ComboBox kullanmak daha doğrudur -->
                 <TextBox Style="{StaticResource ModernTextBoxStyle}" Tag="Örn: Gıda, Yatırım, Fatura" Margin="0,0,0,15"/>
-
                 <TextBlock Text="BİTİŞ TARİHİ" Style="{StaticResource LabelTextStyle}"/>
-                <!-- Gerçek uygulamada DatePicker kullanmak daha doğrudur -->
                 <TextBox Style="{StaticResource ModernTextBoxStyle}" Tag="GG.AA.YYYY" Margin="0,0,0,25"/>
-
                 <Button x:Name="FormButton" Content="BÜTÇE OLUŞTUR" Style="{StaticResource PrimaryButtonStyle}"/>
-
                 <Button Content="Temizle" Style="{StaticResource LinkButtonStyle}" HorizontalAlignment="Right" Margin="0,10,0,0"/>
 
             </StackPanel>

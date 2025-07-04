@@ -3,8 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+<<<<<<< Updated upstream
              xmlns:local="clr-namespace:FinTrack.Views"
              xmlns:vm="clr-namespace:FinTrack.ViewModels"
+=======
+             xmlns:vm="clr-namespace:FinTrack.ViewModels"
+             xmlns:helpers="clr-namespace:FinTrack.Helpers"
+>>>>>>> Stashed changes
              mc:Ignorable="d" 
              d:DesignHeight="800" d:DesignWidth="1400"
              Background="{StaticResource MainBackgroundBrush}"
@@ -16,6 +21,7 @@
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
 
+<<<<<<< Updated upstream
         <StackPanel Grid.Column="0" Margin="0,0,20,0">
             <Border Style="{StaticResource DashboardCardStyle}">
                 <StackPanel>
@@ -84,6 +90,72 @@
         </StackPanel>
 
         <!-- SAĞ SÜTUN: EKLE/DÜZENLE FORMU -->
+=======
+        <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <StackPanel Margin="0,0,20,0">
+                <Border Style="{StaticResource DashboardCardStyle}">
+                    <StackPanel>
+                        <TextBlock Text="Mevcut Hesaplar" Style="{StaticResource CardTitleTextStyle}"/>
+                        <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,15" Opacity="0.5"/>
+                        <ListView ItemsSource="{Binding Accounts}" 
+                                  SelectedItem="{Binding SelectedAccount, Mode=TwoWay}"
+                                  Background="Transparent" BorderThickness="0" 
+                                  ItemContainerStyle="{StaticResource CleanListViewItemStyle}" 
+                                  MaxHeight="350">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10" Padding="15">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Border Grid.Column="0" Background="{Binding IconBackground}" CornerRadius="25" Width="50" Height="50">
+                                                <Image Source="{Binding IconPath}" Width="25" Height="25" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                            </Border>
+                                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="15,0">
+                                                <TextBlock Text="{Binding Name}" Foreground="White" FontSize="16" FontWeight="SemiBold"/>
+                                                <ProgressBar Value="{Binding ProgressValue, Mode=OneWay}" Height="8" Margin="0,8,0,8" 
+                                                             Background="{StaticResource ProgressBarBackgroundBrush}" 
+                                                             Foreground="{Binding IconBackground}"/>
+                                                <TextBlock Text="{Binding BalanceText}" Foreground="{StaticResource TopBarTextSecondaryBrush}" FontSize="12"/>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                                                <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Düzenle"
+                                                        Command="{Binding DataContext.PrepareToEditAccountCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                                        CommandParameter="{Binding}">
+                                                    <Image Source="/Assets/Images/Icons/edit.png" Width="16" Height="16"/>
+                                                </Button>
+                                                <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Sil" Margin="5,0,0,0"
+                                                        Command="{Binding DataContext.DeleteAccountCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                                        CommandParameter="{Binding}">
+                                                    <Image Source="/Assets/Images/Icons/delete.png" Width="16" Height="16"/>
+                                                </Button>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource DashboardCardStyle}" Margin="0,20,0,0">
+                    <StackPanel>
+                        <TextBlock Text="Hesap İstatistikleri" Style="{StaticResource CardTitleTextStyle}"/>
+                        <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,15" Opacity="0.5"/>
+                        <Border Height="200" Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10">
+                            <TextBlock Text="[İstatistik grafiği alanı]" 
+                                       Foreground="{StaticResource TopBarTextSecondaryBrush}" 
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+>>>>>>> Stashed changes
         <Border Grid.Column="1" Style="{StaticResource DashboardCardStyle}" Margin="20,0,0,0">
             <StackPanel>
                 <TextBlock Text="{Binding FormTitle}" Style="{StaticResource CardTitleTextStyle}"/>
@@ -93,7 +165,10 @@
                 <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding SelectedAccount.Name, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
 
                 <TextBlock Text="HESAP TÜRÜ" Style="{StaticResource LabelTextStyle}"/>
+<<<<<<< Updated upstream
                
+=======
+>>>>>>> Stashed changes
                 <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding SelectedAccount.Type, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
 
                 <TextBlock Text="BAKİYE / LİMİT" Style="{StaticResource LabelTextStyle}"/>
