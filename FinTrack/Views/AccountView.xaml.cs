@@ -1,10 +1,8 @@
-﻿using System.Windows.Controls;
+﻿using FinTrack.ViewModels;
+using System.Windows.Controls;
 
 namespace FinTrack.Views
 {
-    /// <summary>
-    /// Interaction logic for AccountView.xaml
-    /// </summary>
     public partial class AccountView : UserControl
     {
         public AccountView()
