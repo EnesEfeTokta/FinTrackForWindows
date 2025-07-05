@@ -50,7 +50,7 @@ namespace FinTrack.ViewModels
         private void NewTransaction()
         {
             IsEditing = false;
-            EditableTransaction = new TransactionModel(); 
+            EditableTransaction = new TransactionModel();
             _logger.LogInformation("Yeni işlem formu hazırlandı.");
 
             OnPropertyChanged(nameof(FormTitle));

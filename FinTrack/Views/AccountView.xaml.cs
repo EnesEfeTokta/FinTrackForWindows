@@ -1,5 +1,4 @@
-﻿using FinTrack.ViewModels;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 
 namespace FinTrack.Views
 {
