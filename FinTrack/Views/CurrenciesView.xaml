@@ -3,9 +3,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:helpers="clr-namespace:FinTrack.Helpers"
              mc:Ignorable="d" 
              d:DesignHeight="800" d:DesignWidth="1400"
              Background="{StaticResource MainBackgroundBrush}">
+
+    <UserControl.Resources>
+        <helpers:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+    </UserControl.Resources>
 
     <Grid Margin="30">
         <Grid.ColumnDefinitions>
@@ -14,120 +19,94 @@
         </Grid.ColumnDefinitions>
 
         <!-- SOL SÜTUN: KUR LİSTESİ -->
-        <Border Grid.Column="0" Style="{StaticResource DashboardCardStyle}" Margin="0,0,20,0">
-            <DockPanel>
-                <TextBlock DockPanel.Dock="Top" Text="Tüm Kurlar" Style="{StaticResource CardTitleTextStyle}"/>
-                <Border DockPanel.Dock="Top" BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,15" Opacity="0.5"/>
-                <TextBox DockPanel.Dock="Top" Text="Para birimi ara..." Style="{StaticResource ModernTextBoxStyle}" Margin="0,0,0,15"/>
-
-                <ListView Background="Transparent" BorderThickness="0" ItemContainerStyle="{StaticResource CleanListViewItemStyle}">
-                    <!-- Örnek Kur 1: Türk Lirası -->
-                    <ListViewItem>
-                        <Border Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10" Padding="15">
-                            <Grid>
-                                <StackPanel Orientation="Horizontal">
-                                    <Image Source="https://currencyfreaks.com/photos/flags/try.png" Width="40" Height="25" Stretch="Fill"/>
-                                    <StackPanel Margin="15,0,0,0" VerticalAlignment="Center">
-                                        <TextBlock Text="TRY" Foreground="White" FontSize="16" FontWeight="SemiBold"/>
-                                        <TextBlock Text="Turkish Lira" Foreground="{StaticResource TopBarTextSecondaryBrush}" FontSize="12"/>
-                                    </StackPanel>
-                                </StackPanel>
-                                <StackPanel HorizontalAlignment="Right" VerticalAlignment="Center" TextBlock.TextAlignment="Right">
-                                    <TextBlock Text="32,25" Foreground="White" FontSize="16" FontWeight="SemiBold"/>
-                                    <TextBlock Text="+0.12 (0.37%)" Foreground="{StaticResource StatusGreenBrush}" FontSize="12"/>
-                                </StackPanel>
-                            </Grid>
-                        </Border>
-                    </ListViewItem>
-
-                    <!-- Örnek Kur 2: Euro -->
-                    <ListViewItem>
-                        <Border Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10" Padding="15">
-                            <Grid>
-                                <StackPanel Orientation="Horizontal">
-                                    <Image Source="https://currencyfreaks.com/photos/flags/eur.png" Width="40" Height="25" Stretch="Fill"/>
-                                    <StackPanel Margin="15,0,0,0" VerticalAlignment="Center">
-                                        <TextBlock Text="EUR" Foreground="White" FontSize="16" FontWeight="SemiBold"/>
-                                        <TextBlock Text="Euro" Foreground="{StaticResource TopBarTextSecondaryBrush}" FontSize="12"/>
-                                    </StackPanel>
-                                </StackPanel>
-                                <StackPanel HorizontalAlignment="Right" VerticalAlignment="Center" TextBlock.TextAlignment="Right">
-                                    <TextBlock Text="0,92" Foreground="White" FontSize="16" FontWeight="SemiBold"/>
-                                    <TextBlock Text="-0.01 (0.11%)" Foreground="{StaticResource StatusRedBrush}" FontSize="12"/>
-                                </StackPanel>
-                            </Grid>
-                        </Border>
-                    </ListViewItem>
-
-                    <!-- Örnek Kur 3: Pound Sterling -->
-                    <ListViewItem>
-                        <Border Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10" Padding="15">
-                            <Grid>
-                                <StackPanel Orientation="Horizontal">
-                                    <Image Source="https://currencyfreaks.com/photos/flags/gbp.png" Width="40" Height="25" Stretch="Fill"/>
-                                    <StackPanel Margin="15,0,0,0" VerticalAlignment="Center">
-                                        <TextBlock Text="GBP" Foreground="White" FontSize="16" FontWeight="SemiBold"/>
-                                        <TextBlock Text="Pound Sterling" Foreground="{StaticResource TopBarTextSecondaryBrush}" FontSize="12"/>
-                                    </StackPanel>
-                                </StackPanel>
-                                <StackPanel HorizontalAlignment="Right" VerticalAlignment="Center" TextBlock.TextAlignment="Right">
-                                    <TextBlock Text="0,79" Foreground="White" FontSize="16" FontWeight="SemiBold"/>
-                                    <TextBlock Text="+0.00 (0.00%)" Foreground="{StaticResource TopBarTextSecondaryBrush}" FontSize="12"/>
-                                </StackPanel>
-                            </Grid>
-                        </Border>
-                    </ListViewItem>
-                    <!-- ... Diğer kurlar ... -->
-                </ListView>
-            </DockPanel>
-        </Border>
+        <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <Border Style="{StaticResource DashboardCardStyle}" Margin="0,0,20,0">
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Top" Text="Tüm Kurlar" Style="{StaticResource CardTitleTextStyle}"/>
+                    <Border DockPanel.Dock="Top" BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,15" Opacity="0.5"/>
+                    <TextBox DockPanel.Dock="Top" Text="{Binding CurrencySearch, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ModernTextBoxStyle}" Margin="0,0,0,15"/>
+    
+                    <ListView ItemsSource="{Binding FilteredCurrencies}"
+                              SelectedItem="{Binding SelectedCurrency}"
+                              Background="Transparent" BorderThickness="0" 
+                              ItemContainerStyle="{StaticResource CleanListViewItemStyle}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10" Padding="15" Margin="0,0,0,8">
+                                    <Grid>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Image Source="{Binding ToCurrencyFlag}" Width="40" Height="25" Stretch="Fill"/>
+                                            <StackPanel Margin="15,0,0,0" VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding ToCurrencyCode}" Foreground="White" FontSize="16" FontWeight="SemiBold"/>
+                                                <TextBlock Text="{Binding ToCurrencyName}" Foreground="{StaticResource TopBarTextSecondaryBrush}" FontSize="12"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                        <StackPanel HorizontalAlignment="Right" VerticalAlignment="Center" TextBlock.TextAlignment="Right">
+                                            <TextBlock Text="{Binding ToCurrencyPrice, StringFormat='N4'}" Foreground="White" FontSize="16" FontWeight="SemiBold"/>
+                                            <TextBlock Text="{Binding ToCurrencyChange}" Foreground="{Binding ToCurrencyChangeForeground}" FontSize="12"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </DockPanel>
+            </Border>
+        </ScrollViewer>
 
         <!-- SAĞ SÜTUN: DETAY VE GRAFİK -->
-        <Border Grid.Column="1" Style="{StaticResource DashboardCardStyle}" Margin="20,0,0,0">
-            <StackPanel>
-                <!-- Seçilen Kur Başlığı -->
-                <Grid Margin="0,0,0,15">
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <Image Source="https://currencyfreaks.com/photos/flags/usd.png" Width="50" Height="35" Stretch="Fill"/>
-                        <StackPanel Margin="15,0,0,0">
-                            <TextBlock Text="USD / TRY" Style="{StaticResource CardTitleTextStyle}"/>
-                            <TextBlock Text="Türk Lirası Karşılığı" Foreground="{StaticResource TopBarTextSecondaryBrush}"/>
+        <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <Border Style="{StaticResource DashboardCardStyle}" Margin="20,0,0,0"
+                    DataContext="{Binding SelectedCurrency}">
+                <StackPanel Visibility="{Binding Converter={StaticResource NullToVisibilityConverter}}">
+                    <Grid Margin="0,0,0,15">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Image Source="https://currencyfreaks.com/photos/flags/usd.png" Width="50" Height="35" Stretch="Fill"/>
+                            <StackPanel Margin="15,0,0,0">
+                                <TextBlock Style="{StaticResource CardTitleTextStyle}" FontSize="24">
+                                    <Run Text="USD" FontWeight="Bold" Foreground="White"/>
+                                    <Run Text=" / " FontWeight="SemiBold" Foreground="{StaticResource TopBarTextSecondaryBrush}"/>
+                                    <Run Text="{Binding ToCurrencyCode}" FontWeight="Bold" Foreground="White"/>
+                                </TextBlock>
+                                <TextBlock Foreground="{StaticResource TopBarTextSecondaryBrush}">
+                                    <Run Text="{Binding ToCurrencyName}"/> Karşılığı
+                                </TextBlock>
+                            </StackPanel>
                         </StackPanel>
-                    </StackPanel>
-                    <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center">
-                        <Run Text="32,25" FontSize="42" FontWeight="Bold" Foreground="White"/>
-                        <Run Text="TRY" FontSize="20" FontWeight="SemiBold" Foreground="{StaticResource TopBarTextSecondaryBrush}"/>
-                    </TextBlock>
-                </Grid>
-                <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,0,0,20" Opacity="0.5"/>
+                        <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center">
+                            <Run Text="{Binding ToCurrencyPrice, StringFormat='N4'}" FontSize="42" FontWeight="Bold" Foreground="White"/>
+                            <Run Text="{Binding ToCurrencyCode}" FontSize="20" FontWeight="SemiBold" Foreground="{StaticResource TopBarTextSecondaryBrush}"/>
+                        </TextBlock>
+                    </Grid>
+                    <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,0,0,20" Opacity="0.5"/>
+    
+                    <!-- Grafik Alanı (Henüz veri yok) -->
+                    <TextBlock Text="Son 1 Haftalık Değişim" Style="{StaticResource LabelTextStyle}" FontSize="14" Margin="0,0,0,15"/>
+                    <Border Height="350" Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10">
+                        <TextBlock Text="[Grafik Verisi Yok]" Foreground="{StaticResource TopBarTextSecondaryBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
 
-                <!-- Grafik Alanı -->
-                <TextBlock Text="Son 1 Haftalık Değişim" Style="{StaticResource LabelTextStyle}" FontSize="14" Margin="0,0,0,15"/>
-                <!-- LiveCharts için yer tutucu. Gerçek uygulamada ViewModel'e bağlanır. -->
-                <Border Height="350" Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10">
-                    <TextBlock Text="[Son 1 Haftalık Kur Değişim Grafiği Placeholder]" Foreground="{StaticResource TopBarTextSecondaryBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                </Border>
-
-                <!-- Ek Detaylar -->
-                <UniformGrid Columns="2" Margin="0,25,0,0">
-                    <StackPanel>
-                        <TextBlock Text="GÜNLÜK EN DÜŞÜK" Style="{StaticResource LabelTextStyle}"/>
-                        <TextBlock Text="32,18 TRY" FontSize="18" Foreground="White"/>
-                    </StackPanel>
-                    <StackPanel>
-                        <TextBlock Text="GÜNLÜK EN YÜKSEK" Style="{StaticResource LabelTextStyle}"/>
-                        <TextBlock Text="32,31 TRY" FontSize="18" Foreground="White"/>
-                    </StackPanel>
-                    <StackPanel Margin="0,20,0,0">
-                        <TextBlock Text="HAFTALIK DEĞİŞİM" Style="{StaticResource LabelTextStyle}"/>
-                        <TextBlock Text="+0.85 (2.71%)" FontSize="18" Foreground="{StaticResource StatusGreenBrush}"/>
-                    </StackPanel>
-                    <StackPanel Margin="0,20,0,0">
-                        <TextBlock Text="AYLIK DEĞİŞİM" Style="{StaticResource LabelTextStyle}"/>
-                        <TextBlock Text="+1.42 (4.60%)" FontSize="18" Foreground="{StaticResource StatusGreenBrush}"/>
-                    </StackPanel>
-                </UniformGrid>
-            </StackPanel>
-        </Border>
+                    <!-- Ek Detaylar (Henüz veri yok) -->
+                    <UniformGrid Columns="2" Margin="0,25,0,0">
+                        <StackPanel>
+                            <TextBlock Text="GÜNLÜK EN DÜŞÜK" Style="{StaticResource LabelTextStyle}"/>
+                            <TextBlock Text="{Binding DailyLow, FallbackValue='--'}" FontSize="18" Foreground="White"/>
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="GÜNLÜK EN YÜKSEK" Style="{StaticResource LabelTextStyle}"/>
+                            <TextBlock Text="{Binding DailyHigh, FallbackValue='--'}" FontSize="18" Foreground="White"/>
+                        </StackPanel>
+                        <StackPanel Margin="0,20,0,0">
+                            <TextBlock Text="HAFTALIK DEĞİŞİM" Style="{StaticResource LabelTextStyle}"/>
+                            <TextBlock Text="{Binding WeeklyChange, FallbackValue='--'}" FontSize="18" Foreground="{StaticResource StatusGreenBrush}"/>
+                        </StackPanel>
+                        <StackPanel Margin="0,20,0,0">
+                            <TextBlock Text="AYLIK DEĞİŞİM" Style="{StaticResource LabelTextStyle}"/>
+                            <TextBlock Text="{Binding MonthlyChange, FallbackValue='--'}" FontSize="18" Foreground="{StaticResource StatusGreenBrush}"/>
+                        </StackPanel>
+                    </UniformGrid>
+                </StackPanel>
+            </Border>
+        </ScrollViewer>
     </Grid>
 </UserControl>
