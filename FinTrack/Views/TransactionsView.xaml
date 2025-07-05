@@ -3,9 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:FinTrack.ViewModels"
+             xmlns:helpers="clr-namespace:FinTrack.Helpers"
+             xmlns:enums="clr-namespace:FinTrack.Enums"
              mc:Ignorable="d" 
              d:DesignHeight="850" d:DesignWidth="1500"
+             d:DataContext="{d:DesignInstance Type=local:TransactionsViewModel, IsDesignTimeCreatable=True}"
              Background="{StaticResource MainBackgroundBrush}">
+
+    <UserControl.Resources>
+        <helpers:EnumToBooleanConverter x:Key="EnumToBooleanConverter" />
+    </UserControl.Resources>
 
     <Grid Margin="30">
         <Grid.ColumnDefinitions>
@@ -13,139 +21,130 @@
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- SOL VE ORTA BÖLÜM -->
         <DockPanel Grid.Column="0" Margin="0,0,20,0">
-            <!-- ÜST KISIM: ÖZET KARTLARI -->
             <UniformGrid DockPanel.Dock="Top" Columns="3" Margin="0,0,0,20">
                 <Border Style="{StaticResource DashboardCardStyle}">
                     <StackPanel TextBlock.TextAlignment="Center">
                         <TextBlock Text="TOPLAM GELİR" Style="{StaticResource LabelTextStyle}" Margin="0"/>
-                        <TextBlock Text="$6.800" Foreground="{StaticResource StatusGreenBrush}" FontSize="32" FontWeight="Bold" Margin="0,10,0,0"/>
+                        <TextBlock Text="{Binding TotalIncome}" Foreground="{StaticResource StatusGreenBrush}" FontSize="32" FontWeight="Bold" Margin="0,10,0,0"/>
                     </StackPanel>
                 </Border>
                 <Border Style="{StaticResource DashboardCardStyle}">
                     <StackPanel TextBlock.TextAlignment="Center">
                         <TextBlock Text="TOPLAM GİDER" Style="{StaticResource LabelTextStyle}" Margin="0"/>
-                        <TextBlock Text="$2.250" Foreground="{StaticResource StatusRedBrush}" FontSize="32" FontWeight="Bold" Margin="0,10,0,0"/>
+                        <TextBlock Text="{Binding TotalExpense}" Foreground="{StaticResource StatusRedBrush}" FontSize="32" FontWeight="Bold" Margin="0,10,0,0"/>
                     </StackPanel>
                 </Border>
                 <Border Style="{StaticResource DashboardCardStyle}">
                     <StackPanel TextBlock.TextAlignment="Center">
                         <TextBlock Text="EN ÇOK HARCAMA" Style="{StaticResource LabelTextStyle}" Margin="0"/>
-                        <TextBlock Text="Kira" Foreground="{StaticResource AccentBlueBrush}" FontSize="32" FontWeight="Bold" Margin="0,10,0,0"/>
+                        <TextBlock Text="{Binding MostSpending}" Foreground="{StaticResource AccentBlueBrush}" FontSize="32" FontWeight="Bold" Margin="0,10,0,0"/>
                     </StackPanel>
                 </Border>
             </UniformGrid>
 
-            <!-- ORTA KISIM: İŞLEM LİSTESİ -->
             <Border Style="{StaticResource DashboardCardStyle}">
                 <DockPanel>
-                    <!-- Liste Başlığı ve Filtreleme -->
                     <Grid DockPanel.Dock="Top" Margin="0,0,0,15">
                         <TextBlock Text="Tüm İşlemler" Style="{StaticResource CardTitleTextStyle}"/>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                             <TextBox Text="Ara..." Style="{StaticResource ModernTextBoxStyle}" Width="150" Margin="0,0,10,0"/>
-                            <Button Content="Filtrele" Style="{StaticResource PrimaryButtonStyle}" Padding="15,8"/>
+                            <Button Content="Filtrele" Style="{StaticResource PrimaryButtonStyle}" Padding="15,8" Width="70"/>
                         </StackPanel>
                     </Grid>
                     <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" DockPanel.Dock="Top" BorderThickness="0,0,0,1" Margin="0,0,0,15" Opacity="0.5"/>
 
-                    <!-- İşlemler Listesi -->
-                    <ListView Background="Transparent" BorderThickness="0" ItemContainerStyle="{StaticResource CleanListViewItemStyle}">
-                        <!-- Örnek İşlem 1 -->
-                        <ListViewItem>
-                            <Border Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10" Padding="15">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Border Grid.Column="0" Background="{StaticResource StatusGreenBrush}" CornerRadius="20" Width="40" Height="40">
-                                        <Image Source="/Assets/Images/Icons/money.png" Width="20" Height="20"/>
-                                    </Border>
-                                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="15,0">
-                                        <TextBlock Text="Ana iş kolundan maaş geliri" Foreground="White" FontSize="15" FontWeight="SemiBold"/>
-                                        <TextBlock Text="01 Mayıs 2024 - ING Bank" Foreground="{StaticResource TopBarTextSecondaryBrush}" FontSize="12"/>
-                                    </StackPanel>
-                                    <TextBlock Grid.Column="2" Text="+$5.500" Foreground="{StaticResource StatusGreenBrush}" FontSize="16" FontWeight="Bold" VerticalAlignment="Center"/>
-                                    <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center" Margin="15,0,0,0">
-                                        <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Düzenle">
-                                            <Image Source="/Assets/Images/Icons/edit.png" Width="16" Height="16"/>
-                                        </Button>
-                                        <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Sil">
-                                            <Image Source="/Assets/Images/Icons/delete.png" Width="16" Height="16"/>
-                                        </Button>
-                                    </StackPanel>
-                                </Grid>
-                            </Border>
-                        </ListViewItem>
-                        <!-- Örnek İşlem 2 -->
-                        <ListViewItem>
-                            <Border Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10" Padding="15">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Border Grid.Column="0" Background="{StaticResource StatusRedBrush}" CornerRadius="20" Width="40" Height="40">
-                                        <Image Source="/Assets/Images/Icons/money.png" Width="20" Height="20"/>
-                                    </Border>
-                                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="15,0">
-                                        <TextBlock Text="Aylık Kira Ödemesi" Foreground="White" FontSize="15" FontWeight="SemiBold"/>
-                                        <TextBlock Text="05 Mayıs 2024 - QNB Bank" Foreground="{StaticResource TopBarTextSecondaryBrush}" FontSize="12"/>
-                                    </StackPanel>
-                                    <TextBlock Grid.Column="2" Text="-$1.500" Foreground="{StaticResource StatusRedBrush}" FontSize="16" FontWeight="Bold" VerticalAlignment="Center"/>
-                                    <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center" Margin="15,0,0,0">
-                                        <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Düzenle">
-                                            <Image Source="/Assets/Images/Icons/edit.png" Width="16" Height="16"/>
-                                        </Button>
-                                        <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Sil">
-                                            <Image Source="/Assets/Images/Icons/delete.png" Width="16" Height="16"/>
-                                        </Button>
-                                    </StackPanel>
-                                </Grid>
-                            </Border>
-                        </ListViewItem>
-                        <!-- ... Diğer işlemler ... -->
+                    <ListView ItemsSource="{Binding Transactions}"
+                              SelectedItem="{Binding SelectedTransaction, Mode=OneWayToSource}"
+                              Background="Transparent" BorderThickness="0" 
+                              ItemContainerStyle="{StaticResource CleanListViewItemStyle}"
+                              ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10" Padding="15" Margin="0,0,0,8">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Border Grid.Column="0" Background="{Binding IconBackground}" CornerRadius="20" Width="40" Height="40">
+                                            <Image Source="/Assets/Images/Icons/money.png" Width="20" Height="20"/>
+                                        </Border>
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="15,0">
+                                            <TextBlock Text="{Binding NameOrDescription}" Foreground="White" FontSize="15" FontWeight="SemiBold"/>
+                                            <TextBlock Foreground="{StaticResource TopBarTextSecondaryBrush}" FontSize="12">
+                                                <Run Text="{Binding Date, StringFormat='dd MMMM yyyy'}" />
+                                                <Run Text=" - " />
+                                                <Run Text="{Binding AccountName}" />
+                                            </TextBlock>
+                                        </StackPanel>
+                                        <TextBlock Grid.Column="2" Text="{Binding Amount, StringFormat='C'}" Foreground="{Binding AmountForegroundColor}" FontSize="16" FontWeight="Bold" VerticalAlignment="Center"/>
+                                        <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center" Margin="15,0,0,0">
+                                            <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Düzenle"
+                                                    Command="{Binding DataContext.EditTransactionCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                                    CommandParameter="{Binding}">
+                                                <Image Source="/Assets/Images/Icons/edit.png" Width="16" Height="16"/>
+                                            </Button>
+                                            <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Sil"
+                                                    Command="{Binding DataContext.DeleteTransactionCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                                    CommandParameter="{Binding}">
+                                                <Image Source="/Assets/Images/Icons/delete.png" Width="16" Height="16"/>
+                                            </Button>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
                     </ListView>
                 </DockPanel>
             </Border>
         </DockPanel>
 
-        <!-- SAĞ SÜTUN: EKLE/DÜZENLE FORMU -->
-        <Border Grid.Column="1" Style="{StaticResource DashboardCardStyle}" Margin="20,0,0,0">
-            <StackPanel>
-                <TextBlock Text="Yeni İşlem Ekle" Style="{StaticResource CardTitleTextStyle}"/>
-                <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,20" Opacity="0.5"/>
+        <ScrollViewer Grid.Column="1">
+            <Border Style="{StaticResource DashboardCardStyle}" Margin="20,0,0,0">
+                <StackPanel>
+                    <Grid>
+                        <TextBlock Text="{Binding FormTitle}" Style="{StaticResource CardTitleTextStyle}"/>
+                        <Button Command="{Binding NewTransactionCommand}" Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Yeni İşlem Formunu Temizle" HorizontalAlignment="Right">
+                            <Image Source="/Assets/Images/Icons/add.png" Width="16" Height="16"/>
+                        </Button>
+                    </Grid>
+                    <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,20" Opacity="0.5"/>
 
-                <TextBlock Text="İŞLEM AÇIKLAMASI" Style="{StaticResource LabelTextStyle}"/>
-                <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="Netflix Aylık Üyelik" Margin="0,0,0,15"/>
+                    <TextBlock Text="İŞLEM AÇIKLAMASI" Style="{StaticResource LabelTextStyle}"/>
+                    <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding EditableTransaction.NameOrDescription, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
 
-                <TextBlock Text="TUTAR" Style="{StaticResource LabelTextStyle}"/>
-                <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="250" Margin="0,0,0,15"/>
+                    <TextBlock Text="TUTAR" Style="{StaticResource LabelTextStyle}"/>
+                    <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding EditableTransaction.Amount, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
 
-                <TextBlock Text="İŞLEM TÜRÜ" Style="{StaticResource LabelTextStyle}"/>
-                <!-- Gerçek uygulamada ComboBox veya ToggleButton'lar kullanılabilir -->
-                <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
-                    <RadioButton Content="Gelir" IsChecked="False" GroupName="TransactionType" Margin="0,0,20,0" Foreground="White"/>
-                    <RadioButton Content="Gider" IsChecked="True" GroupName="TransactionType" Foreground="White"/>
+                    <TextBlock Text="PARA BİRİMİ" Style="{StaticResource LabelTextStyle}"/>
+                    <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding EditableTransaction.Currency, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
+
+                    <TextBlock Text="İŞLEM TÜRÜ" Style="{StaticResource LabelTextStyle}"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,15">
+                        <RadioButton Content="Gelir" GroupName="TransactionType" Margin="0,0,20,0" Foreground="White"
+                                    IsChecked="{Binding EditableTransaction.Type, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static enums:TransactionType.Income}}"/>
+                        <RadioButton Content="Gider" GroupName="TransactionType" Foreground="White"
+                                 IsChecked="{Binding EditableTransaction.Type, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static enums:TransactionType.Expense}}"/>
+                    </StackPanel>
+
+                    <TextBlock Text="HESAP" Style="{StaticResource LabelTextStyle}"/>
+                    <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding EditableTransaction.AccountName, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
+
+                    <TextBlock Text="KATEGORİ" Style="{StaticResource LabelTextStyle}"/>
+                    <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding EditableTransaction.Category, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
+
+                    <TextBlock Text="TARİH" Style="{StaticResource LabelTextStyle}"/>
+                    <DatePicker Style="{StaticResource ModernDatePickerStyle}" 
+                                SelectedDate="{Binding EditableTransaction.Date, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,20"/>
+
+                    <Button Content="{Binding SaveButtonText}" 
+                            Command="{Binding SaveTransactionCommand}"
+                            Style="{StaticResource PrimaryButtonStyle}"/>
                 </StackPanel>
-
-                <TextBlock Text="HESAP" Style="{StaticResource LabelTextStyle}"/>
-                <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="QNB Bank - Kredi Kartı" Margin="0,0,0,15"/>
-
-                <TextBlock Text="KATEGORİ" Style="{StaticResource LabelTextStyle}"/>
-                <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="Eğlence" Margin="0,0,0,15"/>
-
-                <TextBlock Text="TARİH" Style="{StaticResource LabelTextStyle}"/>
-                <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="20.05.2024" Margin="0,0,0,25"/>
-
-                <Button Content="İŞLEM EKLE" Style="{StaticResource PrimaryButtonStyle}"/>
-            </StackPanel>
-        </Border>
+            </Border>
+        </ScrollViewer>
     </Grid>
 </UserControl>

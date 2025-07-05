@@ -19,6 +19,7 @@
                 <TextBlock Text="Mevcut Bütçeler" Style="{StaticResource CardTitleTextStyle}"/>
                 <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,20" Opacity="0.5"/>
                 <ListView ItemsSource="{Binding Budgets}" 
+                          SelectedItem="{Binding SelectedBudget, Mode=TwoWay}"
                           Background="Transparent" BorderThickness="0" 
                           ItemContainerStyle="{StaticResource CleanListViewItemStyle}">
                     <ListView.ItemTemplate>
