@@ -18,94 +18,86 @@
             <StackPanel>
                 <TextBlock Text="Mevcut Bütçeler" Style="{StaticResource CardTitleTextStyle}"/>
                 <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,20" Opacity="0.5"/>
+                <ListView ItemsSource="{Binding Budgets}" 
+                          SelectedItem="{Binding SelectedBudget, Mode=TwoWay}"
+                          Background="Transparent" BorderThickness="0" 
+                          ItemContainerStyle="{StaticResource CleanListViewItemStyle}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Border Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10" Padding="15">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
 
-                <ListView Background="Transparent" BorderThickness="0" ItemContainerStyle="{StaticResource CleanListViewItemStyle}">
-                    <!-- Örnek Bütçe 1 -->
-                    <ListViewItem>
-                        <Border Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10" Padding="15">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="{Binding Name}" Foreground="White" FontSize="16" FontWeight="SemiBold"/>
+                                        <ProgressBar Value="{Binding ProgressValue, Mode=OneWay}" Height="8" Margin="0,8" Background="{StaticResource ProgressBarBackgroundBrush}" Foreground="{StaticResource StatusRedBrush}"/>
+                                        <TextBlock Foreground="{StaticResource TopBarTextSecondaryBrush}">
+                                            <Run Text="{Binding ProgressText, Mode=OneWay}"/> - <Run Text="{Binding RemainingTimeText, Mode=OneWay}"/>
+                                        </TextBlock>
+                                    </StackPanel>
 
-                                <StackPanel Grid.Column="0">
-                                    <TextBlock Text="Aylık Mutfak Giderleri" Foreground="White" FontSize="16" FontWeight="SemiBold"/>
-                                    <ProgressBar Value="75" Height="8" Margin="0,8" Background="{StaticResource ProgressBarBackgroundBrush}" Foreground="{StaticResource StatusRedBrush}"/>
-                                    <TextBlock Foreground="{StaticResource TopBarTextSecondaryBrush}">
-                                        <Run Text="$1.500"/> / <Run Text="$2.000"/> - <Run Text="Kalan Süre: 12 gün"/>
-                                    </TextBlock>
-                                </StackPanel>
-
-                                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="15,0,0,0">
-                                    <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Düzenle">
-                                        <Image Source="/Assets/Images/Icons/edit.png" Width="16" Height="16"/>
-                                    </Button>
-                                    <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Sil" Margin="5,0,0,0">
-                                        <Image Source="/Assets/Images/Icons/delete.png" Width="16" Height="16"/>
-                                    </Button>
-                                </StackPanel>
-                            </Grid>
-                        </Border>
-                    </ListViewItem>
-
-                    <!-- Örnek Bütçe 2 -->
-                    <ListViewItem>
-                        <Border Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10" Padding="15">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-
-                                <StackPanel Grid.Column="0">
-                                    <TextBlock Text="Yatırım Fonu Birikimi" Foreground="White" FontSize="16" FontWeight="SemiBold"/>
-                                    <ProgressBar Value="40" Height="8" Margin="0,8" Background="{StaticResource ProgressBarBackgroundBrush}" Foreground="{StaticResource StatusGreenBrush}"/>
-                                    <TextBlock Foreground="{StaticResource TopBarTextSecondaryBrush}">
-                                        <Run Text="$4.000"/> / <Run Text="$10.000"/> - <Run Text="Kalan Süre: 6 ay"/>
-                                    </TextBlock>
-                                </StackPanel>
-
-                                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="15,0,0,0">
-                                    <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Düzenle">
-                                        <Image Source="/Assets/Images/Icons/edit.png" Width="16" Height="16"/>
-                                    </Button>
-                                    <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Sil" Margin="5,0,0,0">
-                                        <Image Source="/Assets/Images/Icons/delete.png" Width="16" Height="16"/>
-                                    </Button>
-                                </StackPanel>
-                            </Grid>
-                        </Border>
-                    </ListViewItem>
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="15,0,0,0">
+                                        <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Düzenle"
+                                                Command="{Binding DataContext.PrepareToEditBudgetCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                                CommandParameter="{Binding}">
+                                            <Image Source="/Assets/Images/Icons/edit.png" Width="16" Height="16"/>
+                                        </Button>
+                                        <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Sil" Margin="5,0,0,0"
+                                                Command="{Binding DataContext.DeleteBudgetCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                                CommandParameter="{Binding}">
+                                            <Image Source="/Assets/Images/Icons/delete.png" Width="16" Height="16"/>
+                                        </Button>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
                 </ListView>
             </StackPanel>
         </Border>
 
         <!-- SAĞ SÜTUN: EKLE/DÜZENLE FORMU -->
-        <Border Grid.Column="1" Style="{StaticResource DashboardCardStyle}" Margin="20,0,0,0">
-            <StackPanel>
-                <TextBlock x:Name="FormTitle" Text="Yeni Bütçe Ekle" Style="{StaticResource CardTitleTextStyle}"/>
-                <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,20" Opacity="0.5"/>
+        <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <Border Style="{StaticResource DashboardCardStyle}" Margin="20,0,0,0">
+                <StackPanel DataContext="{Binding SelectedBudget}">
+                    <TextBlock Text="{Binding DataContext.FormTitle, RelativeSource={RelativeSource AncestorType=UserControl}}" Style="{StaticResource CardTitleTextStyle}"/>
+                    <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" 
+                        BorderThickness="0,0,0,1" Margin="0,5,0,20" Opacity="0.5"/>
 
-                <TextBlock Text="BÜTÇE ADI" Style="{StaticResource LabelTextStyle}"/>
-                <TextBox Style="{StaticResource ModernTextBoxStyle}" Tag="Örn: Mutfak Giderleri" Margin="0,0,0,15"/>
+                    <TextBlock Text="BÜTÇE ADI" Style="{StaticResource LabelTextStyle}"/>
+                    <TextBox Style="{StaticResource ModernTextBoxStyle}" 
+                         Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
 
-                <TextBlock Text="HEDEF TUTAR" Style="{StaticResource LabelTextStyle}"/>
-                <TextBox Style="{StaticResource ModernTextBoxStyle}" Tag="Örn: 2000" Margin="0,0,0,15"/>
+                    <TextBlock Text="HEDEF TUTAR" Style="{StaticResource LabelTextStyle}"/>
+                    <TextBox Style="{StaticResource ModernTextBoxStyle}"
+                         Text="{Binding TargetAmount, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}" Margin="0,0,0,15"/>
 
-                <TextBlock Text="KATEGORİ" Style="{StaticResource LabelTextStyle}"/>
-                <!-- Gerçek uygulamada ComboBox kullanmak daha doğrudur -->
-                <TextBox Style="{StaticResource ModernTextBoxStyle}" Tag="Örn: Gıda, Yatırım, Fatura" Margin="0,0,0,15"/>
+                    <TextBlock Text="PARA BİRİMİ" Style="{StaticResource LabelTextStyle}"/>
+                    <TextBox Style="{StaticResource ModernTextBoxStyle}"
+                         Text="{Binding Currency, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
 
-                <TextBlock Text="BİTİŞ TARİHİ" Style="{StaticResource LabelTextStyle}"/>
-                <!-- Gerçek uygulamada DatePicker kullanmak daha doğrudur -->
-                <TextBox Style="{StaticResource ModernTextBoxStyle}" Tag="GG.AA.YYYY" Margin="0,0,0,25"/>
+                    <TextBlock Text="BAŞLANGIÇ TARİHİ" Style="{StaticResource LabelTextStyle}"/>
+                    <DatePicker Style="{StaticResource ModernDatePickerStyle}" 
+                                SelectedDate="{Binding StartDate, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
 
-                <Button x:Name="FormButton" Content="BÜTÇE OLUŞTUR" Style="{StaticResource PrimaryButtonStyle}"/>
+                    <TextBlock Text="BİTİŞ TARİHİ" Style="{StaticResource LabelTextStyle}"/>
+                    <DatePicker Style="{StaticResource ModernDatePickerStyle}" 
+                                SelectedDate="{Binding EndDate, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,25"/>
 
-                <Button Content="Temizle" Style="{StaticResource LinkButtonStyle}" HorizontalAlignment="Right" Margin="0,10,0,0"/>
+                    <Button Content="{Binding DataContext.SaveButtonText, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                            Command="{Binding DataContext.SaveBudgetCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                            Style="{StaticResource PrimaryButtonStyle}"/>
 
-            </StackPanel>
-        </Border>
+                    <Button Content="Temizle" 
+                            Command="{Binding DataContext.CleanFormCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                            Style="{StaticResource LinkButtonStyle}"
+                            HorizontalAlignment="Right" Margin="0,10,0,0"/>
+
+                </StackPanel>
+            </Border>
+        </ScrollViewer>
     </Grid>
 </UserControl>
