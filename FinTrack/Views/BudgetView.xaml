@@ -16,7 +16,7 @@
         <!-- SOL SÜTUN: BÜTÇE LİSTESİ -->
         <Border Grid.Column="0" Style="{StaticResource DashboardCardStyle}" Margin="0,0,20,0">
             <StackPanel>
-                <TextBlock Text="Mevcut Bütçeler" Style="{StaticResource CardTitleTextStyle}"/>
+                <TextBlock Text="Current Budgets" Style="{StaticResource CardTitleTextStyle}"/>
                 <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,20" Opacity="0.5"/>
                 <ListView ItemsSource="{Binding Budgets}" 
                           SelectedItem="{Binding SelectedBudget, Mode=TwoWay}"
@@ -67,23 +67,23 @@
                     <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" 
                         BorderThickness="0,0,0,1" Margin="0,5,0,20" Opacity="0.5"/>
 
-                    <TextBlock Text="BÜTÇE ADI" Style="{StaticResource LabelTextStyle}"/>
+                    <TextBlock Text="BUDGET NAME" Style="{StaticResource LabelTextStyle}"/>
                     <TextBox Style="{StaticResource ModernTextBoxStyle}" 
                          Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
 
-                    <TextBlock Text="HEDEF TUTAR" Style="{StaticResource LabelTextStyle}"/>
+                    <TextBlock Text="TARGET AMOUNT" Style="{StaticResource LabelTextStyle}"/>
                     <TextBox Style="{StaticResource ModernTextBoxStyle}"
                          Text="{Binding TargetAmount, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}" Margin="0,0,0,15"/>
 
-                    <TextBlock Text="PARA BİRİMİ" Style="{StaticResource LabelTextStyle}"/>
+                    <TextBlock Text="CURRENCY" Style="{StaticResource LabelTextStyle}"/>
                     <TextBox Style="{StaticResource ModernTextBoxStyle}"
                          Text="{Binding Currency, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
 
-                    <TextBlock Text="BAŞLANGIÇ TARİHİ" Style="{StaticResource LabelTextStyle}"/>
+                    <TextBlock Text="START DATE" Style="{StaticResource LabelTextStyle}"/>
                     <DatePicker Style="{StaticResource ModernDatePickerStyle}" 
                                 SelectedDate="{Binding StartDate, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
 
-                    <TextBlock Text="BİTİŞ TARİHİ" Style="{StaticResource LabelTextStyle}"/>
+                    <TextBlock Text="END DATE" Style="{StaticResource LabelTextStyle}"/>
                     <DatePicker Style="{StaticResource ModernDatePickerStyle}" 
                                 SelectedDate="{Binding EndDate, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,25"/>
 
@@ -91,7 +91,7 @@
                             Command="{Binding DataContext.SaveBudgetCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                             Style="{StaticResource PrimaryButtonStyle}"/>
 
-                    <Button Content="Temizle" 
+                    <Button Content="Clean" 
                             Command="{Binding DataContext.CleanFormCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                             Style="{StaticResource LinkButtonStyle}"
                             HorizontalAlignment="Right" Margin="0,10,0,0"/>

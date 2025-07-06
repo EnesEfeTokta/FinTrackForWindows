@@ -20,7 +20,7 @@
             <StackPanel Margin="0,0,20,0">
                 <Border Style="{StaticResource DashboardCardStyle}">
                     <StackPanel>
-                        <TextBlock Text="Mevcut Hesaplar" Style="{StaticResource CardTitleTextStyle}"/>
+                        <TextBlock Text="Current Accounts" Style="{StaticResource CardTitleTextStyle}"/>
                         <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,15" Opacity="0.5"/>
                         <ListView ItemsSource="{Binding Accounts}" 
                                   SelectedItem="{Binding SelectedAccount, Mode=TwoWay}"
@@ -47,12 +47,12 @@
                                                 <TextBlock Text="{Binding BalanceText}" Foreground="{StaticResource TopBarTextSecondaryBrush}" FontSize="12"/>
                                             </StackPanel>
                                             <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                                                <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Düzenle"
+                                                <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Edit"
                                                         Command="{Binding DataContext.PrepareToEditAccountCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
                                                         CommandParameter="{Binding}">
                                                     <Image Source="/Assets/Images/Icons/edit.png" Width="16" Height="16"/>
                                                 </Button>
-                                                <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Sil" Margin="5,0,0,0"
+                                                <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Delete" Margin="5,0,0,0"
                                                         Command="{Binding DataContext.DeleteAccountCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
                                                         CommandParameter="{Binding}">
                                                     <Image Source="/Assets/Images/Icons/delete.png" Width="16" Height="16"/>
@@ -68,10 +68,10 @@
 
                 <Border Style="{StaticResource DashboardCardStyle}" Margin="0,20,0,0">
                     <StackPanel>
-                        <TextBlock Text="Hesap İstatistikleri" Style="{StaticResource CardTitleTextStyle}"/>
+                        <TextBlock Text="Account Statistics" Style="{StaticResource CardTitleTextStyle}"/>
                         <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,15" Opacity="0.5"/>
                         <Border Height="200" Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10">
-                            <TextBlock Text="[İstatistik grafiği alanı]" 
+                            <TextBlock Text="[Statistical graph area]" 
                                        Foreground="{StaticResource TopBarTextSecondaryBrush}" 
                                        HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
@@ -85,19 +85,19 @@
                 <TextBlock Text="{Binding FormTitle}" Style="{StaticResource CardTitleTextStyle}"/>
                 <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,20" Opacity="0.5"/>
 
-                <TextBlock Text="HESAP ADI" Style="{StaticResource LabelTextStyle}"/>
+                <TextBlock Text="ACCOUNT NAME" Style="{StaticResource LabelTextStyle}"/>
                 <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding SelectedAccount.Name, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
 
-                <TextBlock Text="HESAP TÜRÜ" Style="{StaticResource LabelTextStyle}"/>
+                <TextBlock Text="ACCOUNT TYPE" Style="{StaticResource LabelTextStyle}"/>
                 <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding SelectedAccount.Type, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
 
-                <TextBlock Text="BAKİYE / LİMİT" Style="{StaticResource LabelTextStyle}"/>
+                <TextBlock Text="BALANCE / LIMIT" Style="{StaticResource LabelTextStyle}"/>
                 <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding SelectedAccount.CurrentBalance, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
 
-                <TextBlock Text="HEDEF (İsteğe Bağlı)" Style="{StaticResource LabelTextStyle}"/>
+                <TextBlock Text="TARGET (Optional)" Style="{StaticResource LabelTextStyle}"/>
                 <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding SelectedAccount.TargetBalance, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
 
-                <TextBlock Text="PARA BİRİMİ" Style="{StaticResource LabelTextStyle}"/>
+                <TextBlock Text="CURRENCY" Style="{StaticResource LabelTextStyle}"/>
                 <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding SelectedAccount.Currency, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,25"/>
 
                 <Button Content="{Binding SaveButtonText}" 

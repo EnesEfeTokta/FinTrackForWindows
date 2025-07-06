@@ -22,7 +22,7 @@
         <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
             <Border Style="{StaticResource DashboardCardStyle}" Margin="0,0,20,0">
                 <DockPanel>
-                    <TextBlock DockPanel.Dock="Top" Text="Tüm Kurlar" Style="{StaticResource CardTitleTextStyle}"/>
+                    <TextBlock DockPanel.Dock="Top" Text="All Rates" Style="{StaticResource CardTitleTextStyle}"/>
                     <Border DockPanel.Dock="Top" BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,15" Opacity="0.5"/>
                     <TextBox DockPanel.Dock="Top" Text="{Binding CurrencySearch, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ModernTextBoxStyle}" Margin="0,0,0,15"/>
     
@@ -69,7 +69,7 @@
                                     <Run Text="{Binding ToCurrencyCode}" FontWeight="Bold" Foreground="White"/>
                                 </TextBlock>
                                 <TextBlock Foreground="{StaticResource TopBarTextSecondaryBrush}">
-                                    <Run Text="{Binding ToCurrencyName}"/> Karşılığı
+                                    <Run Text="{Binding ToCurrencyName}"/> Equivalent
                                 </TextBlock>
                             </StackPanel>
                         </StackPanel>
@@ -81,27 +81,27 @@
                     <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,0,0,20" Opacity="0.5"/>
     
                     <!-- Grafik Alanı (Henüz veri yok) -->
-                    <TextBlock Text="Son 1 Haftalık Değişim" Style="{StaticResource LabelTextStyle}" FontSize="14" Margin="0,0,0,15"/>
+                    <TextBlock Text="Change Over the Last Week" Style="{StaticResource LabelTextStyle}" FontSize="14" Margin="0,0,0,15"/>
                     <Border Height="350" Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10">
-                        <TextBlock Text="[Grafik Verisi Yok]" Foreground="{StaticResource TopBarTextSecondaryBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <TextBlock Text="[No Graphical Data]" Foreground="{StaticResource TopBarTextSecondaryBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Border>
 
                     <!-- Ek Detaylar (Henüz veri yok) -->
                     <UniformGrid Columns="2" Margin="0,25,0,0">
                         <StackPanel>
-                            <TextBlock Text="GÜNLÜK EN DÜŞÜK" Style="{StaticResource LabelTextStyle}"/>
+                            <TextBlock Text="DAILY LOW" Style="{StaticResource LabelTextStyle}"/>
                             <TextBlock Text="{Binding DailyLow, FallbackValue='--'}" FontSize="18" Foreground="White"/>
                         </StackPanel>
                         <StackPanel>
-                            <TextBlock Text="GÜNLÜK EN YÜKSEK" Style="{StaticResource LabelTextStyle}"/>
+                            <TextBlock Text="DAILY HIGH" Style="{StaticResource LabelTextStyle}"/>
                             <TextBlock Text="{Binding DailyHigh, FallbackValue='--'}" FontSize="18" Foreground="White"/>
                         </StackPanel>
                         <StackPanel Margin="0,20,0,0">
-                            <TextBlock Text="HAFTALIK DEĞİŞİM" Style="{StaticResource LabelTextStyle}"/>
+                            <TextBlock Text="WEEKLY CHANGE" Style="{StaticResource LabelTextStyle}"/>
                             <TextBlock Text="{Binding WeeklyChange, FallbackValue='--'}" FontSize="18" Foreground="{StaticResource StatusGreenBrush}"/>
                         </StackPanel>
                         <StackPanel Margin="0,20,0,0">
-                            <TextBlock Text="AYLIK DEĞİŞİM" Style="{StaticResource LabelTextStyle}"/>
+                            <TextBlock Text="MONTHLY CHANGE" Style="{StaticResource LabelTextStyle}"/>
                             <TextBlock Text="{Binding MonthlyChange, FallbackValue='--'}" FontSize="18" Foreground="{StaticResource StatusGreenBrush}"/>
                         </StackPanel>
                     </UniformGrid>
