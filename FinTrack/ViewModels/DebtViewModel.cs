@@ -116,51 +116,51 @@ namespace FinTrack.ViewModels
         {
             allDebts = new ObservableCollection<DebtModel>
             {
-                new DebtModel 
-                { 
-                    LenderName = "Ahmet Yılmaz", 
-                    BorrowerName = "Unknown", 
-                    Amount = 500, 
-                    DueDate = new DateTime(2024, 6, 15), 
-                    Status = DebtStatus.PendingProposal, 
-                    CurrentUserName = CurrentUserName 
+                new DebtModel
+                {
+                    LenderName = "Ahmet Yılmaz",
+                    BorrowerName = "Unknown",
+                    Amount = 500,
+                    DueDate = new DateTime(2024, 6, 15),
+                    Status = DebtStatus.PendingProposal,
+                    CurrentUserName = CurrentUserName
                 },
-                new DebtModel 
-                { 
-                    LenderName = CurrentUserName, 
-                    BorrowerName = "Eylül Korkmaz", 
-                    Amount = 2500, 
-                    DueDate = new DateTime(2024, 10, 1), 
-                    Status = DebtStatus.AwaitingVideoUpload, 
-                    CurrentUserName = CurrentUserName 
+                new DebtModel
+                {
+                    LenderName = CurrentUserName,
+                    BorrowerName = "Eylül Korkmaz",
+                    Amount = 2500,
+                    DueDate = new DateTime(2024, 10, 1),
+                    Status = DebtStatus.AwaitingVideoUpload,
+                    CurrentUserName = CurrentUserName
                 },
-                new DebtModel 
-                { 
-                    LenderName = "Sinem Berçem", 
-                    BorrowerName = CurrentUserName, 
-                    Amount = 30000, 
-                    DueDate = new DateTime(2024, 8, 31), 
-                    Status = DebtStatus.Active, 
-                    CurrentUserName = CurrentUserName 
+                new DebtModel
+                {
+                    LenderName = "Sinem Berçem",
+                    BorrowerName = CurrentUserName,
+                    Amount = 30000,
+                    DueDate = new DateTime(2024, 8, 31),
+                    Status = DebtStatus.Active,
+                    CurrentUserName = CurrentUserName
                 },
-                new DebtModel 
-                { 
-                    LenderName = CurrentUserName, 
-                    BorrowerName = "Ali Veli", 
-                    Amount = 800000, 
-                    DueDate = new DateTime(2025, 1, 1), 
-                    Status = DebtStatus.AwaitingOperatorApproval, 
-                    CurrentUserName = CurrentUserName 
+                new DebtModel
+                {
+                    LenderName = CurrentUserName,
+                    BorrowerName = "Ali Veli",
+                    Amount = 800000,
+                    DueDate = new DateTime(2025, 1, 1),
+                    Status = DebtStatus.AwaitingOperatorApproval,
+                    CurrentUserName = CurrentUserName
                 },
-                new DebtModel 
-                { 
-                    LenderName = CurrentUserName, 
-                    BorrowerName = "Canan Aslan", 
-                    Amount = 1000, 
-                    DueDate = new DateTime(2024, 9, 20), 
-                    Status = DebtStatus.RejectedByOperator, 
-                    RejectionReason = "Insufficient video", 
-                    CurrentUserName = CurrentUserName 
+                new DebtModel
+                {
+                    LenderName = CurrentUserName,
+                    BorrowerName = "Canan Aslan",
+                    Amount = 1000,
+                    DueDate = new DateTime(2024, 9, 20),
+                    Status = DebtStatus.RejectedByOperator,
+                    RejectionReason = "Insufficient video",
+                    CurrentUserName = CurrentUserName
                 }
             };
             _logger.LogInformation("Örnek borç verileri yüklendi.");

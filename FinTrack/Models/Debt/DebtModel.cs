@@ -1,6 +1,6 @@
-﻿using System.Windows.Media;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using FinTrack.Enums;
+using System.Windows.Media;
 
 namespace FinTrack.Models.Debt
 {

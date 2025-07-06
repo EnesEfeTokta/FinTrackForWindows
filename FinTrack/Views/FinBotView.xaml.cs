@@ -2,7 +2,7 @@
 
 namespace FinTrack.Views
 {
-public partial class FinBotView : UserControl
+    public partial class FinBotView : UserControl
     {
         public FinBotView()
         {
