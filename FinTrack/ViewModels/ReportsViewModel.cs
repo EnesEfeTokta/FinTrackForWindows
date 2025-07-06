@@ -90,10 +90,9 @@ namespace FinTrack.ViewModels
             SortingCriteria.Add("By Date (Oldest to Newest)");
             SortingCriteria.Add("By Amount (Highest to Lowest)");
             SortingCriteria.Add("By Amount (Lowest to Highest)");
-
-            selectedReportType = AvailableReportTypes.FirstOrDefault();
-            selectedSortingCriterion = SortingCriteria.FirstOrDefault();
-            selectedExportFormat = AvailableExportFormats.FirstOrDefault();
+            SelectedReportType = AvailableReportTypes.FirstOrDefault();
+            SelectedSortingCriterion = SortingCriteria.FirstOrDefault();
+            SelectedExportFormat = AvailableExportFormats.FirstOrDefault();
         }
 
         [RelayCommand]
