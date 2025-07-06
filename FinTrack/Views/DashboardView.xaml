@@ -25,7 +25,7 @@
 
             <Border Grid.Row="0" Style="{StaticResource DashboardCardStyle}">
                 <StackPanel>
-                    <TextBlock Text="Bütçeler" Style="{StaticResource CardTitleTextStyle}" Margin="0,0,0,15"/>
+                    <TextBlock Text="Budgets" Style="{StaticResource CardTitleTextStyle}" Margin="0,0,0,15"/>
                     <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,20" Opacity="0.5"/>
                     <ItemsControl ItemsSource="{Binding Budgets_DashboardView_ItemsControl}">
                         <ItemsControl.ItemsPanel>
@@ -51,7 +51,7 @@
 
             <Border Grid.Row="1" Style="{StaticResource DashboardCardStyle}">
                 <StackPanel>
-                    <TextBlock Text="Kurlar" Style="{StaticResource CardTitleTextStyle}" Margin="0,0,0,15"/>
+                    <TextBlock Text="Currencies" Style="{StaticResource CardTitleTextStyle}" Margin="0,0,0,15"/>
                     <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,20" Opacity="0.5"/>
                     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                         <ItemsControl ItemsSource="{Binding CurrencyRates_DashboardView_ItemsControl}" AlternationCount="2147483647">
@@ -112,7 +112,7 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0">
-                        <TextBlock Text="Hesaplar" Style="{StaticResource CardTitleTextStyle}"/>
+                        <TextBlock Text="Accounts" Style="{StaticResource CardTitleTextStyle}"/>
                         <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,20" Opacity="0.5"/>
                         <ItemsControl ItemsSource="{Binding Accounts_DashboardView_ItemsControl}" Margin="0,15,0,0">
                             <ItemsControl.ItemTemplate>
@@ -127,7 +127,7 @@
                         </ItemsControl>
                     </StackPanel>
                     <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="20,0,0,0">
-                        <TextBlock Text="Toplam:" Foreground="{StaticResource TopBarTextSecondaryBrush}" HorizontalAlignment="Center" FontSize="14"/>
+                        <TextBlock Text="Total:" Foreground="{StaticResource TopBarTextSecondaryBrush}" HorizontalAlignment="Center" FontSize="14"/>
                         <TextBlock Text="{Binding TotalBalance_DashboardView_TextBlock}" Style="{StaticResource LargeMetricTextStyle}" Foreground="{StaticResource TotalBalanceGradientBrush}"/>
                     </StackPanel>
                 </Grid>
@@ -142,7 +142,7 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Row="0" Text="İşlemler" Style="{StaticResource CardTitleTextStyle}"/>
+                    <TextBlock Grid.Row="0" Text="Transactions" Style="{StaticResource CardTitleTextStyle}"/>
 
                     <Border Grid.Row="1" BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,0" Opacity="0.5"/>
                     
@@ -175,7 +175,7 @@
 
             <Border Grid.Row="2" Style="{StaticResource DashboardCardStyle}">
                 <StackPanel>
-                    <TextBlock Text="Üyelik" Style="{StaticResource CardTitleTextStyle}"/>
+                    <TextBlock Text="Membership" Style="{StaticResource CardTitleTextStyle}"/>
                     <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,20" Opacity="0.5"/>
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -187,15 +187,15 @@
                         </Border>
                         <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="20,0,0,0">
                             <Grid>
-                                <TextBlock Text="Üyelik Başlangıç:" Foreground="{StaticResource TopBarTextPrimaryBrush}"/>
+                                <TextBlock Text="Membership Start:" Foreground="{StaticResource TopBarTextPrimaryBrush}"/>
                                 <TextBlock Text="{Binding CurrentMembership_DashboardView_Multiple.StartDate}" HorizontalAlignment="Right" Foreground="{StaticResource TopBarTextPrimaryBrush}"/>
                             </Grid>
                             <Grid Margin="0,5,0,0">
-                                <TextBlock Text="Üyelik Yenilenme:" Foreground="{StaticResource TopBarTextPrimaryBrush}"/>
+                                <TextBlock Text="Membership Renewal:" Foreground="{StaticResource TopBarTextPrimaryBrush}"/>
                                 <TextBlock Text="{Binding CurrentMembership_DashboardView_Multiple.RenewalDate}" HorizontalAlignment="Right" Foreground="{StaticResource TopBarTextPrimaryBrush}"/>
                             </Grid>
                             <Grid Margin="0,5,0,0">
-                                <TextBlock Text="Üyelik Fiyatı:" Foreground="{StaticResource TopBarTextPrimaryBrush}"/>
+                                <TextBlock Text="Membership Fee:" Foreground="{StaticResource TopBarTextPrimaryBrush}"/>
                                 <TextBlock Text="{Binding CurrentMembership_DashboardView_Multiple.Price}" HorizontalAlignment="Right" Foreground="{StaticResource TopBarTextPrimaryBrush}"/>
                             </Grid>
                         </StackPanel>
@@ -212,7 +212,7 @@
             </Grid.RowDefinitions>
             <Border Grid.Row="0" Style="{StaticResource DashboardCardStyle}">
                 <StackPanel>
-                    <TextBlock Text="Borçlar" Style="{StaticResource CardTitleTextStyle}"/>
+                    <TextBlock Text="Debts" Style="{StaticResource CardTitleTextStyle}"/>
                     <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,20" Opacity="0.5"/>
                     <Border Background="{StaticResource DebtAccentGradientBrush}" CornerRadius="15" Padding="15,20">
                         <Border.Style>
@@ -254,15 +254,15 @@
 
                                 <StackPanel Grid.Column="0" VerticalAlignment="Bottom">
                                     <TextBlock Margin="0,2" Opacity="0.7">
-                                        <Run Text="Oluşturma:" FontSize="10" Foreground="White"/>
+                                        <Run Text="Creation:" FontSize="10" Foreground="White"/>
                                         <Run Text="{Binding CurrentDebt_DashboardView_Multiple.CreationDate}" FontSize="11" Foreground="White"/>
                                     </TextBlock>
                                     <TextBlock Margin="0,2" Opacity="0.7">
-                                        <Run Text="Son Ödeme:" FontSize="10" Foreground="White"/>
+                                        <Run Text="Final Payment:" FontSize="10" Foreground="White"/>
                                         <Run Text="{Binding CurrentDebt_DashboardView_Multiple.DueDate}" FontSize="11" Foreground="White" FontWeight="SemiBold"/>
                                     </TextBlock>
                                     <TextBlock Margin="0,2" Opacity="0.7">
-                                        <Run Text="İnceleme:" FontSize="10" Foreground="White"/>
+                                        <Run Text="Review:" FontSize="10" Foreground="White"/>
                                         <Run Text="{Binding CurrentDebt_DashboardView_Multiple.ReviewDate}" FontSize="11" Foreground="White"/>
                                     </TextBlock>
                                 </StackPanel>
@@ -288,7 +288,7 @@
                     </Grid.RowDefinitions>
 
                     <StackPanel Grid.Row="0">
-                        <TextBlock Text="Raporlar" Style="{StaticResource CardTitleTextStyle}"/>
+                        <TextBlock Text="Reports" Style="{StaticResource CardTitleTextStyle}"/>
                         <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,20" Opacity="0.5"/>
                     </StackPanel>
 

@@ -3,9 +3,18 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:viewModels="clr-namespace:FinTrack.ViewModels"
+             xmlns:models="clr-namespace:FinTrack.Models.Report"
+             xmlns:enums="clr-namespace:FinTrack.Enums"
+             xmlns:helpers="clr-namespace:FinTrack.Helpers"
              mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance Type=viewModels:ReportsViewModel, IsDesignTimeCreatable=True}"
              d:DesignHeight="800" d:DesignWidth="1400"
              Background="{StaticResource MainBackgroundBrush}">
+
+    <UserControl.Resources>
+        <helpers:EnumToBooleanConverter x:Key="EnumToBooleanConverter"/>
+    </UserControl.Resources>
 
     <Grid Margin="30">
         <Grid.ColumnDefinitions>
@@ -16,100 +25,114 @@
 
         <!-- 1. SÜTUN: RAPOR TÜRÜ SEÇİMİ -->
         <Border Grid.Column="0" Style="{StaticResource DashboardCardStyle}" Margin="0,0,15,0">
-            <StackPanel>
-                <TextBlock Text="1. Rapor Türünü Seçin" Style="{StaticResource CardTitleTextStyle}"/>
-                <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,15" Opacity="0.5"/>
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Top" Text="1. Select Report Type" Style="{StaticResource CardTitleTextStyle}"/>
+                <Border DockPanel.Dock="Top" BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,15" Opacity="0.5"/>
 
-                <!-- Rapor türleri için RadioButton'lar kullanılır, böylece sadece biri seçilebilir. -->
-                <RadioButton GroupName="ReportType" IsChecked="True" Style="{StaticResource {x:Type ToggleButton}}" Margin="0,5">
-                    <Border Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10" Padding="20">
-                        <StackPanel Orientation="Horizontal">
-                            <Image Source="/Assets/Images/Icons/report.png" Width="30" Height="30"/>
-                            <TextBlock Text="Bütçe Raporları" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center" Margin="15,0,0,0" Foreground="White"/>
-                        </StackPanel>
-                    </Border>
-                </RadioButton>
-
-                <RadioButton GroupName="ReportType" Style="{StaticResource {x:Type ToggleButton}}" Margin="0,5">
-                    <Border Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10" Padding="20">
-                        <StackPanel Orientation="Horizontal">
-                            <Image Source="/Assets/Images/Icons/report.png" Width="30" Height="30"/>
-                            <TextBlock Text="Hesap Raporları" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center" Margin="15,0,0,0" Foreground="White"/>
-                        </StackPanel>
-                    </Border>
-                </RadioButton>
-
-                <RadioButton GroupName="ReportType" Style="{StaticResource {x:Type ToggleButton}}" Margin="0,5">
-                    <Border Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10" Padding="20">
-                        <StackPanel Orientation="Horizontal">
-                            <Image Source="/Assets/Images/Icons/report.png" Width="30" Height="30"/>
-                            <TextBlock Text="İşlem Raporları" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center" Margin="15,0,0,0" Foreground="White"/>
-                        </StackPanel>
-                    </Border>
-                </RadioButton>
-            </StackPanel>
+                <ListView ItemsSource="{Binding AvailableReportTypes}"
+                          SelectedItem="{Binding SelectedReportType}"
+                          Background="Transparent" BorderThickness="0"
+                          ItemContainerStyle="{StaticResource CleanListViewItemStyle}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate DataType="{x:Type enums:ReportType}">
+                            <Border x:Name="ItemBorder" Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10" Padding="20" Margin="0,0,0,8">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="/Assets/Images/Icons/report.png" Width="30" Height="30"/>
+                                    <TextBlock Text="{Binding}" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center" Margin="15,0,0,0" Foreground="White"/>
+                                </StackPanel>
+                            </Border>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=ListViewItem}}" Value="True">
+                                    <Setter TargetName="ItemBorder" Property="BorderBrush" Value="{StaticResource AccentBlueBrush}"/>
+                                    <Setter TargetName="ItemBorder" Property="BorderThickness" Value="2"/>
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </DockPanel>
         </Border>
 
         <!-- 2. SÜTUN: FİLTRELEME SEÇENEKLERİ -->
         <Border Grid.Column="1" Style="{StaticResource DashboardCardStyle}" Margin="15,0">
             <StackPanel>
-                <TextBlock Text="2. Filtreleri Belirleyin" Style="{StaticResource CardTitleTextStyle}"/>
+                <TextBlock Text="2. Select Filters" Style="{StaticResource CardTitleTextStyle}"/>
                 <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,15" Opacity="0.5"/>
 
-                <TextBlock Text="TARİH ARALIĞI" Style="{StaticResource LabelTextStyle}"/>
+                <TextBlock Text="DATE RANGE" Style="{StaticResource LabelTextStyle}"/>
                 <Grid Margin="0,0,0,15">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <!-- Gerçek uygulamada DatePicker kontrolleri kullanılmalıdır. -->
-                    <TextBox Grid.Column="0" Style="{StaticResource ModernTextBoxStyle}" Text="01.01.2024"/>
+                    <DatePicker Grid.Column="0" SelectedDate="{Binding StartDate}" Style="{StaticResource ModernDatePickerStyle}"/>
                     <TextBlock Grid.Column="1" Text="-" VerticalAlignment="Center" Margin="10,0" FontSize="18" Foreground="White"/>
-                    <TextBox Grid.Column="2" Style="{StaticResource ModernTextBoxStyle}" Text="31.12.2024"/>
+                    <DatePicker Grid.Column="2" SelectedDate="{Binding EndDate}" Style="{StaticResource ModernDatePickerStyle}"/>
                 </Grid>
 
-                <TextBlock Text="HESAPLAR" Style="{StaticResource LabelTextStyle}"/>
-                <!-- Gerçek uygulamada CheckBox'lar içeren bir liste kullanılmalıdır. -->
-                <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="Tüm Hesaplar" Margin="0,0,0,15"/>
+                <TextBlock Text="ACCOUNTS" Style="{StaticResource LabelTextStyle}"/>
+                <ListView ItemsSource="{Binding AvailableAccounts}" MaxHeight="120" Margin="0,0,0,15" BorderThickness="0" Background="Transparent">
+                    <ListView.ItemTemplate>
+                        <DataTemplate DataType="{x:Type models:SelectableOptionReport}">
+                            <CheckBox Content="{Binding Name}" IsChecked="{Binding IsSelected, Mode=TwoWay}" Foreground="White" Margin="0,2"/>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
 
-                <TextBlock Text="KATEGORİLER" Style="{StaticResource LabelTextStyle}"/>
-                <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="Tüm Kategoriler" Margin="0,0,0,15"/>
+                <TextBlock Text="CATEGORIES" Style="{StaticResource LabelTextStyle}"/>
+                <ListView ItemsSource="{Binding AvailableCategories}" MaxHeight="120" Margin="0,0,0,15" BorderThickness="0" Background="Transparent">
+                    <ListView.ItemTemplate>
+                        <DataTemplate DataType="{x:Type models:SelectableOptionReport}">
+                            <CheckBox Content="{Binding Name}" IsChecked="{Binding IsSelected, Mode=TwoWay}" Foreground="White" Margin="0,2"/>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
 
-                <TextBlock Text="İŞLEM TÜRÜ" Style="{StaticResource LabelTextStyle}"/>
-                <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
-                    <CheckBox Content="Gelir" IsChecked="True" Margin="0,0,20,0" Foreground="White"/>
-                    <CheckBox Content="Gider" IsChecked="True" Foreground="White"/>
+                <TextBlock Text="TRANSACTION TYPE" Style="{StaticResource LabelTextStyle}"/>
+                <StackPanel Orientation="Horizontal" Margin="0,5,0,15">
+                    <CheckBox Content="Income" IsChecked="{Binding IsIncomeSelected}" Margin="0,0,20,0" Foreground="White"/>
+                    <CheckBox Content="Expense" IsChecked="{Binding IsExpenseSelected}" Foreground="White"/>
                 </StackPanel>
 
-                <TextBlock Text="SIRALAMA ÖLÇÜTÜ" Style="{StaticResource LabelTextStyle}"/>
-                <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="Tarihe Göre (Yeniden Eskiye)" Margin="0,0,0,15"/>
+                <TextBlock Text="RANKING CRITERIA" Style="{StaticResource LabelTextStyle}"/>
+                <ComboBox ItemsSource="{Binding SortingCriteria}" SelectedItem="{Binding SelectedSortingCriterion}" Margin="0,0,0,15" Style="{StaticResource ModernComboBoxStyle}"/>
             </StackPanel>
         </Border>
 
         <!-- 3. SÜTUN: FORMAT VE ÇIKTI -->
         <Border Grid.Column="2" Style="{StaticResource DashboardCardStyle}" Margin="15,0,0,0">
             <StackPanel>
-                <TextBlock Text="3. Formatı Seçin" Style="{StaticResource CardTitleTextStyle}"/>
+                <TextBlock Text="3. Select the Format" Style="{StaticResource CardTitleTextStyle}"/>
                 <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,15" Opacity="0.5"/>
 
-                <!-- Format butonları WrapPanel içinde, böylece esnek olurlar. -->
-                <WrapPanel>
-                    <Button Content="PDF" Style="{StaticResource ReportFormatButtonStyle}"/>
-                    <Button Content="WORD" Style="{StaticResource ReportFormatButtonStyle}"/>
-                    <Button Content="EXCEL" Style="{StaticResource ReportFormatButtonStyle}"/>
-                    <Button Content="TEXT" Style="{StaticResource ReportFormatButtonStyle}"/>
-                    <Button Content="MARKDOWN" Style="{StaticResource ReportFormatButtonStyle}"/>
-                    <Button Content="XML" Style="{StaticResource ReportFormatButtonStyle}"/>
-                </WrapPanel>
+                <!-- Formatlar için Liste -->
+                <ItemsControl ItemsSource="{Binding AvailableExportFormats}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type enums:ExportFormat}">
+                            <RadioButton GroupName="ExportFormat" Content="{Binding}"
+                                         IsChecked="{Binding Path=., Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static enums:ExportFormat.PDF}}"
+                                         Command="{Binding DataContext.SelectExportFormatCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                         CommandParameter="{Binding}"
+                                         Style="{StaticResource ReportFormatToggleButtonStyle}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
 
                 <Separator Margin="0,30" Background="{StaticResource ProgressBarBackgroundBrush}"/>
 
-                <TextBlock Text="ÖZET" Style="{StaticResource LabelTextStyle}" FontSize="14"/>
-                <TextBlock Text="Bütçe Raporu, 01.01.2024 - 31.12.2024 tarihleri arasındaki tüm hesapları ve kategorileri içerecektir." 
+                <TextBlock Text="SUMMARY" Style="{StaticResource LabelTextStyle}" FontSize="14"/>
+                <TextBlock Text="{Binding ReportSummary}" 
                            TextWrapping="Wrap" Foreground="{StaticResource TopBarTextSecondaryBrush}" Margin="0,5,0,0"/>
 
-                <Button Content="RAPOR OLUŞTUR" Style="{StaticResource PrimaryButtonStyle}" Margin="0,40,0,0" Padding="15" FontSize="16"/>
+                <Button Content="CREATE REPORT" Style="{StaticResource PrimaryButtonStyle}" 
+                        Command="{Binding CreateReportCommand}"
+                        Margin="0,40,0,0" Padding="15" FontSize="16"/>
             </StackPanel>
         </Border>
     </Grid>

@@ -1,0 +1,39 @@
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using FinTrack.Enums;
+using System.Windows.Media;
+
+namespace FinTrack.Models.Currency
+{
+    public partial class CurrencyModel : ObservableObject
+    {
+        [ObservableProperty]
+        private string toCurrencyFlag = string.Empty;
+
+        [ObservableProperty]
+        private string toCurrencyCode = string.Empty;
+
+        [ObservableProperty]
+        private string toCurrencyName = string.Empty;
+
+        [ObservableProperty]
+        private decimal toCurrencyPrice;
+
+        [ObservableProperty]
+        private string toCurrencyChange = string.Empty;
+
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(ToCurrencyChangeForeground))]
+        private CurrencyConversionType type = CurrencyConversionType.Increase;
+
+        private static readonly Brush IncreaseBrush = new SolidColorBrush(Colors.Green);
+        private static readonly Brush DecreaseBrush = new SolidColorBrush(Colors.Red);
+        private static readonly Brush DefaultBrush = new SolidColorBrush(Colors.Gray);
+
+        public Brush ToCurrencyChangeForeground => Type switch
+        {
+            CurrencyConversionType.Increase => IncreaseBrush,
+            CurrencyConversionType.Decrease => DecreaseBrush,
+            _ => DefaultBrush
+        };
+    }
+}
