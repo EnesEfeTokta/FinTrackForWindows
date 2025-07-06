@@ -2,10 +2,7 @@
 
 namespace FinTrack.Views
 {
-    /// <summary>
-    /// Interaction logic for FinBotView.xaml
-    /// </summary>
-    public partial class FinBotView : UserControl
+public partial class FinBotView : UserControl
     {
         public FinBotView()
         {

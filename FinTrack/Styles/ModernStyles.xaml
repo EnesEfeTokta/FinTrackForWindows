@@ -13,6 +13,9 @@
     <SolidColorBrush x:Key="ErrorBrush" Color="#F85149"/>
     <SolidColorBrush x:Key="AccentBrush" Color="#58A6FF"/>
 
+    <SolidColorBrush x:Key="BotMessageBackgroundBrush" Color="#2C2F3B"/>
+    <SolidColorBrush x:Key="UserMessageBackgroundBrush" Color="#0078D7"/>
+
     <SolidColorBrush x:Key="StatusGreenBrush" Color="#4CAF50"/>
     <SolidColorBrush x:Key="StatusRedBrush" Color="#F44336"/>
     <SolidColorBrush x:Key="CardDarkerBackgroundBrush" Color="#21243B"/> <!-- For nested cards -->
@@ -860,10 +863,10 @@
 </Style>
 
         <Style x:Key="ModernDatePickerStyle" TargetType="DatePicker">
-            <Setter Property="Background" Value="#2D3A4F" /> <!-- ModernTextBox'unuzun arkaplan rengiyle aynı yapın -->
-            <Setter Property="Foreground" Value="White" /> <!-- Yazı rengi -->
+            <Setter Property="Background" Value="#2D3A4F" />
+            <Setter Property="Foreground" Value="White" />
             <Setter Property="BorderThickness" Value="0,0,0,1" />
-            <Setter Property="BorderBrush" Value="#4A5A74" /> <!-- ModernTextBox'unuzun kenarlık rengiyle aynı yapın -->
+            <Setter Property="BorderBrush" Value="#4A5A74" />
             <Setter Property="Padding" Value="10,8" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
             <Setter Property="Template">
@@ -904,4 +907,41 @@
             </Setter>
         </Style>
 
+        <!-- Kullanıcı Mesaj Balonu Stili -->
+        <Style x:Key="UserMessageBorderStyle" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource PrimaryAccentBrush}"/>
+            <!-- Mor tonu -->
+            <Setter Property="CornerRadius" Value="20,20,5,20"/>
+            <Setter Property="Padding" Value="15"/>
+            <Setter Property="Margin" Value="80,5,5,5"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="MaxWidth" Value="450"/>
+        </Style>
+
+        <!-- FinBot Mesaj Balonu Stili -->
+        <Style x:Key="BotMessageBorderStyle" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource CardDarkerBackgroundBrush}"/>
+            <Setter Property="CornerRadius" Value="20,20,20,5"/>
+            <Setter Property="Padding" Value="15"/>
+            <Setter Property="Margin" Value="5,5,80,5"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="MaxWidth" Value="450"/>
+        </Style>
+
+        <!-- Hızlı Eylem Buton Stili -->
+        <Style x:Key="QuickActionButtonStyle" TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
+            <Setter Property="Background" Value="{StaticResource CardDarkerBackgroundBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TopBarTextSecondaryBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource ProgressBarBackgroundBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="15,10"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+
+    <Style x:Key="ChatQuickActionButtonStyle" TargetType="Button" BasedOn="{StaticResource QuickActionButtonStyle}">
+        <Setter Property="Command" Value="{Binding DataContext.SendQuickActionCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+        <Setter Property="CommandParameter" Value="{Binding Content, RelativeSource={RelativeSource Self}}"/>
+        <Setter Property="Width" Value="150"/>
+    </Style>
+        
 </ResourceDictionary>
