@@ -3,9 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using FinTrack.Enums;
 using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
-using System;
 using System.Diagnostics;
-using System.Security.Policy;
 using System.Windows;
 
 namespace FinTrack.ViewModels

@@ -21,7 +21,7 @@ namespace FinTrack.Models.Notification
         [NotifyPropertyChangedFor(nameof(isUnread))]
         private bool isRead = false;
 
-        public bool isUnread => !isRead;
+        public bool isUnread => !IsRead;
 
         public NotificationModel(string title, string message, string? timestamp, NotificationType type, bool _isRead = false)
         {

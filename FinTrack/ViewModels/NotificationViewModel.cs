@@ -1,9 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using FinTrack.Enums;
+using FinTrack.Models.Notification;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
-using FinTrack.Models.Notification;
-using FinTrack.Enums;
-using CommunityToolkit.Mvvm.Input;
 
 namespace FinTrack.ViewModels
 {
