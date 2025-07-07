@@ -3,82 +3,94 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:vm="clr-namespace:FinTrack.ViewModels" 
+             xmlns:helpers="clr-namespace:FinTrack.Helpers"
+             xmlns:enums="clr-namespace:FinTrack.Enums"
              mc:Ignorable="d" 
              d:DesignHeight="800" d:DesignWidth="1200"
+             d:DataContext="{d:DesignInstance Type=local:FeedbackViewModel, IsDesignTimeCreatable=True}"
              Background="{StaticResource MainBackgroundBrush}">
+    
+    <UserControl.Resources>
+        <helpers:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter"/>
+    </UserControl.Resources>
 
-    <Grid Margin="40">
+        <Grid Margin="40">
         <Grid.ColumnDefinitions>
-            <!-- Sol Sütun: Form Alanı -->
             <ColumnDefinition Width="1.8*"/>
-            <!-- Sağ Sütun: Bilgilendirme ve SSS -->
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
 
         <!-- SOL SÜTUN: DESTEK FORMU -->
-        <Border Grid.Column="0" Style="{StaticResource DashboardCardStyle}" Margin="0,0,20,0">
-            <StackPanel>
-                <TextBlock Text="Teknik Destek ve Geri Bildirim" Style="{StaticResource CardTitleTextStyle}"/>
-                <TextBlock Text="Bir sorun mu yaşıyorsunuz veya bir öneriniz mi var? Aşağıdaki formu kullanarak bize ulaşın." 
-                           Foreground="{StaticResource TopBarTextSecondaryBrush}" TextWrapping="Wrap" Margin="0,5,0,0"/>
-                <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,15,0,20" Opacity="0.5"/>
+        <ScrollViewer Grid.Column="0">
+            <Border Style="{StaticResource DashboardCardStyle}" Margin="0,0,20,0">
+                <StackPanel>
+                    <TextBlock Text="Technical Support and Feedback" Style="{StaticResource CardTitleTextStyle}"/>
+                    <TextBlock Text="Are you experiencing a problem or do you have a suggestion? Contact us using the form below." 
+                               Foreground="{StaticResource TopBarTextSecondaryBrush}" TextWrapping="Wrap" Margin="0,5,0,0"/>
+                    <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,15,0,20" Opacity="0.5"/>
+    
+                    <TextBlock Text="SUBJECT" Style="{StaticResource LabelTextStyle}"/>
+                    <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding InputSubject, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
 
-                <TextBlock Text="KONU" Style="{StaticResource LabelTextStyle}"/>
-                <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="Uygulama yavaş çalışıyor" Margin="0,0,0,15"/>
+                    <TextBlock Text="TYPE OF PAPER" Style="{StaticResource LabelTextStyle}"/>
+                    <ComboBox Style="{StaticResource ModernComboBoxStyle}" 
+                              ItemsSource="{Binding FeedbackTypes}"
+                              SelectedItem="{Binding SelectedFeedbackType, Mode=OneWay}"
+                              Margin="0,0,0,15">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Converter={StaticResource EnumToDescriptionConverter}}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                    </ComboBox>
 
-                <TextBlock Text="BİLDİRİ TÜRÜ" Style="{StaticResource LabelTextStyle}"/>
-                <!-- Gerçek uygulamada burası ComboBox olmalı -->
-                <ComboBox Style="{StaticResource ModernComboBoxStyle}" SelectedIndex="0" Margin="0,0,0,15">
-                    <ComboBoxItem Content="Hata Bildirimi (Bug Report)"/>
-                    <ComboBoxItem Content="Özellik İsteği (Feature Request)"/>
-                    <ComboBoxItem Content="Genel Geri Bildirim"/>
-                    <ComboBoxItem Content="Hesap Sorunu"/>
-                </ComboBox>
+                    <TextBlock Text="DESCRIPTION" Style="{StaticResource LabelTextStyle}"/>
+                    <TextBox Style="{StaticResource ModernTextBoxStyle}" 
+                             TextWrapping="Wrap" AcceptsReturn="True"
+                             Height="150" VerticalContentAlignment="Top"
+                             Text="{Binding InputDescription, UpdateSourceTrigger=PropertyChanged}"
+                             Margin="0,0,0,20"/>
 
-                <TextBlock Text="AÇIKLAMA" Style="{StaticResource LabelTextStyle}"/>
-                <TextBox Style="{StaticResource ModernTextBoxStyle}" 
-                         TextWrapping="Wrap" AcceptsReturn="True"
-                         Height="150" VerticalContentAlignment="Top"
-                         Text="Uygulamayı başlattıktan sonra dashboard ekranının yüklenmesi yaklaşık 10 saniye sürüyor. Özellikle istatistikler kartı geç geliyor."
-                         Margin="0,0,0,20"/>
-
-                <TextBlock Text="DOSYA EKLE (İsteğe Bağlı)" Style="{StaticResource LabelTextStyle}"/>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition Width="Auto" MinWidth="93"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBox Grid.Column="0" Style="{StaticResource ModernTextBoxStyle}" IsReadOnly="True" Text="screenshot-2024-05-21.png"/>
-                    <Button Grid.Column="1" Content="Gözat..." Style="{StaticResource SecondaryButtonStyle}" Margin="10,0,0,0"/>
-                </Grid>
-
-                <Button Content="GÖNDER" Style="{StaticResource PrimaryButtonStyle}" HorizontalAlignment="Right" Margin="0,30,0,0" Padding="30,10" Width="90"/>
-            </StackPanel>
-        </Border>
+                    <TextBlock Text="ADD FILE (Optional)" Style="{StaticResource LabelTextStyle}"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="Auto" MinWidth="93"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" Style="{StaticResource ModernTextBoxStyle}" IsReadOnly="True" Text="{Binding SelectedFilePath, Mode=OneWay}"/>
+                        <Button Grid.Column="1" Content="Browse..." Style="{StaticResource SecondaryButtonStyle}" Command="{Binding BrowseFileCommand}" Margin="10,0,0,0"/>
+                    </Grid>
+    
+                    <Button Content="SEND" Style="{StaticResource PrimaryButtonStyle}" HorizontalAlignment="Right" 
+                            Margin="0,30,0,0" Padding="30,10" Width="90"
+                            Command="{Binding SendFeedbackCommand}"/>
+                </StackPanel>
+            </Border>
+        </ScrollViewer>
 
         <!-- SAĞ SÜTUN: BİLGİLENDİRME VE SSS -->
         <Border Grid.Column="1" Style="{StaticResource DashboardCardStyle}" Margin="20,0,0,0">
             <StackPanel>
-                <TextBlock Text="Bilmeniz Gerekenler" Style="{StaticResource CardTitleTextStyle}"/>
+                <TextBlock Text="What You Need to Know" Style="{StaticResource CardTitleTextStyle}"/>
                 <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,20" Opacity="0.5"/>
 
-                <TextBlock Text="Hızlı Çözümler İçin:" FontWeight="SemiBold" Foreground="{StaticResource TopBarTextPrimaryBrush}" FontSize="14"/>
-                <TextBlock Text="Sorun yaşamadan önce lütfen Sıkça Sorulan Sorular (SSS) bölümümüzü kontrol edin. Aradığınız çözüm orada olabilir." 
+                <TextBlock Text="For Quick Solutions:" FontWeight="SemiBold" Foreground="{StaticResource TopBarTextPrimaryBrush}" FontSize="14"/>
+                <TextBlock Text="Before you encounter a problem, please check our Frequently Asked Questions (FAQ) section. The solution you are looking for may be there." 
                            Foreground="{StaticResource TopBarTextSecondaryBrush}" TextWrapping="Wrap" Margin="0,5,0,20"/>
 
-                <TextBlock Text="Sıkça Sorulan Sorular" FontWeight="SemiBold" Foreground="{StaticResource TopBarTextPrimaryBrush}" FontSize="14"/>
-                <!-- Gerçek uygulamada burası bir ItemsControl ile doldurulabilir -->
+                <TextBlock Text="Frequently Asked Questions" FontWeight="SemiBold" Foreground="{StaticResource TopBarTextPrimaryBrush}" FontSize="14"/>
                 <StackPanel Margin="0,10,0,0">
-                    <TextBlock Margin="0,5"><Hyperlink NavigateUri="#" Foreground="{StaticResource AccentBlueBrush}">- Şifremi nasıl sıfırlarım?</Hyperlink></TextBlock>
-                    <TextBlock Margin="0,5"><Hyperlink NavigateUri="#" Foreground="{StaticResource AccentBlueBrush}">- Banka hesabımı senkronize edemiyorum.</Hyperlink></TextBlock>
-                    <TextBlock Margin="0,5"><Hyperlink NavigateUri="#" Foreground="{StaticResource AccentBlueBrush}">- Raporları dışa aktarırken hata alıyorum.</Hyperlink></TextBlock>
-                    <TextBlock Margin="0,5"><Hyperlink NavigateUri="#" Foreground="{StaticResource AccentBlueBrush}">- Üyelik planımı nasıl değiştiririm?</Hyperlink></TextBlock>
+                    <TextBlock Margin="0,5"><Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="https://www.fintrac.com/faq/reset-password" Foreground="{StaticResource AccentBlueBrush}">- How do I reset my password?</Hyperlink></TextBlock>
+                    <TextBlock Margin="0,5"><Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="https://www.fintrac.com/faq/sync-bank" Foreground="{StaticResource AccentBlueBrush}">- I can't synchronize my bank account.</Hyperlink></TextBlock>
+                    <TextBlock Margin="0,5"><Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="https://www.fintrac.com/faq/export-error" Foreground="{StaticResource AccentBlueBrush}">- I am receiving an error when exporting reports.</Hyperlink></TextBlock>
+                    <TextBlock Margin="0,5"><Hyperlink Command="{Binding OpenLinkCommand}" CommandParameter="https://www.fintrac.com/faq/change-plan" Foreground="{StaticResource AccentBlueBrush}">- How do I change my membership plan?</Hyperlink></TextBlock>
                 </StackPanel>
 
                 <Border Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10" Padding="15" Margin="0,30,0,0">
                     <StackPanel>
-                        <TextBlock Text="Destek Yanıt Süresi" FontWeight="SemiBold" Foreground="White"/>
-                        <TextBlock Text="Taleplerinize genellikle 24 saat içinde yanıt veriyoruz. Anlayışınız için teşekkür ederiz." TextWrapping="Wrap" Foreground="{StaticResource TopBarTextSecondaryBrush}" Margin="0,5,0,0"/>
+                        <TextBlock Text="Support Response Time" FontWeight="SemiBold" Foreground="White"/>
+                        <TextBlock Text="We usually respond to your requests within 24 hours. Thank you for your understanding." TextWrapping="Wrap" Foreground="{StaticResource TopBarTextSecondaryBrush}" Margin="0,5,0,0"/>
                     </StackPanel>
                 </Border>
 
