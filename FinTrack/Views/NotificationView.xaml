@@ -3,115 +3,113 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:vm="clr-namespace:FinTrack.ViewModels"
+             xmlns:models="clr-namespace:FinTrack.Models.Notification"
+             xmlns:enums="clr-namespace:FinTrack.Enums"
+             xmlns:helpers="clr-namespace:FinTrack.Helpers"
              mc:Ignorable="d" 
              d:DesignHeight="800" d:DesignWidth="1200"
+             d:DataContext="{d:DesignInstance Type=local:NotificationViewModel, IsDesignTimeCreatable=True}"
              Background="{StaticResource MainBackgroundBrush}">
 
-    <!-- Ana Konteyner -->
+    <UserControl.Resources>
+        <helpers:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </UserControl.Resources>
+
     <Border Style="{StaticResource DashboardCardStyle}" Margin="40">
         <StackPanel>
             <!-- Başlık ve Eylemler -->
             <Grid>
-                <TextBlock Text="Bildirimler" Style="{StaticResource CardTitleTextStyle}"/>
+                <TextBlock Text="Notifications" Style="{StaticResource CardTitleTextStyle}"/>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button Content="Tümünü Okundu İşaretle" Style="{StaticResource LinkButtonStyle}" VerticalAlignment="Center"/>
-                    <Button Content="Tümünü Temizle" Style="{StaticResource LinkButtonStyle}" Margin="15,0,0,0" Foreground="{StaticResource StatusRedBrush}" VerticalAlignment="Center"/>
+                    <Button Content="Mark All as Read" Style="{StaticResource LinkButtonStyle}" VerticalAlignment="Center" 
+                            Command="{Binding MarkAllAsReadCommand}"/>
+                    <Button Content="Clear All" Style="{StaticResource LinkButtonStyle}" Margin="15,0,0,0" Foreground="{StaticResource StatusRedBrush}" VerticalAlignment="Center"
+                            Command="{Binding ClearAllCommand}"/>
                 </StackPanel>
             </Grid>
             <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,20" Opacity="0.5"/>
 
             <!-- Bildirimler Listesi -->
-            <ListView Background="Transparent" BorderThickness="0" ItemContainerStyle="{StaticResource CleanListViewItemStyle}">
+            <ListView Background="Transparent" BorderThickness="0" 
+                      ItemsSource="{Binding Notifications}" >
 
-                <!-- Örnek Bildirim 1 (Okunmamış) -->
-                <ListViewItem>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem" BasedOn="{StaticResource CleanListViewItemStyle}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsRead}" Value="True">
+                                <Setter Property="Opacity" Value="0.6"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListView.ItemContainerStyle>
 
-                        <!-- İkon -->
-                        <Border Grid.Column="0" Background="{StaticResource AccentBlueBrush}" CornerRadius="25" Width="50" Height="50" Margin="0,0,20,0">
-                            <TextBlock Text="💡" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
+                <ListView.ItemTemplate>
+                    <DataTemplate DataType="{x:Type models:NotificationModel}">
+                        <Grid Margin="0,0,0,15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
 
-                        <!-- Metin -->
-                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                            <TextBlock Text="Yeni Bütçe Önerisi" FontSize="16" FontWeight="Bold" Foreground="White"/>
-                            <TextBlock Text="Aylık 'Eğlence' harcamalarınız için yeni bir bütçe limiti önerimiz var. Göz atmak için tıklayın." TextWrapping="Wrap" Foreground="{StaticResource TopBarTextSecondaryBrush}" Margin="0,5,0,0"/>
-                            <TextBlock Text="2 saat önce" FontSize="11" FontStyle="Italic" Foreground="{StaticResource TopBarTextSecondaryBrush}" Opacity="0.7" Margin="0,8,0,0"/>
-                        </StackPanel>
+                            <!-- İkon -->
+                            <Border Grid.Column="0" CornerRadius="25" Width="50" Height="50" Margin="0,0,20,0">
+                                <Border.Style>
+                                    <Style TargetType="Border">
+                                        <Setter Property="Background" Value="{StaticResource AccentBlueBrush}"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Type}" Value="{x:Static enums:NotificationType.GoalAchieved}">
+                                                <Setter Property="Background" Value="{StaticResource MembershipAccentGradientBrush}"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Type}" Value="{x:Static enums:NotificationType.Warning}">
+                                                <Setter Property="Background" Value="{StaticResource StatusRedBrush}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
+                                <TextBlock FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <!-- Varsayılan ikon -->
+                                            <Setter Property="Text" Value="💡"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Type}" Value="{x:Static enums:NotificationType.GoalAchieved}">
+                                                    <Setter Property="Text" Value="🎉"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Type}" Value="{x:Static enums:NotificationType.Warning}">
+                                                    <Setter Property="Text" Value="❗"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </Border>
 
-                        <!-- Eylemler -->
-                        <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                            <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Okundu İşaretle">
-                                <Image Source="/Assets/Images/Icons/tick.png" Width="18" Height="18"/>
-                            </Button>
-                            <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Sil" Margin="5,0,0,0">
-                                <Image Source="/Assets/Images/Icons/delete.png" Width="16" Height="16"/>
-                            </Button>
-                        </StackPanel>
-                    </Grid>
-                </ListViewItem>
+                            <!-- Metin -->
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock Text="{Binding Title}" FontSize="16" FontWeight="Bold" Foreground="White"/>
+                                <TextBlock Text="{Binding Message}" TextWrapping="Wrap" Foreground="{StaticResource TopBarTextSecondaryBrush}" Margin="0,5,0,0"/>
+                                <TextBlock Text="{Binding Timestamp}" FontSize="11" FontStyle="Italic" Foreground="{StaticResource TopBarTextSecondaryBrush}" Opacity="0.7" Margin="0,8,0,0"/>
+                            </StackPanel>
 
-                <!-- Örnek Bildirim 2 (Okunmuş) -->
-                <ListViewItem Opacity="0.6">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-
-                        <!-- İkon -->
-                        <Border Grid.Column="0" Background="{StaticResource MembershipAccentGradientBrush}" CornerRadius="25" Width="50" Height="50" Margin="0,0,20,0">
-                            <TextBlock Text="🎉" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-
-                        <!-- Metin -->
-                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                            <TextBlock Text="Hedefe Ulaşıldı!" FontSize="16" FontWeight="SemiBold" Foreground="White"/>
-                            <TextBlock Text="'Yeni Bilgisayar' birikim hedefinize ulaştınız. Tebrikler!" TextWrapping="Wrap" Foreground="{StaticResource TopBarTextSecondaryBrush}" Margin="0,5,0,0"/>
-                            <TextBlock Text="1 gün önce" FontSize="11" FontStyle="Italic" Foreground="{StaticResource TopBarTextSecondaryBrush}" Opacity="0.7" Margin="0,8,0,0"/>
-                        </StackPanel>
-
-                        <!-- Eylemler -->
-                        <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                            <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Sil">
-                                <Image Source="/Assets/Images/Icons/delete.png" Width="16" Height="16"/>
-                            </Button>
-                        </StackPanel>
-                    </Grid>
-                </ListViewItem>
-
-                <!-- Örnek Bildirim 3 (Hata/Uyarı) -->
-                <ListViewItem>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <Border Grid.Column="0" Background="{StaticResource StatusRedBrush}" CornerRadius="25" Width="50" Height="50" Margin="0,0,20,0">
-                            <TextBlock Text="❗" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                            <TextBlock Text="Fatura Hatırlatması" FontSize="16" FontWeight="Bold" Foreground="White"/>
-                            <TextBlock Text="İnternet faturanızın son ödeme tarihi yarın. Gecikme faizinden kaçınmak için ödeme yapın." TextWrapping="Wrap" Foreground="{StaticResource TopBarTextSecondaryBrush}" Margin="0,5,0,0"/>
-                            <TextBlock Text="3 gün önce" FontSize="11" FontStyle="Italic" Foreground="{StaticResource TopBarTextSecondaryBrush}" Opacity="0.7" Margin="0,8,0,0"/>
-                        </StackPanel>
-                        <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                            <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Okundu İşaretle">
-                                <Image Source="/Assets/Images/Icons/tick.png" Width="18" Height="18"/>
-                            </Button>
-                            <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Sil" Margin="5,0,0,0">
-                                <Image Source="/Assets/Images/Icons/delete.png" Width="16" Height="16"/>
-                            </Button>
-                        </StackPanel>
-                    </Grid>
-                </ListViewItem>
+                            <!-- Eylemler -->
+                            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                                <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Okundu İşaretle"
+                                        Command="{Binding DataContext.MarkAsReadCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                        CommandParameter="{Binding}"
+                                        Visibility="{Binding IsUnread, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                    <Image Source="/Assets/Images/Icons/tick.png" Width="18" Height="18"/>
+                                </Button>
+                                <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Sil" Margin="5,0,0,0"
+                                        Command="{Binding DataContext.DeleteNotificationCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                        CommandParameter="{Binding}">
+                                    <Image Source="/Assets/Images/Icons/delete.png" Width="16" Height="16"/>
+                                </Button>
+                            </StackPanel>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
             </ListView>
         </StackPanel>
     </Border>

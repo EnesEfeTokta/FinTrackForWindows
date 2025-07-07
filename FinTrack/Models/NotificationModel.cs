@@ -40,12 +40,4 @@ namespace FinTrack.Models
         [Column("IsRead")]
         public bool IsRead { get; set; } = false;
     }
-
-    public enum NotificationType
-    {
-        Info,
-        Warning,
-        Error,
-        Success,
-    }
 }
