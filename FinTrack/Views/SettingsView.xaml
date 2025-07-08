@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
+             xmlns:local="clr-namespace:FinTrack.Views"
              d:DesignHeight="850" d:DesignWidth="1400"
              Background="{StaticResource MainBackgroundBrush}">
 
@@ -19,24 +20,26 @@
                         <Border Style="{StaticResource MembershipCardStyle}">
                             <StackPanel>
                                 <TextBlock Text="Free" FontSize="24" FontWeight="Bold" Foreground="{StaticResource TopBarTextSecondaryBrush}"/>
-                                <TextBlock Text="Temel Özellikler" FontSize="14" Margin="0,5,0,15" Foreground="{StaticResource TextBrush}"/>
-                                <TextBlock Text="✓ 3 Hesap" Margin="0,2" Foreground="{StaticResource TextBrush}"/>
-                                <TextBlock Text="✓ 5 Bütçe" Margin="0,2" Foreground="{StaticResource TextBrush}"/>
-                                <TextBlock Text="✓ Sınırlı Kur Takibi" Margin="0,2" Foreground="{StaticResource TextBrush}"/>
-                                <TextBlock Text="✗ Detaylı Raporlama" Margin="0,2" Foreground="{StaticResource TopBarTextSecondaryBrush}" Opacity="0.6"/>
-                                <Button Content="Mevcut Plan" IsEnabled="False" Style="{StaticResource PrimaryButtonStyle}" Margin="0,25,0,0" Background="Transparent" BorderBrush="{StaticResource ProgressBarBackgroundBrush}" BorderThickness="1"/>
+                                <TextBlock Text="Basic Features" FontSize="14" Margin="0,5,0,15" Foreground="{StaticResource TextBrush}"/>
+                                <TextBlock Text="✓ 3 Accounts" Margin="0,2" Foreground="{StaticResource TextBrush}"/>
+                                <TextBlock Text="✓ 5 Budgets" Margin="0,2" Foreground="{StaticResource TextBrush}"/>
+                                <TextBlock Text="✓ Limited Currency Tracking" Margin="0,2" Foreground="{StaticResource TextBrush}"/>
+                                <TextBlock Text="✗ Detailed Reporting" Margin="0,2" Foreground="{StaticResource TopBarTextSecondaryBrush}" Opacity="0.6"/>
+                                <Button Content="{Binding FreeButtonStatus}" Command="{Binding SelectFreeMembershipCommand}" 
+                                        IsEnabled="False" Style="{StaticResource PrimaryButtonStyle}" Margin="0,25,0,0" Background="Transparent" BorderBrush="{StaticResource ProgressBarBackgroundBrush}" BorderThickness="1"/>
                             </StackPanel>
                         </Border>
                         <!-- Plus Plan Kartı -->
                         <Border Style="{StaticResource MembershipCardStyle}" BorderBrush="{StaticResource DebtAccentGradientBrush}" BorderThickness="2">
                             <StackPanel>
                                 <TextBlock Text="Plus" FontSize="24" FontWeight="Bold" Foreground="{StaticResource AccentBlueBrush}"/>
-                                <TextBlock Text="$9.99 / Ay" FontSize="14" Margin="0,5,0,15" Foreground="{StaticResource TextBrush}"/>
-                                <TextBlock Text="✓ 10 Hesap" Margin="0,2" Foreground="{StaticResource TextBrush}"/>
-                                <TextBlock Text="✓ Sınırsız Bütçe" Margin="0,2" Foreground="{StaticResource TextBrush}"/>
-                                <TextBlock Text="✓ Detaylı Raporlama" Margin="0,2" Foreground="{StaticResource TextBrush}"/>
-                                <TextBlock Text="✓ Güvenli Borç Sistemi" Margin="0,2" Foreground="{StaticResource TextBrush}"/>
-                                <Button Content="Yükselt" Style="{StaticResource PrimaryButtonStyle}" Margin="0,25,0,0"/>
+                                <TextBlock Text="$9.99 / Month" FontSize="14" Margin="0,5,0,15" Foreground="{StaticResource TextBrush}"/>
+                                <TextBlock Text="✓ 10 Accounts" Margin="0,2" Foreground="{StaticResource TextBrush}"/>
+                                <TextBlock Text="✓ Unlimited Budget" Margin="0,2" Foreground="{StaticResource TextBrush}"/>
+                                <TextBlock Text="✓ Detailed Reporting" Margin="0,2" Foreground="{StaticResource TextBrush}"/>
+                                <TextBlock Text="✓ Secure Debt System" Margin="0,2" Foreground="{StaticResource TextBrush}"/>
+                                <Button Content="{Binding PlusButtonStatus}" Command="{Binding SelectPlusMembershipCommand}" 
+                                        Style="{StaticResource PrimaryButtonStyle}" Margin="0,25,0,0"/>
                             </StackPanel>
                         </Border>
                         <!-- Pro Plan Kartı -->
@@ -44,11 +47,12 @@
                             <StackPanel>
                                 <TextBlock Text="Pro" FontSize="24" FontWeight="Bold" Foreground="{StaticResource PrimaryAccentBrush}"/>
                                 <TextBlock Text="$19.99 / Ay" FontSize="14" Margin="0,5,0,15" Foreground="{StaticResource TextBrush}"/>
-                                <TextBlock Text="✓ Sınırsız Hesap" Margin="0,2" Foreground="{StaticResource TextBrush}"/>
-                                <TextBlock Text="✓ Tüm Plus Özellikleri" Margin="0,2" Foreground="{StaticResource TextBrush}"/>
-                                <TextBlock Text="✓ FinBot Öncelikli Destek" Margin="0,2" Foreground="{StaticResource TextBrush}"/>
-                                <TextBlock Text="✓ API Erişimi" Margin="0,2" Foreground="{StaticResource TextBrush}"/>
-                                <Button Content="Yükselt" Style="{StaticResource PrimaryButtonStyle}" Background="{StaticResource MembershipAccentGradientBrush}" Margin="0,25,0,0"/>
+                                <TextBlock Text="✓ Unlimited Account" Margin="0,2" Foreground="{StaticResource TextBrush}"/>
+                                <TextBlock Text="✓ All Plus Features" Margin="0,2" Foreground="{StaticResource TextBrush}"/>
+                                <TextBlock Text="✓ FinBot Priority Support" Margin="0,2" Foreground="{StaticResource TextBrush}"/>
+                                <TextBlock Text="✓ API Access" Margin="0,2" Foreground="{StaticResource TextBrush}"/>
+                                <Button Content="{Binding ProButtonStatus}" Command="{Binding SelectProMembershipCommand}" 
+                                        Style="{StaticResource PrimaryButtonStyle}" Background="{StaticResource MembershipAccentGradientBrush}" Margin="0,25,0,0"/>
                             </StackPanel>
                         </Border>
                     </UniformGrid>
@@ -58,41 +62,55 @@
             <!-- 2. BÖLÜM: AYARLAR -->
             <Grid Margin="0,30,0,0">
                 <Grid.ColumnDefinitions>
-                    <!-- Sol Sütun: Ayarlar Menüsü -->
                     <ColumnDefinition Width="1*"/>
-                    <!-- Sağ Sütun: Ayar İçeriği -->
                     <ColumnDefinition Width="3*"/>
                 </Grid.ColumnDefinitions>
 
                 <!-- AYARLAR MENÜSÜ -->
                 <Border Grid.Column="0" Style="{StaticResource DashboardCardStyle}" Margin="0,0,20,0">
                     <StackPanel>
-                        <RadioButton Content="Profil Ayarları" GroupName="Settings" IsChecked="True" Style="{StaticResource SettingsMenuButtonStyle}"/>
-                        <RadioButton Content="Güvenlik" GroupName="Settings" Style="{StaticResource SettingsMenuButtonStyle}"/>
-                        <RadioButton Content="Bildirimler" GroupName="Settings" Style="{StaticResource SettingsMenuButtonStyle}"/>
-                        <RadioButton Content="Uygulama" GroupName="Settings" Style="{StaticResource SettingsMenuButtonStyle}"/>
+                        <RadioButton x:Name="ProfileSettingsRadio" Content="Profile Settings" GroupName="Settings" IsChecked="True" Style="{StaticResource SettingsMenuButtonStyle}"/>
+                        <RadioButton x:Name="SecuritySettingsRadio" Content="Security" GroupName="Settings" Style="{StaticResource SettingsMenuButtonStyle}"/>
+                        <RadioButton x:Name="NotificationsSettingsRadio" Content="Notifications" GroupName="Settings" Style="{StaticResource SettingsMenuButtonStyle}"/>
+                        <RadioButton x:Name="AppSettingsRadio" Content="Application" GroupName="Settings" Style="{StaticResource SettingsMenuButtonStyle}"/>
                     </StackPanel>
                 </Border>
 
                 <!-- AYAR İÇERİĞİ ALANI -->
-                <!-- Not: Gerçek uygulamada burası bir ContentControl ile yönetilir. -->
-                <Border Grid.Column="1" Style="{StaticResource DashboardCardStyle}" Margin="20,0,0,0">
-                    <StackPanel>
-                        <TextBlock Text="Profil Ayarları" Style="{StaticResource CardTitleTextStyle}"/>
-                        <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,20" Opacity="0.5"/>
-
-                        <TextBlock Text="TAM AD" Style="{StaticResource LabelTextStyle}"/>
-                        <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="Eyüp Karameşe" Margin="0,0,0,15"/>
-
-                        <TextBlock Text="E-POSTA ADRESİ" Style="{StaticResource LabelTextStyle}"/>
-                        <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="eyup.karamese@example.com" IsEnabled="False" Margin="0,0,0,15"/>
-
-                        <TextBlock Text="PROFİL FOTOĞRAFI" Style="{StaticResource LabelTextStyle}"/>
-                        <Button Content="Yeni Fotoğraf Yükle" Style="{StaticResource PrimaryButtonStyle}" Background="Transparent" BorderBrush="{StaticResource ProgressBarBackgroundBrush}" BorderThickness="1" HorizontalAlignment="Left" Margin="0,0,0,25"/>
-
-                        <Button Content="DEĞİŞİKLİKLERİ KAYDET" Style="{StaticResource PrimaryButtonStyle}"/>
-                    </StackPanel>
-                </Border>
+                <ContentControl Grid.Column="1" Margin="20,0,0,0">
+                    <ContentControl.Style>
+                        <Style TargetType="ContentControl">
+                            <Setter Property="Content">
+                                <Setter.Value>
+                                    <local:ProfileSettingsContentView/>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=SecuritySettingsRadio, Path=IsChecked}" Value="True">
+                                    <Setter Property="Content">
+                                        <Setter.Value>
+                                            <local:SecuritySettingsContentView/>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding ElementName=NotificationsSettingsRadio, Path=IsChecked}" Value="True">
+                                    <Setter Property="Content">
+                                        <Setter.Value>
+                                            <local:NotificationSettingsContentView/>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding ElementName=AppSettingsRadio, Path=IsChecked}" Value="True">
+                                    <Setter Property="Content">
+                                        <Setter.Value>
+                                            <local:AppSettingsContentView/>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ContentControl.Style>
+                </ContentControl>
             </Grid>
         </StackPanel>
     </ScrollViewer>

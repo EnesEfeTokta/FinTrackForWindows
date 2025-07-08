@@ -1,0 +1,41 @@
+﻿<UserControl x:Class="FinTrack.Views.AppSettingsContentView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <Border Style="{StaticResource DashboardCardStyle}">
+        <StackPanel>
+            <TextBlock Text="Application Settings" Style="{StaticResource CardTitleTextStyle}"/>
+            <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" 
+                    Margin="0,5,0,20" Opacity="0.5"/>
+
+            <TextBlock Text="APPEARANCE" Style="{StaticResource LabelTextStyle}"/>
+            <ComboBox SelectedIndex="0" Style="{StaticResource ModernComboBoxStyle}" Margin="0,5,0,20">
+                <ComboBoxItem Content="System Default"/>
+                <ComboBoxItem Content="Open Theme"/>
+                <ComboBoxItem Content="Dark Theme"/>
+            </ComboBox>
+
+            <TextBlock Text="VARSAYILAN PARA BİRİMİ" Style="{StaticResource LabelTextStyle}"/>
+            <ComboBox SelectedIndex="0" Style="{StaticResource ModernComboBoxStyle}" Margin="0,5,0,20">
+                <ComboBoxItem Content="TRY - Turkish Lira"/>
+                <ComboBoxItem Content="USD - US Dollar"/>
+                <ComboBoxItem Content="EUR - Euro"/>
+                <ComboBoxItem Content="GBP - British Pound"/>
+            </ComboBox>
+
+            <TextBlock Text="GENERAL" Style="{StaticResource LabelTextStyle}" Margin="0,10,0,5"/>
+            <CheckBox Content="Start FinTrack when the computer starts up" IsChecked="False" 
+                      Style="{StaticResource ModernCheckBoxStyle}" Margin="0,5"/>
+
+            <Button Content="SAVE APPLICATION SETTINGS" 
+                    Style="{StaticResource PrimaryButtonStyle}" 
+                    Margin="0,35,0,0"
+                    HorizontalAlignment="Stretch"
+                    Command="{Binding AppSettingsContentChangesCommand}"/>
+        </StackPanel>
+    </Border>
+</UserControl>
