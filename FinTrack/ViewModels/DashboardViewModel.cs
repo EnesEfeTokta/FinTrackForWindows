@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Media;
+using FinTrack.Enums;
 
 namespace FinTrack.ViewModels
 {
@@ -32,6 +33,9 @@ namespace FinTrack.ViewModels
 
         [ObservableProperty]
         private ObservableCollection<ReportDashboard> _reports_DashboardView_ItemsControl;
+
+        [ObservableProperty]
+        private string transactionSummary = string.Empty;
 
         private readonly ILogger<DashboardViewModel> _logger;
 
@@ -83,6 +87,24 @@ namespace FinTrack.ViewModels
                 new TransactionDashboard { DateText = "02.01.2025", Description = "Maaş", Amount = "+3.000$", Category = "Gelir", Type = Enums.TransactionType.Income },
                 new TransactionDashboard { DateText = "03.01.2025", Description = "Elektrik Faturası", Amount = "-200$", Category = "Fatura", Type = Enums.TransactionType.Expense }
             };
+
+            // [TEST]
+            double totalIncome = Transactions_DashboardView_ListView
+                .Where(t => t.Type == TransactionType.Income)
+                .Sum(t =>
+                {
+                    var cleaned = t.Amount.Replace("+", string.Empty).Replace("$", string.Empty).Trim();
+                    return double.TryParse(cleaned, out var value) ? value : 0;
+                });
+            double totalExpense = Transactions_DashboardView_ListView
+                .Where(t => t.Type == TransactionType.Expense)
+                .Sum(t =>
+                {
+                    var cleaned = t.Amount.Replace("-", string.Empty).Replace("$", string.Empty).Trim();
+                    return double.TryParse(cleaned, out var value) ? value : 0;
+                });
+            double remainingBalance = totalIncome - totalExpense;
+            TransactionSummary = $"Toplam {Transactions_DashboardView_ListView.Count} işlem bulundu. Gelir: +{totalIncome}$, Gider: -{totalExpense}$ Kalan: {remainingBalance}";
 
             // [TEST]
             CurrentMembership_DashboardView_Multiple = new MembershipDashboard { Level = "Pro | AKTF", StartDate = "01.01.2025", RenewalDate = "01.02.2025", Price = "9.99$" };

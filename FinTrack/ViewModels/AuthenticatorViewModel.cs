@@ -1,4 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
+using FinTrack.Core;
+using FinTrack.Messages;
+using System.Windows;
+using Microsoft.Extensions.Logging;
 
 namespace FinTrack.ViewModels
 {
@@ -13,12 +18,18 @@ namespace FinTrack.ViewModels
         private readonly ForgotPasswordViewModel _forgotPasswordViewModel;
         private readonly ApplicationRecognizeSlideViewModel _applicationRecognizeSlideViewModel;
 
+        private readonly ISecureTokenStorage _secureToken;
+
+        private readonly ILogger<AuthenticatorViewModel> _logger;
+
         public AuthenticatorViewModel(
             LoginViewModel loginViewModel,
             RegisterViewModel registerViewModel,
             OtpVerificationViewModel otpVerificationViewModel,
             ForgotPasswordViewModel forgotPasswordViewModel,
-            ApplicationRecognizeSlideViewModel applicationRecognizeSlideViewModel)
+            ApplicationRecognizeSlideViewModel applicationRecognizeSlideViewModel,
+            ISecureTokenStorage secureToken,
+            ILogger<AuthenticatorViewModel> logger)
         {
             _loginViewModel = loginViewModel;
             _registerViewModel = registerViewModel;
@@ -41,6 +52,42 @@ namespace FinTrack.ViewModels
             _forgotPasswordViewModel.NavigateToLoginRequested += () => CurrentViewModel = _loginViewModel;
 
             CurrentViewModel = _applicationRecognizeSlideViewModel;
+
+            _registerViewModel.SendOtpVerificationRequested += OnSendOtpVerificationRequested;
+
+            _logger = logger;
+            _secureToken = secureToken;
+
+            SavedTokenLogin();
+        }
+
+        private void OnSendOtpVerificationRequested(object? sender, EventArgs e)
+        {
+            _otpVerificationViewModel.StartCounter();
+        }
+
+        private void SavedTokenLogin()
+        {
+            string? token = _secureToken.GetToken();
+            if (token is not null)
+            {
+                bool isValid = TokenValidator.IsTokenValid(token);
+                if (!isValid)
+                {
+                    MessageBox.Show("Token geçersiz. Lütfen tekrar giriş yapın.", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
+                    _logger.LogWarning("Geçersiz token bulundu. Kullanıcıdan yeni giriş yapması istendi.");
+                    SessionManager.ClearToken();
+                    _secureToken.ClearToken();
+                }
+
+                SessionManager.SetToken(token);
+                _logger.LogInformation("Kullanıcı zaten giriş yapmış. Token kullanıldı.");
+                WeakReferenceMessenger.Default.Send(new LoginSuccessMessage());
+            }
+            else
+            {
+                _logger.LogInformation("Kullanıcı henüz giriş yapmamış. Uygulama tanıtım slaytları gösteriliyor.");
+            }
         }
     }
 }

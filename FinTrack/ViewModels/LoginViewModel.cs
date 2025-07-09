@@ -39,28 +39,6 @@ namespace FinTrack.ViewModels
             _authService = authService;
             _logger = logger;
             _secureTokenStorage = secureTokenStorage;
-            SavedTokenLogin();
-        }
-
-        private void SavedTokenLogin()
-        {
-            string? token = _secureTokenStorage.GetToken();
-            if (!string.IsNullOrEmpty(token))
-            {
-                bool isValid = TokenValidator.IsTokenValid(token);
-                if (!isValid)
-                {
-                    MessageBox.Show("Token geçersiz. Lütfen tekrar giriş yapın.", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
-                    _logger.LogWarning("Geçersiz token bulundu. Kullanıcıdan yeni giriş yapması istendi.");
-                    SessionManager.ClearToken();
-                    _secureTokenStorage.ClearToken();
-                }
-
-                SessionManager.SetToken(token);
-                MessageBox.Show("Giriş başarılı! Token kullanıldı.", "Bilgi", MessageBoxButton.OK, MessageBoxImage.Information);
-                _logger.LogInformation("Kullanıcı zaten giriş yapmış. Token kullanıldı.");
-                WeakReferenceMessenger.Default.Send(new LoginSuccessMessage());
-            }
         }
 
         [RelayCommand]
@@ -68,7 +46,6 @@ namespace FinTrack.ViewModels
         {
             _logger.LogInformation("Kullanıcı giriş yapmaya çalışıyor. E-posta: {Email}", Email_LoginView_TextBox);
 
-            WeakReferenceMessenger.Default.Send(new LoginSuccessMessage()); // TODO: [TEST]
             if (string.IsNullOrEmpty(Email_LoginView_TextBox) || string.IsNullOrEmpty(Password_LoginView_TextBox))
             {
                 MessageBox.Show("Lütfen e-posta ve şifre alanlarını doldurun.", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
