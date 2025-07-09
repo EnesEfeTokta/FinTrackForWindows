@@ -14,11 +14,9 @@
 
             <TextBlock Text="PASSWORD" Style="{StaticResource LabelTextStyle}"/>
             <TextBlock Text="Current Password" Style="{StaticResource LabelTextStyle}"/>
-            <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding CurrentPassword}" 
-                     IsEnabled="False" Margin="0,0,0,15"/>
+            <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding CurrentPassword}" Margin="0,0,0,15"/>
             <TextBlock Text="New Password" Style="{StaticResource LabelTextStyle}"/>
-            <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding NewPassword}" 
-                     IsEnabled="False" Margin="0,0,0,15"/>
+            <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding NewPassword}" Margin="0,0,0,15"/>
 
             <Button Content="SAVE CHANGES" Command="{Binding SecuritySettingsContentSaveChangesCommand}" 
                     Style="{StaticResource PrimaryButtonStyle}"/>

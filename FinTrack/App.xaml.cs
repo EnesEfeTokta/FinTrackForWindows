@@ -60,11 +60,14 @@ namespace FinTrack
             services.AddTransient<DebtViewModel>();
             services.AddTransient<SettingsViewModel>();
             services.AddTransient<FeedbackViewModel>();
+
+            services.AddTransient<SettingsView>();
+
             services.AddTransient<NotificationViewModel>();
-            services.AddTransient<ProfileSettingsContentView>();
-            services.AddTransient<SecuritySettingsContentView>();
-            services.AddTransient<NotificationSettingsContentView>();
-            services.AddTransient<AppSettingsContentView>();
+            services.AddTransient<ProfileSettingsContentViewModel>();
+            services.AddTransient<SecuritySettingsContentViewModel>();
+            services.AddTransient<NotificationSettingsContentViewModel>();
+            services.AddTransient<AppSettingsContentViewModel>();
 
             services.AddTransient<AccountView>();
 

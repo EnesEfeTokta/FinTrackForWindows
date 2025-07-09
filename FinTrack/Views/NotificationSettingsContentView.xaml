@@ -3,8 +3,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:vm="clr-namespace:FinTrack.ViewModels"
+             xmlns:helpers="clr-namespace:FinTrack.Helpers"
              mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance Type=vm:NotificationSettingsContentViewModel, IsDesignTimeCreatable=True}"
              d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <helpers:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter"/>
+    </UserControl.Resources>
 
     <Border Style="{StaticResource DashboardCardStyle}">
         <StackPanel>
@@ -13,21 +20,22 @@
                     Margin="0,5,0,20" Opacity="0.5"/>
 
             <TextBlock Text="EMAIL NOTIFICATIONS" Style="{StaticResource LabelTextStyle}" Margin="0,0,0,5"/>
-            <StackPanel Margin="10,0,0,20">
-                <CheckBox Content="Spending limit warning" IsChecked="True" 
-                          Style="{StaticResource ModernCheckBoxStyle}" Margin="0,5"/>
-                <CheckBox Content="Expected bill reminder" IsChecked="True" 
-                          Style="{StaticResource ModernCheckBoxStyle}" Margin="0,5"/>
-                <CheckBox Content="Weekly spending summary" IsChecked="False" 
-                          Style="{StaticResource ModernCheckBoxStyle}" Margin="0,5"/>
-                <CheckBox Content="New features and announcements" IsChecked="True" 
-                          Style="{StaticResource ModernCheckBoxStyle}" Margin="0,5"/>
-            </StackPanel>
+            <ItemsControl ItemsSource="{Binding EmailNotificationSettings}" Margin="10,0,0,20">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <CheckBox Style="{StaticResource ModernCheckBoxStyle}" Margin="0,5"
+                                  IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                                  Content="{Binding SettingType, Converter={StaticResource EnumToDescriptionConverter}}"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
 
             <TextBlock Text="IN-APP NOTIFICATIONS" Style="{StaticResource LabelTextStyle}" Margin="0,10,0,5"/>
             <StackPanel Margin="10,0,0,20">
-                <CheckBox Content="Enable desktop notifications" IsChecked="True" 
-                          Style="{StaticResource ModernCheckBoxStyle}" Margin="0,5"/>
+
+                <CheckBox Content="Enable desktop notifications" 
+                          Style="{StaticResource ModernCheckBoxStyle}" Margin="0,5"
+                          IsChecked="{Binding EnableDesktopNotifications, Mode=TwoWay}"/>
             </StackPanel>
 
             <Button Content="SAVE NOTIFICATION PREFERENCES" 

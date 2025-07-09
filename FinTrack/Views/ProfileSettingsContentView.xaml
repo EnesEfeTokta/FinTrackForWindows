@@ -16,12 +16,10 @@
             <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding FullName}" Margin="0,0,0,15"/>
 
             <TextBlock Text="EMAIL" Style="{StaticResource LabelTextStyle}"/>
-            <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding Email}" 
-                     IsEnabled="False" Margin="0,0,0,15"/>
+            <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding Email}" Margin="0,0,0,15"/>
 
             <TextBlock Text="PROFILE PHOTO URL" Style="{StaticResource LabelTextStyle}"/>
-            <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding ProfilePhotoUrl}" 
-                     IsEnabled="False" Margin="0,0,0,15"/>
+            <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding ProfilePhotoUrl}" Margin="0,0,0,15"/>
 
             <Button Content="SAVE CHANGES" Command="{Binding ProfileSettingsContentSaveChangesCommand}" 
                     Style="{StaticResource PrimaryButtonStyle}"/>

@@ -5,8 +5,24 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              xmlns:local="clr-namespace:FinTrack.Views"
+             xmlns:vm="clr-namespace:FinTrack.ViewModels"
              d:DesignHeight="850" d:DesignWidth="1400"
              Background="{StaticResource MainBackgroundBrush}">
+
+    <UserControl.Resources>
+        <DataTemplate DataType="{x:Type vm:ProfileSettingsContentViewModel}">
+            <local:ProfileSettingsContentView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:SecuritySettingsContentViewModel}">
+            <local:SecuritySettingsContentView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:NotificationSettingsContentViewModel}">
+            <local:NotificationSettingsContentView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:AppSettingsContentViewModel}">
+            <local:AppSettingsContentView/>
+        </DataTemplate>
+    </UserControl.Resources>
 
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="30">
         <StackPanel>
@@ -26,7 +42,7 @@
                                 <TextBlock Text="✓ Limited Currency Tracking" Margin="0,2" Foreground="{StaticResource TextBrush}"/>
                                 <TextBlock Text="✗ Detailed Reporting" Margin="0,2" Foreground="{StaticResource TopBarTextSecondaryBrush}" Opacity="0.6"/>
                                 <Button Content="{Binding FreeButtonStatus}" Command="{Binding SelectFreeMembershipCommand}" 
-                                        IsEnabled="False" Style="{StaticResource PrimaryButtonStyle}" Margin="0,25,0,0" Background="Transparent" BorderBrush="{StaticResource ProgressBarBackgroundBrush}" BorderThickness="1"/>
+                                        IsEnabled="{Binding IsFreeButtonEnabled}" Style="{StaticResource PrimaryButtonStyle}" Margin="0,25,0,0" Background="Transparent" BorderBrush="{StaticResource ProgressBarBackgroundBrush}" BorderThickness="1"/>
                             </StackPanel>
                         </Border>
                         <!-- Plus Plan Kartı -->
@@ -39,7 +55,8 @@
                                 <TextBlock Text="✓ Detailed Reporting" Margin="0,2" Foreground="{StaticResource TextBrush}"/>
                                 <TextBlock Text="✓ Secure Debt System" Margin="0,2" Foreground="{StaticResource TextBrush}"/>
                                 <Button Content="{Binding PlusButtonStatus}" Command="{Binding SelectPlusMembershipCommand}" 
-                                        Style="{StaticResource PrimaryButtonStyle}" Margin="0,25,0,0"/>
+                                        Style="{StaticResource PrimaryButtonStyle}" Margin="0,25,0,0"
+                                        IsEnabled="{Binding IsPlusButtonEnabled}"/>
                             </StackPanel>
                         </Border>
                         <!-- Pro Plan Kartı -->
@@ -52,7 +69,8 @@
                                 <TextBlock Text="✓ FinBot Priority Support" Margin="0,2" Foreground="{StaticResource TextBrush}"/>
                                 <TextBlock Text="✓ API Access" Margin="0,2" Foreground="{StaticResource TextBrush}"/>
                                 <Button Content="{Binding ProButtonStatus}" Command="{Binding SelectProMembershipCommand}" 
-                                        Style="{StaticResource PrimaryButtonStyle}" Background="{StaticResource MembershipAccentGradientBrush}" Margin="0,25,0,0"/>
+                                        Style="{StaticResource PrimaryButtonStyle}" Background="{StaticResource MembershipAccentGradientBrush}" 
+                                        IsEnabled="{Binding IsProButtonEnabled}" Margin="0,25,0,0"/>
                             </StackPanel>
                         </Border>
                     </UniformGrid>
@@ -69,48 +87,28 @@
                 <!-- AYARLAR MENÜSÜ -->
                 <Border Grid.Column="0" Style="{StaticResource DashboardCardStyle}" Margin="0,0,20,0">
                     <StackPanel>
-                        <RadioButton x:Name="ProfileSettingsRadio" Content="Profile Settings" GroupName="Settings" IsChecked="True" Style="{StaticResource SettingsMenuButtonStyle}"/>
-                        <RadioButton x:Name="SecuritySettingsRadio" Content="Security" GroupName="Settings" Style="{StaticResource SettingsMenuButtonStyle}"/>
-                        <RadioButton x:Name="NotificationsSettingsRadio" Content="Notifications" GroupName="Settings" Style="{StaticResource SettingsMenuButtonStyle}"/>
-                        <RadioButton x:Name="AppSettingsRadio" Content="Application" GroupName="Settings" Style="{StaticResource SettingsMenuButtonStyle}"/>
+                        <RadioButton Content="Profil Ayarları" GroupName="Settings" IsChecked="True" 
+                                     Style="{StaticResource SettingsMenuButtonStyle}"
+                                     Command="{Binding ChangePageCommand}" 
+                                     CommandParameter="Profile"/>
+                        <RadioButton Content="Güvenlik" GroupName="Settings" 
+                                     Style="{StaticResource SettingsMenuButtonStyle}"
+                                     Command="{Binding ChangePageCommand}" 
+                                     CommandParameter="Security"/>
+                        <RadioButton Content="Bildirimler" GroupName="Settings" 
+                                     Style="{StaticResource SettingsMenuButtonStyle}"
+                                     Command="{Binding ChangePageCommand}" 
+                                     CommandParameter="Notifications"/>
+                        <RadioButton Content="Uygulama" GroupName="Settings" 
+                                     Style="{StaticResource SettingsMenuButtonStyle}"
+                                     Command="{Binding ChangePageCommand}" 
+                                     CommandParameter="App"/>
                     </StackPanel>
                 </Border>
 
-                <!-- AYAR İÇERİĞİ ALANI -->
-                <ContentControl Grid.Column="1" Margin="20,0,0,0">
-                    <ContentControl.Style>
-                        <Style TargetType="ContentControl">
-                            <Setter Property="Content">
-                                <Setter.Value>
-                                    <local:ProfileSettingsContentView/>
-                                </Setter.Value>
-                            </Setter>
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding ElementName=SecuritySettingsRadio, Path=IsChecked}" Value="True">
-                                    <Setter Property="Content">
-                                        <Setter.Value>
-                                            <local:SecuritySettingsContentView/>
-                                        </Setter.Value>
-                                    </Setter>
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding ElementName=NotificationsSettingsRadio, Path=IsChecked}" Value="True">
-                                    <Setter Property="Content">
-                                        <Setter.Value>
-                                            <local:NotificationSettingsContentView/>
-                                        </Setter.Value>
-                                    </Setter>
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding ElementName=AppSettingsRadio, Path=IsChecked}" Value="True">
-                                    <Setter Property="Content">
-                                        <Setter.Value>
-                                            <local:AppSettingsContentView/>
-                                        </Setter.Value>
-                                    </Setter>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </ContentControl.Style>
-                </ContentControl>
+                <ContentControl Grid.Column="1" 
+                                Margin="20,0,0,0"
+                                Content="{Binding CurrentPageViewModel}"/>
             </Grid>
         </StackPanel>
     </ScrollViewer>

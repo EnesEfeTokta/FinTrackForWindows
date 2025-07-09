@@ -3,8 +3,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" 
+             mc:Ignorable="d"
+             xmlns:vm="clr-namespace:FinTrack.ViewModels"
+             xmlns:helpers="clr-namespace:FinTrack.Helpers"
              d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <helpers:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter"/>
+    </UserControl.Resources>
 
     <Border Style="{StaticResource DashboardCardStyle}">
         <StackPanel>
@@ -13,22 +19,27 @@
                     Margin="0,5,0,20" Opacity="0.5"/>
 
             <TextBlock Text="APPEARANCE" Style="{StaticResource LabelTextStyle}"/>
-            <ComboBox SelectedIndex="0" Style="{StaticResource ModernComboBoxStyle}" Margin="0,5,0,20">
-                <ComboBoxItem Content="System Default"/>
-                <ComboBoxItem Content="Open Theme"/>
-                <ComboBoxItem Content="Dark Theme"/>
+            <ComboBox SelectedIndex="0" Style="{StaticResource ModernComboBoxStyle}" Margin="0,5,0,20"
+                      ItemsSource="{Binding AppearanceTypes}" SelectedItem="{Binding SelectedAppearanceType, Mode=OneWay}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource EnumToDescriptionConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
             </ComboBox>
 
             <TextBlock Text="VARSAYILAN PARA BİRİMİ" Style="{StaticResource LabelTextStyle}"/>
-            <ComboBox SelectedIndex="0" Style="{StaticResource ModernComboBoxStyle}" Margin="0,5,0,20">
-                <ComboBoxItem Content="TRY - Turkish Lira"/>
-                <ComboBoxItem Content="USD - US Dollar"/>
-                <ComboBoxItem Content="EUR - Euro"/>
-                <ComboBoxItem Content="GBP - British Pound"/>
+            <ComboBox SelectedIndex="0" Style="{StaticResource ModernComboBoxStyle}" Margin="0,5,0,20"
+                      ItemsSource="{Binding CurrencyTypes}" SelectedItem="{Binding SelectedCurrencyType, Mode=OneWay}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource EnumToDescriptionConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
             </ComboBox>
 
             <TextBlock Text="GENERAL" Style="{StaticResource LabelTextStyle}" Margin="0,10,0,5"/>
-            <CheckBox Content="Start FinTrack when the computer starts up" IsChecked="False" 
+            <CheckBox Content="Start FinTrack when the computer starts up" IsChecked="{Binding IsFirstOpening}" 
                       Style="{StaticResource ModernCheckBoxStyle}" Margin="0,5"/>
 
             <Button Content="SAVE APPLICATION SETTINGS" 
