@@ -665,7 +665,6 @@
     </Style>
 
 <!-- 1. ToggleButton Stili (ComboBox'ın açma/kapama düğmesi için) -->
-<!-- Bu stil, ana ComboBox stilinden ÖNCE tanımlanmalıdır. -->
 <Style x:Key="ComboBoxToggleButtonModernStyle" TargetType="{x:Type ToggleButton}">
     <Setter Property="OverridesDefaultStyle" Value="true"/>
     <Setter Property="Template">
@@ -943,5 +942,60 @@
         <Setter Property="CommandParameter" Value="{Binding Content, RelativeSource={RelativeSource Self}}"/>
         <Setter Property="Width" Value="150"/>
     </Style>
+
+    <Style x:Key="ModernCheckBoxStyle" TargetType="CheckBox">
+    <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderBrush" Value="{StaticResource TopBarTextSecondaryBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="Template">
+        <Setter.Value>
+            <ControlTemplate TargetType="CheckBox">
+                <StackPanel Orientation="Horizontal">
+                    <!-- CheckBox Kutusu ve İşareti için bir Grid -->
+                    <Grid Width="20" Height="20" VerticalAlignment="Center">
+                        <!-- Kutu için Border -->
+                        <Border x:Name="CheckBoxBorder"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="3"/>
+                        <!-- Onay İşareti için Path (sadece işaretliyken görünür) -->
+                        <Path x:Name="CheckMark"
+                              Data="M 4,10 L 8,14 L 16,6"
+                              Stroke="{StaticResource MainBackgroundBrush}"
+                              StrokeThickness="2.5"
+                              StrokeStartLineCap="Round"
+                              StrokeEndLineCap="Round"
+                              StrokeLineJoin="Round"
+                              Opacity="0"/>
+                    </Grid>
+                    <!-- CheckBox Metni -->
+                    <ContentPresenter Margin="10,0,0,0"
+                                      VerticalAlignment="Center"
+                                      RecognizesAccessKey="True"/>
+                </StackPanel>
+                <ControlTemplate.Triggers>
+                    <!-- Fare üzerine gelince -->
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter TargetName="CheckBoxBorder" Property="BorderBrush" Value="{StaticResource PrimaryAccentBrush}"/>
+                    </Trigger>
+                    <!-- İşaretli olduğunda -->
+                    <Trigger Property="IsChecked" Value="True">
+                        <Setter TargetName="CheckBoxBorder" Property="Background" Value="{StaticResource PrimaryAccentBrush}"/>
+                        <Setter TargetName="CheckBoxBorder" Property="BorderBrush" Value="{StaticResource PrimaryAccentBrush}"/>
+                        <Setter TargetName="CheckMark" Property="Opacity" Value="1"/>
+                    </Trigger>
+                    <!-- Devre dışı bırakıldığında -->
+                    <Trigger Property="IsEnabled" Value="False">
+                        <Setter Property="Opacity" Value="0.5"/>
+                    </Trigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+        </Setter.Value>
+    </Setter>
+</Style>
         
 </ResourceDictionary>
