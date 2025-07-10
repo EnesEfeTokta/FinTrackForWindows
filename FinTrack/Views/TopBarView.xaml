@@ -30,18 +30,18 @@
                     <Border BorderBrush="#4A4E7A" BorderThickness="2" CornerRadius="26" Width="52" Height="52">
                         <Ellipse Width="48" Height="48">
                             <Ellipse.Fill>
-                                <ImageBrush ImageSource="{Binding UserAvatar_TopBarView_Image}"/>
+                                <ImageBrush ImageSource="{Binding UserAvatar}"/>
                             </Ellipse.Fill>
                         </Ellipse>
                     </Border>
                     <StackPanel VerticalAlignment="Center" Margin="15,0,0,0">
-                        <TextBlock Text="{Binding UserFullName_TopBarView_TextBlock}"
+                        <TextBlock Text="{Binding UserFullName}"
                                    Foreground="{StaticResource TopBarTextPrimaryBrush}"
                                    FontSize="16" FontWeight="SemiBold"/>
-                        <TextBlock Text="{Binding UserEmail_TopBarView_TextBlock}"
+                        <TextBlock Text="{Binding UserEmail}"
                                    Foreground="{StaticResource TopBarTextSecondaryBrush}"
                                    FontSize="12" Margin="0,2,0,2"/>
-                        <TextBlock Text="{Binding UserMembershipType_TopBarView_TextBlock}"
+                        <TextBlock Text="{Binding UserMembershipType}"
                                    FontSize="13" FontWeight="Bold"
                                    Foreground="{StaticResource NeonGradientBrush}"/>
                     </StackPanel>

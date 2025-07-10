@@ -10,16 +10,16 @@ namespace FinTrack.ViewModels
     public partial class TopBarViewModel : ObservableObject
     {
         [ObservableProperty]
-        private string? _userAvatar_TopBarView_Image;
+        private string userAvatar = "/Assets/Images/Icons/user-red.png";
 
         [ObservableProperty]
-        private string? _userFullName_TopBarView_TextBlock;
+        private string userFullName = "User Full Name";
 
         [ObservableProperty]
-        private string? _userEmail_TopBarView_TextBlock;
+        private string userEmail = "user@example.com";
 
         [ObservableProperty]
-        private string? _userMembershipType_TopBarView_TextBlock;
+        private string userMembershipType = "Free";
 
         public event Action? NavigateToDashboardRequested;
         public event Action? NavigateToAccountRequested;
@@ -59,10 +59,10 @@ namespace FinTrack.ViewModels
 
             if (userProfile != null)
             {
-                UserAvatar_TopBarView_Image = userProfile.ProfilePicture;
-                UserFullName_TopBarView_TextBlock = userProfile.UserName;
-                UserEmail_TopBarView_TextBlock = userProfile.Email;
-                UserMembershipType_TopBarView_TextBlock = userProfile.MembershipType;
+                UserAvatar = userProfile.ProfilePicture;
+                UserFullName = userProfile.UserName;
+                UserEmail = userProfile.Email;
+                UserMembershipType = userProfile.MembershipType;
                 _logger.LogInformation("Kullanıcı profili başarıyla yüklendi. Kullanıcı Adı: {UserName}, Email: {Email}, Üyelik Tipi: {MembershipType}",
                     userProfile.UserName, userProfile.Email, userProfile.MembershipType);
             }

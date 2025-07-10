@@ -122,7 +122,7 @@ namespace FinTrack.ViewModels
                 BorrowerName = "Ahmet Mehmet",
                 BorrowerIconPath = "https://pbs.twimg.com/profile_images/1144861916734451712/D76C3ugh_400x400.jpg",
                 Status = "Ödenmemiş",
-                StatusBrush = "StatusGreenBrush",
+                StatusBrush = (Brush)Application.Current.FindResource("StatusGreenBrush"),
                 Amount = "1.000$",
                 CreationDate = "01.01.2025",
                 DueDate = "01.02.2025",
