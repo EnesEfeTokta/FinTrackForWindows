@@ -62,10 +62,7 @@ namespace FinTrack.ViewModels
             }
 
             SessionManager.SetToken(token);
-
             _secureTokenStorage.SaveToken(token);
-
-            MessageBox.Show("Giriş başarılı!", "Bilgi", MessageBoxButton.OK, MessageBoxImage.Information);
             _logger.LogInformation("Kullanıcı giriş yaptı ve token kaydedildi.");
 
             WeakReferenceMessenger.Default.Send(new LoginSuccessMessage());

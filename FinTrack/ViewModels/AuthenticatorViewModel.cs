@@ -2,8 +2,8 @@
 using CommunityToolkit.Mvvm.Messaging;
 using FinTrack.Core;
 using FinTrack.Messages;
-using System.Windows;
 using Microsoft.Extensions.Logging;
+using System.Windows;
 
 namespace FinTrack.ViewModels
 {

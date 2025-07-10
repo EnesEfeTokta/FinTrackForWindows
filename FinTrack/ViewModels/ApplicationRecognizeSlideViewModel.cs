@@ -1,10 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
 using FinTrack.Core;
-using FinTrack.Messages;
 using Microsoft.Extensions.Logging;
-using System.Windows;
 
 namespace FinTrack.ViewModels
 {

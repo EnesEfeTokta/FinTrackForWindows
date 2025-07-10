@@ -1,9 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using FinTrack.Core;
 using FinTrack.Dtos;
 using FinTrack.Services.Api;
 using Microsoft.Extensions.Logging;
-using FinTrack.Core;
 
 namespace FinTrack.ViewModels
 {

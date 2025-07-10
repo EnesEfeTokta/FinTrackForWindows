@@ -28,7 +28,7 @@ namespace FinTrack.ViewModels
         public OtpVerificationViewModel(IAuthService authService, ILogger<OtpVerificationViewModel> logger)
         {
             _authService = authService;
-            _logger = logger;        
+            _logger = logger;
         }
 
         public void StartCounter()

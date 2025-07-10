@@ -25,7 +25,7 @@ namespace FinTrack.ViewModels
 
             int year = DateTime.Now.Year;
             Company = $"© {year} FinTrack Inc.";
-            
+
             Version = "v1.0.0";
             LastSyncStatus = "Son Senkronizasyon: Başarılı";
         }

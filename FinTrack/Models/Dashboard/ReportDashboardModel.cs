@@ -1,9 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FinTrack.Enums;
+using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 using System.Windows;
-using Microsoft.Extensions.Logging;
 
 namespace FinTrack.Models.Dashboard
 {
