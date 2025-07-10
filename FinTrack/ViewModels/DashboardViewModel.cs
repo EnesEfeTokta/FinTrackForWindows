@@ -5,6 +5,8 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Media;
 using FinTrack.Enums;
+using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace FinTrack.ViewModels
 {
@@ -32,16 +34,19 @@ namespace FinTrack.ViewModels
         private DebtDashboard _currentDebt_DashboardView_Multiple;
 
         [ObservableProperty]
-        private ObservableCollection<ReportDashboard> _reports_DashboardView_ItemsControl;
+        private ObservableCollection<ReportDashboardModel> _reports_DashboardView_ItemsControl;
 
         [ObservableProperty]
         private string transactionSummary = string.Empty;
 
         private readonly ILogger<DashboardViewModel> _logger;
 
-        public DashboardViewModel(ILogger<DashboardViewModel> logger)
+        private readonly IServiceProvider _serviceProvider;
+
+        public DashboardViewModel(ILogger<DashboardViewModel> logger, IServiceProvider serviceProvider)
         {
             _logger = logger;
+            _serviceProvider = serviceProvider;
             LoadData();
         }
 
@@ -125,12 +130,23 @@ namespace FinTrack.ViewModels
             };
 
             // [TEST]
-            Reports_DashboardView_ItemsControl = new ObservableCollection<ReportDashboard>
+            Reports_DashboardView_ItemsControl = new ObservableCollection<ReportDashboardModel>
             {
-                new ReportDashboard { Name = "Gelir Raporu" },
-                new ReportDashboard { Name = "Gider Raporu" },
-                new ReportDashboard { Name = "Bütçe Raporu" }
+                CreateReport("2025 Yılı Finansal Raporu"),
+                CreateReport("2024 Yılı Tasarruf Raporu"),
+                CreateReport("2023 Yılı Gelir-Gider Raporu"),
+                CreateReport("2022 Yılı Bütçe Raporu")
             };
+        }
+
+        private ReportDashboardModel CreateReport(string name)
+        {
+            var reportLogger = _serviceProvider.GetRequiredService<ILogger<ReportDashboardModel>>();
+            var report = new ReportDashboardModel(reportLogger)
+            {
+                Name = name,
+            };
+            return report;
         }
     }
 }

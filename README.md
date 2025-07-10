@@ -21,6 +21,9 @@ FinTrack is a modern, user-friendly desktop application for personal finance man
 
 FinTrack provides a comprehensive solution for tracking daily financial transactions, creating budgets, and generating insightful reports. It is developed using C# with a modern .NET 8 stack, utilizing a local SQLite database for secure data storage. The application follows the MVVM design pattern for a clean and maintainable codebase.
 
+Please click on the image to watch the video on YouTube.
+[<img src="https://t.ctcdn.com.br/gbO3hsV5DRUS3MYFIL0-vgDJtYk=/640x360/smart/i533291.png" width="50%">](https://youtu.be/0r24kuKRQ6A)
+
 ### 🎨 Design Philosophy
 
 -   **Simplicity**: An intuitive and straightforward user interface.
