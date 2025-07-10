@@ -57,7 +57,7 @@ namespace FinTrack.ViewModels
         {
             foreach (var notification in Notifications)
             {
-                if (notification.isUnread)
+                if (notification.IsUnread)
                 {
                     notification.IsRead = true;
                     _logger.LogInformation($"Notification '{notification.Title}' marked as read.");
@@ -76,7 +76,7 @@ namespace FinTrack.ViewModels
         [RelayCommand]
         private void MarkAsRead(NotificationModel? notification)
         {
-            if (notification.isUnread)
+            if (notification.IsUnread)
             {
                 notification.IsRead = true;
                 _logger.LogInformation($"Notification '{notification.Title}' marked as read.");

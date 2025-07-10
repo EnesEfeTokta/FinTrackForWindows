@@ -18,10 +18,10 @@ namespace FinTrack.Models.Notification
         private NotificationType type;
 
         [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(isUnread))]
+        [NotifyPropertyChangedFor(nameof(IsUnread))]
         private bool isRead = false;
 
-        public bool isUnread => !IsRead;
+        public bool IsUnread => !IsRead;
 
         public NotificationModel(string title, string message, string? timestamp, NotificationType type, bool _isRead = false)
         {
@@ -29,7 +29,7 @@ namespace FinTrack.Models.Notification
             Message = message;
             Type = type;
             Timestamp = timestamp ?? DateTime.Now.ToString();
-            isRead = _isRead;
+            IsRead = _isRead;
         }
     }
 }
