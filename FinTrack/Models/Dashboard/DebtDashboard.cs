@@ -1,4 +1,6 @@
-﻿namespace FinTrack.Models.Dashboard
+﻿using System.Windows.Media;
+
+namespace FinTrack.Models.Dashboard
 {
     public class DebtDashboard
     {
@@ -7,7 +9,7 @@
         public string BorrowerName { get; set; } = string.Empty;
         public string BorrowerIconPath { get; set; } = string.Empty;
         public string Status { get; set; } = string.Empty;
-        public string StatusBrush { get; set; } = string.Empty;
+        public Brush StatusBrush { get; set; } = Brushes.Transparent;
         public string Amount { get; set; } = string.Empty;
         public string CreationDate { get; set; } = string.Empty;
         public string DueDate { get; set; } = string.Empty;

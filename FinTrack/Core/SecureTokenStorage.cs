@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using Microsoft.Extensions.Logging;
+using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -6,12 +7,16 @@ namespace FinTrack.Core
 {
     public class SecureTokenStorage : ISecureTokenStorage
     {
+        private readonly ILogger<SecureTokenStorage> _logger;
+
         private readonly string _filePath;
 
         private static readonly byte[] s_entropy = Encoding.UTF8.GetBytes("E5A3B8B8_4A8C_4F1D_9F0B_2B3A7F9C1D0E"); // [TEST]
 
-        public SecureTokenStorage()
+        public SecureTokenStorage(ILogger<SecureTokenStorage> logger)
         {
+            _logger = logger;
+
             var appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             var appFolder = Path.Combine(appDataPath, "FinTrack");
             Directory.CreateDirectory(appFolder);
@@ -27,10 +32,11 @@ namespace FinTrack.Core
             {
                 var encryptedToken = ProtectedData.Protect(Encoding.UTF8.GetBytes(token), s_entropy, DataProtectionScope.CurrentUser);
                 File.WriteAllBytes(_filePath, encryptedToken);
+                _logger.LogInformation("Token başarıyla kaydedildi.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error saving token: {ex.Message}");
+                _logger.LogError(ex, "Token 'ı kaydederken hata oluştu.");
                 throw;
             }
         }
@@ -48,7 +54,7 @@ namespace FinTrack.Core
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error retrieving token: {ex.Message}");
+                _logger.LogError(ex, "Token 'ı alırken hata oluştu.");
                 ClearToken();
                 return null;
             }
@@ -61,10 +67,11 @@ namespace FinTrack.Core
                 try
                 {
                     File.Delete(_filePath);
+                    _logger.LogInformation("Token başarıyla temizlendi.");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error clearing token: {ex.Message}");
+                    _logger.LogError(ex, "Token 'ı temizlerken hata oluştu.");
                 }
             }
         }

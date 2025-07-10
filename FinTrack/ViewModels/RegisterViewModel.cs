@@ -30,6 +30,8 @@ namespace FinTrack.ViewModels
         private readonly ILogger<RegisterViewModel> _logger;
         private readonly IAuthService _authService;
 
+        public event EventHandler SendOtpVerificationRequested;
+
         public RegisterViewModel(ILogger<RegisterViewModel> logger, IAuthService authService)
         {
             _logger = logger;
@@ -67,6 +69,7 @@ namespace FinTrack.ViewModels
                 _logger.LogError("Kayıt işlemi başarısız oldu. E-posta: {Email}", Email_RegisterView_TextBox);
                 return;
             }
+            SendOtpVerificationRequested?.Invoke(this, EventArgs.Empty);
             MessageBox.Show("Kayıt işlemi başarılı! Lütfen e-posta adresinize gelen doğrulama kodunu girin.", "Bilgi", MessageBoxButton.OK, MessageBoxImage.Information);
             _logger.LogInformation("Kayıt işlemi başarılı. E-posta: {Email}", Email_RegisterView_TextBox);
 

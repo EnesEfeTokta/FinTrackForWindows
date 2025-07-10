@@ -6,15 +6,10 @@
              xmlns:vm="clr-namespace:FinTrack.ViewModels"
              xmlns:models="clr-namespace:FinTrack.Models.Notification"
              xmlns:enums="clr-namespace:FinTrack.Enums"
-             xmlns:helpers="clr-namespace:FinTrack.Helpers"
              mc:Ignorable="d" 
              d:DesignHeight="800" d:DesignWidth="1200"
              d:DataContext="{d:DesignInstance Type=local:NotificationViewModel, IsDesignTimeCreatable=True}"
              Background="{StaticResource MainBackgroundBrush}">
-
-    <UserControl.Resources>
-        <helpers:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-    </UserControl.Resources>
 
     <Border Style="{StaticResource DashboardCardStyle}" Margin="40">
         <StackPanel>
@@ -98,7 +93,7 @@
                                 <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Okundu İşaretle"
                                         Command="{Binding DataContext.MarkAsReadCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
                                         CommandParameter="{Binding}"
-                                        Visibility="{Binding IsUnread, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                        IsEnabled="{Binding IsUnread}">
                                     <Image Source="/Assets/Images/Icons/tick.png" Width="18" Height="18"/>
                                 </Button>
                                 <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Sil" Margin="5,0,0,0"

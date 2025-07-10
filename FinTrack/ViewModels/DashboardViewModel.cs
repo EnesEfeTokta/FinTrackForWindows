@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using FinTrack.Enums;
 using FinTrack.Models.Dashboard;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 using System.Windows;
@@ -31,13 +33,19 @@ namespace FinTrack.ViewModels
         private DebtDashboard _currentDebt_DashboardView_Multiple;
 
         [ObservableProperty]
-        private ObservableCollection<ReportDashboard> _reports_DashboardView_ItemsControl;
+        private ObservableCollection<ReportDashboardModel> _reports_DashboardView_ItemsControl;
+
+        [ObservableProperty]
+        private string transactionSummary = string.Empty;
 
         private readonly ILogger<DashboardViewModel> _logger;
 
-        public DashboardViewModel(ILogger<DashboardViewModel> logger)
+        private readonly IServiceProvider _serviceProvider;
+
+        public DashboardViewModel(ILogger<DashboardViewModel> logger, IServiceProvider serviceProvider)
         {
             _logger = logger;
+            _serviceProvider = serviceProvider;
             LoadData();
         }
 
@@ -85,6 +93,24 @@ namespace FinTrack.ViewModels
             };
 
             // [TEST]
+            double totalIncome = Transactions_DashboardView_ListView
+                .Where(t => t.Type == TransactionType.Income)
+                .Sum(t =>
+                {
+                    var cleaned = t.Amount.Replace("+", string.Empty).Replace("$", string.Empty).Trim();
+                    return double.TryParse(cleaned, out var value) ? value : 0;
+                });
+            double totalExpense = Transactions_DashboardView_ListView
+                .Where(t => t.Type == TransactionType.Expense)
+                .Sum(t =>
+                {
+                    var cleaned = t.Amount.Replace("-", string.Empty).Replace("$", string.Empty).Trim();
+                    return double.TryParse(cleaned, out var value) ? value : 0;
+                });
+            double remainingBalance = totalIncome - totalExpense;
+            TransactionSummary = $"Toplam {Transactions_DashboardView_ListView.Count} işlem bulundu. Gelir: +{totalIncome}$, Gider: -{totalExpense}$ Kalan: {remainingBalance}";
+
+            // [TEST]
             CurrentMembership_DashboardView_Multiple = new MembershipDashboard { Level = "Pro | AKTF", StartDate = "01.01.2025", RenewalDate = "01.02.2025", Price = "9.99$" };
 
             // [TEST]
@@ -95,7 +121,7 @@ namespace FinTrack.ViewModels
                 BorrowerName = "Ahmet Mehmet",
                 BorrowerIconPath = "https://pbs.twimg.com/profile_images/1144861916734451712/D76C3ugh_400x400.jpg",
                 Status = "Ödenmemiş",
-                StatusBrush = "StatusGreenBrush",
+                StatusBrush = (Brush)Application.Current.FindResource("StatusGreenBrush"),
                 Amount = "1.000$",
                 CreationDate = "01.01.2025",
                 DueDate = "01.02.2025",
@@ -103,12 +129,23 @@ namespace FinTrack.ViewModels
             };
 
             // [TEST]
-            Reports_DashboardView_ItemsControl = new ObservableCollection<ReportDashboard>
+            Reports_DashboardView_ItemsControl = new ObservableCollection<ReportDashboardModel>
             {
-                new ReportDashboard { Name = "Gelir Raporu" },
-                new ReportDashboard { Name = "Gider Raporu" },
-                new ReportDashboard { Name = "Bütçe Raporu" }
+                CreateReport("2025 Yılı Finansal Raporu"),
+                CreateReport("2024 Yılı Tasarruf Raporu"),
+                CreateReport("2023 Yılı Gelir-Gider Raporu"),
+                CreateReport("2022 Yılı Bütçe Raporu")
             };
+        }
+
+        private ReportDashboardModel CreateReport(string name)
+        {
+            var reportLogger = _serviceProvider.GetRequiredService<ILogger<ReportDashboardModel>>();
+            var report = new ReportDashboardModel(reportLogger)
+            {
+                Name = name,
+            };
+            return report;
         }
     }
 }

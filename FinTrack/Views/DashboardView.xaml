@@ -308,7 +308,7 @@
                                                 <ColumnDefinition Width="*"/>
                                             </Grid.ColumnDefinitions>
 
-                                            <Image Grid.Column="0" Source="{Binding IconPath}" Width="60" Height="60" VerticalAlignment="Center" Margin="0,0,25,0"/>
+                                            <Image Grid.Column="0" Source="/Assets/Images/Icons/report.png" Width="60" Height="60" VerticalAlignment="Center" Margin="0,0,25,0"/>
 
                                             <StackPanel Grid.Column="1" VerticalAlignment="Center">
                                                 <TextBlock Text="{Binding Name}" FontSize="20" FontWeight="SemiBold" Foreground="White" Margin="0,0,0,10"/>
@@ -323,14 +323,8 @@
                                                         <DataTemplate>
                                                             <Button Content="{Binding}" 
                                                                     Style="{StaticResource ReportFormatButtonStyle}" 
-                                                                    Command="{Binding DataContext.GenerateReportCommand, RelativeSource={RelativeSource AncestorType=UserControl}}">
-                                                                <Button.CommandParameter>
-                                                                    <MultiBinding StringFormat="{}{0}:{1}">
-                                                                        <Binding Path="DataContext.Name" RelativeSource="{RelativeSource AncestorType=Border, AncestorLevel=2}"/>
-                                                                        <Binding/>
-                                                                    </MultiBinding>
-                                                                </Button.CommandParameter>
-                                                            </Button>
+                                                                    Command="{Binding DataContext.GenerateCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                                    CommandParameter="{Binding}"/>
                                                         </DataTemplate>
                                                     </ItemsControl.ItemTemplate>
                                                 </ItemsControl>

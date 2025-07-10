@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using FinTrack.Core;
+using Microsoft.Extensions.Logging;
 
 namespace FinTrack.ViewModels
 {
@@ -94,10 +96,17 @@ namespace FinTrack.ViewModels
             }
         };
 
+        private readonly ILogger<ApplicationRecognizeSlideViewModel> _logger;
+
+        private readonly ISecureTokenStorage _secureToken;
+
         private int currentSlideIndex = 0;
 
-        public ApplicationRecognizeSlideViewModel()
+        public ApplicationRecognizeSlideViewModel(ILogger<ApplicationRecognizeSlideViewModel> logger, ISecureTokenStorage secureToken)
         {
+            _logger = logger;
+            _secureToken = secureToken;
+
             UpdateCurrentSlide(CurrentSlide);
         }
 
@@ -108,6 +117,7 @@ namespace FinTrack.ViewModels
             {
                 currentSlideIndex--;
                 UpdateCurrentSlide(CurrentSlide);
+                _logger.LogInformation("Kullanıcı geri düğmesine bastı. Şu anki slayt: {CurrentSlideTitle}", CurrentSlide.Title);
             }
         }
 
@@ -117,6 +127,7 @@ namespace FinTrack.ViewModels
             if (currentSlideIndex < applicationRecognizeSlides.Count - 1)
             {
                 currentSlideIndex++;
+                _logger.LogInformation("Kullanıcı ileri düğmesine bastı. Şu anki slayt: {CurrentSlideTitle}", CurrentSlide.Title);
                 UpdateCurrentSlide(CurrentSlide);
             }
         }
@@ -124,6 +135,7 @@ namespace FinTrack.ViewModels
         [RelayCommand]
         public void Skip_ApplicationRecognizeSlideView_Button()
         {
+            _logger.LogInformation("Kullanıcı uygulama tanıtımını atladı. Giriş ekranına yönlendiriliyor.");
             NavigateToLoginRequested?.Invoke();
         }
 

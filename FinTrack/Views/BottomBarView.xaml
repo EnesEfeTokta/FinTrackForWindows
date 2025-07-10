@@ -24,15 +24,14 @@
                         VerticalAlignment="Center" 
                         HorizontalAlignment="Left"
                         Margin="20,0,0,0">
-                <TextBlock Text="© 2024 FinTrack"
+                <TextBlock Text="{Binding Company}"
                            Foreground="{StaticResource TopBarTextSecondaryBrush}"
                            FontSize="12"/>
                 <TextBlock Text="|" 
                            Foreground="{StaticResource TopBarTextSecondaryBrush}"
                            Margin="10,0"/>
                 <TextBlock Foreground="{StaticResource TopBarTextSecondaryBrush}" FontSize="12">
-                    <Run Text="Version"/>
-                    <Run Text="{Binding AppVersion, FallbackValue='1.0.0'}"/>
+                    <Run Text="{Binding Version}"/>
                 </TextBlock>
             </StackPanel>
 

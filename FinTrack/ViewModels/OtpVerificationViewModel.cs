@@ -20,6 +20,7 @@ namespace FinTrack.ViewModels
         public event Action? NavigateToRegisterRequested;
 
         private int _counter;
+        private Task? _counterTask;
 
         private readonly IAuthService _authService;
         private readonly ILogger<OtpVerificationViewModel> _logger;
@@ -28,21 +29,9 @@ namespace FinTrack.ViewModels
         {
             _authService = authService;
             _logger = logger;
-
-            if (NewUserInformationManager.Email != null)
-            {
-                StartCounter();
-                _logger.LogInformation("OTP doğrulama başlatıldı. E-posta: {Email}", NewUserInformationManager.Email);
-            }
-            else
-            {
-                MessageBox.Show("Lütfen önce kayıt işlemini tamamlayın.", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
-                _logger.LogWarning("OTP doğrulama için e-posta bilgisi eksik. Kullanıcı kayıt sayfasına yönlendiriliyor.");
-                NavigateToRegisterRequested?.Invoke();
-            }
         }
 
-        private void StartCounter()
+        public void StartCounter()
         {
             _counter = 300;
             CounterText_OtpVerificationView_TextBlock = $"{_counter / 60}:{_counter % 60:D2}";

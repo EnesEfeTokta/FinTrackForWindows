@@ -96,6 +96,13 @@ namespace FinTrack.ViewModels
         }
 
         [RelayCommand]
+        private void SelectExportFormat(ExportFormat format)
+        {
+            SelectedExportFormat = format;
+            _logger?.LogInformation("Selected export format: {ExportFormat}", format);
+        }
+
+        [RelayCommand]
         private void CreateReport()
         {
             _logger?.LogInformation("Aşağıdaki parametrelerle rapor oluşturma: {ReportType}, {StartDate} ila {EndDate}, Seçilen Gelir: {IsIncomeSelected}, Seçilen Gider: {IsExpenseSelected}, Sıralama Kriterleri: {SortingCriteria}, Dışa Aktarma Biçimi: {ExportFormat}",
