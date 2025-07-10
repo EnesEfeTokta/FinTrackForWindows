@@ -1,14 +1,13 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
 using FinTrack.Dtos;
-using FinTrack.Messages;
 using FinTrack.Services.Api;
 using Microsoft.Extensions.Logging;
+using FinTrack.Core;
 
 namespace FinTrack.ViewModels
 {
-    public partial class TopBarViewModel : ObservableObject, IRecipient<LoginSuccessMessage>
+    public partial class TopBarViewModel : ObservableObject
     {
         [ObservableProperty]
         private string? _userAvatar_TopBarView_Image;
@@ -36,25 +35,26 @@ namespace FinTrack.ViewModels
 
         private readonly ILogger<TopBarViewModel> _logger;
         private readonly IApiService _apiService;
-        private readonly IMessenger _messenger;
 
-        public TopBarViewModel(ILogger<TopBarViewModel> logger, IApiService apiService, IMessenger messenger)
+        public TopBarViewModel(ILogger<TopBarViewModel> logger, IApiService apiService)
         {
             _logger = logger;
             _apiService = apiService;
-            _messenger = messenger;
 
-            _messenger.Register<LoginSuccessMessage>(this);
-        }
-
-        public void Receive(LoginSuccessMessage message)
-        {
-            _logger.LogInformation("Login başarılı, TopBarViewModel profil bilgilerini yüklüyor.");
-            _ = LoadProfile();
+            if (SessionManager.IsLoggedIn)
+            {
+                _logger.LogInformation("Kullanıcı zaten giriş yapmış. TopBarViewModel profil bilgilerini yüklüyor.");
+                _ = LoadProfile();
+            }
         }
 
         private async Task LoadProfile()
         {
+            if (!SessionManager.IsLoggedIn)
+            {
+                _logger.LogWarning("Kullanıcı oturumu açık değil, profil bilgileri yüklenemedi.");
+                return;
+            }
             var userProfile = await _apiService.GetAsync<UserProfileDto>("user");
 
             if (userProfile != null)
@@ -63,6 +63,8 @@ namespace FinTrack.ViewModels
                 UserFullName_TopBarView_TextBlock = userProfile.UserName;
                 UserEmail_TopBarView_TextBlock = userProfile.Email;
                 UserMembershipType_TopBarView_TextBlock = userProfile.MembershipType;
+                _logger.LogInformation("Kullanıcı profili başarıyla yüklendi. Kullanıcı Adı: {UserName}, Email: {Email}, Üyelik Tipi: {MembershipType}",
+                    userProfile.UserName, userProfile.Email, userProfile.MembershipType);
             }
             else
             {

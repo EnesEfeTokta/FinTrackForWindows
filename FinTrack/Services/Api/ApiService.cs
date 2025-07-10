@@ -12,9 +12,8 @@ namespace FinTrack.Services.Api
         private readonly HttpClient _httpClient;
         private readonly ILogger<ApiService> _logger;
         private readonly JsonSerializerOptions _jsonSerializerOptions;
-        private readonly ISecureTokenStorage _secureTokenStorage;
 
-        public ApiService(ILogger<ApiService> logger, ISecureTokenStorage secureTokenStorage)
+        public ApiService(ILogger<ApiService> logger)
         {
             _baseUrl = "http://localhost:5000/api/";
             _httpClient = new HttpClient
@@ -24,7 +23,6 @@ namespace FinTrack.Services.Api
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             _logger = logger;
-            _secureTokenStorage = secureTokenStorage;
 
             _jsonSerializerOptions = new JsonSerializerOptions
             {
@@ -34,7 +32,7 @@ namespace FinTrack.Services.Api
 
         private void AddAuthorizationHeader()
         {
-            string token = _secureTokenStorage.GetToken() ?? "null";
+            string token = SessionManager.CurrentToken;
             if (!string.IsNullOrEmpty(token))
             {
                 _httpClient.DefaultRequestHeaders.Authorization = null;
