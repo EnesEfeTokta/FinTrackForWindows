@@ -10,7 +10,7 @@ namespace FinTrack.Models.Account
         private Guid id = Guid.NewGuid();
 
         [ObservableProperty]
-        private string name;
+        private string name = string.Empty;
 
         [ObservableProperty]
         private AccountType type;
@@ -30,9 +30,9 @@ namespace FinTrack.Models.Account
         public string IconPath => Type switch
         {
             AccountType.Checking => "/Assets/Images/Icons/bank.png",
-            AccountType.CreditCard => "/Assets/Images/Icons/credit_card.png",
+            AccountType.CreditCard => "/Assets/Images/Icons/credit-card.png",
             AccountType.Loan => "/Assets/Images/Icons/investment.png",
-            _ => string.Empty
+            _ => "/Assets/Images/Icons/money.png"
         };
 
         public Brush IconBackground => Type switch

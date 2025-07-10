@@ -90,19 +90,19 @@
                     <UniformGrid Columns="2" Margin="0,25,0,0">
                         <StackPanel>
                             <TextBlock Text="DAILY LOW" Style="{StaticResource LabelTextStyle}"/>
-                            <TextBlock Text="{Binding DailyLow, FallbackValue='--'}" FontSize="18" Foreground="White"/>
+                            <TextBlock Text="{Binding DailyLow}" FontSize="18" Foreground="White"/>
                         </StackPanel>
                         <StackPanel>
                             <TextBlock Text="DAILY HIGH" Style="{StaticResource LabelTextStyle}"/>
-                            <TextBlock Text="{Binding DailyHigh, FallbackValue='--'}" FontSize="18" Foreground="White"/>
+                            <TextBlock Text="{Binding DailyHigh}" FontSize="18" Foreground="White"/>
                         </StackPanel>
                         <StackPanel Margin="0,20,0,0">
                             <TextBlock Text="WEEKLY CHANGE" Style="{StaticResource LabelTextStyle}"/>
-                            <TextBlock Text="{Binding WeeklyChange, FallbackValue='--'}" FontSize="18" Foreground="{StaticResource StatusGreenBrush}"/>
+                            <TextBlock Text="{Binding WeeklyChange}" FontSize="18" Foreground="{StaticResource StatusGreenBrush}"/>
                         </StackPanel>
                         <StackPanel Margin="0,20,0,0">
                             <TextBlock Text="MONTHLY CHANGE" Style="{StaticResource LabelTextStyle}"/>
-                            <TextBlock Text="{Binding MonthlyChange, FallbackValue='--'}" FontSize="18" Foreground="{StaticResource StatusGreenBrush}"/>
+                            <TextBlock Text="{Binding MonthlyChange}" FontSize="18" Foreground="{StaticResource StatusGreenBrush}"/>
                         </StackPanel>
                     </UniformGrid>
                 </StackPanel>

@@ -27,12 +27,6 @@ namespace FinTrack.ViewModels
         [ObservableProperty]
         private string toCurrencyPrice = string.Empty;
 
-        [ObservableProperty]
-        private string weeklyChange = string.Empty;
-
-        [ObservableProperty]
-        private string monthlyChange = string.Empty;
-
         private readonly ILogger<CurrenciesViewModel> _logger;
 
         public CurrenciesViewModel(ILogger<CurrenciesViewModel> logger)
@@ -74,7 +68,11 @@ namespace FinTrack.ViewModels
                     ToCurrencyName = "Turkish Lira",
                     ToCurrencyPrice = 32.56m,
                     ToCurrencyChange = "+0.12 (0.37%)",
-                    Type = Enums.CurrencyConversionType.Increase
+                    Type = Enums.CurrencyConversionType.Increase,
+                    DailyLow = "3.05",
+                    DailyHigh = "3.08",
+                    WeeklyChange = "-0.1%",
+                    MonthlyChange = "+0.5%"
                 },
                 new CurrencyModel
                 {
@@ -83,7 +81,11 @@ namespace FinTrack.ViewModels
                     ToCurrencyName = "Euro",
                     ToCurrencyPrice = 3.06m,
                     ToCurrencyChange = "-0.12 (0.37%)",
-                    Type = Enums.CurrencyConversionType.Decrease
+                    Type = Enums.CurrencyConversionType.Decrease,
+                    DailyLow = "3.05",
+                    DailyHigh = "3.08",
+                    WeeklyChange = "-0.1%",
+                    MonthlyChange = "+0.5%"
                 },
                 new CurrencyModel
                 {
@@ -92,7 +94,11 @@ namespace FinTrack.ViewModels
                     ToCurrencyName = "British Pound",
                     ToCurrencyPrice = 0.08m,
                     ToCurrencyChange = "+0.20 (0.80%)",
-                    Type = Enums.CurrencyConversionType.Decrease
+                    Type = Enums.CurrencyConversionType.Decrease,
+                    DailyLow = "3.05",
+                    DailyHigh = "3.08",
+                    WeeklyChange = "-0.1%",
+                    MonthlyChange = "+0.5%"
                 },
                 new CurrencyModel
                 {
@@ -101,7 +107,11 @@ namespace FinTrack.ViewModels
                     ToCurrencyName = "Euro",
                     ToCurrencyPrice = 3.06m,
                     ToCurrencyChange = "-0.12 (0.37%)",
-                    Type = Enums.CurrencyConversionType.Decrease
+                    Type = Enums.CurrencyConversionType.Decrease,
+                    DailyLow = "3.05",
+                    DailyHigh = "3.08",
+                    WeeklyChange = "-0.1%",
+                    MonthlyChange = "+0.5%"
                 },
                 new CurrencyModel
                 {
@@ -110,7 +120,11 @@ namespace FinTrack.ViewModels
                     ToCurrencyName = "British Pound",
                     ToCurrencyPrice = 0.08m,
                     ToCurrencyChange = "+0.20 (0.80%)",
-                    Type = Enums.CurrencyConversionType.Decrease
+                    Type = Enums.CurrencyConversionType.Decrease,
+                    DailyLow = "3.05",
+                    DailyHigh = "3.08",
+                    WeeklyChange = "-0.1%",
+                    MonthlyChange = "+0.5%"
                 },
                 new CurrencyModel
                 {
@@ -119,7 +133,11 @@ namespace FinTrack.ViewModels
                     ToCurrencyName = "Euro",
                     ToCurrencyPrice = 3.06m,
                     ToCurrencyChange = "-0.12 (0.37%)",
-                    Type = Enums.CurrencyConversionType.Decrease
+                    Type = Enums.CurrencyConversionType.Decrease,
+                    DailyLow = "32.40",
+                    DailyHigh = "32.60",
+                    WeeklyChange = "+0.2%",
+                    MonthlyChange = "+1.5%"
                 },
                 new CurrencyModel
                 {
@@ -128,7 +146,11 @@ namespace FinTrack.ViewModels
                     ToCurrencyName = "British Pound",
                     ToCurrencyPrice = 0.08m,
                     ToCurrencyChange = "+0.20 (0.80%)",
-                    Type = Enums.CurrencyConversionType.Decrease
+                    Type = Enums.CurrencyConversionType.Decrease,
+                    DailyLow = "3.05",
+                    DailyHigh = "3.08",
+                    WeeklyChange = "-0.1%",
+                    MonthlyChange = "+0.5%"
                 }
             };
             FilterCurrencies();

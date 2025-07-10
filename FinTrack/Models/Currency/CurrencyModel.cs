@@ -25,6 +25,18 @@ namespace FinTrack.Models.Currency
         [NotifyPropertyChangedFor(nameof(ToCurrencyChangeForeground))]
         private CurrencyConversionType type = CurrencyConversionType.Increase;
 
+        [ObservableProperty]
+        private string dailyLow = string.Empty;
+
+        [ObservableProperty]
+        private string dailyHigh = string.Empty;
+
+        [ObservableProperty]
+        private string weeklyChange = string.Empty;
+
+        [ObservableProperty]
+        private string monthlyChange = string.Empty;
+
         private static readonly Brush IncreaseBrush = new SolidColorBrush(Colors.Green);
         private static readonly Brush DecreaseBrush = new SolidColorBrush(Colors.Red);
         private static readonly Brush DefaultBrush = new SolidColorBrush(Colors.Gray);
