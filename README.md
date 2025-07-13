@@ -1,13 +1,13 @@
-# 💰 FinTrack - WPF Personal Finance Tracker
+# FinTrack - WPF Personal Finance Tracker
 
 FinTrack is a modern, user-friendly desktop application for personal finance management, built with WPF and .NET 8. It helps you track income, expenses, and investments to achieve your financial goals.
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![License](https://img.shields.io/badge/license-GPL-blue.svg)
 ![.NET](https://img.shields.io/badge/.NET-8.0-purple.svg)
 ![Platform](https://img.shields.io/badge/platform-Windows-lightgrey.svg)
 ![Status](https://img.shields.io/badge/status-In%20Development-yellow.svg)
 
-## 📋 Table of Contents
+## Table of Contents
 
 - [Overview](#overview)
 - [Features](#features)
@@ -17,32 +17,33 @@ FinTrack is a modern, user-friendly desktop application for personal finance man
 - [Contributing](#contributing)
 - [License](#license)
 
-## 🎯 Overview
+## Overview
 
 FinTrack provides a comprehensive solution for tracking daily financial transactions, creating budgets, and generating insightful reports. It is developed using C# with a modern .NET 8 stack, utilizing a local SQLite database for secure data storage. The application follows the MVVM design pattern for a clean and maintainable codebase.
 
 Please click on the image to watch the video on YouTube.
+
 [<img src="https://t.ctcdn.com.br/gbO3hsV5DRUS3MYFIL0-vgDJtYk=/640x360/smart/i533291.png" width="50%">](https://youtu.be/0r24kuKRQ6A)
 
-### 🎨 Design Philosophy
+### Design Philosophy
 
 -   **Simplicity**: An intuitive and straightforward user interface.
 -   **Reliability**: Ensuring the security and integrity of your financial data.
 -   **Performance**: A fast and responsive user experience.
 -   **Modularity**: A clean architecture that is easy to extend.
 
-## ⚡ Features
+## Features
 
-### 🏆 Core Features
+### Core Features
 
--   💸 **Transaction Tracking**: Categorize and monitor all your financial activities.
--   📊 **Smart Reporting**: Generate reports to analyze financial trends.
--   🎯 **Budget Management**: Set budget limits for categories with alerts.
--   📈 **Visual Analysis**: Interactive charts and a dashboard to visualize spending.
--   🔒 **Secure Local Storage**: Data is stored locally in an SQLite database.
--   🎨 **Modern UI**: A clean and responsive user interface built with WPF.
+-  **Transaction Tracking**: Categorize and monitor all your financial activities.
+-  **Smart Reporting**: Generate reports to analyze financial trends.
+-  **Budget Management**: Set budget limits for categories with alerts.
+-  **Visual Analysis**: Interactive charts and a dashboard to visualize spending.
+-  **Secure Local Storage**: Data is stored locally in an SQLite database.
+-  **Modern UI**: A clean and responsive user interface built with WPF.
 
-### 🛠️ Technical Features
+### Technical Features
 
 -   **Modern Architecture**: Developed on **.NET 8**.
 -   **MVVM Pattern**: Clean and separated code structure using **CommunityToolkit.Mvvm**.
@@ -52,7 +53,7 @@ Please click on the image to watch the video on YouTube.
 -   **Logging**: Comprehensive logging with **Serilog**.
 -   **Authentication**: JWT-based authentication for security.
 
-## 🏗️ Technology Stack
+## Technology Stack
 
 ### Backend & Core
 -   **Framework**: .NET 8.0
@@ -74,7 +75,7 @@ Please click on the image to watch the video on YouTube.
 -   **Version Control**: Git & GitHub
 -   **CI/CD**: GitHub Actions
 
-## 📂 Project Structure
+## Project Structure
 
 The project is organized into a single solution with a clear folder structure following the MVVM pattern.
 
@@ -94,7 +95,7 @@ FinTrack/
 └── FinTrack.csproj # Project file with dependencies.
 ```
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -106,7 +107,7 @@ FinTrack/
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/your-username/FinTrack.git
+    git clone https://github.com/EnesEfeTokta/FinTrack.git
     cd FinTrack
     ```
 
