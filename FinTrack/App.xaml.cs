@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 using Serilog;
 using System.Windows;
 
-namespace FinTrack
+namespace FinTrackForWindows
 {
     public partial class App : Application
     {
