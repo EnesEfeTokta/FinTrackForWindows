@@ -81,7 +81,7 @@ namespace FinTrackForWindows.ViewModels
             // Store user information in the static manager
             NewUserInformationManager.FirstName = FirstName_RegisterView_TextBox;
             NewUserInformationManager.LastName = LastName_RegisterView_TextBox;
-            NewUserInformationManager.FullName = FirstName_RegisterView_TextBox.Trim() + "_" + LastName_RegisterView_TextBox.Trim();
+            NewUserInformationManager.FullName = FirstName_RegisterView_TextBox.Replace(" ", "").Trim() + "_" + LastName_RegisterView_TextBox.Replace(" ", "").Trim();
             NewUserInformationManager.Email = Email_RegisterView_TextBox;
             NewUserInformationManager.Password = Password_RegisterView_TextBox;
 

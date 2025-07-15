@@ -104,5 +104,12 @@ namespace FinTrackForWindows.ViewModels
                 NavigateToRegisterRequested?.Invoke();
             }
         }
+
+        [RelayCommand]
+        private void NavigateToRegister_OtpVerificationView_Button()
+        {
+            NavigateToRegisterRequested?.Invoke();
+            _logger.LogInformation("Kullanıcı giriş sayfasına yönlendirildi.");
+        }
     }
 }

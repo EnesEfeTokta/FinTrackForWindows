@@ -65,7 +65,7 @@ namespace FinTrackForWindows.Services
             {
                 RegisterRequestDto request = new RegisterRequestDto
                 {
-                    FistName = firstName,
+                    FirstName = firstName,
                     LastName = lastName,
                     Email = email,
                     Password = password,
