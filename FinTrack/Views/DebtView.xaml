@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:viewModels="clr-namespace:FinTrackForWindows.ViewModels"
-             xmlns:models="clr-namespace:FinTrackForWindows.Models"
+             xmlns:models="clr-namespace:FinTrackForWindows.Models.Debt"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance Type=viewModels:DebtViewModel, IsDesignTimeCreatable=True}"
              d:DesignHeight="850" d:DesignWidth="1600"

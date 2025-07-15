@@ -57,7 +57,7 @@ namespace FinTrackForWindows.ViewModels
                 BorrowerName = "Unknown",
                 Amount = NewProposalAmount,
                 DueDate = NewProposalDueDate,
-                Status = DebtStatus.PendingProposal,
+                Status = DebtStatusType.PendingBorrowerAcceptance,
                 CurrentUserName = CurrentUserName
             };
 
@@ -74,7 +74,7 @@ namespace FinTrackForWindows.ViewModels
         {
             if (debt == null) return;
 
-            debt.Status = DebtStatus.AwaitingVideoUpload;
+            debt.Status = DebtStatusType.PendingOperatorApproval;
             debt.BorrowerName = CurrentUserName;
             RefreshLists();
             _logger.LogInformation("{Amount} TRY tutarındaki borç teklifi onaylandı.", debt.Amount);
@@ -85,7 +85,7 @@ namespace FinTrackForWindows.ViewModels
         {
             if (debt == null) return;
 
-            debt.Status = DebtStatus.RejectedByBorrower;
+            debt.Status = DebtStatusType.RejectedByOperator;
             RefreshLists();
             _logger.LogWarning("{Amount} TRY tutarındaki borç teklifi reddedildi.", debt.Amount);
         }
@@ -95,7 +95,7 @@ namespace FinTrackForWindows.ViewModels
         {
             if (debt == null) return;
 
-            debt.Status = DebtStatus.AwaitingOperatorApproval;
+            debt.Status = DebtStatusType.PendingOperatorApproval;
             RefreshLists();
             _logger.LogInformation("{Amount} TRY borcu için onay videosu yüklendi, operatör onayı bekleniyor.", debt.Amount);
             MessageBox.Show("Video başarıyla yüklendi. Operatör onayı bekleniyor.", "Başarılı");
@@ -103,11 +103,11 @@ namespace FinTrackForWindows.ViewModels
 
         private void RefreshLists()
         {
-            var pending = allDebts.Where(d => d.Status == DebtStatus.PendingProposal && d.LenderName != CurrentUserName).ToList();
+            var pending = allDebts.Where(d => d.Status == DebtStatusType.PendingBorrowerAcceptance && d.LenderName != CurrentUserName).ToList();
             PendingOffers.Clear();
             foreach (var item in pending) PendingOffers.Add(item);
 
-            var myDebts = allDebts.Where(d => d.Status != DebtStatus.PendingProposal && (d.LenderName == CurrentUserName || d.BorrowerName == CurrentUserName)).ToList();
+            var myDebts = allDebts.Where(d => d.Status != DebtStatusType.PendingBorrowerAcceptance && (d.LenderName == CurrentUserName || d.BorrowerName == CurrentUserName)).ToList();
             MyDebtsList.Clear();
             foreach (var item in myDebts) MyDebtsList.Add(item);
         }
@@ -122,7 +122,7 @@ namespace FinTrackForWindows.ViewModels
                     BorrowerName = "Unknown",
                     Amount = 500,
                     DueDate = new DateTime(2024, 6, 15),
-                    Status = DebtStatus.PendingProposal,
+                    Status = DebtStatusType.RejectedByOperator,
                     CurrentUserName = CurrentUserName
                 },
                 new DebtModel
@@ -131,7 +131,7 @@ namespace FinTrackForWindows.ViewModels
                     BorrowerName = "Eylül Korkmaz",
                     Amount = 2500,
                     DueDate = new DateTime(2024, 10, 1),
-                    Status = DebtStatus.AwaitingVideoUpload,
+                    Status = DebtStatusType.PendingOperatorApproval,
                     CurrentUserName = CurrentUserName
                 },
                 new DebtModel
@@ -140,7 +140,7 @@ namespace FinTrackForWindows.ViewModels
                     BorrowerName = CurrentUserName,
                     Amount = 30000,
                     DueDate = new DateTime(2024, 8, 31),
-                    Status = DebtStatus.Active,
+                    Status = DebtStatusType.Active,
                     CurrentUserName = CurrentUserName
                 },
                 new DebtModel
@@ -149,7 +149,7 @@ namespace FinTrackForWindows.ViewModels
                     BorrowerName = "Ali Veli",
                     Amount = 800000,
                     DueDate = new DateTime(2025, 1, 1),
-                    Status = DebtStatus.AwaitingOperatorApproval,
+                    Status = DebtStatusType.Active,
                     CurrentUserName = CurrentUserName
                 },
                 new DebtModel
@@ -158,7 +158,7 @@ namespace FinTrackForWindows.ViewModels
                     BorrowerName = "Canan Aslan",
                     Amount = 1000,
                     DueDate = new DateTime(2024, 9, 20),
-                    Status = DebtStatus.RejectedByOperator,
+                    Status = DebtStatusType.RejectedByOperator,
                     RejectionReason = "Insufficient video",
                     CurrentUserName = CurrentUserName
                 }

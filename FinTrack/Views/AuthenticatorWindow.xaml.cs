@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
-using FinTrack.Messages;
-using FinTrack.ViewModels;
-using FinTrack.Views;
+using FinTrackForWindows.Messages;
+using FinTrackForWindows.ViewModels;
+using FinTrackForWindows.Views;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Windows;
