@@ -37,6 +37,7 @@
     <None Remove="Assets\Images\Icons\user-red.png" />
     <None Remove="Assets\Images\Icons\user.png" />
     <None Remove="Assets\Images\Icons\verify.png" />
+    <None Remove="Assets\Images\Icons\warning.png" />
     <None Remove="Assets\Images\Icons\x.png" />
   </ItemGroup>
 
@@ -88,6 +89,9 @@
     <Resource Include="Assets\Images\Icons\sync.png" />
     <Resource Include="Assets\Images\Icons\user-green.png" />
     <Resource Include="Assets\Images\Icons\user-red.png" />
+    <Resource Include="Assets\Images\Icons\warning.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Assets\Images\increase.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>

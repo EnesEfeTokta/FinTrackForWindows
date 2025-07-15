@@ -2,7 +2,7 @@
 
 namespace FinTrack.Models.Dashboard
 {
-    public class BudgetDashboard
+    public class BudgetDashboardModel
     {
         public string Name { get; set; } = string.Empty;
         public string DueDate { get; set; } = string.Empty;

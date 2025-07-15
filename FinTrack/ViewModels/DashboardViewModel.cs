@@ -12,7 +12,7 @@ namespace FinTrack.ViewModels
     public partial class DashboardViewModel : ObservableObject
     {
         [ObservableProperty]
-        private ObservableCollection<BudgetDashboard> _budgets_DashboardView_ItemsControl;
+        private ObservableCollection<BudgetDashboardModel> _budgets_DashboardView_ItemsControl;
 
         [ObservableProperty]
         private ObservableCollection<CurrencyRateDashboard> _currencyRates_DashboardView_ItemsControl;
@@ -52,12 +52,12 @@ namespace FinTrack.ViewModels
         private void LoadData()
         {
             // [TEST]
-            Budgets_DashboardView_ItemsControl = new ObservableCollection<BudgetDashboard>
+            Budgets_DashboardView_ItemsControl = new ObservableCollection<BudgetDashboardModel>
             {
-                new BudgetDashboard { Name = "Tasarruf", DueDate = "15.02.2025", Amount = "6.000$", RemainingTime = "15 gün kaldı", StatusBrush = (Brush)Application.Current.FindResource("StatusGreenBrush") },
-                new BudgetDashboard { Name = "Harcama", DueDate = "20.02.2025", Amount = "2.000$", RemainingTime = "10 gün kaldı", StatusBrush = (Brush)Application.Current.FindResource("StatusRedBrush") },
-                new BudgetDashboard { Name = "Yatırım", DueDate = "10.03.2025", Amount = "10.000$", RemainingTime = "30 gün kaldı", StatusBrush = (Brush)Application.Current.FindResource("StatusGreenBrush") },
-                new BudgetDashboard { Name = "Eğlence", DueDate = "05.04.2025", Amount = "8.000$", RemainingTime = "20 gün kaldı", StatusBrush = (Brush)Application.Current.FindResource("StatusGreenBrush") }
+                new BudgetDashboardModel { Name = "Tasarruf", DueDate = "15.02.2025", Amount = "6.000$", RemainingTime = "15 gün kaldı", StatusBrush = (Brush)Application.Current.FindResource("StatusGreenBrush") },
+                new BudgetDashboardModel { Name = "Harcama", DueDate = "20.02.2025", Amount = "2.000$", RemainingTime = "10 gün kaldı", StatusBrush = (Brush)Application.Current.FindResource("StatusRedBrush") },
+                new BudgetDashboardModel { Name = "Yatırım", DueDate = "10.03.2025", Amount = "10.000$", RemainingTime = "30 gün kaldı", StatusBrush = (Brush)Application.Current.FindResource("StatusGreenBrush") },
+                new BudgetDashboardModel { Name = "Eğlence", DueDate = "05.04.2025", Amount = "8.000$", RemainingTime = "20 gün kaldı", StatusBrush = (Brush)Application.Current.FindResource("StatusGreenBrush") }
             };
 
             // [TEST]
