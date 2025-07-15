@@ -10,7 +10,10 @@ namespace FinTrackForWindows.ViewModels
     public partial class RegisterViewModel : ObservableObject
     {
         [ObservableProperty]
-        private string? fullName_RegisterView_TextBox;
+        private string? firstName_RegisterView_TextBox;
+
+        [ObservableProperty]
+        private string? lastName_RegisterView_TextBox;
 
         [ObservableProperty]
         private string? email_RegisterView_TextBox;
@@ -42,7 +45,8 @@ namespace FinTrackForWindows.ViewModels
         private async Task Register_RegisterView_Button()
         {
             NavigateToOtpVerificationRequested?.Invoke();
-            if (string.IsNullOrEmpty(FullName_RegisterView_TextBox) ||
+            if (string.IsNullOrEmpty(FirstName_RegisterView_TextBox) ||
+                string.IsNullOrEmpty(LastName_RegisterView_TextBox) ||
                 string.IsNullOrEmpty(Email_RegisterView_TextBox) ||
                 string.IsNullOrEmpty(Password_RegisterView_TextBox))
             {
@@ -60,7 +64,8 @@ namespace FinTrackForWindows.ViewModels
             }
 
             bool isInitiateRegistration = await _authService.InitiateRegistrationAsnc(
-                FullName_RegisterView_TextBox,
+                FirstName_RegisterView_TextBox,
+                LastName_RegisterView_TextBox,
                 Email_RegisterView_TextBox,
                 Password_RegisterView_TextBox);
             if (!isInitiateRegistration)
@@ -74,7 +79,9 @@ namespace FinTrackForWindows.ViewModels
             _logger.LogInformation("Kayıt işlemi başarılı. E-posta: {Email}", Email_RegisterView_TextBox);
 
             // Store user information in the static manager
-            NewUserInformationManager.FullName = FullName_RegisterView_TextBox;
+            NewUserInformationManager.FirstName = FirstName_RegisterView_TextBox;
+            NewUserInformationManager.LastName = LastName_RegisterView_TextBox;
+            NewUserInformationManager.FullName = FirstName_RegisterView_TextBox.Trim() + "_" + LastName_RegisterView_TextBox.Trim();
             NewUserInformationManager.Email = Email_RegisterView_TextBox;
             NewUserInformationManager.Password = Password_RegisterView_TextBox;
 

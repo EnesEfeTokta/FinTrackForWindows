@@ -26,7 +26,7 @@ namespace FinTrackForWindows.Services
             {
                 LoginRequestDto request = new LoginRequestDto { Email = email, Password = password };
 
-                HttpResponseMessage response = await _httpClient.PostAsJsonAsync("api/auth/user/login", request);
+                HttpResponseMessage response = await _httpClient.PostAsJsonAsync("UserAuth/login", request);
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -59,19 +59,20 @@ namespace FinTrackForWindows.Services
             _httpClient.DefaultRequestHeaders.Authorization = null;
         }
 
-        public async Task<bool> InitiateRegistrationAsnc(string userName, string email, string password)
+        public async Task<bool> InitiateRegistrationAsnc(string firstName, string lastName, string email, string password)
         {
             try
             {
                 RegisterRequestDto request = new RegisterRequestDto
                 {
-                    UserName = userName,
+                    FistName = firstName,
+                    LastName = lastName,
                     Email = email,
                     Password = password,
                     ProfilePicture = null
                 };
 
-                HttpResponseMessage response = await _httpClient.PostAsJsonAsync("api/auth/user/initiate-registration", request);
+                HttpResponseMessage response = await _httpClient.PostAsJsonAsync("UserAuth/initiate-registration", request);
                 if (response.IsSuccessStatusCode)
                 {
                     return true;
@@ -98,7 +99,7 @@ namespace FinTrackForWindows.Services
                     Code = code
                 };
 
-                HttpResponseMessage response = await _httpClient.PostAsJsonAsync("api/auth/user/verify-otp-and-register", request);
+                HttpResponseMessage response = await _httpClient.PostAsJsonAsync("UserAuth/verify-otp-and-register", request);
                 if (response.IsSuccessStatusCode)
                 {
                     return true;

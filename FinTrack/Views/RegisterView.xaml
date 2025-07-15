@@ -6,8 +6,7 @@
              xmlns:helpers="clr-namespace:FinTrackForWindows.Helpers"
              xmlns:viewmodels="clr-namespace:FinTrackForWindows.ViewModels"
              mc:Ignorable="d"  
-             d:DataContext="{d:DesignInstance Type=viewmodels:RegisterViewModel, IsDesignTimeCreatable=True}"
-             d:DesignWidth="350" Height="564">
+             d:DataContext="{d:DesignInstance Type=viewmodels:RegisterViewModel, IsDesignTimeCreatable=True}">
 
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
@@ -57,7 +56,8 @@
         <ScaleTransform ScaleX="1" ScaleY="1" CenterX="0.5" CenterY="0.5"/>
     </UserControl.RenderTransform>
 
-    <Border Margin="0,0,0,10">
+    <ScrollViewer Margin="0,0,0,10">
+    <Border>
         <StackPanel Margin="20,20,20,10">
             <Image Source="/Assets/Images/Icons/register.png" 
                    Width="80" Height="80" Margin="0,0,0,20"/>
@@ -67,11 +67,18 @@
             <TextBlock Text="You need to sign up to keep going" Style="{StaticResource LabelTextStyle}" 
                        HorizontalAlignment="Center" Margin="0,0,0,25"/>
 
-            <TextBlock Text="FULL NAME" Style="{StaticResource LabelTextStyle}"/>
+            <TextBlock Text="FIRST NAME" Style="{StaticResource LabelTextStyle}"/>
             
             <TextBox Style="{StaticResource ModernTextBoxStyle}" 
-                     Tag="Enter your full name" 
-                     Text="{Binding FullName_RegisterView_TextBox, UpdateSourceTrigger=PropertyChanged}"
+                     Tag="Enter your first name" 
+                     Text="{Binding FirstName_RegisterView_TextBox, UpdateSourceTrigger=PropertyChanged}"
+                     Margin="0,0,0,15"/>
+
+            <TextBlock Text="LAST NAME" Style="{StaticResource LabelTextStyle}"/>
+
+            <TextBox Style="{StaticResource ModernTextBoxStyle}" 
+                     Tag="Enter your last name" 
+                     Text="{Binding LastName_RegisterView_TextBox, UpdateSourceTrigger=PropertyChanged}"
                      Margin="0,0,0,15"/>
 
             <TextBlock Text="EMAIL" Style="{StaticResource LabelTextStyle}"/>
@@ -126,4 +133,5 @@
             </StackPanel>
         </StackPanel>
     </Border>
+    </ScrollViewer>
 </UserControl>

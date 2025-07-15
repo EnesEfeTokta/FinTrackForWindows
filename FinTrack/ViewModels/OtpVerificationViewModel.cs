@@ -77,10 +77,14 @@ namespace FinTrackForWindows.ViewModels
         [RelayCommand]
         private async Task CodeNotFound_OtpVerificationView_Button()
         {
-            if (NewUserInformationManager.FullName != null && NewUserInformationManager.Email != null && NewUserInformationManager.Password != null)
+            if (string.IsNullOrEmpty(NewUserInformationManager.FirstName) ||
+                string.IsNullOrEmpty(NewUserInformationManager.LastName) ||
+                string.IsNullOrEmpty(NewUserInformationManager.Email) ||
+                string.IsNullOrEmpty(NewUserInformationManager.Password))
             {
                 bool isInitiateRegistration = await _authService.InitiateRegistrationAsnc(
-                    NewUserInformationManager.FullName,
+                    NewUserInformationManager.FirstName,
+                    NewUserInformationManager.LastName,
                     NewUserInformationManager.Email,
                     NewUserInformationManager.Password);
 
