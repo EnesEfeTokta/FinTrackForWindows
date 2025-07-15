@@ -2,7 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using System.Windows;
 
-namespace FinTrack.ViewModels
+namespace FinTrackForWindows.ViewModels
 {
     public partial class ForgotPasswordViewModel : ObservableObject
     {

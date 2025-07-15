@@ -1,4 +1,4 @@
-﻿namespace FinTrack.Models.Account
+﻿namespace FinTrackForWindows.Models.Account
 {
     public class AccountBalanceHistoryPoint
     {

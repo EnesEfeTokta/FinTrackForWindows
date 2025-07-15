@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using System.Windows;
 
 
-namespace FinTrack.ViewModels
+namespace FinTrackForWindows.ViewModels
 {
     public partial class BottomBarViewModel : ObservableObject
     {

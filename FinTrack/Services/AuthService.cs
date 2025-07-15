@@ -1,9 +1,9 @@
-﻿using FinTrack.Dtos;
+﻿using FinTrackForWindows.Dtos;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 
-namespace FinTrack.Services
+namespace FinTrackForWindows.Services
 {
     public class AuthService : IAuthService
     {

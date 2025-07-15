@@ -1,11 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using FinTrack.Enums;
-using FinTrack.Models.Account;
+using FinTrackForWindows.Enums;
+using FinTrackForWindows.Models.Account;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 
-namespace FinTrack.ViewModels
+namespace FinTrackForWindows.ViewModels
 {
     public partial class AccountViewModel : ObservableObject
     {

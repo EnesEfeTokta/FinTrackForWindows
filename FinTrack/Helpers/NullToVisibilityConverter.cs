@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Data;
 
-namespace FinTrack.Helpers
+namespace FinTrackForWindows.Helpers
 {
     public class NullToVisibilityConverter : IValueConverter
     {

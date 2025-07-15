@@ -1,8 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using FinTrack.Enums;
+using FinTrackForWindows.Enums;
 using System.Windows.Media;
 
-namespace FinTrack.Models.Transaction
+namespace FinTrackForWindows.Models.Transaction
 {
     public partial class TransactionModel : ObservableObject
     {

@@ -1,9 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using FinTrack.Models.Currency;
+using FinTrackForWindows.Models.Currency;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 
-namespace FinTrack.ViewModels
+namespace FinTrackForWindows.ViewModels
 {
     public partial class CurrenciesViewModel : ObservableObject
     {

@@ -1,6 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 
-namespace FinTrack.Core
+namespace FinTrackForWindows.Core
 {
     public static class TokenValidator
     {

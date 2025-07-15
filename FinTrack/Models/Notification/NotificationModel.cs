@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using FinTrack.Enums;
+using FinTrackForWindows.Enums;
 
-namespace FinTrack.Models.Notification
+namespace FinTrackForWindows.Models.Notification
 {
     public partial class NotificationModel : ObservableObject
     {

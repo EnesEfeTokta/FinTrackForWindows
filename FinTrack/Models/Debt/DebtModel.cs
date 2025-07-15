@@ -1,8 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using FinTrack.Enums;
+using FinTrackForWindows.Enums;
 using System.Windows.Media;
 
-namespace FinTrack.Models.Debt
+namespace FinTrackForWindows.Models.Debt
 {
     public partial class DebtModel : ObservableObject
     {
@@ -26,7 +26,7 @@ namespace FinTrack.Models.Debt
         [NotifyPropertyChangedFor(nameof(StatusBrush))]
         [NotifyPropertyChangedFor(nameof(IsActionRequired))]
         [NotifyPropertyChangedFor(nameof(IsRejected))]
-        private DebtStatus status;
+        private DebtStatusType status;
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(DebtTitle))]

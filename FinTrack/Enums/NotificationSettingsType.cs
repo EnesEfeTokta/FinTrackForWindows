@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace FinTrack.Enums
+namespace FinTrackForWindows.Enums
 {
     public enum NotificationSettingsType
     {

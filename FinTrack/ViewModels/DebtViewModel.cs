@@ -1,12 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using FinTrack.Enums;
-using FinTrack.Models.Debt;
+using FinTrackForWindows.Enums;
+using FinTrackForWindows.Models.Debt;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 using System.Windows;
 
-namespace FinTrack.ViewModels
+namespace FinTrackForWindows.ViewModels
 {
     public partial class DebtViewModel : ObservableObject
     {

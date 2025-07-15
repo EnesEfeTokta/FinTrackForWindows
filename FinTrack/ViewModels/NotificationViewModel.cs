@@ -1,11 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using FinTrack.Enums;
-using FinTrack.Models.Notification;
+using FinTrackForWindows.Enums;
+using FinTrackForWindows.Models.Notification;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 
-namespace FinTrack.ViewModels
+namespace FinTrackForWindows.ViewModels
 {
     public partial class NotificationViewModel : ObservableObject
     {

@@ -1,8 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using FinTrack.Enums;
+using FinTrackForWindows.Enums;
 using System.Windows.Media;
 
-namespace FinTrack.Models.Account
+namespace FinTrackForWindows.Models.Account
 {
     public partial class AccountModel : ObservableObject
     {

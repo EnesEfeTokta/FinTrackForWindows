@@ -1,8 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using FinTrack.Enums;
+using FinTrackForWindows.Enums;
 using System.Collections.ObjectModel;
 
-namespace FinTrack.Models.FinBot
+namespace FinTrackForWindows.Models.FinBot
 {
     public partial class ChatMessageModel : ObservableObject
     {

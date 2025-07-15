@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System.Globalization;
 
-namespace FinTrack.Models.Budget
+namespace FinTrackForWindows.Models.Budget
 {
     public partial class BudgetModel : ObservableObject
     {

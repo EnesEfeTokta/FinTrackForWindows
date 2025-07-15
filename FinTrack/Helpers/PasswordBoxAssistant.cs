@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace FinTrack.Helpers
+namespace FinTrackForWindows.Helpers
 {
     public static class PasswordBoxAssistant
     {

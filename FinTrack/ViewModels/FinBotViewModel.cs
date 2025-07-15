@@ -1,11 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using FinTrack.Enums;
-using FinTrack.Models.FinBot;
+using FinTrackForWindows.Enums;
+using FinTrackForWindows.Models.FinBot;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 
-namespace FinTrack.ViewModels
+namespace FinTrackForWindows.ViewModels
 {
     public partial class FinBotViewModel : ObservableObject
     {

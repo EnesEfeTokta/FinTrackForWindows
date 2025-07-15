@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace FinTrack.Views
+namespace FinTrackForWindows.Views
 {
     public partial class AccountView : UserControl
     {

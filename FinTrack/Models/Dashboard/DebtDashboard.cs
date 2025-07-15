@@ -1,6 +1,6 @@
 ﻿using System.Windows.Media;
 
-namespace FinTrack.Models.Dashboard
+namespace FinTrackForWindows.Models.Dashboard
 {
     public class DebtDashboard
     {

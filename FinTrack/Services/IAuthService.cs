@@ -1,4 +1,4 @@
-﻿namespace FinTrack.Services
+﻿namespace FinTrackForWindows.Services
 {
     public interface IAuthService
     {

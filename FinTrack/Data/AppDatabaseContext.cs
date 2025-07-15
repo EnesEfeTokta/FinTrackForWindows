@@ -1,8 +1,8 @@
-﻿using FinTrack.Models;
+﻿using FinTrackForWindows.Models;
 using Microsoft.EntityFrameworkCore;
 using System.IO;
 
-namespace FinTrack.Data
+namespace FinTrackForWindows.Data
 {
     public class AppDatabaseContext : DbContext
     {

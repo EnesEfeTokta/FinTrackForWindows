@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using System.Windows;
 using System.Windows.Input;
 
-namespace FinTrack.ViewModels
+namespace FinTrackForWindows.ViewModels
 {
     public partial class SettingsViewModel : ObservableObject
     {

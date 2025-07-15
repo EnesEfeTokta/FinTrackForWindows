@@ -1,8 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using FinTrack.Enums;
+using FinTrackForWindows.Enums;
 using System.Windows.Media;
 
-namespace FinTrack.Models.Currency
+namespace FinTrackForWindows.Models.Currency
 {
     public partial class CurrencyModel : ObservableObject
     {

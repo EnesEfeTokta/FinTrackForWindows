@@ -1,7 +1,7 @@
-﻿using FinTrack.Enums;
+﻿using FinTrackForWindows.Enums;
 using System.Windows.Media;
 
-namespace FinTrack.Models.Dashboard
+namespace FinTrackForWindows.Models.Dashboard
 {
     public class TransactionDashboard
     {

@@ -1,11 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using FinTrack.Core;
-using FinTrack.Services;
+using FinTrackForWindows.Core;
+using FinTrackForWindows.Services;
 using Microsoft.Extensions.Logging;
 using System.Windows;
 
-namespace FinTrack.ViewModels
+namespace FinTrackForWindows.ViewModels
 {
     public partial class RegisterViewModel : ObservableObject
     {

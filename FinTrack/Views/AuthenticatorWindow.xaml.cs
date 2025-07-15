@@ -7,7 +7,7 @@ using Microsoft.Extensions.Hosting;
 using System.Windows;
 using System.Windows.Input;
 
-namespace FinTrack
+namespace FinTrackForWindows
 {
     public partial class AuthenticatorWindow : Window, IRecipient<LoginSuccessMessage>
     {
