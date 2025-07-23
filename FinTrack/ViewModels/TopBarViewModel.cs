@@ -55,7 +55,7 @@ namespace FinTrackForWindows.ViewModels
                 _logger.LogWarning("Kullanıcı oturumu açık değil, profil bilgileri yüklenemedi.");
                 return;
             }
-            var userProfile = await _apiService.GetAsync<UserProfileDto>("user");
+            var userProfile = await _apiService.GetAsync<UserProfileDto>("User");
 
             if (userProfile != null)
             {

@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using FinTrackForWindows.Core;
 using FinTrackForWindows.Services;
 using Microsoft.Extensions.Logging;
+using System.Text.RegularExpressions;
 using System.Windows;
 
 namespace FinTrackForWindows.ViewModels
@@ -63,6 +64,13 @@ namespace FinTrackForWindows.ViewModels
                 return;
             }
 
+            if (IsPasswordValid(Password_RegisterView_TextBox) == false)
+            {
+                MessageBox.Show("Şifre en az 8 karakter uzunluğunda, en az bir büyük harf, bir küçük harf, bir rakam ve bir özel karakter içermelidir.", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
+                _logger.LogWarning("Kayıt işlemi için geçersiz şifre girildi.");
+                return;
+            }
+
             bool isInitiateRegistration = await _authService.InitiateRegistrationAsnc(
                 FirstName_RegisterView_TextBox,
                 LastName_RegisterView_TextBox,
@@ -86,6 +94,13 @@ namespace FinTrackForWindows.ViewModels
             NewUserInformationManager.Password = Password_RegisterView_TextBox;
 
             NavigateToOtpVerificationRequested?.Invoke();
+        }
+
+        private bool IsPasswordValid(string password)
+        {
+            string pattern = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':""\\|,.<>\/?]).{8,}$";
+            Regex regex = new Regex(pattern);
+            return regex.IsMatch(password);
         }
 
         [RelayCommand]

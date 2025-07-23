@@ -1,4 +1,5 @@
 ﻿using FinTrackForWindows.Dtos;
+using Microsoft.Extensions.Configuration;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -8,12 +9,15 @@ namespace FinTrackForWindows.Services
     public class AuthService : IAuthService
     {
         private readonly HttpClient _httpClient;
+        private readonly IConfiguration _configuration;
 
-        public AuthService()
+        public AuthService(IConfiguration configuration)
         {
+            _configuration = configuration;
             _httpClient = new HttpClient
             {
-                BaseAddress = new Uri("http://localhost:5000/")
+                BaseAddress = new Uri("http://localhost:5246/")
+                //BaseAddress = new Uri(_configuration["BaseServerUrl"])
             };
 
             _httpClient.DefaultRequestHeaders.Accept.Clear();

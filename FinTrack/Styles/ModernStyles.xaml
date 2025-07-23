@@ -13,6 +13,8 @@
     <SolidColorBrush x:Key="ErrorBrush" Color="#F85149"/>
     <SolidColorBrush x:Key="AccentBrush" Color="#58A6FF"/>
 
+    <SolidColorBrush x:Key="PrimaryBrush" Color="#FF007ACC"/>
+
     <SolidColorBrush x:Key="BotMessageBackgroundBrush" Color="#2C2F3B"/>
     <SolidColorBrush x:Key="UserMessageBackgroundBrush" Color="#0078D7"/>
 
