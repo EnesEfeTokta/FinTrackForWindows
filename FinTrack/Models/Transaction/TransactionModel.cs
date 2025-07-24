@@ -7,7 +7,7 @@ namespace FinTrackForWindows.Models.Transaction
     public partial class TransactionModel : ObservableObject
     {
         [ObservableProperty]
-        private Guid id = Guid.NewGuid();
+        private int id;
 
         [ObservableProperty]
         private string nameOrDescription = string.Empty;

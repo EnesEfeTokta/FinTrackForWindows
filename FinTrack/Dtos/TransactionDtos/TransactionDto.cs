@@ -1,5 +1,4 @@
 ﻿using FinTrackForWindows.Dtos.AccountDtos;
-using FinTrackForWindows.Dtos.TransactionDtos;
 using FinTrackForWindows.Enums;
 
 namespace FinTrackForWindows.Dtos.TransactionDtos

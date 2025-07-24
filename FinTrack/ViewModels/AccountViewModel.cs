@@ -1,7 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using FinTrackForWindows.Dtos.AccountDtos;
 using FinTrackForWindows.Enums;
 using FinTrackForWindows.Models.Account;
+using FinTrackForWindows.Services.Api;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 
@@ -24,10 +26,13 @@ namespace FinTrackForWindows.ViewModels
 
         private bool IsEditing = false;
 
-        public AccountViewModel(ILogger<AccountViewModel> logger)
+        private readonly IApiService _apiService;
+
+        public AccountViewModel(ILogger<AccountViewModel> logger, IApiService apiService)
         {
             _logger = logger;
-            LoadSampleData();
+            _apiService = apiService;
+            _ = LoadData();
             PrepareForNewAccount();
         }
 
@@ -35,53 +40,46 @@ namespace FinTrackForWindows.ViewModels
         {
             _logger.LogInformation("Seçilen hesap değişti: {AccountName}", value?.Name ?? "Hiçbiri");
 
-            IsEditing = value != null && value.Id != Guid.Empty;
+            IsEditing = value != null && value.Id != null;
 
             OnPropertyChanged(nameof(FormTitle));
             OnPropertyChanged(nameof(SaveButtonText));
         }
 
-        private void LoadSampleData()
+        private async Task LoadData()
         {
-            Accounts = new ObservableCollection<AccountModel>
+            var accounts = await _apiService.GetAsync<List<AccountDto>>("Account");
+            Accounts = new ObservableCollection<AccountModel>();
+            if (accounts != null)
             {
-                new AccountModel
+                foreach (var item in accounts)
                 {
-                    Id = Guid.NewGuid(),
-                    Name = "ING Bank - Vadesiz",
-                    Type = AccountType.Checking,
-                    CurrentBalance = 15000,
-                    TargetBalance = 20000,
-                    Currency = "USD",
-                    History = new List<AccountBalanceHistoryPoint>()
-                },
-                new AccountModel
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "QNB Bank - Kredi Kartı",
-                    Type = AccountType.CreditCard,
-                    CurrentBalance = 3000,
-                    TargetBalance = 10000,
-                    Currency = "USD",
-                    History = new List<AccountBalanceHistoryPoint>()
-                },
-                new AccountModel
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Yatırım Hesabı - Portföy",
-                    Type = AccountType.Investment,
-                    CurrentBalance = 90000,
-                    TargetBalance = null,
-                    Currency = "USD",
-                    History = new List<AccountBalanceHistoryPoint>()
+                    Accounts.Add(new AccountModel
+                    {
+                        Id = item.Id,
+                        Name = item.Name,
+                        Type = item.Type,
+                        CurrentBalance = item.Balance,
+                        TargetBalance = 100,
+                        Currency = item.Currency.ToString(),
+                    });
                 }
-            };
+            }
         }
 
         [RelayCommand]
-        private void SaveAccount()
+        private async Task SaveAccount()
         {
             if (SelectedAccount == null || string.IsNullOrWhiteSpace(SelectedAccount.Name)) return;
+
+            if (Enum.TryParse(SelectedAccount.Currency, out BaseCurrencyType currency))
+            {
+                _logger.LogInformation("");
+            }
+            else
+            {
+                _logger.LogError("");
+            }
 
             if (IsEditing)
             {
@@ -93,22 +91,43 @@ namespace FinTrackForWindows.ViewModels
                     existingAccount.CurrentBalance = SelectedAccount.CurrentBalance;
                     existingAccount.TargetBalance = SelectedAccount.TargetBalance;
                     existingAccount.Currency = SelectedAccount.Currency;
+
+                    await _apiService.PutAsync<object>($"Account/{SelectedAccount.Id}", new AccountUpdateDto
+                    {
+                        Name = SelectedAccount.Name,
+                        Type = SelectedAccount.Type,
+                        Balance = SelectedAccount.CurrentBalance,
+                        Currency = currency
+                    });
                 }
             }
             else
             {
-                SelectedAccount.Id = Guid.NewGuid();
+                var newAccount = await _apiService.PostAsync<AccountCreateDto>("Account", new AccountCreateDto
+                {
+                    Name = SelectedAccount.Name,
+                    Type = SelectedAccount.Type,
+                    IsActive = true,
+                    Balance = SelectedAccount.CurrentBalance,
+                    Currency = currency,
+                });
+
+                SelectedAccount.Id = 10; // TODO: Burası kesinlikle incele.
+
                 Accounts.Add(SelectedAccount);
             }
             PrepareForNewAccount();
         }
 
         [RelayCommand]
-        private void DeleteAccount(AccountModel accountToDelete)
+        private async Task DeleteAccount(AccountModel accountToDelete)
         {
             if (accountToDelete != null)
             {
                 Accounts.Remove(accountToDelete);
+
+               await _apiService.DeleteAsync<object>($"Account/{accountToDelete.Id}");
+
                 if (SelectedAccount?.Id == accountToDelete.Id)
                 {
                     PrepareForNewAccount();

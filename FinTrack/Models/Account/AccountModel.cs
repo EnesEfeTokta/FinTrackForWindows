@@ -7,7 +7,7 @@ namespace FinTrackForWindows.Models.Account
     public partial class AccountModel : ObservableObject
     {
         [ObservableProperty]
-        private Guid id = Guid.NewGuid();
+        private int? id;
 
         [ObservableProperty]
         private string name = string.Empty;

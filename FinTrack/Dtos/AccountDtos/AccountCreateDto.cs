@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using FinTrackForWindows.Enums;
 
 namespace FinTrackForWindows.Dtos.AccountDtos
 {
     public class AccountCreateDto
     {
+        public string Name { get; set; } = null!;
+        public AccountType Type { get; set; }
+        public bool IsActive { get; set; }
+        public decimal Balance { get; set; }
+        public BaseCurrencyType Currency { get; set; }
     }
 }

@@ -1,10 +1,13 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using FinTrackForWindows.Dtos.TransactionDtos;
 using FinTrackForWindows.Enums;
 using FinTrackForWindows.Models.Transaction;
+using FinTrackForWindows.Services.Api;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace FinTrackForWindows.ViewModels
@@ -12,6 +15,7 @@ namespace FinTrackForWindows.ViewModels
     public partial class TransactionsViewModel : ObservableObject
     {
         private readonly ILogger<TransactionsViewModel> _logger;
+        private readonly IApiService _apiService;
 
         [ObservableProperty]
         private ObservableCollection<TransactionModel> transactions;
@@ -38,10 +42,11 @@ namespace FinTrackForWindows.ViewModels
         [ObservableProperty]
         private string mostSpending;
 
-        public TransactionsViewModel(ILogger<TransactionsViewModel> logger)
+        public TransactionsViewModel(ILogger<TransactionsViewModel> logger, IApiService apiService)
         {
             _logger = logger;
-            LoadSampleData();
+            _apiService = apiService;
+            _ = LoadData();
 
             NewTransaction();
         }
@@ -84,10 +89,11 @@ namespace FinTrackForWindows.ViewModels
 
 
         [RelayCommand]
-        private void DeleteTransaction(TransactionModel transactionToDelete)
+        private async Task DeleteTransaction(TransactionModel transactionToDelete)
         {
             if (transactionToDelete != null)
             {
+                await _apiService.DeleteAsync<object>($"Transactions/{transactionToDelete.Id}");
                 Transactions.Remove(transactionToDelete);
                 _logger.LogInformation("'{TransactionName}' adlı işlem silindi.", transactionToDelete.NameOrDescription);
                 NewTransaction();
@@ -95,7 +101,7 @@ namespace FinTrackForWindows.ViewModels
         }
 
         [RelayCommand]
-        private void SaveTransaction()
+        private async Task SaveTransaction()
         {
             if (string.IsNullOrWhiteSpace(EditableTransaction.NameOrDescription))
             {
@@ -117,6 +123,12 @@ namespace FinTrackForWindows.ViewModels
                     existing.Category = EditableTransaction.Category;
                     existing.Currency = EditableTransaction.Currency;
 
+                    // TODO: Yeni Gelir/Gider şemasına uygun.
+                    //await _apiService.PutAsync<object>($"Transactions/{existing.Id}", new TransactionUpdateDto 
+                    //{
+                        
+                    //});
+
                     _logger.LogInformation("'{TransactionName}' adlı işlem güncellendi.", existing.NameOrDescription);
                     CalculateTotals();
                 }
@@ -130,41 +142,27 @@ namespace FinTrackForWindows.ViewModels
             NewTransaction();
         }
 
-        private void LoadSampleData()
+        private async Task LoadData()
         {
-            Transactions = new ObservableCollection<TransactionModel>
+            var transactions = await _apiService.GetAsync<List<TransactionDto>>("Transactions");
+            Transactions = new ObservableCollection<TransactionModel>();
+            if (transactions != null)
             {
-                new TransactionModel
+                foreach (var transaction in transactions)
                 {
-                    NameOrDescription = "Maaş",
-                    Amount = 5000m,
-                    Date = DateTime.Now.AddDays(-2),
-                    AccountName = "ING Bank - Vadesiz",
-                    Category = "Maaş",
-                    Type = TransactionType.Income,
-                    Currency = "TRY"
-                },
-                new TransactionModel
-                {
-                    NameOrDescription = "Market Alışverişi",
-                    Amount = 450.75m,
-                    Date = DateTime.Now.AddDays(-5),
-                    AccountName = "Garanti Kredi Kartı",
-                    Category = "Gıda",
-                    Type = TransactionType.Expense,
-                    Currency = "TRY"
-                },
-                new TransactionModel
-                {
-                    NameOrDescription = "Elektrik Faturası",
-                    Amount = 275.50m,
-                    Date = DateTime.Now.AddDays(-10),
-                    AccountName = "ING Bank - Vadesiz",
-                    Category = "Fatura",
-                    Type = TransactionType.Expense,
-                    Currency = "TRY"
+                    Transactions.Add(new TransactionModel 
+                    {
+                        Id = transaction.Id,
+                        NameOrDescription = transaction.Description ?? "N/A",
+                        Amount = transaction.Amount,
+                        Date = transaction.TransactionDateUtc,
+                        AccountName = transaction.Account.Name,
+                        Category = transaction.Category.Name,
+                        Type = transaction.Category.Type,
+                        Currency = transaction.Currency.ToString()
+                    });
                 }
-            };
+            }
 
             Transactions.CollectionChanged += OnTransactionsChanged;
             CalculateTotals();
