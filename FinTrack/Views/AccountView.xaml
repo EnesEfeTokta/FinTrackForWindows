@@ -41,9 +41,6 @@
                                             </Border>
                                             <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="15,0">
                                                 <TextBlock Text="{Binding Name}" Foreground="White" FontSize="16" FontWeight="SemiBold"/>
-                                                <ProgressBar Value="{Binding ProgressValue, Mode=OneWay}" Height="8" Margin="0,8,0,8" 
-                                                             Background="{StaticResource ProgressBarBackgroundBrush}" 
-                                                             Foreground="{Binding IconBackground}"/>
                                                 <TextBlock Text="{Binding BalanceText}" Foreground="{StaticResource TopBarTextSecondaryBrush}" FontSize="12"/>
                                             </StackPanel>
                                             <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
@@ -92,10 +89,7 @@
                 <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding SelectedAccount.Type, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
 
                 <TextBlock Text="BALANCE / LIMIT" Style="{StaticResource LabelTextStyle}"/>
-                <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding SelectedAccount.CurrentBalance, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
-
-                <TextBlock Text="TARGET (Optional)" Style="{StaticResource LabelTextStyle}"/>
-                <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding SelectedAccount.TargetBalance, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
+                <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding SelectedAccount.Balance, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
 
                 <TextBlock Text="CURRENCY" Style="{StaticResource LabelTextStyle}"/>
                 <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding SelectedAccount.Currency, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,25"/>

@@ -42,7 +42,8 @@
                    Style="{StaticResource HeaderTextStyle}"
                    HorizontalAlignment="Center"
                    Margin="0,0,0,10"
-                   TextWrapping="Wrap"/>
+                   TextWrapping="Wrap"
+                   TextAlignment="Center"/>
 
         <TextBlock Grid.Row="2" 
                    Text="{Binding CurrentDescription_ApplicationRecognizeSlideView_TextBlock}"

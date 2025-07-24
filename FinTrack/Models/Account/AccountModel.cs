@@ -16,10 +16,7 @@ namespace FinTrackForWindows.Models.Account
         private AccountType type;
 
         [ObservableProperty]
-        private decimal currentBalance;
-
-        [ObservableProperty]
-        private decimal? targetBalance;
+        private decimal balance;
 
         [ObservableProperty]
         private string currency = "USD";
@@ -47,27 +44,14 @@ namespace FinTrackForWindows.Models.Account
         {
             get
             {
-                if (Type == AccountType.CreditCard && TargetBalance.HasValue)
+                var balance = Balance.ToString("C", System.Globalization.CultureInfo.CurrentCulture);
+                return Type switch
                 {
-                    return $"Kullanılan Limit: {CurrentBalance:C} / {TargetBalance.Value:C}";
-                }
-                if (TargetBalance.HasValue && TargetBalance > 0)
-                {
-                    return $"{CurrentBalance:C} / {TargetBalance.Value:C}";
-                }
-                return $"Değer: {CurrentBalance:C}";
-            }
-        }
-        public double ProgressValue
-        {
-            get
-            {
-                if (TargetBalance.HasValue && TargetBalance.Value > 0)
-                {
-                    return (double)Math.Max(0, Math.Min(100, (CurrentBalance / TargetBalance.Value) * 100));
-                }
-
-                return Type == AccountType.Loan ? 100 : 0;
+                    AccountType.Checking => $"Bakiye: {balance}",
+                    AccountType.CreditCard => $"Borç: {balance}",
+                    AccountType.Loan => $"Kredi: {balance}",
+                    _ => $"Bakiye: {balance}"
+                };
             }
         }
     }

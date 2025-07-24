@@ -59,8 +59,7 @@ namespace FinTrackForWindows.ViewModels
                         Id = item.Id,
                         Name = item.Name,
                         Type = item.Type,
-                        CurrentBalance = item.Balance,
-                        TargetBalance = 100,
+                        Balance = item.Balance,
                         Currency = item.Currency.ToString(),
                     });
                 }
@@ -74,11 +73,12 @@ namespace FinTrackForWindows.ViewModels
 
             if (Enum.TryParse(SelectedAccount.Currency, out BaseCurrencyType currency))
             {
-                _logger.LogInformation("");
+                _logger.LogInformation("Seçilen para birimi: {Currency}", currency);
             }
             else
             {
-                _logger.LogError("");
+                _logger.LogWarning("Geçersiz para birimi: {Currency}", SelectedAccount.Currency);
+                return;
             }
 
             if (IsEditing)
@@ -88,31 +88,30 @@ namespace FinTrackForWindows.ViewModels
                 {
                     existingAccount.Name = SelectedAccount.Name;
                     existingAccount.Type = SelectedAccount.Type;
-                    existingAccount.CurrentBalance = SelectedAccount.CurrentBalance;
-                    existingAccount.TargetBalance = SelectedAccount.TargetBalance;
+                    existingAccount.Balance = SelectedAccount.Balance;
                     existingAccount.Currency = SelectedAccount.Currency;
 
                     await _apiService.PutAsync<object>($"Account/{SelectedAccount.Id}", new AccountUpdateDto
                     {
                         Name = SelectedAccount.Name,
                         Type = SelectedAccount.Type,
-                        Balance = SelectedAccount.CurrentBalance,
+                        Balance = SelectedAccount.Balance,
                         Currency = currency
                     });
                 }
             }
             else
             {
-                var newAccount = await _apiService.PostAsync<AccountCreateDto>("Account", new AccountCreateDto
+                var newAccount = await _apiService.PostAsync<AccountResponseDto>("Account", new AccountCreateDto
                 {
                     Name = SelectedAccount.Name,
                     Type = SelectedAccount.Type,
                     IsActive = true,
-                    Balance = SelectedAccount.CurrentBalance,
+                    Balance = SelectedAccount.Balance,
                     Currency = currency,
                 });
 
-                SelectedAccount.Id = 10; // TODO: Burası kesinlikle incele.
+                SelectedAccount.Id = newAccount.Id;
 
                 Accounts.Add(SelectedAccount);
             }
