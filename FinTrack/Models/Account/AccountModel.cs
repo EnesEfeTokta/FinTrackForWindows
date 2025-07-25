@@ -21,7 +21,7 @@ namespace FinTrackForWindows.Models.Account
         [ObservableProperty]
         private List<AccountBalanceHistoryPoint> history = new();
 
-        public decimal? balance {  get; set; }
+        public decimal? balance { get; set; }
 
         public string IconPath => Type switch
         {

@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using FinTrackForWindows.Core;
-using FinTrackForWindows.Dtos.BudgetDtos;
 using FinTrackForWindows.Dtos.AccountDtos;
+using FinTrackForWindows.Dtos.BudgetDtos;
 using FinTrackForWindows.Dtos.TransactionDtos;
 using FinTrackForWindows.Enums;
 using FinTrackForWindows.Models.Dashboard;
@@ -50,7 +50,7 @@ namespace FinTrackForWindows.ViewModels
         private readonly IApiService _apiService;
 
         public DashboardViewModel(
-            ILogger<DashboardViewModel> logger, 
+            ILogger<DashboardViewModel> logger,
             IServiceProvider serviceProvider,
             IApiService apiService)
         {
@@ -151,7 +151,7 @@ namespace FinTrackForWindows.ViewModels
                 decimal totalBalance = 0;
                 for (int i = 0; i < 2; i++)
                 {
-                    Accounts_DashboardView_ItemsControl.Add(new AccountDashboard 
+                    Accounts_DashboardView_ItemsControl.Add(new AccountDashboard
                     {
                         Name = accounts[i].Name,
                         Balance = $"{accounts[i].Balance} {accounts[i].Currency}",

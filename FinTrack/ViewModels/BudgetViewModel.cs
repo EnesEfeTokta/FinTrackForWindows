@@ -93,7 +93,7 @@ namespace FinTrackForWindows.ViewModels
                 Currency = SelectedBudget.Currency,
                 StartDate = SelectedBudget.StartDate,
                 EndDate = SelectedBudget.EndDate,
-                IsActive = true 
+                IsActive = true
             };
 
             try

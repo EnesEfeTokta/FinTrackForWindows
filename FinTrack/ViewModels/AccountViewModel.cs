@@ -13,8 +13,6 @@ using LiveChartsCore.SkiaSharpView.VisualElements;
 using Microsoft.Extensions.Logging;
 using SkiaSharp;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace FinTrackForWindows.ViewModels
 {
@@ -275,7 +273,7 @@ namespace FinTrackForWindows.ViewModels
             {
                 Accounts.Remove(accountToDelete);
 
-               await _apiService.DeleteAsync<object>($"Account/{accountToDelete.Id}");
+                await _apiService.DeleteAsync<object>($"Account/{accountToDelete.Id}");
 
                 if (SelectedAccount?.Id == accountToDelete.Id)
                 {

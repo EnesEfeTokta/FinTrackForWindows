@@ -7,7 +7,6 @@ using FinTrackForWindows.Services.Api;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace FinTrackForWindows.ViewModels
@@ -126,7 +125,7 @@ namespace FinTrackForWindows.ViewModels
                     // TODO: Yeni Gelir/Gider şemasına uygun.
                     //await _apiService.PutAsync<object>($"Transactions/{existing.Id}", new TransactionUpdateDto 
                     //{
-                        
+
                     //});
 
                     _logger.LogInformation("'{TransactionName}' adlı işlem güncellendi.", existing.NameOrDescription);
@@ -150,7 +149,7 @@ namespace FinTrackForWindows.ViewModels
             {
                 foreach (var transaction in transactions)
                 {
-                    Transactions.Add(new TransactionModel 
+                    Transactions.Add(new TransactionModel
                     {
                         Id = transaction.Id,
                         NameOrDescription = transaction.Description ?? "N/A",
