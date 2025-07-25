@@ -101,8 +101,8 @@ namespace FinTrackForWindows.ViewModels
                 if (IsEditing)
                 {
                     // TEST
-                    await _apiService.PutAsync<BudgetModel>($"Budgets/{selectedBudget.Id}", budgetDto);
-                    _logger.LogInformation("Bütçe güncellendi: {BudgetId}", selectedBudget.Id);
+                    await _apiService.PutAsync<BudgetModel>($"Budgets/{SelectedBudget.Id}", budgetDto);
+                    _logger.LogInformation("Bütçe güncellendi: {BudgetId}", SelectedBudget.Id);
 
                     var existingBudget = Budgets.FirstOrDefault(b => b.Id == SelectedBudget.Id);
                     if (existingBudget != null)
