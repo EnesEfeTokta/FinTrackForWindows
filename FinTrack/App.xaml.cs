@@ -4,7 +4,6 @@ using FinTrackForWindows.Services;
 using FinTrackForWindows.Services.Api;
 using FinTrackForWindows.ViewModels;
 using FinTrackForWindows.Views;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;

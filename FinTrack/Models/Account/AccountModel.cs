@@ -16,13 +16,12 @@ namespace FinTrackForWindows.Models.Account
         private AccountType type;
 
         [ObservableProperty]
-        private decimal balance;
-
-        [ObservableProperty]
-        private string currency = "USD";
+        private BaseCurrencyType currency;
 
         [ObservableProperty]
         private List<AccountBalanceHistoryPoint> history = new();
+
+        public decimal? balance {  get; set; }
 
         public string IconPath => Type switch
         {
@@ -44,7 +43,7 @@ namespace FinTrackForWindows.Models.Account
         {
             get
             {
-                var balance = Balance.ToString("C", System.Globalization.CultureInfo.CurrentCulture);
+                var balanceString = balance.ToString();
                 return Type switch
                 {
                     AccountType.Checking => $"Bakiye: {balance}",

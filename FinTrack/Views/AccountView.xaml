@@ -5,10 +5,16 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:vm="clr-namespace:FinTrackForWindows.ViewModels"
              xmlns:helpers="clr-namespace:FinTrackForWindows.Helpers"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
              mc:Ignorable="d" 
              d:DesignHeight="800" d:DesignWidth="1400"
              Background="{StaticResource MainBackgroundBrush}"
              d:DataContext="{d:DesignInstance Type=vm:AccountViewModel, IsDesignTimeCreatable=True}">
+
+    <UserControl.Resources>
+        <helpers:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter"/>
+        <helpers:BrushToLvcPaintConverter x:Key="BrushToLvcPaintConverter"/>
+    </UserControl.Resources>
 
     <Grid Margin="30">
         <Grid.ColumnDefinitions>
@@ -65,13 +71,18 @@
 
                 <Border Style="{StaticResource DashboardCardStyle}" Margin="0,20,0,0">
                     <StackPanel>
-                        <TextBlock Text="Account Statistics" Style="{StaticResource CardTitleTextStyle}"/>
-                        <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,15" Opacity="0.5"/>
-                        <Border Height="200" Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10">
-                            <TextBlock Text="[Statistical graph area]" 
-                                       Foreground="{StaticResource TopBarTextSecondaryBrush}" 
-                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
+                        <lvc:CartesianChart
+                Height="280"
+                Series="{Binding Series}"
+                XAxes="{Binding XAxes}"
+                YAxes="{Binding YAxes}"
+                Title="{Binding Title}"
+                LegendPosition="Bottom"
+                LegendTextPaint="{Binding Source={StaticResource TopBarTextSecondaryBrush}, Converter={StaticResource BrushToLvcPaintConverter}}"
+                TooltipPosition="Top"
+                TooltipBackgroundPaint="{Binding Source={StaticResource CardDarkerBackgroundBrush}, Converter={StaticResource BrushToLvcPaintConverter}}"
+                TooltipTextPaint="{Binding Source={StaticResource TopBarTextSecondaryBrush}, Converter={StaticResource BrushToLvcPaintConverter}}">
+                        </lvc:CartesianChart>
                     </StackPanel>
                 </Border>
             </StackPanel>
@@ -86,13 +97,24 @@
                 <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding SelectedAccount.Name, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
 
                 <TextBlock Text="ACCOUNT TYPE" Style="{StaticResource LabelTextStyle}"/>
-                <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding SelectedAccount.Type, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
-
-                <TextBlock Text="BALANCE / LIMIT" Style="{StaticResource LabelTextStyle}"/>
-                <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding SelectedAccount.Balance, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
+                <ComboBox SelectedIndex="0" Style="{StaticResource ModernComboBoxStyle}" Margin="0,0,0,15"
+                      ItemsSource="{Binding AccountTypes}" SelectedItem="{Binding SelectedAccount.Type, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Converter={StaticResource EnumToDescriptionConverter}}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
 
                 <TextBlock Text="CURRENCY" Style="{StaticResource LabelTextStyle}"/>
-                <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding SelectedAccount.Currency, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,25"/>
+                <ComboBox SelectedIndex="0" Style="{StaticResource ModernComboBoxStyle}" Margin="0,0,0,15"
+                      ItemsSource="{Binding CurrencyTypes}" SelectedItem="{Binding SelectedAccount.Currency, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Converter={StaticResource EnumToDescriptionConverter}}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
 
                 <Button Content="{Binding SaveButtonText}" 
                         Style="{StaticResource PrimaryButtonStyle}"
