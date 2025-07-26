@@ -1,16 +1,16 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
-using FinTrack.Core;
-using FinTrack.Services;
-using FinTrack.Services.Api;
-using FinTrack.ViewModels;
-using FinTrack.Views;
+using FinTrackForWindows.Core;
+using FinTrackForWindows.Services;
+using FinTrackForWindows.Services.Api;
+using FinTrackForWindows.ViewModels;
+using FinTrackForWindows.Views;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using System.Windows;
 
-namespace FinTrack
+namespace FinTrackForWindows
 {
     public partial class App : Application
     {

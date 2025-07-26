@@ -1,7 +1,7 @@
-﻿using FinTrack.ViewModels;
+﻿using FinTrackForWindows.ViewModels;
 using System.Windows;
 
-namespace FinTrack.Views
+namespace FinTrackForWindows.Views
 {
     public partial class MainWindow : Window
     {

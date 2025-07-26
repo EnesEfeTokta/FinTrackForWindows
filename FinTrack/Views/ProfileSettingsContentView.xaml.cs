@@ -1,10 +1,7 @@
 ﻿using System.Windows.Controls;
 
-namespace FinTrack.Views
+namespace FinTrackForWindows.Views
 {
-    /// <summary>
-    /// Interaction logic for ProfileSettingsContentView.xaml
-    /// </summary>
     public partial class ProfileSettingsContentView : UserControl
     {
         public ProfileSettingsContentView()

@@ -1,13 +1,13 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using FinTrack.Enums;
+using FinTrackForWindows.Enums;
 using System.Windows.Media;
 
-namespace FinTrack.Models.Transaction
+namespace FinTrackForWindows.Models.Transaction
 {
     public partial class TransactionModel : ObservableObject
     {
         [ObservableProperty]
-        private Guid id = Guid.NewGuid();
+        private int id;
 
         [ObservableProperty]
         private string nameOrDescription = string.Empty;

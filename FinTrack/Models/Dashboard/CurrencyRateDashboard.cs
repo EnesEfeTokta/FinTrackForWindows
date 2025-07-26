@@ -1,4 +1,4 @@
-﻿namespace FinTrack.Models.Dashboard
+﻿namespace FinTrackForWindows.Models.Dashboard
 {
     public class CurrencyRateDashboard
     {

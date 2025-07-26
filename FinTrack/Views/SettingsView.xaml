@@ -1,11 +1,11 @@
-﻿<UserControl x:Class="FinTrack.Views.SettingsView"
+﻿<UserControl x:Class="FinTrackForWindows.Views.SettingsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             xmlns:local="clr-namespace:FinTrack.Views"
-             xmlns:vm="clr-namespace:FinTrack.ViewModels"
+             xmlns:local="clr-namespace:FinTrackForWindows.Views"
+             xmlns:vm="clr-namespace:FinTrackForWindows.ViewModels"
              d:DesignHeight="850" d:DesignWidth="1400"
              Background="{StaticResource MainBackgroundBrush}">
 

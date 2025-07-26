@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace FinTrack.Models.Report
+namespace FinTrackForWindows.Models.Report
 {
     public partial class SelectableOptionReport : ObservableObject
     {

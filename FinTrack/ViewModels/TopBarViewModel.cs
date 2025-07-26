@@ -1,11 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using FinTrack.Core;
-using FinTrack.Dtos;
-using FinTrack.Services.Api;
+using FinTrackForWindows.Core;
+using FinTrackForWindows.Dtos;
+using FinTrackForWindows.Services.Api;
 using Microsoft.Extensions.Logging;
 
-namespace FinTrack.ViewModels
+namespace FinTrackForWindows.ViewModels
 {
     public partial class TopBarViewModel : ObservableObject
     {
@@ -55,7 +55,7 @@ namespace FinTrack.ViewModels
                 _logger.LogWarning("Kullanıcı oturumu açık değil, profil bilgileri yüklenemedi.");
                 return;
             }
-            var userProfile = await _apiService.GetAsync<UserProfileDto>("user");
+            var userProfile = await _apiService.GetAsync<UserProfileDto>("User");
 
             if (userProfile != null)
             {

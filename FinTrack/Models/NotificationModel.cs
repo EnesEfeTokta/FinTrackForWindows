@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace FinTrack.Models
+namespace FinTrackForWindows.Models
 {
     [Table("Notifications")]
     public class NotificationModel

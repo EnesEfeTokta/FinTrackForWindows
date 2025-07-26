@@ -1,6 +1,6 @@
 ﻿using System.Windows.Input;
 
-namespace FinTrack.Core
+namespace FinTrackForWindows.Core
 {
     public class RelayCommand : ICommand
     {

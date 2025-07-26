@@ -1,48 +1,67 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿// FinTrackForWindows.Models.Budget/BudgetModel.cs
+
+using CommunityToolkit.Mvvm.ComponentModel;
+using FinTrackForWindows.Enums;
 using System.Globalization;
 
-namespace FinTrack.Models.Budget
+namespace FinTrackForWindows.Models.Budget
 {
     public partial class BudgetModel : ObservableObject
     {
         [ObservableProperty]
-        private Guid id = Guid.NewGuid();
+        private int id;
 
         [ObservableProperty]
         private string name = string.Empty;
 
         [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(ProgressValue))]
-        [NotifyPropertyChangedFor(nameof(ProgressText))]
-        private decimal amount;
+        private string? description;
+
+        [ObservableProperty]
+        private string category = "Other";
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(ProgressValue))]
         [NotifyPropertyChangedFor(nameof(ProgressText))]
-        private decimal targetAmount;
+        private decimal allocatedAmount;
 
         [ObservableProperty]
-        private DateTime startDate;
+        [NotifyPropertyChangedFor(nameof(ProgressValue))]
+        [NotifyPropertyChangedFor(nameof(ProgressText))]
+        private decimal currentAmount;
+
+        [ObservableProperty]
+        private BaseCurrencyType currency = BaseCurrencyType.USD;
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(RemainingTimeText))]
-        private DateTime endDate;
+        private DateTime startDate = DateTime.Today;
 
         [ObservableProperty]
-        private string currency = "USD";
+        [NotifyPropertyChangedFor(nameof(RemainingTimeText))]
+        private DateTime endDate = DateTime.Today.AddMonths(1);
 
-        public double ProgressValue => TargetAmount <= 0 ? 0 : Math.Max(0, Math.Min(100, (double)(Amount / TargetAmount) * 100));
+        public double ProgressValue => AllocatedAmount <= 0 ? 0 : Math.Max(0, Math.Min(100, (double)(CurrentAmount / AllocatedAmount) * 100));
 
-        public string ProgressText => $"{Amount.ToString("C", new CultureInfo("tr-TR"))} / {TargetAmount.ToString("C", new CultureInfo("tr-TR"))}";
+        public string ProgressText
+        {
+            get
+            {
+                var culture = new CultureInfo("tr-TR");
+                return $"{CurrentAmount.ToString("C", culture)} / {AllocatedAmount.ToString("C", culture)}";
+            }
+        }
 
         public string RemainingTimeText
         {
             get
             {
-                var remaining = EndDate - DateTime.Today;
+                var remaining = EndDate.Date - DateTime.Today;
                 if (remaining.TotalDays < 0)
                     return "Süre Doldu";
-                return $"Kalan Süre: {remaining.Days} gün";
+                if (remaining.TotalDays == 0)
+                    return "Son gün";
+                return $"{remaining.Days} gün kaldı";
             }
         }
     }

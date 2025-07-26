@@ -1,11 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
-using FinTrack.Core;
-using FinTrack.Messages;
+using FinTrackForWindows.Core;
+using FinTrackForWindows.Messages;
 using Microsoft.Extensions.Logging;
 using System.Windows;
 
-namespace FinTrack.ViewModels
+namespace FinTrackForWindows.ViewModels
 {
     public partial class AuthenticatorViewModel : ObservableObject
     {

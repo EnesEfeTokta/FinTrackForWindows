@@ -1,4 +1,4 @@
-﻿namespace FinTrack.Services.Api
+﻿namespace FinTrackForWindows.Services.Api
 {
     public interface IApiService
     {

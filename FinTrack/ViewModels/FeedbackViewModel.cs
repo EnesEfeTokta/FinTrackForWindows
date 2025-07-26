@@ -1,12 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using FinTrack.Enums;
+using FinTrackForWindows.Enums;
 using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
 using System.Diagnostics;
 using System.Windows;
 
-namespace FinTrack.ViewModels
+namespace FinTrackForWindows.ViewModels
 {
     public partial class FeedbackViewModel : ObservableObject
     {

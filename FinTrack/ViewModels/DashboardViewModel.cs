@@ -1,18 +1,23 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using FinTrack.Enums;
-using FinTrack.Models.Dashboard;
+using FinTrackForWindows.Core;
+using FinTrackForWindows.Dtos.AccountDtos;
+using FinTrackForWindows.Dtos.BudgetDtos;
+using FinTrackForWindows.Dtos.TransactionDtos;
+using FinTrackForWindows.Enums;
+using FinTrackForWindows.Models.Dashboard;
+using FinTrackForWindows.Services.Api;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Media;
 
-namespace FinTrack.ViewModels
+namespace FinTrackForWindows.ViewModels
 {
     public partial class DashboardViewModel : ObservableObject
     {
         [ObservableProperty]
-        private ObservableCollection<BudgetDashboard> _budgets_DashboardView_ItemsControl;
+        private ObservableCollection<BudgetDashboardModel> _budgets_DashboardView_ItemsControl;
 
         [ObservableProperty]
         private ObservableCollection<CurrencyRateDashboard> _currencyRates_DashboardView_ItemsControl;
@@ -42,24 +47,28 @@ namespace FinTrack.ViewModels
 
         private readonly IServiceProvider _serviceProvider;
 
-        public DashboardViewModel(ILogger<DashboardViewModel> logger, IServiceProvider serviceProvider)
+        private readonly IApiService _apiService;
+
+        public DashboardViewModel(
+            ILogger<DashboardViewModel> logger,
+            IServiceProvider serviceProvider,
+            IApiService apiService)
         {
             _logger = logger;
             _serviceProvider = serviceProvider;
-            LoadData();
+            _apiService = apiService;
+
+            if (SessionManager.IsLoggedIn)
+            {
+                _logger.LogInformation("Kullanıcı zaten giriş yapmış. DashboardViewModel verileri yüklüyor.");
+                _ = LoadBudgetData();
+                _ = LoadAccountData();
+                _ = LoadTransactionData();
+            }
         }
 
-        private void LoadData()
+        private async Task LoadData()
         {
-            // [TEST]
-            Budgets_DashboardView_ItemsControl = new ObservableCollection<BudgetDashboard>
-            {
-                new BudgetDashboard { Name = "Tasarruf", DueDate = "15.02.2025", Amount = "6.000$", RemainingTime = "15 gün kaldı", StatusBrush = (Brush)Application.Current.FindResource("StatusGreenBrush") },
-                new BudgetDashboard { Name = "Harcama", DueDate = "20.02.2025", Amount = "2.000$", RemainingTime = "10 gün kaldı", StatusBrush = (Brush)Application.Current.FindResource("StatusRedBrush") },
-                new BudgetDashboard { Name = "Yatırım", DueDate = "10.03.2025", Amount = "10.000$", RemainingTime = "30 gün kaldı", StatusBrush = (Brush)Application.Current.FindResource("StatusGreenBrush") },
-                new BudgetDashboard { Name = "Eğlence", DueDate = "05.04.2025", Amount = "8.000$", RemainingTime = "20 gün kaldı", StatusBrush = (Brush)Application.Current.FindResource("StatusGreenBrush") }
-            };
-
             // [TEST]
             CurrencyRates_DashboardView_ItemsControl = new ObservableCollection<CurrencyRateDashboard>
             {
@@ -74,41 +83,6 @@ namespace FinTrack.ViewModels
                     ToCurrencyFlagUrl = "https://flagcdn.com/w320/tr.png", ToCurrencyCountry = "Türkiye", ToCurrencyName = "Türk Lirası", ToCurrencyAmount = "30.00", ToCurrencyImageHeight = 20
                 }
             };
-
-            // [TEST]
-            Accounts_DashboardView_ItemsControl = new ObservableCollection<AccountDashboard>
-            {
-                new AccountDashboard { Name = "Nakit", Percentage = 50, Balance = "5.000$", ProgressBarBrush = (Brush)Application.Current.FindResource("StatusGreenBrush") },
-                new AccountDashboard { Name = "Banka", Percentage = 30, Balance = "3.000$", ProgressBarBrush = (Brush)Application.Current.FindResource("StatusGreenBrush") }
-            };
-
-            TotalBalance_DashboardView_TextBlock = "7.000$";
-
-            // [TEST]
-            Transactions_DashboardView_ListView = new ObservableCollection<TransactionDashboard>
-            {
-                new TransactionDashboard { DateText = "01.01.2025", Description = "Market Alışverişi", Amount = "-150$", Category = "Gıda", Type = Enums.TransactionType.Expense },
-                new TransactionDashboard { DateText = "02.01.2025", Description = "Maaş", Amount = "+3.000$", Category = "Gelir", Type = Enums.TransactionType.Income },
-                new TransactionDashboard { DateText = "03.01.2025", Description = "Elektrik Faturası", Amount = "-200$", Category = "Fatura", Type = Enums.TransactionType.Expense }
-            };
-
-            // [TEST]
-            double totalIncome = Transactions_DashboardView_ListView
-                .Where(t => t.Type == TransactionType.Income)
-                .Sum(t =>
-                {
-                    var cleaned = t.Amount.Replace("+", string.Empty).Replace("$", string.Empty).Trim();
-                    return double.TryParse(cleaned, out var value) ? value : 0;
-                });
-            double totalExpense = Transactions_DashboardView_ListView
-                .Where(t => t.Type == TransactionType.Expense)
-                .Sum(t =>
-                {
-                    var cleaned = t.Amount.Replace("-", string.Empty).Replace("$", string.Empty).Trim();
-                    return double.TryParse(cleaned, out var value) ? value : 0;
-                });
-            double remainingBalance = totalIncome - totalExpense;
-            TransactionSummary = $"Toplam {Transactions_DashboardView_ListView.Count} işlem bulundu. Gelir: +{totalIncome}$, Gider: -{totalExpense}$ Kalan: {remainingBalance}";
 
             // [TEST]
             CurrentMembership_DashboardView_Multiple = new MembershipDashboard { Level = "Pro | AKTF", StartDate = "01.01.2025", RenewalDate = "01.02.2025", Price = "9.99$" };
@@ -146,6 +120,88 @@ namespace FinTrack.ViewModels
                 Name = name,
             };
             return report;
+        }
+
+        private async Task LoadBudgetData()
+        {
+            var budgets = await _apiService.GetAsync<List<BudgetDto>>("Budgets");
+            Budgets_DashboardView_ItemsControl = new ObservableCollection<BudgetDashboardModel>();
+            if (budgets != null)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    Budgets_DashboardView_ItemsControl.Add(new BudgetDashboardModel
+                    {
+                        Name = budgets[i].Name,
+                        DueDate = budgets[i].EndDate.ToString("dd.MM.yyyy"),
+                        Amount = $"{budgets[i].AllocatedAmount} {budgets[i].Currency}",
+                        RemainingTime = $"Son {(budgets[i].EndDate - budgets[i].StartDate).Days} gün kaldı.",
+                        StatusBrush = (Brush)Application.Current.FindResource("StatusGreenBrush")
+                    });
+                }
+            }
+        }
+
+        private async Task LoadAccountData()
+        {
+            var accounts = await _apiService.GetAsync<List<AccountDto>>("Account");
+            Accounts_DashboardView_ItemsControl = new ObservableCollection<AccountDashboard>();
+            if (accounts != null)
+            {
+                decimal totalBalance = 0;
+                for (int i = 0; i < 2; i++)
+                {
+                    Accounts_DashboardView_ItemsControl.Add(new AccountDashboard
+                    {
+                        Name = accounts[i].Name,
+                        Balance = $"{accounts[i].Balance} {accounts[i].Currency}",
+                        Percentage = 70, // Burası yüzdelik bar olduğu için daha iyi bir hesaplama yapılmalı.
+                        ProgressBarBrush = (Brush)Application.Current.FindResource("StatusGreenBrush")
+                    });
+
+                    totalBalance += accounts[i].Balance;
+                }
+
+                TotalBalance_DashboardView_TextBlock = $"{totalBalance} {accounts[0].Currency}";
+            }
+        }
+
+        private async Task LoadTransactionData()
+        {
+            var transactions = await _apiService.GetAsync<List<TransactionDto>>("Transactions");
+            Transactions_DashboardView_ListView = new ObservableCollection<TransactionDashboard>();
+            if (transactions != null)
+            {
+                foreach (var item in transactions)
+                {
+                    Transactions_DashboardView_ListView.Add(new TransactionDashboard
+                    {
+                        DateText = item.TransactionDateUtc.ToString("dd.MM.yyyy"),
+                        Description = item.Description ?? "N/A",
+                        Amount = $"{item.Amount} {item.Currency}",
+                        Category = item.Category.Name,
+                        Type = item.Category.Type
+                    });
+                }
+
+                double totalIncome = Transactions_DashboardView_ListView
+                    .Where(t => t.Type == TransactionType.Income)
+                    .Sum(t =>
+                    {
+                        var cleaned = t.Amount.Replace("+", string.Empty).Replace("$", string.Empty).Trim();
+                        return double.TryParse(cleaned, out var value) ? value : 0;
+                    });
+                double totalExpense = Transactions_DashboardView_ListView
+                    .Where(t => t.Type == TransactionType.Expense)
+                    .Sum(t =>
+                    {
+                        var cleaned = t.Amount.Replace("-", string.Empty).Replace("$", string.Empty).Trim();
+                        return double.TryParse(cleaned, out var value) ? value : 0;
+                    });
+                double remainingBalance = totalIncome - totalExpense;
+
+                TransactionSummary = $"Toplam {Transactions_DashboardView_ListView.Count} işlem bulundu. Gelir: +{totalIncome} {transactions[0].Currency}, Gider: -{totalExpense} {transactions[0].Currency} Kalan: {remainingBalance} {transactions[0].Currency}";
+            }
         }
     }
 }

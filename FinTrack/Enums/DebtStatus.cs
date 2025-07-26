@@ -1,13 +1,15 @@
-﻿namespace FinTrack.Enums
+﻿namespace FinTrackForWindows.Enums
 {
-    public enum DebtStatus
+    public enum DebtStatusType
     {
-        PendingProposal,        // Teklif gönderildi, borçlunun onayı bekleniyor
-        AwaitingVideoUpload,    // Teklif kabul edildi, video yüklenmesi bekleniyor
-        AwaitingOperatorApproval,// Video yüklendi, operatör onayı bekleniyor
-        Active,                 // Operatör onayladı, borç aktif
-        RejectedByBorrower,     // Borçlu teklifi reddetti
-        RejectedByOperator,     // Operatör videoyu reddetti
-        Completed               // Borç ödendi
+        PendingBorrowerAcceptance, // Borç Alan Onayı Bekliyor
+        PendingOperatorApproval, // Operatör Onayı Bekliyor (eğer varsa)
+        Active, // Aktif Borç
+        PaymentConfirmationPending, // Ödeme Onayı Bekliyor
+        Paid, // Ödendi
+        Defaulted, // Vadesi Geçmiş/Ödenmemiş
+        RejectedByBorrower, // Borç Alan Tarafından Reddedildi
+        RejectedByOperator, // Operatör Tarafından Reddedildi (eğer varsa)
+        CancelledByLender, // Borç Veren Tarafından İptal Edildi
     }
 }

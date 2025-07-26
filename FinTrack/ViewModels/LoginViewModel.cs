@@ -1,13 +1,13 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using FinTrack.Core;
-using FinTrack.Messages;
-using FinTrack.Services;
+using FinTrackForWindows.Core;
+using FinTrackForWindows.Messages;
+using FinTrackForWindows.Services;
 using Microsoft.Extensions.Logging;
 using System.Windows;
 
-namespace FinTrack.ViewModels
+namespace FinTrackForWindows.ViewModels
 {
     public partial class LoginViewModel : ObservableObject
     {

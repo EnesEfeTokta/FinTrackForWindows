@@ -1,4 +1,4 @@
-﻿namespace FinTrack.Core
+﻿namespace FinTrackForWindows.Core
 {
     public interface ISecureTokenStorage
     {

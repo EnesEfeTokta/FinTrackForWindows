@@ -1,10 +1,13 @@
-﻿using FinTrack.Core;
+﻿using FinTrackForWindows.Core;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
-namespace FinTrack.Services.Api
+namespace FinTrackForWindows.Services.Api
 {
     public class ApiService : IApiService
     {
@@ -12,21 +15,26 @@ namespace FinTrack.Services.Api
         private readonly HttpClient _httpClient;
         private readonly ILogger<ApiService> _logger;
         private readonly JsonSerializerOptions _jsonSerializerOptions;
+        private readonly IConfiguration _configuration;
 
-        public ApiService(ILogger<ApiService> logger)
+
+        public ApiService(ILogger<ApiService> logger, IConfiguration configuration)
         {
-            _baseUrl = "http://localhost:5000/api/";
+            _logger = logger;
+            _configuration = configuration;
+
+            _baseUrl = "http://localhost:5246/";
+            //_baseUrl = _configuration["BaseServerUrl"];
             _httpClient = new HttpClient
             {
                 BaseAddress = new Uri(_baseUrl)
             };
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-            _logger = logger;
-
             _jsonSerializerOptions = new JsonSerializerOptions
             {
-                PropertyNameCaseInsensitive = true
+                PropertyNameCaseInsensitive = true,
+                Converters = { new JsonStringEnumConverter() }
             };
         }
 
@@ -85,7 +93,7 @@ namespace FinTrack.Services.Api
                 response.EnsureSuccessStatusCode();
 
                 var strean = await response.Content.ReadAsStreamAsync();
-                var result = await JsonSerializer.DeserializeAsync<T>(strean, _jsonSerializerOptions);
+                var result = await _httpClient.GetFromJsonAsync<T>(endpoint, _jsonSerializerOptions);
 
                 _logger.LogInformation("GET isteği başarılı: {Endpoint}", endpoint);
                 return result;
@@ -104,6 +112,38 @@ namespace FinTrack.Services.Api
             {
                 _logger.LogError(ex, "GET isteği sırasında beklenmeyen bir hata oluştu: {Endpoint}", endpoint);
                 return default(T);
+            }
+        }
+
+        public async Task<List<T>?> GetsAsync<T>(string endpoint)
+        {
+            _logger.LogInformation("GET (list) isteği başlatılıyor: {Endpoint}", endpoint);
+            try
+            {
+                AddAuthorizationHeader();
+
+                var response = await _httpClient.GetAsync(endpoint);
+                response.EnsureSuccessStatusCode();
+
+                var result = await _httpClient.GetFromJsonAsync<List<T>>(endpoint, _jsonSerializerOptions);
+
+                _logger.LogInformation("GET (list) isteği başarılı: {Endpoint}", endpoint);
+                return result;
+            }
+            catch (HttpRequestException ex)
+            {
+                _logger.LogError(ex, "GET (list) isteği sırasında HTTP hatası oluştu: {Endpoint}. Status Code: {StatusCode}", endpoint, ex.StatusCode);
+                return default(List<T>);
+            }
+            catch (JsonException ex)
+            {
+                _logger.LogError(ex, "GET (list) isteği sırasında JSON serileştirme hatası oluştu: {Endpoint}", endpoint);
+                return default(List<T>);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "GET (list) isteği sırasında beklenmeyen bir hata oluştu: {Endpoint}", endpoint);
+                return default(List<T>);
             }
         }
 
@@ -128,7 +168,7 @@ namespace FinTrack.Services.Api
                 var jsonPayload = JsonSerializer.Serialize(data);
                 var content = new StringContent(jsonPayload, System.Text.Encoding.UTF8, "application/json");
 
-                var response = await _httpClient.PostAsync(endpoint, content);
+                var response = await _httpClient.PostAsJsonAsync(endpoint, data, _jsonSerializerOptions);
                 response.EnsureSuccessStatusCode();
 
                 var stream = await response.Content.ReadAsStreamAsync();

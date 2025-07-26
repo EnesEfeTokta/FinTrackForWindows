@@ -1,9 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using FinTrack.Core;
+using FinTrackForWindows.Core;
 using Microsoft.Extensions.Logging;
 
-namespace FinTrack.ViewModels
+namespace FinTrackForWindows.ViewModels
 {
     public partial class ApplicationRecognizeSlideViewModel : ObservableObject
     {

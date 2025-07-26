@@ -1,10 +1,10 @@
-﻿<UserControl x:Class="FinTrack.Views.OtpVerificationView"
+﻿<UserControl x:Class="FinTrackForWindows.Views.OtpVerificationView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:helpers="clr-namespace:FinTrack.Helpers"
-             xmlns:viewmodels="clr-namespace:FinTrack.ViewModels"
+             xmlns:helpers="clr-namespace:FinTrackForWindows.Helpers"
+             xmlns:viewmodels="clr-namespace:FinTrackForWindows.ViewModels"
              mc:Ignorable="d"  
              d:DataContext="{d:DesignInstance Type=viewmodels:OtpVerificationViewModel, IsDesignTimeCreatable=True}" 
              d:DesignWidth="350" Height="465">

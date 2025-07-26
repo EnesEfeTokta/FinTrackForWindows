@@ -1,4 +1,4 @@
-﻿namespace FinTrack.Enums
+﻿namespace FinTrackForWindows.Enums
 {
     public enum ExportFormat
     {

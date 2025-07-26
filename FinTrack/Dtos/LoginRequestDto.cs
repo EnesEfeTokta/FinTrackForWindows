@@ -1,4 +1,4 @@
-﻿namespace FinTrack.Dtos
+﻿namespace FinTrackForWindows.Dtos
 {
     public class LoginRequestDto
     {

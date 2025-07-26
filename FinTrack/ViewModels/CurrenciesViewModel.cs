@@ -1,9 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using FinTrack.Models.Currency;
+using FinTrackForWindows.Enums;
+using FinTrackForWindows.Models.Currency;
+using FinTrackForWindows.Services.Api;
+using FinTrackWebApi.Dtos.CurrencyDtos;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 
-namespace FinTrack.ViewModels
+namespace FinTrackForWindows.ViewModels
 {
     public partial class CurrenciesViewModel : ObservableObject
     {
@@ -29,11 +32,15 @@ namespace FinTrack.ViewModels
 
         private readonly ILogger<CurrenciesViewModel> _logger;
 
-        public CurrenciesViewModel(ILogger<CurrenciesViewModel> logger)
+        private readonly IApiService _apiService;
+
+        public CurrenciesViewModel(ILogger<CurrenciesViewModel> logger, IApiService apiService)
         {
             _logger = logger;
 
-            LoadSampleData();
+            _apiService = apiService;
+
+            _ = LoadCurrenciesData();
         }
         partial void OnCurrencySearchChanged(string value)
         {
@@ -57,105 +64,34 @@ namespace FinTrack.ViewModels
             _logger.LogInformation("Para birimleri '{SearchText}' metnine göre filtrelendi.", CurrencySearch);
         }
 
-        private void LoadSampleData()
+        private async Task LoadCurrenciesData()
         {
-            allCurrencies = new ObservableCollection<CurrencyModel>
+            var currencies = await _apiService.GetAsync<LatestRatesResponseDto>("Currency/latest/USD"); // TODO: USD yerine kullanıcının seçtiği para birimini kullan
+            allCurrencies = new ObservableCollection<CurrencyModel>();
+            if (currencies.Rates != null)
             {
-                new CurrencyModel
+                foreach (RateDetailDto item in currencies.Rates)
                 {
-                    ToCurrencyFlag = "https://currencyfreaks.com/photos/flags/try.png",
-                    ToCurrencyCode = "TRY",
-                    ToCurrencyName = "Turkish Lira",
-                    ToCurrencyPrice = 32.56m,
-                    ToCurrencyChange = "+0.12 (0.37%)",
-                    Type = Enums.CurrencyConversionType.Increase,
-                    DailyLow = "3.05",
-                    DailyHigh = "3.08",
-                    WeeklyChange = "-0.1%",
-                    MonthlyChange = "+0.5%"
-                },
-                new CurrencyModel
-                {
-                    ToCurrencyFlag = "https://currencyfreaks.com/photos/flags/eur.png",
-                    ToCurrencyCode = "EUR",
-                    ToCurrencyName = "Euro",
-                    ToCurrencyPrice = 3.06m,
-                    ToCurrencyChange = "-0.12 (0.37%)",
-                    Type = Enums.CurrencyConversionType.Decrease,
-                    DailyLow = "3.05",
-                    DailyHigh = "3.08",
-                    WeeklyChange = "-0.1%",
-                    MonthlyChange = "+0.5%"
-                },
-                new CurrencyModel
-                {
-                    ToCurrencyFlag = "https://currencyfreaks.com/photos/flags/gbp.png",
-                    ToCurrencyCode = "GBP",
-                    ToCurrencyName = "British Pound",
-                    ToCurrencyPrice = 0.08m,
-                    ToCurrencyChange = "+0.20 (0.80%)",
-                    Type = Enums.CurrencyConversionType.Decrease,
-                    DailyLow = "3.05",
-                    DailyHigh = "3.08",
-                    WeeklyChange = "-0.1%",
-                    MonthlyChange = "+0.5%"
-                },
-                new CurrencyModel
-                {
-                    ToCurrencyFlag = "https://currencyfreaks.com/photos/flags/eur.png",
-                    ToCurrencyCode = "EUR",
-                    ToCurrencyName = "Euro",
-                    ToCurrencyPrice = 3.06m,
-                    ToCurrencyChange = "-0.12 (0.37%)",
-                    Type = Enums.CurrencyConversionType.Decrease,
-                    DailyLow = "3.05",
-                    DailyHigh = "3.08",
-                    WeeklyChange = "-0.1%",
-                    MonthlyChange = "+0.5%"
-                },
-                new CurrencyModel
-                {
-                    ToCurrencyFlag = "https://currencyfreaks.com/photos/flags/gbp.png",
-                    ToCurrencyCode = "GBP",
-                    ToCurrencyName = "British Pound",
-                    ToCurrencyPrice = 0.08m,
-                    ToCurrencyChange = "+0.20 (0.80%)",
-                    Type = Enums.CurrencyConversionType.Decrease,
-                    DailyLow = "3.05",
-                    DailyHigh = "3.08",
-                    WeeklyChange = "-0.1%",
-                    MonthlyChange = "+0.5%"
-                },
-                new CurrencyModel
-                {
-                    ToCurrencyFlag = "https://currencyfreaks.com/photos/flags/eur.png",
-                    ToCurrencyCode = "EUR",
-                    ToCurrencyName = "Euro",
-                    ToCurrencyPrice = 3.06m,
-                    ToCurrencyChange = "-0.12 (0.37%)",
-                    Type = Enums.CurrencyConversionType.Decrease,
-                    DailyLow = "32.40",
-                    DailyHigh = "32.60",
-                    WeeklyChange = "+0.2%",
-                    MonthlyChange = "+1.5%"
-                },
-                new CurrencyModel
-                {
-                    ToCurrencyFlag = "https://currencyfreaks.com/photos/flags/gbp.png",
-                    ToCurrencyCode = "GBP",
-                    ToCurrencyName = "British Pound",
-                    ToCurrencyPrice = 0.08m,
-                    ToCurrencyChange = "+0.20 (0.80%)",
-                    Type = Enums.CurrencyConversionType.Decrease,
-                    DailyLow = "3.05",
-                    DailyHigh = "3.08",
-                    WeeklyChange = "-0.1%",
-                    MonthlyChange = "+0.5%"
+                    allCurrencies.Add(new CurrencyModel
+                    {
+                        Id = item.Id,
+                        ToCurrencyCode = item.Code,
+                        ToCurrencyName = item.CountryCode ?? "N/A",
+                        ToCurrencyFlag = item.IconUrl ?? "N/A",
+                        ToCurrencyPrice = item.Rate,
+                        ToCurrencyChange = "N/A",
+                        Type = CurrencyConversionType.Increase, // TODO: Değişim bilgisi eklenmeli
+                        DailyLow = "N/A",
+                        DailyHigh = "N/A",
+                        WeeklyChange = "N/A",
+                        MonthlyChange = "N/A"
+                    });
                 }
-            };
-            FilterCurrencies();
-            SelectedCurrency = FilteredCurrencies.FirstOrDefault();
-            _logger.LogInformation("Örnek para birimleri yüklendi.");
+
+                FilterCurrencies();
+                SelectedCurrency = FilteredCurrencies.FirstOrDefault();
+                _logger.LogInformation("Para birimleri başarıyla yüklendi. Para birimler: {Currencies}", currencies);
+            }
         }
     }
 }

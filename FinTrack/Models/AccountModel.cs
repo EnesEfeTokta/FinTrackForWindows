@@ -1,8 +1,8 @@
-﻿using FinTrack.Enums;
+﻿using FinTrackForWindows.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace FinTrack.Models
+namespace FinTrackForWindows.Models
 {
     [Table("Accounts")]
     public class AccountModel

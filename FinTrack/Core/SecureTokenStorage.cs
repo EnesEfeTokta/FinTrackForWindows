@@ -3,7 +3,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace FinTrack.Core
+namespace FinTrackForWindows.Core
 {
     public class SecureTokenStorage : ISecureTokenStorage
     {

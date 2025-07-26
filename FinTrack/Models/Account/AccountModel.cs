@@ -1,13 +1,13 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using FinTrack.Enums;
+using FinTrackForWindows.Enums;
 using System.Windows.Media;
 
-namespace FinTrack.Models.Account
+namespace FinTrackForWindows.Models.Account
 {
     public partial class AccountModel : ObservableObject
     {
         [ObservableProperty]
-        private Guid id = Guid.NewGuid();
+        private int? id;
 
         [ObservableProperty]
         private string name = string.Empty;
@@ -16,16 +16,12 @@ namespace FinTrack.Models.Account
         private AccountType type;
 
         [ObservableProperty]
-        private decimal currentBalance;
-
-        [ObservableProperty]
-        private decimal? targetBalance;
-
-        [ObservableProperty]
-        private string currency = "USD";
+        private BaseCurrencyType currency;
 
         [ObservableProperty]
         private List<AccountBalanceHistoryPoint> history = new();
+
+        public decimal? balance { get; set; }
 
         public string IconPath => Type switch
         {
@@ -47,27 +43,14 @@ namespace FinTrack.Models.Account
         {
             get
             {
-                if (Type == AccountType.CreditCard && TargetBalance.HasValue)
+                var balanceString = balance.ToString();
+                return Type switch
                 {
-                    return $"Kullanılan Limit: {CurrentBalance:C} / {TargetBalance.Value:C}";
-                }
-                if (TargetBalance.HasValue && TargetBalance > 0)
-                {
-                    return $"{CurrentBalance:C} / {TargetBalance.Value:C}";
-                }
-                return $"Değer: {CurrentBalance:C}";
-            }
-        }
-        public double ProgressValue
-        {
-            get
-            {
-                if (TargetBalance.HasValue && TargetBalance.Value > 0)
-                {
-                    return (double)Math.Max(0, Math.Min(100, (CurrentBalance / TargetBalance.Value) * 100));
-                }
-
-                return Type == AccountType.Loan ? 100 : 0;
+                    AccountType.Checking => $"Bakiye: {balance}",
+                    AccountType.CreditCard => $"Borç: {balance}",
+                    AccountType.Loan => $"Kredi: {balance}",
+                    _ => $"Bakiye: {balance}"
+                };
             }
         }
     }

@@ -1,4 +1,4 @@
-﻿namespace FinTrack.Models
+﻿namespace FinTrackForWindows.Models
 {
     public class DebtModel
     {

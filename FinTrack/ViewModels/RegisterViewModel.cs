@@ -1,16 +1,20 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using FinTrack.Core;
-using FinTrack.Services;
+using FinTrackForWindows.Core;
+using FinTrackForWindows.Services;
 using Microsoft.Extensions.Logging;
+using System.Text.RegularExpressions;
 using System.Windows;
 
-namespace FinTrack.ViewModels
+namespace FinTrackForWindows.ViewModels
 {
     public partial class RegisterViewModel : ObservableObject
     {
         [ObservableProperty]
-        private string? fullName_RegisterView_TextBox;
+        private string? firstName_RegisterView_TextBox;
+
+        [ObservableProperty]
+        private string? lastName_RegisterView_TextBox;
 
         [ObservableProperty]
         private string? email_RegisterView_TextBox;
@@ -42,7 +46,8 @@ namespace FinTrack.ViewModels
         private async Task Register_RegisterView_Button()
         {
             NavigateToOtpVerificationRequested?.Invoke();
-            if (string.IsNullOrEmpty(FullName_RegisterView_TextBox) ||
+            if (string.IsNullOrEmpty(FirstName_RegisterView_TextBox) ||
+                string.IsNullOrEmpty(LastName_RegisterView_TextBox) ||
                 string.IsNullOrEmpty(Email_RegisterView_TextBox) ||
                 string.IsNullOrEmpty(Password_RegisterView_TextBox))
             {
@@ -59,8 +64,16 @@ namespace FinTrack.ViewModels
                 return;
             }
 
+            if (IsPasswordValid(Password_RegisterView_TextBox) == false)
+            {
+                MessageBox.Show("Şifre en az 8 karakter uzunluğunda, en az bir büyük harf, bir küçük harf, bir rakam ve bir özel karakter içermelidir.", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
+                _logger.LogWarning("Kayıt işlemi için geçersiz şifre girildi.");
+                return;
+            }
+
             bool isInitiateRegistration = await _authService.InitiateRegistrationAsnc(
-                FullName_RegisterView_TextBox,
+                FirstName_RegisterView_TextBox,
+                LastName_RegisterView_TextBox,
                 Email_RegisterView_TextBox,
                 Password_RegisterView_TextBox);
             if (!isInitiateRegistration)
@@ -74,11 +87,20 @@ namespace FinTrack.ViewModels
             _logger.LogInformation("Kayıt işlemi başarılı. E-posta: {Email}", Email_RegisterView_TextBox);
 
             // Store user information in the static manager
-            NewUserInformationManager.FullName = FullName_RegisterView_TextBox;
+            NewUserInformationManager.FirstName = FirstName_RegisterView_TextBox;
+            NewUserInformationManager.LastName = LastName_RegisterView_TextBox;
+            NewUserInformationManager.FullName = FirstName_RegisterView_TextBox.Replace(" ", "").Trim() + "_" + LastName_RegisterView_TextBox.Replace(" ", "").Trim();
             NewUserInformationManager.Email = Email_RegisterView_TextBox;
             NewUserInformationManager.Password = Password_RegisterView_TextBox;
 
             NavigateToOtpVerificationRequested?.Invoke();
+        }
+
+        private bool IsPasswordValid(string password)
+        {
+            string pattern = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':""\\|,.<>\/?]).{8,}$";
+            Regex regex = new Regex(pattern);
+            return regex.IsMatch(password);
         }
 
         [RelayCommand]

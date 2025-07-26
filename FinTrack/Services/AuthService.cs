@@ -1,19 +1,23 @@
-﻿using FinTrack.Dtos;
+﻿using FinTrackForWindows.Dtos;
+using Microsoft.Extensions.Configuration;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 
-namespace FinTrack.Services
+namespace FinTrackForWindows.Services
 {
     public class AuthService : IAuthService
     {
         private readonly HttpClient _httpClient;
+        private readonly IConfiguration _configuration;
 
-        public AuthService()
+        public AuthService(IConfiguration configuration)
         {
+            _configuration = configuration;
             _httpClient = new HttpClient
             {
-                BaseAddress = new Uri("http://localhost:5000/")
+                BaseAddress = new Uri("http://localhost:5246/")
+                //BaseAddress = new Uri(_configuration["BaseServerUrl"])
             };
 
             _httpClient.DefaultRequestHeaders.Accept.Clear();
@@ -26,7 +30,7 @@ namespace FinTrack.Services
             {
                 LoginRequestDto request = new LoginRequestDto { Email = email, Password = password };
 
-                HttpResponseMessage response = await _httpClient.PostAsJsonAsync("api/auth/user/login", request);
+                HttpResponseMessage response = await _httpClient.PostAsJsonAsync("UserAuth/login", request);
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -59,19 +63,20 @@ namespace FinTrack.Services
             _httpClient.DefaultRequestHeaders.Authorization = null;
         }
 
-        public async Task<bool> InitiateRegistrationAsnc(string userName, string email, string password)
+        public async Task<bool> InitiateRegistrationAsnc(string firstName, string lastName, string email, string password)
         {
             try
             {
                 RegisterRequestDto request = new RegisterRequestDto
                 {
-                    UserName = userName,
+                    FirstName = firstName,
+                    LastName = lastName,
                     Email = email,
                     Password = password,
                     ProfilePicture = null
                 };
 
-                HttpResponseMessage response = await _httpClient.PostAsJsonAsync("api/auth/user/initiate-registration", request);
+                HttpResponseMessage response = await _httpClient.PostAsJsonAsync("UserAuth/initiate-registration", request);
                 if (response.IsSuccessStatusCode)
                 {
                     return true;
@@ -98,7 +103,7 @@ namespace FinTrack.Services
                     Code = code
                 };
 
-                HttpResponseMessage response = await _httpClient.PostAsJsonAsync("api/auth/user/verify-otp-and-register", request);
+                HttpResponseMessage response = await _httpClient.PostAsJsonAsync("UserAuth/verify-otp-and-register", request);
                 if (response.IsSuccessStatusCode)
                 {
                     return true;

@@ -1,4 +1,4 @@
-﻿namespace FinTrack.Messages
+﻿namespace FinTrackForWindows.Messages
 {
     public class LoginSuccessMessag
     {

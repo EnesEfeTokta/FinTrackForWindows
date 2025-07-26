@@ -1,11 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using FinTrack.Core;
-using FinTrack.Services;
+using FinTrackForWindows.Core;
+using FinTrackForWindows.Services;
 using Microsoft.Extensions.Logging;
 using System.Windows;
 
-namespace FinTrack.ViewModels
+namespace FinTrackForWindows.ViewModels
 {
     public partial class OtpVerificationViewModel : ObservableObject
     {
@@ -77,10 +77,14 @@ namespace FinTrack.ViewModels
         [RelayCommand]
         private async Task CodeNotFound_OtpVerificationView_Button()
         {
-            if (NewUserInformationManager.FullName != null && NewUserInformationManager.Email != null && NewUserInformationManager.Password != null)
+            if (string.IsNullOrEmpty(NewUserInformationManager.FirstName) ||
+                string.IsNullOrEmpty(NewUserInformationManager.LastName) ||
+                string.IsNullOrEmpty(NewUserInformationManager.Email) ||
+                string.IsNullOrEmpty(NewUserInformationManager.Password))
             {
                 bool isInitiateRegistration = await _authService.InitiateRegistrationAsnc(
-                    NewUserInformationManager.FullName,
+                    NewUserInformationManager.FirstName,
+                    NewUserInformationManager.LastName,
                     NewUserInformationManager.Email,
                     NewUserInformationManager.Password);
 
@@ -99,6 +103,13 @@ namespace FinTrack.ViewModels
                 _logger.LogWarning("Kod gönderme sırasında eksik kullanıcı bilgileri. Kullanıcı kayıt sayfasına yönlendiriliyor.");
                 NavigateToRegisterRequested?.Invoke();
             }
+        }
+
+        [RelayCommand]
+        private void NavigateToRegister_OtpVerificationView_Button()
+        {
+            NavigateToRegisterRequested?.Invoke();
+            _logger.LogInformation("Kullanıcı giriş sayfasına yönlendirildi.");
         }
     }
 }

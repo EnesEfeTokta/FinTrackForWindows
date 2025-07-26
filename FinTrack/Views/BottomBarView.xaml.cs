@@ -1,10 +1,7 @@
 ﻿using System.Windows.Controls;
 
-namespace FinTrack.Views
+namespace FinTrackForWindows.Views
 {
-    /// <summary>
-    /// Interaction logic for BottomBarView.xaml
-    /// </summary>
     public partial class BottomBarView : UserControl
     {
         public BottomBarView()

@@ -1,8 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using FinTrack.Enums;
+using FinTrackForWindows.Enums;
 using System.Windows.Media;
 
-namespace FinTrack.Models.Debt
+namespace FinTrackForWindows.Models.Debt
 {
     public partial class DebtModel : ObservableObject
     {
@@ -26,7 +26,7 @@ namespace FinTrack.Models.Debt
         [NotifyPropertyChangedFor(nameof(StatusBrush))]
         [NotifyPropertyChangedFor(nameof(IsActionRequired))]
         [NotifyPropertyChangedFor(nameof(IsRejected))]
-        private DebtStatus status;
+        private DebtStatusType status;
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(DebtTitle))]
@@ -54,33 +54,33 @@ namespace FinTrack.Models.Debt
 
         public Brush StatusBrush => Status switch
         {
-            DebtStatus.Active => GreenBrush,
-            DebtStatus.AwaitingVideoUpload => BlueBrush,
-            DebtStatus.AwaitingOperatorApproval => OrangeBrush,
-            DebtStatus.RejectedByOperator => RedBrush,
-            DebtStatus.RejectedByBorrower => RedBrush,
+            DebtStatusType.Active => GreenBrush,
+            DebtStatusType.PendingBorrowerAcceptance => BlueBrush,
+            DebtStatusType.PendingOperatorApproval => OrangeBrush,
+            DebtStatusType.RejectedByOperator => RedBrush,
+            DebtStatusType.RejectedByBorrower => RedBrush,
             _ => GrayBrush
         };
 
         public string StatusText => Status switch
         {
-            DebtStatus.AwaitingVideoUpload => "Status: Awaiting Video Approval",
-            DebtStatus.AwaitingOperatorApproval => "Status: FinTrack Operator Approval Pending",
-            DebtStatus.Active => "Status: Active - In force",
-            DebtStatus.RejectedByOperator => "Status: Rejected by Operator",
-            DebtStatus.RejectedByBorrower => "Status: Rejected by Borrower",
+            DebtStatusType.PendingBorrowerAcceptance => "Status: Awaiting Video Approval",
+            DebtStatusType.PendingOperatorApproval => "Status: FinTrack Operator Approval Pending",
+            DebtStatusType.Active => "Status: Active - In force",
+            DebtStatusType.RejectedByOperator => "Status: Rejected by Operator",
+            DebtStatusType.RejectedByBorrower => "Status: Rejected by Borrower",
             _ => "Status: Unknown"
         };
 
-        public bool IsActionRequired => Status == DebtStatus.AwaitingVideoUpload;
+        public bool IsActionRequired => Status == DebtStatusType.PendingBorrowerAcceptance;
 
-        public bool IsRejected => Status == DebtStatus.RejectedByBorrower || Status == DebtStatus.RejectedByOperator;
+        public bool IsRejected => Status == DebtStatusType.RejectedByBorrower || Status == DebtStatusType.RejectedByOperator;
 
         public string InfoText => Status switch
         {
-            DebtStatus.Active => $"Final Payment: {DueDate:dd.MM.yyyy}",
-            DebtStatus.AwaitingOperatorApproval => "Video uploaded",
-            DebtStatus.RejectedByOperator => $"Reason: {RejectionReason}",
+            DebtStatusType.Active => $"Final Payment: {DueDate:dd.MM.yyyy}",
+            DebtStatusType.PendingOperatorApproval => "Video uploaded",
+            DebtStatusType.RejectedByOperator => $"Reason: {RejectionReason}",
             _ => string.Empty
         };
     }
