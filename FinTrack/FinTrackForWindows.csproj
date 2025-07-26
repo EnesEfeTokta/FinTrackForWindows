@@ -55,7 +55,6 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.0-preview.6.25358.103" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Npgsql" Version="9.0.3" />
-    <PackageReference Include="ScottPlot.WPF" Version="5.0.55" />
     <PackageReference Include="Serilog.Extensions.Hosting" Version="9.0.1-dev-02307" />
     <PackageReference Include="Serilog.Settings.Configuration" Version="9.0.1-dev-02317" />
     <PackageReference Include="Serilog.Sinks.Debug" Version="3.0.0" />

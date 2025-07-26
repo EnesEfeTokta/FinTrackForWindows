@@ -76,7 +76,7 @@ namespace FinTrackForWindows.ViewModels
             Series = new ISeries[0];
             Title = new LabelVisual
             {
-                Text = "Verileri görmek için bir hesap seçin.",
+                Text = "Select an account to view the data.",
                 TextSize = 18,
                 Paint = new SolidColorPaint(SKColors.Gray),
                 Padding = new LiveChartsCore.Drawing.Padding(15)
@@ -142,7 +142,7 @@ namespace FinTrackForWindows.ViewModels
                 Series = new ISeries[0];
                 Title = new LabelVisual
                 {
-                    Text = "Veri yok.",
+                    Text = "No Data",
                     TextSize = 18,
                     Paint = new SolidColorPaint(SKColors.Gray),
                     Padding = new LiveChartsCore.Drawing.Padding(15)
@@ -164,7 +164,7 @@ namespace FinTrackForWindows.ViewModels
             {
                 new LineSeries<DateTimePoint>
                 {
-                    Name = "Gelir",
+                    Name = "Income",
                     Values = incomePoints,
                     Stroke = new SolidColorPaint(SKColors.MediumSpringGreen) { StrokeThickness = 2 },
                     GeometryStroke = new SolidColorPaint(SKColors.MediumSpringGreen) { StrokeThickness = 4 },
@@ -172,7 +172,7 @@ namespace FinTrackForWindows.ViewModels
                 },
                 new LineSeries<DateTimePoint>
                 {
-                    Name = "Gider",
+                    Name = "Expense",
                     Values = expensePoints,
                     Stroke = new SolidColorPaint(SKColors.IndianRed) { StrokeThickness = 2 },
                     GeometryStroke = new SolidColorPaint(SKColors.IndianRed) { StrokeThickness = 4 },
@@ -182,7 +182,7 @@ namespace FinTrackForWindows.ViewModels
 
             Title = new LabelVisual
             {
-                Text = $"{accountName} - Hareketler",
+                Text = $"{accountName} - Transactions",
                 TextSize = 16,
                 Paint = new SolidColorPaint(SKColors.WhiteSmoke),
                 Padding = new LiveChartsCore.Drawing.Padding(15)

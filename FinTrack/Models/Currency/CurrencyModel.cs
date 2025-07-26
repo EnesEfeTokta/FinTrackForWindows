@@ -6,6 +6,8 @@ namespace FinTrackForWindows.Models.Currency
 {
     public partial class CurrencyModel : ObservableObject
     {
+        public int Id { get; set; }
+
         [ObservableProperty]
         private string toCurrencyFlag = string.Empty;
 

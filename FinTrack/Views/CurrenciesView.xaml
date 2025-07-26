@@ -19,40 +19,43 @@
         </Grid.ColumnDefinitions>
 
         <!-- SOL SÜTUN: KUR LİSTESİ -->
-        <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-            <Border Style="{StaticResource DashboardCardStyle}" Margin="0,0,20,0">
-                <DockPanel>
-                    <TextBlock DockPanel.Dock="Top" Text="All Rates" Style="{StaticResource CardTitleTextStyle}"/>
-                    <Border DockPanel.Dock="Top" BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,15" Opacity="0.5"/>
-                    <TextBox DockPanel.Dock="Top" Text="{Binding CurrencySearch, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ModernTextBoxStyle}" Margin="0,0,0,15"/>
-    
-                    <ListView ItemsSource="{Binding FilteredCurrencies}"
-                              SelectedItem="{Binding SelectedCurrency}"
-                              Background="Transparent" BorderThickness="0" 
-                              ItemContainerStyle="{StaticResource CleanListViewItemStyle}">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <Border Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10" Padding="15" Margin="0,0,0,8">
-                                    <Grid>
-                                        <StackPanel Orientation="Horizontal">
-                                            <Image Source="{Binding ToCurrencyFlag}" Width="40" Height="25" Stretch="Fill"/>
-                                            <StackPanel Margin="15,0,0,0" VerticalAlignment="Center">
-                                                <TextBlock Text="{Binding ToCurrencyCode}" Foreground="White" FontSize="16" FontWeight="SemiBold"/>
-                                                <TextBlock Text="{Binding ToCurrencyName}" Foreground="{StaticResource TopBarTextSecondaryBrush}" FontSize="12"/>
-                                            </StackPanel>
+        <Border Grid.Column="0" Style="{StaticResource DashboardCardStyle}" Margin="0,0,20,0">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Top" Text="All Rates" Style="{StaticResource CardTitleTextStyle}"/>
+                <Border DockPanel.Dock="Top" BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,15" Opacity="0.5"/>
+                <TextBox DockPanel.Dock="Top" Text="{Binding CurrencySearch, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ModernTextBoxStyle}" Margin="0,0,0,15"/>
+                <ListView ItemsSource="{Binding FilteredCurrencies}"
+                          SelectedItem="{Binding SelectedCurrency}"
+                          Background="Transparent" 
+                          BorderThickness="0" 
+                          ItemContainerStyle="{StaticResource CleanListViewItemStyle}"
+                          
+                          VirtualizingPanel.IsVirtualizing="True"
+                          VirtualizingPanel.VirtualizationMode="Recycling"
+                          ScrollViewer.CanContentScroll="True">
+
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Border Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10" Padding="15" Margin="0,0,0,8">
+                                <Grid>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="{Binding ToCurrencyFlag}" Width="40" Height="25" Stretch="Fill"/>
+                                        <StackPanel Margin="15,0,0,0" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding ToCurrencyCode}" Foreground="White" FontSize="16" FontWeight="SemiBold"/>
+                                            <TextBlock Text="{Binding ToCurrencyName}" Foreground="{StaticResource TopBarTextSecondaryBrush}" FontSize="12"/>
                                         </StackPanel>
-                                        <StackPanel HorizontalAlignment="Right" VerticalAlignment="Center" TextBlock.TextAlignment="Right">
-                                            <TextBlock Text="{Binding ToCurrencyPrice, StringFormat='N4'}" Foreground="White" FontSize="16" FontWeight="SemiBold"/>
-                                            <TextBlock Text="{Binding ToCurrencyChange}" Foreground="{Binding ToCurrencyChangeForeground}" FontSize="12"/>
-                                        </StackPanel>
-                                    </Grid>
-                                </Border>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                </DockPanel>
-            </Border>
-        </ScrollViewer>
+                                    </StackPanel>
+                                    <StackPanel HorizontalAlignment="Right" VerticalAlignment="Center" TextBlock.TextAlignment="Right">
+                                        <TextBlock Text="{Binding ToCurrencyPrice, StringFormat='N4'}" Foreground="White" FontSize="16" FontWeight="SemiBold"/>
+                                        <TextBlock Text="{Binding ToCurrencyChange}" Foreground="{Binding ToCurrencyChangeForeground}" FontSize="12"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </DockPanel>
+        </Border>
 
         <!-- SAĞ SÜTUN: DETAY VE GRAFİK -->
         <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
