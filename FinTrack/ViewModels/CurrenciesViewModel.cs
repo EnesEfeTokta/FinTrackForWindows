@@ -1,10 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using FinTrackForWindows.Enums;
 using FinTrackForWindows.Models.Currency;
 using FinTrackForWindows.Services.Api;
 using FinTrackWebApi.Dtos.CurrencyDtos;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
-using FinTrackForWindows.Enums;
 
 namespace FinTrackForWindows.ViewModels
 {
@@ -72,7 +72,7 @@ namespace FinTrackForWindows.ViewModels
             {
                 foreach (RateDetailDto item in currencies.Rates)
                 {
-                    allCurrencies.Add(new CurrencyModel 
+                    allCurrencies.Add(new CurrencyModel
                     {
                         Id = item.Id,
                         ToCurrencyCode = item.Code,
