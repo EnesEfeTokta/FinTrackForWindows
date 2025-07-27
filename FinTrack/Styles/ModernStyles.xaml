@@ -999,5 +999,62 @@
         </Setter.Value>
     </Setter>
 </Style>
+
+            <Style x:Key="MaterialDesignCircularProgressBar" TargetType="ProgressBar">
+                <Setter Property="Width" Value="50"/>
+                <Setter Property="Height" Value="50"/>
+                <Setter Property="Foreground" Value="{StaticResource PrimaryBrush}"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ProgressBar">
+                            <!-- Viewbox, ProgressBar'ın boyutlandırılmasına izin verir -->
+                            <Viewbox>
+                                <Grid Width="100" Height="100" Background="Transparent">
+                                    <!-- Arka Plan Halkası (sabit) -->
+                                    <Ellipse x:Name="BackgroundEllipse"
+                                             Width="90" Height="90"
+                                             Stroke="{StaticResource TopBarTextSecondaryBrush}"
+                                             StrokeThickness="8"
+                                             Opacity="0.3"
+                                             HorizontalAlignment="Center"
+                                             VerticalAlignment="Center"/>
+
+                                    <!-- Dönen Parça (animasyonlu) -->
+                                    <Ellipse x:Name="IndicatorEllipse"
+                                             Width="90" Height="90"
+                                             Stroke="{TemplateBinding Foreground}"
+                                             StrokeThickness="8"
+                                             StrokeDashArray="140 142"
+                                             StrokeDashCap="Round"
+                                             HorizontalAlignment="Center"
+                                             VerticalAlignment="Center">
+                                        <Ellipse.RenderTransform>
+                                            <RotateTransform Angle="0" CenterX="45" CenterY="45"/>
+                                        </Ellipse.RenderTransform>
+                                    </Ellipse>
+                                </Grid>
+                            </Viewbox>
+                            <ControlTemplate.Triggers>
+                                <!-- IsIndeterminate true olduğunda animasyonu başlat -->
+                                <Trigger Property="IsIndeterminate" Value="True">
+                                    <Trigger.EnterActions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation
+                                                    Storyboard.TargetName="IndicatorEllipse"
+                                                    Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)"
+                                                    From="0"
+                                                    To="360"
+                                                    Duration="0:0:1.2"
+                                                    RepeatBehavior="Forever"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </Trigger.EnterActions>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
         
 </ResourceDictionary>

@@ -21,29 +21,51 @@ namespace FinTrackForWindows.Models.Currency
         private decimal toCurrencyPrice;
 
         [ObservableProperty]
-        private string toCurrencyChange = string.Empty;
+        private string toCurrencyChange = "N/A";
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(ToCurrencyChangeForeground))]
-        private CurrencyConversionType type = CurrencyConversionType.Increase;
+        private CurrencyConversionType type = CurrencyConversionType.Neutral;
 
         [ObservableProperty]
-        private string dailyLow = string.Empty;
+        private string dailyLow = "N/A";
 
         [ObservableProperty]
-        private string dailyHigh = string.Empty;
+        private string dailyHigh = "N/A";
 
         [ObservableProperty]
-        private string weeklyChange = string.Empty;
+        private string weeklyChange = "N/A";
 
         [ObservableProperty]
-        private string monthlyChange = string.Empty;
+        [NotifyPropertyChangedFor(nameof(WeeklyChangeForeground))]
+        private CurrencyConversionType weeklyChangeType = CurrencyConversionType.Neutral;
 
-        private static readonly Brush IncreaseBrush = new SolidColorBrush(Colors.Green);
-        private static readonly Brush DecreaseBrush = new SolidColorBrush(Colors.Red);
+        [ObservableProperty]
+        private string monthlyChange = "N/A";
+
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(MonthlyChangeForeground))]
+        private CurrencyConversionType monthlyChangeType = CurrencyConversionType.Neutral;
+
+        private static readonly Brush IncreaseBrush = new SolidColorBrush(Color.FromRgb(46, 204, 113));
+        private static readonly Brush DecreaseBrush = new SolidColorBrush(Color.FromRgb(231, 76, 60));
         private static readonly Brush DefaultBrush = new SolidColorBrush(Colors.Gray);
 
         public Brush ToCurrencyChangeForeground => Type switch
+        {
+            CurrencyConversionType.Increase => IncreaseBrush,
+            CurrencyConversionType.Decrease => DecreaseBrush,
+            _ => DefaultBrush
+        };
+
+        public Brush WeeklyChangeForeground => WeeklyChangeType switch
+        {
+            CurrencyConversionType.Increase => IncreaseBrush,
+            CurrencyConversionType.Decrease => DecreaseBrush,
+            _ => DefaultBrush
+        };
+
+        public Brush MonthlyChangeForeground => MonthlyChangeType switch
         {
             CurrencyConversionType.Increase => IncreaseBrush,
             CurrencyConversionType.Decrease => DecreaseBrush,
