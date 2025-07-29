@@ -5,13 +5,18 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:viewModels="clr-namespace:FinTrackForWindows.ViewModels"
              xmlns:models="clr-namespace:FinTrackForWindows.Models.Debt"
+             xmlns:helpers="clr-namespace:FinTrackForWindows.Helpers"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" 
-             d:DataContext="{d:DesignInstance Type=viewModels:DebtViewModel, IsDesignTimeCreatable=True}"
+             d:DataContext="{d:DesignInstance Type=viewModels:DebtViewModel, IsDesignTimeCreatable=False}"
              d:DesignHeight="850" d:DesignWidth="1600"
              Background="{StaticResource MainBackgroundBrush}">
 
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <helpers:ObjectArrayConverter x:Key="ObjectArrayConverter"/>
+        <sys:Boolean x:Key="TrueBoolean">True</sys:Boolean>
+        <sys:Boolean x:Key="FalseBoolean">False</sys:Boolean>
     </UserControl.Resources>
 
     <Grid Margin="30">
@@ -20,61 +25,82 @@
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
 
+        <!-- Yükleme Göstergesi -->
+        <Border Grid.ColumnSpan="2" Background="#80000000" CornerRadius="10"
+                Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <TextBlock Text="Yükleniyor..." Foreground="White" FontSize="24"
+                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </Border>
+
         <!-- SOL SÜTUN: TEKLİF OLUŞTURMA VE GELEN TEKLİFLER -->
         <ScrollViewer Grid.Column="0" Margin="0,0,20,0">
-        <StackPanel>
-            <!-- Borç Teklifi Oluşturma Kartı -->
-            <Border Style="{StaticResource DashboardCardStyle}">
-                <StackPanel>
-                    <TextBlock Text="Create a New Debt Proposal" Style="{StaticResource CardTitleTextStyle}"/>
-                    <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,15" Opacity="0.5"/>
-                    <TextBlock Text="BORROWER'S E-MAIL ADDRESS" Style="{StaticResource LabelTextStyle}"/>
-                    <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding NewProposalBorrowerEmail, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
-                    <TextBlock Text="AMOUNT OF DEBT" Style="{StaticResource LabelTextStyle}"/>
-                    <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding NewProposalAmount, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
-                    <TextBlock Text="FINAL PAYMENT DATE" Style="{StaticResource LabelTextStyle}"/>
-                    <DatePicker SelectedDate="{Binding NewProposalDueDate}" Style="{StaticResource ModernDatePickerStyle}" Margin="0,0,0,25"/>
-                    <Button Content="SEND OFFER" Style="{StaticResource PrimaryButtonStyle}" Command="{Binding SendOfferCommand}"/>
-                </StackPanel>
-            </Border>
-            
-            <!-- Bana Gelen Teklifler Kartı -->
-            <Border Style="{StaticResource DashboardCardStyle}" Margin="0,20,0,0">
-                <StackPanel>
-                    <TextBlock Text="Pending Offers" Style="{StaticResource CardTitleTextStyle}"/>
-                    <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,15" Opacity="0.5"/>
+            <StackPanel>
+                <!-- Borç Teklifi Oluşturma Kartı -->
+                <Border Style="{StaticResource DashboardCardStyle}">
+                    <StackPanel>
+                        <TextBlock Text="Create a New Debt Proposal" Style="{StaticResource CardTitleTextStyle}"/>
+                        <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,15" Opacity="0.5"/>
+                        <TextBlock Text="BORROWER'S E-MAIL ADDRESS" Style="{StaticResource LabelTextStyle}"/>
+                        <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding NewProposalBorrowerEmail, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
+                        <TextBlock Text="AMOUNT OF EXPLANATION" Style="{StaticResource LabelTextStyle}"/>
+                        <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding NewProposalDescription, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
+                        <TextBlock Text="AMOUNT OF DEBT" Style="{StaticResource LabelTextStyle}"/>
+                        <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding NewProposalAmount, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}" Margin="0,0,0,15"/>
+                        <TextBlock Text="FINAL PAYMENT DATE" Style="{StaticResource LabelTextStyle}"/>
+                        <DatePicker SelectedDate="{Binding NewProposalDueDate}" Style="{StaticResource ModernDatePickerStyle}" Margin="0,0,0,25"/>
+                        <Button Content="SEND OFFER" Style="{StaticResource PrimaryButtonStyle}" Command="{Binding SendOfferCommand}"/>
+                    </StackPanel>
+                </Border>
 
-                    <ItemsControl ItemsSource="{Binding PendingOffers}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate DataType="{x:Type models:DebtModel}">
-                                <Border Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10" Padding="15" Margin="0,0,0,10">
-                                    <StackPanel>
-                                        <TextBlock Foreground="White">
-                                            <Run Text="{Binding LenderName}" FontWeight="Bold"/>
-                                            <Run Text="sent you a debt offer."/>
-                                        </TextBlock>
-                                        <TextBlock Foreground="{StaticResource TopBarTextSecondaryBrush}" Margin="0,5,0,10">
-                                            <Run Text="Amount:"/>
-                                            <Run Text="{Binding Amount, StringFormat={}{0:N2} TRY}"/>
-                                            <Run Text="| Final Payment:"/>
-                                            <Run Text="{Binding DueDate, StringFormat=dd.MM.yyyy}"/>
-                                        </TextBlock>
-                                        <StackPanel Orientation="Horizontal">
-                                            <Button Content="Confirm" Style="{StaticResource PrimaryButtonStyle}" Background="{StaticResource StatusGreenBrush}" Width="80"
-                                                    Command="{Binding DataContext.ConfirmOfferCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                    CommandParameter="{Binding}"/>
-                                            <Button Content="Reject" Style="{StaticResource PrimaryButtonStyle}" Background="{StaticResource StatusRedBrush}" Width="80" Margin="10,0,0,0"
-                                                    Command="{Binding DataContext.RejectOfferCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                    CommandParameter="{Binding}"/>
+                <!-- Bana Gelen Teklifler Kartı -->
+                <Border Style="{StaticResource DashboardCardStyle}" Margin="0,20,0,0">
+                    <StackPanel>
+                        <TextBlock Text="Pending Offers" Style="{StaticResource CardTitleTextStyle}"/>
+                        <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,15" Opacity="0.5"/>
+
+                        <ItemsControl ItemsSource="{Binding PendingOffers}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="{x:Type models:DebtModel}">
+                                    <Border Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10" Padding="15" Margin="0,0,0,10">
+                                        <StackPanel>
+                                            <TextBlock Foreground="White">
+                                                <Run Text="{Binding LenderName}" FontWeight="Bold"/>
+                                                <Run Text="sent you a debt offer."/>
+                                            </TextBlock>
+                                            <TextBlock Foreground="{StaticResource TopBarTextSecondaryBrush}" Margin="0,5,0,10">
+                                                <Run Text="Amount:"/>
+                                                <Run Text="{Binding Amount, StringFormat={}{0:N2} TRY}"/>
+                                                <Run Text="| Final Payment:"/>
+                                                <Run Text="{Binding DueDate, StringFormat=dd.MM.yyyy}"/>
+                                            </TextBlock>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Button Content="Confirm" Style="{StaticResource PrimaryButtonStyle}" Background="{StaticResource StatusGreenBrush}" Width="80"
+                                                        Command="{Binding DataContext.RespondToOfferCommand, RelativeSource={RelativeSource AncestorType=UserControl}}">
+                                                    <Button.CommandParameter>
+                                                        <MultiBinding Converter="{StaticResource ObjectArrayConverter}">
+                                                            <Binding Path="."/>
+                                                            <Binding Source="{StaticResource TrueBoolean}"/>
+                                                        </MultiBinding>
+                                                    </Button.CommandParameter>
+                                                </Button>
+                                                <Button Content="Reject" Style="{StaticResource PrimaryButtonStyle}" Background="{StaticResource StatusRedBrush}" Width="80" Margin="10,0,0,0"
+                                                        Command="{Binding DataContext.RespondToOfferCommand, RelativeSource={RelativeSource AncestorType=UserControl}}">
+                                                    <Button.CommandParameter>
+                                                        <MultiBinding Converter="{StaticResource ObjectArrayConverter}">
+                                                            <Binding Path="."/>
+                                                            <Binding Source="{StaticResource FalseBoolean}"/>
+                                                        </MultiBinding>
+                                                    </Button.CommandParameter>
+                                                </Button>
+                                            </StackPanel>
                                         </StackPanel>
-                                    </StackPanel>
-                                </Border>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </StackPanel>
-            </Border>
-        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
         </ScrollViewer>
 
         <!-- SAĞ SÜTUN: TÜM BORÇLARIM LİSTESİ -->
@@ -111,18 +137,14 @@
                                     <Grid>
                                         <TextBlock Text="{Binding StatusText}" Foreground="{Binding StatusBrush}" VerticalAlignment="Center"/>
 
-                                        <!-- Eylem Butonu (Sadece gerektiğinde görünür) -->
                                         <Button Content="Upload Approval Video" HorizontalAlignment="Right" Style="{StaticResource PrimaryButtonStyle}" 
                                                 Background="{StaticResource AccentBlueBrush}" Padding="10,5" Width="180"
-                                                Visibility="{Binding IsActionRequired, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                                IsEnabled="{Binding IsCurrentUserTheBorrower}"
-                                                ToolTip="This action can only be performed by the borrower."
+                                                Visibility="{Binding IsActionRequiredForBorrower, Converter={StaticResource BooleanToVisibilityConverter}}"
                                                 Command="{Binding DataContext.UploadVideoCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                 CommandParameter="{Binding}"/>
-
-                                        <!-- Bilgi Metni (Eylem butonu yoksa görünür) -->
+                                        
                                         <TextBlock Text="{Binding InfoText}" HorizontalAlignment="Right" Foreground="{StaticResource TopBarTextSecondaryBrush}"
-                                                   Visibility="{Binding IsActionRequired, ConverterParameter=Inverse, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                                   Visibility="{Binding IsActionRequiredForBorrower, ConverterParameter=Inverse, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                                     </Grid>
                                 </StackPanel>
                             </Border>

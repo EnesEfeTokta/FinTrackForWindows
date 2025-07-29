@@ -6,8 +6,10 @@ using FinTrackWebApi.Dtos.CurrencyDtos;
 using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.Painting.Effects;
 using LiveChartsCore.SkiaSharpView.VisualElements;
@@ -48,6 +50,30 @@ namespace FinTrackForWindows.ViewModels
 
         [ObservableProperty]
         private LabelVisual title = new();
+
+        [ObservableProperty]
+        private ISeries[] gaugeSeries = new ISeries[0];
+
+        [ObservableProperty]
+        private IEnumerable<ChartElement<SkiaSharpDrawingContext>> gaugeVisuals = new List<ChartElement<SkiaSharpDrawingContext>>();
+
+        [ObservableProperty]
+        private ISeries[] pieSeries = new ISeries[0];
+
+        [ObservableProperty]
+        private string periodHighText = "N/A";
+
+        [ObservableProperty]
+        private string periodLowText = "N/A";
+
+        [ObservableProperty]
+        private string averageRateText = "N/A";
+
+        [ObservableProperty]
+        private double periodHighValue = 1;
+
+        [ObservableProperty]
+        private double periodLowValue = 0;
 
         private readonly ILogger<CurrenciesViewModel> _logger;
         private readonly IApiService _apiService;
@@ -95,9 +121,7 @@ namespace FinTrackForWindows.ViewModels
                             ToCurrencyPrice = item.Rate
                         });
                     }
-
                     FilterCurrencies();
-
                     if (FilteredCurrencies.Any())
                     {
                         SelectedCurrency = FilteredCurrencies.First();
@@ -128,7 +152,8 @@ namespace FinTrackForWindows.ViewModels
                 }
 
                 _logger.LogInformation("{Target} için geçmiş veriler yüklendi.", targetCurrencyCode);
-                UpdateChart(historyData);
+                var dailyHistoricalRates = UpdateChart(historyData);
+                UpdateAdditionalVisuals(dailyHistoricalRates);
                 UpdateDetails(historyData.ChangeSummary);
             }
             catch (Exception ex)
@@ -143,9 +168,15 @@ namespace FinTrackForWindows.ViewModels
             }
         }
 
-        private void UpdateChart(CurrencyHistoryDto historyData)
+        private List<HistoricalRatePointDto> UpdateChart(CurrencyHistoryDto historyData)
         {
-            var historicalPoints = historyData.HistoricalRates
+            var dailyHistoricalRates = historyData.HistoricalRates
+                .GroupBy(r => r.Date.Date)
+                .Select(g => g.OrderBy(r => r.Date).Last())
+                .Select(r => new HistoricalRatePointDto { Date = r.Date.Date, Rate = r.Rate })
+                .ToList();
+
+            var historicalPoints = dailyHistoricalRates
                 .Select(p => new DateTimePoint(p.Date, (double)p.Rate))
                 .OrderBy(p => p.DateTime)
                 .ToList();
@@ -169,7 +200,7 @@ namespace FinTrackForWindows.ViewModels
                 Text = $"{historyData.TargetCurrency} Exchange Rate (Last 30 Days)",
                 TextSize = 16,
                 Padding = new Padding(15),
-                Paint = new SolidColorPaint(SKColors.WhiteSmoke),
+                Paint = new SolidColorPaint(SKColors.WhiteSmoke)
             };
 
             XAxes = new Axis[]
@@ -204,6 +235,81 @@ namespace FinTrackForWindows.ViewModels
                     SeparatorsPaint = new SolidColorPaint(SKColors.Gray) { StrokeThickness = 0.5f, PathEffect = new DashEffect(new float[] { 3, 3 }) }
                 }
             };
+
+            return dailyHistoricalRates;
+        }
+
+        private void UpdateAdditionalVisuals(List<HistoricalRatePointDto> dailyRates)
+        {
+            if (dailyRates == null || !dailyRates.Any())
+            {
+                ClearAdditionalVisuals();
+                return;
+            }
+
+            var rates = dailyRates.Select(r => r.Rate).ToList();
+            var currentRate = (double)rates.Last();
+            var periodHigh = (double)rates.Max();
+            var periodLow = (double)rates.Min();
+            var averageRate = (double)rates.Average();
+
+            PeriodHighText = periodHigh.ToString("N4");
+            PeriodLowText = periodLow.ToString("N4");
+            AverageRateText = averageRate.ToString("N4");
+
+            PeriodHighValue = periodHigh;
+            PeriodLowValue = periodLow;
+
+            GaugeSeries = new ISeries[]
+            {
+                new PieSeries<double>
+                {
+                    Values = new double[] { currentRate },
+                    InnerRadius = 50,
+                    Fill = new SolidColorPaint(_chartColor),
+                    IsHoverable = false,
+                },
+                new PieSeries<double>
+                {
+                    Values = new double[] { periodHigh - currentRate },
+                    InnerRadius = 50,
+                    Fill = new SolidColorPaint(SKColors.DarkGray),
+                    IsHoverable = false,
+                }
+            };
+
+            GaugeVisuals = Enumerable.Empty<ChartElement<SkiaSharpDrawingContext>>();
+
+            int upDays = 0;
+            int downDays = 0;
+            int noChangeDays = 0;
+
+            for (int i = 1; i < dailyRates.Count; i++)
+            {
+                if (dailyRates[i].Rate > dailyRates[i - 1].Rate) upDays++;
+                else if (dailyRates[i].Rate < dailyRates[i - 1].Rate) downDays++;
+                else noChangeDays++;
+            }
+
+            PieSeries = new ISeries[]
+            {
+                new PieSeries<int> { Values = new [] { upDays }, Name = "Up Days", Fill = new SolidColorPaint(SKColor.Parse("#2ECC71")) },
+                new PieSeries<int> { Values = new [] { downDays }, Name = "Down Days", Fill = new SolidColorPaint(SKColor.Parse("#E74C3C")) },
+                new PieSeries<int> { Values = new [] { noChangeDays }, Name = "No Change", Fill = new SolidColorPaint(SKColors.Gray) }
+            };
+        }
+
+        private void ClearAdditionalVisuals()
+        {
+            GaugeSeries = new ISeries[0];
+            GaugeVisuals = new List<ChartElement<SkiaSharpDrawingContext>>();
+            PieSeries = new ISeries[0];
+            PeriodHighText = "N/A";
+            PeriodLowText = "N/A";
+            AverageRateText = "N/A";
+
+            PeriodHighValue = 1;
+            PeriodLowValue = 0;
         }
 
         private void UpdateDetails(ChangeSummaryDto? summary)
@@ -240,15 +346,17 @@ namespace FinTrackForWindows.ViewModels
                 Text = message,
                 TextSize = 18,
                 Paint = new SolidColorPaint(SKColors.Gray),
-                Padding = new LiveChartsCore.Drawing.Padding(15),
+                Padding = new Padding(15),
+                VerticalAlignment = Align.Middle
             };
+            ClearAdditionalVisuals();
         }
 
         private (string FormattedValue, CurrencyConversionType Type) FormatChangeValue(decimal? value, bool isPercentage = true, string format = "P2")
         {
             if (!value.HasValue) return ("N/A", CurrencyConversionType.Neutral);
 
-            string formattedValue = (value.Value / (isPercentage ? 1m : 1m)).ToString(format, CultureInfo.InvariantCulture);
+            string formattedValue = value.Value.ToString(format, CultureInfo.InvariantCulture);
             CurrencyConversionType type;
 
             if (value > 0)
@@ -281,7 +389,7 @@ namespace FinTrackForWindows.ViewModels
                                 c.ToCurrencyName.ToLowerInvariant().Contains(searchText));
                 FilteredCurrencies = new ObservableCollection<CurrencyModel>(filtered);
             }
-            _logger.LogInformation("Para birimleri '{SearchText}' metnine göre filtrelendi.", CurrencySearch);
+            _logger.LogInformation("Para birimleri '{SearchText}' metnine göre filtrelendi.", currencySearch);
         }
     }
 }

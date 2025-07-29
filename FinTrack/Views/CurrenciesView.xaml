@@ -7,6 +7,7 @@
              xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
              mc:Ignorable="d" 
              d:DesignHeight="800" d:DesignWidth="1400"
+             x:Name="currenciesViewRoot"
              Background="{StaticResource MainBackgroundBrush}">
 
     <UserControl.Resources>
@@ -92,10 +93,10 @@
                         <Border Height="350" Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10">
                             <lvc:CartesianChart
                                 Height="320"
-                                Series="{Binding DataContext.Series, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                XAxes="{Binding DataContext.XAxes, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                YAxes="{Binding DataContext.YAxes, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                Title="{Binding DataContext.Title, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                Series="{Binding DataContext.Series, ElementName=currenciesViewRoot}"
+                                XAxes="{Binding DataContext.XAxes, ElementName=currenciesViewRoot}"
+                                YAxes="{Binding DataContext.YAxes, ElementName=currenciesViewRoot}"
+                                Title="{Binding DataContext.Title, ElementName=currenciesViewRoot}"
                                 LegendPosition="Bottom"
                                 LegendTextPaint="{Binding Source={StaticResource TopBarTextSecondaryBrush}, Converter={StaticResource BrushToLvcPaintConverter}}"
                                 TooltipPosition="Top"
@@ -122,11 +123,58 @@
                                 <TextBlock Text="{Binding MonthlyChange}" FontSize="18" Foreground="{Binding MonthlyChangeForeground}"/>
                             </StackPanel>
                         </UniformGrid>
+
+                        <TextBlock Text="Period Analysis" Style="{StaticResource CardTitleTextStyle}" FontSize="16" Margin="0,30,0,15"/>
+                        <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,0,0,20" Opacity="0.5"/>
+
+                        <UniformGrid Columns="3" Margin="0,0,0,20">
+                            <StackPanel>
+                                <TextBlock Text="PERIOD HIGH" Style="{StaticResource LabelTextStyle}"/>
+                                <TextBlock Text="{Binding DataContext.PeriodHighText, ElementName=currenciesViewRoot}" FontSize="18" Foreground="White"/>
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Text="PERIOD LOW" Style="{StaticResource LabelTextStyle}"/>
+                                <TextBlock Text="{Binding DataContext.PeriodLowText, ElementName=currenciesViewRoot}" FontSize="18" Foreground="White"/>
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Text="AVERAGE RATE" Style="{StaticResource LabelTextStyle}"/>
+                                <TextBlock Text="{Binding DataContext.AverageRateText, ElementName=currenciesViewRoot}" FontSize="18" Foreground="White"/>
+                            </StackPanel>
+                        </UniformGrid>
+
+                        <UniformGrid Columns="2" Margin="0,10,0,0">
+                            <Border Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10" Padding="15" Margin="0,0,10,0">
+                                <StackPanel>
+                                    <TextBlock Text="Current Position in Period" Style="{StaticResource LabelTextStyle}" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                                    <lvc:PieChart
+                                        Height="180"
+                                        Series="{Binding DataContext.GaugeSeries, ElementName=currenciesViewRoot}"
+                                        VisualElements="{Binding DataContext.GaugeVisuals, ElementName=currenciesViewRoot}"
+                                        InitialRotation="-135"
+                                        MinValue="{Binding DataContext.PeriodLowValue, ElementName=currenciesViewRoot}"
+                                        MaxValue="{Binding DataContext.PeriodHighValue, ElementName=currenciesViewRoot}">
+                                    </lvc:PieChart>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10" Padding="15" Margin="10,0,0,0">
+                                <StackPanel>
+                                    <TextBlock Text="Daily Trend Distribution" Style="{StaticResource LabelTextStyle}" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                                    <lvc:PieChart
+                                        Height="180"
+                                        Series="{Binding DataContext.PieSeries, ElementName=currenciesViewRoot}"
+                                        LegendPosition="Bottom"
+                                        LegendTextPaint="{Binding Source={StaticResource TopBarTextSecondaryBrush}, Converter={StaticResource BrushToLvcPaintConverter}}"
+                                        TooltipPosition="Bottom"
+                                        TooltipTextPaint="{Binding Source={StaticResource TopBarTextSecondaryBrush}, Converter={StaticResource BrushToLvcPaintConverter}}">
+                                    </lvc:PieChart>
+                                </StackPanel>
+                            </Border>
+                        </UniformGrid>
                     </StackPanel>
                 </Border>
             </ScrollViewer>
 
-            <!-- Yükleme Göstergesi -->
             <Border Background="#991E222D" CornerRadius="12"
                     Visibility="{Binding IsLoadingDetails, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
@@ -135,7 +183,6 @@
                 </StackPanel>
             </Border>
 
-            <!-- Seçim yapılmadığında gösterilecek mesaj -->
             <Border Style="{StaticResource DashboardCardStyle}"
                     Visibility="{Binding IsCurrencySelected, Converter={StaticResource InvertedBooleanToVisibilityConverter}}">
                 <TextBlock Text="Please select a currency from the list to see details." 

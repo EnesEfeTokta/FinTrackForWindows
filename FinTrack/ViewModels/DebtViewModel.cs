@@ -1,26 +1,37 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using FinTrackForWindows.Core;
+using FinTrackForWindows.Dtos.DebtDtos;
 using FinTrackForWindows.Enums;
 using FinTrackForWindows.Models.Debt;
+using FinTrackForWindows.Services.Api;
 using Microsoft.Extensions.Logging;
+using Microsoft.Win32;
 using System.Collections.ObjectModel;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Windows;
 
 namespace FinTrackForWindows.ViewModels
 {
     public partial class DebtViewModel : ObservableObject
     {
-        private const string CurrentUserName = "Siz";
-
         private readonly ILogger<DebtViewModel> _logger;
+        private readonly IApiService _apiService;
 
-        private ObservableCollection<DebtModel> allDebts;
+        private readonly int _currentUserId;
+
+        [ObservableProperty]
+        private bool isLoading;
 
         [ObservableProperty]
         private string? newProposalBorrowerEmail;
 
         [ObservableProperty]
         private decimal newProposalAmount;
+
+        [ObservableProperty]
+        private string newProposalDescription;
 
         [ObservableProperty]
         private DateTime newProposalDueDate = DateTime.Now.AddMonths(1);
@@ -31,139 +42,183 @@ namespace FinTrackForWindows.ViewModels
         [ObservableProperty]
         private ObservableCollection<DebtModel> myDebtsList;
 
-        public DebtViewModel(ILogger<DebtViewModel> logger)
+        public DebtViewModel(ILogger<DebtViewModel> logger, IApiService apiService)
         {
             _logger = logger;
-            allDebts = new ObservableCollection<DebtModel>();
+            _apiService = apiService;
+
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadJwtToken(SessionManager.CurrentToken);
+            _currentUserId = Convert.ToInt16(jsonToken.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value);
+
             pendingOffers = new ObservableCollection<DebtModel>();
             myDebtsList = new ObservableCollection<DebtModel>();
 
-            LoadSampleData();
-            RefreshLists();
+            _ = LoadDebtsAsync();
         }
 
         [RelayCommand]
-        private void SendOffer()
+        private async Task LoadDebtsAsync()
         {
-            if (string.IsNullOrWhiteSpace(NewProposalBorrowerEmail) || NewProposalAmount <= 0)
+            IsLoading = true;
+            _logger.LogInformation("Loading debt data from API...");
+            try
             {
-                MessageBox.Show("Lütfen tüm alanları doldurun.", "Doğrulama Hatası");
-                return;
-            }
+                var debtDtos = await _apiService.GetAsync<List<DebtDto>>("Debt");
+                if (debtDtos == null) return;
 
-            var newDebt = new DebtModel
-            {
-                LenderName = CurrentUserName,
-                BorrowerName = "Unknown",
-                Amount = NewProposalAmount,
-                DueDate = NewProposalDueDate,
-                Status = DebtStatusType.PendingBorrowerAcceptance,
-                CurrentUserName = CurrentUserName
-            };
+                PendingOffers.Clear();
+                MyDebtsList.Clear();
 
-            allDebts.Add(newDebt);
-            RefreshLists();
-
-            NewProposalBorrowerEmail = string.Empty;
-            NewProposalAmount = 0;
-            _logger.LogInformation("Yeni borç teklifi gönderildi.");
-        }
-
-        [RelayCommand]
-        private void ConfirmOffer(DebtModel debt)
-        {
-            if (debt == null) return;
-
-            debt.Status = DebtStatusType.PendingOperatorApproval;
-            debt.BorrowerName = CurrentUserName;
-            RefreshLists();
-            _logger.LogInformation("{Amount} TRY tutarındaki borç teklifi onaylandı.", debt.Amount);
-        }
-
-        [RelayCommand]
-        private void RejectOffer(DebtModel debt)
-        {
-            if (debt == null) return;
-
-            debt.Status = DebtStatusType.RejectedByOperator;
-            RefreshLists();
-            _logger.LogWarning("{Amount} TRY tutarındaki borç teklifi reddedildi.", debt.Amount);
-        }
-
-        [RelayCommand]
-        private void UploadVideo(DebtModel debt)
-        {
-            if (debt == null) return;
-
-            debt.Status = DebtStatusType.PendingOperatorApproval;
-            RefreshLists();
-            _logger.LogInformation("{Amount} TRY borcu için onay videosu yüklendi, operatör onayı bekleniyor.", debt.Amount);
-            MessageBox.Show("Video başarıyla yüklendi. Operatör onayı bekleniyor.", "Başarılı");
-        }
-
-        private void RefreshLists()
-        {
-            var pending = allDebts.Where(d => d.Status == DebtStatusType.PendingBorrowerAcceptance && d.LenderName != CurrentUserName).ToList();
-            PendingOffers.Clear();
-            foreach (var item in pending) PendingOffers.Add(item);
-
-            var myDebts = allDebts.Where(d => d.Status != DebtStatusType.PendingBorrowerAcceptance && (d.LenderName == CurrentUserName || d.BorrowerName == CurrentUserName)).ToList();
-            MyDebtsList.Clear();
-            foreach (var item in myDebts) MyDebtsList.Add(item);
-        }
-
-        private void LoadSampleData()
-        {
-            allDebts = new ObservableCollection<DebtModel>
-            {
-                new DebtModel
+                foreach (var dto in debtDtos)
                 {
-                    LenderName = "Ahmet Yılmaz",
-                    BorrowerName = "Unknown",
-                    Amount = 500,
-                    DueDate = new DateTime(2024, 6, 15),
-                    Status = DebtStatusType.RejectedByOperator,
-                    CurrentUserName = CurrentUserName
-                },
-                new DebtModel
-                {
-                    LenderName = CurrentUserName,
-                    BorrowerName = "Eylül Korkmaz",
-                    Amount = 2500,
-                    DueDate = new DateTime(2024, 10, 1),
-                    Status = DebtStatusType.PendingOperatorApproval,
-                    CurrentUserName = CurrentUserName
-                },
-                new DebtModel
-                {
-                    LenderName = "Sinem Berçem",
-                    BorrowerName = CurrentUserName,
-                    Amount = 30000,
-                    DueDate = new DateTime(2024, 8, 31),
-                    Status = DebtStatusType.Active,
-                    CurrentUserName = CurrentUserName
-                },
-                new DebtModel
-                {
-                    LenderName = CurrentUserName,
-                    BorrowerName = "Ali Veli",
-                    Amount = 800000,
-                    DueDate = new DateTime(2025, 1, 1),
-                    Status = DebtStatusType.Active,
-                    CurrentUserName = CurrentUserName
-                },
-                new DebtModel
-                {
-                    LenderName = CurrentUserName,
-                    BorrowerName = "Canan Aslan",
-                    Amount = 1000,
-                    DueDate = new DateTime(2024, 9, 20),
-                    Status = DebtStatusType.RejectedByOperator,
-                    RejectionReason = "Insufficient video",
-                    CurrentUserName = CurrentUserName
+                    var debtModel = new DebtModel
+                    {
+                        Id = dto.Id,
+                        LenderId = dto.LenderId,
+                        BorrowerId = dto.BorrowerId,
+                        CurrentUserId = _currentUserId,
+                        LenderName = dto.LenderName,
+                        BorrowerName = dto.BorrowerName,
+                        borrowerImageUrl = dto.BorrowerProfilePicture ?? "/Assets/Images/Icons/user-red.png",
+                        lenderImageUrl = dto.LenderProfilePicture ?? "/Assets/Images/Icons/user-green.png",
+                        Amount = dto.Amount,
+                        DueDate = dto.DueDateUtc.ToLocalTime(),
+                        Status = dto.Status
+                    };
+
+                    // Bana gelen ve henüz karar vermediğim borç teklifleri
+                    if (dto.Status == DebtStatusType.PendingBorrowerAcceptance && dto.BorrowerId == _currentUserId)
+                    {
+                        PendingOffers.Add(debtModel);
+                    }
+                    else // Diğer tüm borçlarım (aktif, ödenmiş, reddedilmiş vb.)
+                    {
+                        MyDebtsList.Add(debtModel);
+                    }
                 }
+                _logger.LogInformation("Successfully loaded and processed {Count} debts.", debtDtos.Count);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to load debt data.");
+                MessageBox.Show("Borç verileri yüklenirken bir hata oluştu.", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                IsLoading = false;
+            }
+        }
+
+        [RelayCommand]
+        private async Task SendOfferAsync()
+        {
+            IsLoading = true;
+            try
+            {
+                if (string.IsNullOrWhiteSpace(NewProposalBorrowerEmail) || NewProposalAmount <= 0)
+                {
+                    MessageBox.Show("Lütfen borçlunun e-posta adresini ve geçerli bir miktar girin.", "Doğrulama Hatası");
+                    return;
+                }
+
+                var createDto = new CreateDebtOfferRequestDto
+                {
+                    BorrowerEmail = NewProposalBorrowerEmail,
+                    Amount = NewProposalAmount,
+                    CurrencyCode = BaseCurrencyType.TRY,
+                    DueDateUtc = NewProposalDueDate,
+                    Description = NewProposalDescription
+                };
+
+                _logger.LogInformation("Sending new debt offer to API...");
+                var result = await _apiService.PostAsync<object>("Debt/create-debt-offer", createDto);
+
+                if (result != null)
+                {
+                    MessageBox.Show("Borç teklifi başarıyla gönderildi.", "Başarılı");
+                    NewProposalBorrowerEmail = string.Empty;
+                    NewProposalAmount = 0;
+                    await LoadDebtsAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to send debt offer.");
+                MessageBox.Show("Teklif gönderilirken bir hata oluştu.", "Hata");
+            }
+            finally
+            {
+                IsLoading = false;
+            }
+        }
+
+        [RelayCommand]
+        private async Task RespondToOfferAsync(object parameter)
+        {
+            if (parameter is not object[] values || values.Length != 2 || values[0] is not DebtModel debt || values[1] is not bool decision) return;
+
+            IsLoading = true;
+            try
+            {
+                _logger.LogInformation("Attempting to {Action} offer for DebtId: {DebtId}", decision, debt.Id);
+
+                var requestBody = new { Accepted = decision };
+                bool result = await _apiService.PostAsync<bool>($"Debt/respond-to-offer/{debt.Id}", requestBody);
+
+                if (result)
+                {
+                    var message = decision ? "Teklif kabul edildi. Lütfen onay videosunu yükleyin." : "Teklif reddedildi.";
+                    MessageBox.Show(message, "Başarılı");
+                    await LoadDebtsAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to respond to debt offer for DebtId: {DebtId}", debt.Id);
+                MessageBox.Show("İşlem sırasında bir hata oluştu.", "Hata");
+            }
+            finally
+            {
+                IsLoading = false;
+            }
+        }
+
+        [RelayCommand]
+        private async Task UploadVideoAsync(DebtModel debt)
+        {
+            if (debt == null) return;
+
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "Video Files (*.mp4;*.mov;*.wmv)|*.mp4;*.mov;*.wmv|All files (*.*)|*.*",
+                Title = "Select an Approval Video"
             };
-            _logger.LogInformation("Örnek borç verileri yüklendi.");
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                IsLoading = true;
+                try
+                {
+                    _logger.LogInformation("Uploading video for DebtId: {DebtId}", debt.Id);
+                    var success = await _apiService.UploadFileAsync($"Videos/user-upload-video?debtId={debt.Id}", openFileDialog.FileName);
+
+                    if (success)
+                    {
+                        MessageBox.Show("Video başarıyla yüklendi. Operatör onayı bekleniyor.", "Başarılı");
+                        await LoadDebtsAsync();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Failed to upload video for DebtId: {DebtId}", debt.Id);
+                    MessageBox.Show("Video yüklenirken bir hata oluştu.", "Hata");
+                }
+                finally
+                {
+                    IsLoading = false;
+                }
+            }
         }
     }
 }

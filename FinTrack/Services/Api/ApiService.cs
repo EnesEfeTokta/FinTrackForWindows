@@ -1,12 +1,12 @@
 ﻿using FinTrackForWindows.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-
 namespace FinTrackForWindows.Services.Api
 {
     public class ApiService : IApiService
@@ -228,6 +228,49 @@ namespace FinTrackForWindows.Services.Api
             {
                 _logger.LogError(ex, "PUT isteği sırasında genel bir hata oluştu: {Endpoint}", endpoint);
                 return default(T);
+            }
+        }
+
+        public async Task<bool> UploadFileAsync(string endpoint, string filePath)
+        {
+            _logger.LogInformation("Dosya yükleme isteği başlatılıyor: {Endpoint}, Dosya: {FilePath}", endpoint, filePath);
+            if (!File.Exists(filePath))
+            {
+                _logger.LogError("Yüklenecek dosya bulunamadı: {FilePath}", filePath);
+                return false;
+            }
+
+            try
+            {
+                AddAuthorizationHeader();
+
+                using (var content = new MultipartFormDataContent())
+                {
+                    var fileBytes = await File.ReadAllBytesAsync(filePath);
+                    var fileContent = new ByteArrayContent(fileBytes);
+
+                    fileContent.Headers.ContentType = MediaTypeHeaderValue.Parse("application/octet-stream");
+
+                    content.Add(fileContent, "file", Path.GetFileName(filePath));
+                    var response = await _httpClient.PostAsync(endpoint, content);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        _logger.LogInformation("Dosya başarıyla yüklendi: {Endpoint}", endpoint);
+                        return true;
+                    }
+                    else
+                    {
+                        var errorContent = await response.Content.ReadAsStringAsync();
+                        _logger.LogError("Dosya yükleme sırasında HTTP hatası: {StatusCode} - {Error}", response.StatusCode, errorContent);
+                        return false;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Dosya yükleme sırasında genel bir hata oluştu: {Endpoint}", endpoint);
+                return false;
             }
         }
     }
