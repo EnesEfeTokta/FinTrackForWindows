@@ -4,9 +4,7 @@ using FinTrackForWindows.Dtos.SettingsDtos;
 using FinTrackForWindows.Enums;
 using FinTrackForWindows.Services.Api;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace FinTrackForWindows.ViewModels
@@ -102,6 +100,6 @@ namespace FinTrackForWindows.ViewModels
             }
         }
 
-        private bool CanSaveChanges() => !_isSaving;
+        private bool CanSaveChanges() => !IsSaving;
     }
 }

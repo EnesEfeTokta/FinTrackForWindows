@@ -1,9 +1,9 @@
 ﻿namespace FinTrackForWindows.Enums
 {
-    public enum CurrencyConversionType 
-    { 
-        Increase, 
-        Decrease, 
-        Neutral 
+    public enum CurrencyConversionType
+    {
+        Increase,
+        Decrease,
+        Neutral
     }
 }

@@ -5,7 +5,6 @@ using FinTrackForWindows.Enums;
 using FinTrackForWindows.Models.Settings;
 using FinTrackForWindows.Services.Api;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.ObjectModel;
 using System.Windows;
 

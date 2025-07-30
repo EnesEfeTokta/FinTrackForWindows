@@ -7,7 +7,6 @@ using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -389,7 +388,7 @@ namespace FinTrackForWindows.ViewModels
                                 c.ToCurrencyName.ToLowerInvariant().Contains(searchText));
                 FilteredCurrencies = new ObservableCollection<CurrencyModel>(filtered);
             }
-            _logger.LogInformation("Para birimleri '{SearchText}' metnine göre filtrelendi.", currencySearch);
+            _logger.LogInformation("Para birimleri '{SearchText}' metnine göre filtrelendi.", CurrencySearch);
         }
     }
 }

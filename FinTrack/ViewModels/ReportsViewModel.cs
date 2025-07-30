@@ -1,7 +1,6 @@
 ﻿// ViewModels/ReportsViewModel.cs
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using FinTrackForWindows.Dtos;
 using FinTrackForWindows.Dtos.AccountDtos;
 using FinTrackForWindows.Dtos.CategoryDtos;
 using FinTrackForWindows.Dtos.ReportDtos;
@@ -10,12 +9,8 @@ using FinTrackForWindows.Helpers;
 using FinTrackForWindows.Models.Report;
 using FinTrackForWindows.Services.Api;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace FinTrackForWindows.ViewModels

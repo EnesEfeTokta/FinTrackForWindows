@@ -1,10 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using FinTrackForWindows.Dtos.SettingsDtos;
 using FinTrackForWindows.Services.Api;
 using Microsoft.Extensions.Logging;
 using System.Windows;
-using FinTrackForWindows.Dtos.SettingsDtos;
-using System.Threading.Tasks;
 
 namespace FinTrackForWindows.ViewModels
 {
@@ -44,7 +43,7 @@ namespace FinTrackForWindows.ViewModels
         [RelayCommand]
         private async Task ProfileSettingsContentSaveChanges()
         {
-            await _apiService.PostAsync<object>("UserSettings/ProfileSettings", new ProfileSettingsUpdateDto 
+            await _apiService.PostAsync<object>("UserSettings/ProfileSettings", new ProfileSettingsUpdateDto
             {
                 FullName = FullName,
                 Email = Email,
