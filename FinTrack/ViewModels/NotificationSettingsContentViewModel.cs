@@ -1,8 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using FinTrackForWindows.Dtos.SettingsDtos;
 using FinTrackForWindows.Enums;
 using FinTrackForWindows.Models.Settings;
+using FinTrackForWindows.Services.Api;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.ObjectModel;
 using System.Windows;
 
@@ -13,52 +16,103 @@ namespace FinTrackForWindows.ViewModels
         public ObservableCollection<NotificationSettingItemModel> EmailNotificationSettings { get; }
 
         [ObservableProperty]
-        private bool enableDesktopNotifications;
+        private bool _enableDesktopNotifications;
+
+        [ObservableProperty]
+        private bool _isLoading;
+
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(SaveChangesCommand))]
+        private bool _isSaving;
 
         private readonly ILogger<NotificationSettingsContentViewModel> _logger;
+        private readonly IApiService _apiService;
 
-        public NotificationSettingsContentViewModel(ILogger<NotificationSettingsContentViewModel> logger)
+        public NotificationSettingsContentViewModel(ILogger<NotificationSettingsContentViewModel> logger, IApiService apiService)
         {
             _logger = logger;
-            EnableDesktopNotifications = true;
+            _apiService = apiService;
+
             EmailNotificationSettings = new ObservableCollection<NotificationSettingItemModel>();
-
-            LoadSettings();
+            _ = LoadSettings();
         }
 
-        private void LoadSettings()
+        private async Task LoadSettings()
         {
-            foreach (NotificationSettingsType settingType in Enum.GetValues(typeof(NotificationSettingsType)))
+            IsLoading = true;
+            try
             {
-                bool isInitialSelected = settingType switch
-                {
-                    NotificationSettingsType.SpendingLimitWarning => true,
-                    NotificationSettingsType.ExpectedBillReminder => true,
-                    NotificationSettingsType.WeeklySpendingSummary => false,
-                    NotificationSettingsType.NewFeaturesAndAnnouncements => false,
-                    _ => false
-                };
-                EmailNotificationSettings.Add(new NotificationSettingItemModel(settingType, isInitialSelected));
-            }
+                var settingsDto = await _apiService.GetAsync<UserNotificationSettingsDto>("UserSettings/UserNotificationSettings");
+                EmailNotificationSettings.Clear();
 
-            EnableDesktopNotifications = true;
+                if (settingsDto != null)
+                {
+                    // DTO'dan Model Listesine Mapping
+                    EmailNotificationSettings.Add(new NotificationSettingItemModel(NotificationSettingsType.SpendingLimitWarning, settingsDto.SpendingLimitWarning));
+                    EmailNotificationSettings.Add(new NotificationSettingItemModel(NotificationSettingsType.ExpectedBillReminder, settingsDto.ExpectedBillReminder));
+                    EmailNotificationSettings.Add(new NotificationSettingItemModel(NotificationSettingsType.WeeklySpendingSummary, settingsDto.WeeklySpendingSummary));
+                    EmailNotificationSettings.Add(new NotificationSettingItemModel(NotificationSettingsType.NewFeaturesAndAnnouncements, settingsDto.NewFeaturesAndAnnouncements));
+                    EnableDesktopNotifications = settingsDto.EnableDesktopNotifications;
+                }
+                else
+                {
+                    // API'den veri gelmezse varsayılan değerlerle doldur
+                    InitializeDefaultSettings();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to load notification settings.");
+                MessageBox.Show("Could not load notification settings. Default values will be used.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                InitializeDefaultSettings();
+            }
+            finally
+            {
+                IsLoading = false;
+            }
         }
 
-        [RelayCommand]
-        private void NotificationSettingsContentChanges()
+        [RelayCommand(CanExecute = nameof(CanSaveChanges))]
+        private async Task SaveChanges()
         {
-            var selectedSettings = EmailNotificationSettings
-                .Where(setting => setting.IsEnabled)
-                .Select(setting => setting.SettingType)
-                .ToList();
+            IsSaving = true;
+            try
+            {
+                var settingsUpdateDto = new UserNotificationSettingsUpdateDto
+                {
+                    EnableDesktopNotifications = this.EnableDesktopNotifications,
+                    SpendingLimitWarning = EmailNotificationSettings.FirstOrDefault(s => s.SettingType == NotificationSettingsType.SpendingLimitWarning)?.IsEnabled ?? false,
+                    ExpectedBillReminder = EmailNotificationSettings.FirstOrDefault(s => s.SettingType == NotificationSettingsType.ExpectedBillReminder)?.IsEnabled ?? false,
+                    WeeklySpendingSummary = EmailNotificationSettings.FirstOrDefault(s => s.SettingType == NotificationSettingsType.WeeklySpendingSummary)?.IsEnabled ?? false,
+                    NewFeaturesAndAnnouncements = EmailNotificationSettings.FirstOrDefault(s => s.SettingType == NotificationSettingsType.NewFeaturesAndAnnouncements)?.IsEnabled ?? false
+                };
 
-            _logger.LogInformation("Kullanıcı bildirim ayarlarını değiştirdi: {SelectedSettings}", string.Join(", ", selectedSettings));
-            MessageBox.Show(
-                "Bildirim ayarlarınız kaydedildi.",
-                "Bildirim Ayarları",
-                MessageBoxButton.OK,
-                MessageBoxImage.Information
-            );
+                await _apiService.PostAsync<object>("UserSettings/UserNotificationSettings", settingsUpdateDto);
+
+                _logger.LogInformation("User notification settings have been successfully saved.");
+                MessageBox.Show("Your notification settings have been saved.", "Notification Settings", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to save notification settings.");
+                MessageBox.Show("An error occurred while saving your settings. Please try again.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                IsSaving = false;
+            }
+        }
+
+        private bool CanSaveChanges() => !IsSaving;
+
+        private void InitializeDefaultSettings()
+        {
+            EmailNotificationSettings.Clear();
+            EmailNotificationSettings.Add(new NotificationSettingItemModel(NotificationSettingsType.SpendingLimitWarning, true));
+            EmailNotificationSettings.Add(new NotificationSettingItemModel(NotificationSettingsType.ExpectedBillReminder, true));
+            EmailNotificationSettings.Add(new NotificationSettingItemModel(NotificationSettingsType.WeeklySpendingSummary, false));
+            EmailNotificationSettings.Add(new NotificationSettingItemModel(NotificationSettingsType.NewFeaturesAndAnnouncements, false));
+            EnableDesktopNotifications = true;
         }
     }
 }
