@@ -6,6 +6,11 @@ namespace FinTrackForWindows.Models.Debt
 {
     public partial class DebtModel : ObservableObject
     {
+        public int Id { get; set; }
+        public int LenderId { get; set; }
+        public int BorrowerId { get; set; }
+        public int CurrentUserId { get; set; }
+
         [ObservableProperty]
         private string lenderName = string.Empty;
 
@@ -13,75 +18,60 @@ namespace FinTrackForWindows.Models.Debt
         private string borrowerName = string.Empty;
 
         [ObservableProperty]
-        private string borrowerEmail = string.Empty;
-
-        [ObservableProperty]
         private decimal amount;
 
         [ObservableProperty]
         private DateTime dueDate;
 
+        public string borrowerImageUrl = string.Empty;
+
+        public string lenderImageUrl = string.Empty;
+
         [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(StatusText))]
-        [NotifyPropertyChangedFor(nameof(StatusBrush))]
-        [NotifyPropertyChangedFor(nameof(IsActionRequired))]
-        [NotifyPropertyChangedFor(nameof(IsRejected))]
+        [NotifyPropertyChangedFor(nameof(StatusText), nameof(StatusBrush), nameof(IsActionRequiredForBorrower), nameof(IsRejected))]
         private DebtStatusType status;
 
-        [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(DebtTitle))]
-        [NotifyPropertyChangedFor(nameof(UserIconPath))]
-        [NotifyPropertyChangedFor(nameof(IsCurrentUserTheBorrower))]
-        private string currentUserName = string.Empty;
+        public bool IsCurrentUserTheBorrower => BorrowerId == CurrentUserId;
+        public bool IsCurrentUserTheLender => LenderId == CurrentUserId;
 
-        public string DebtTitle => IsCurrentUserTheBorrower ? $"Your debt: {LenderName}" : $"Debt owed to you: {BorrowerName}";
+        public string DebtTitle => IsCurrentUserTheBorrower
+            ? $"Alacaklı: {LenderName}"
+            : $"Borçlu: {BorrowerName}";
 
-        public string UserIconPath => IsCurrentUserTheBorrower ? "/Assets/Images/Icons/user-red.png" : "/Assets/Images/Icons/user-green.png";
-
-        public bool IsCurrentUserTheBorrower => BorrowerName == CurrentUserName;
-
-        [ObservableProperty]
-        private string? rejectionReason;
-
-        [ObservableProperty]
-        private DateTime createdDate = DateTime.Now;
-
-        private static readonly Brush GreenBrush = new SolidColorBrush(Colors.Green);
-        private static readonly Brush RedBrush = new SolidColorBrush(Colors.Red);
-        private static readonly Brush BlueBrush = new SolidColorBrush(Colors.Blue);
-        private static readonly Brush OrangeBrush = new SolidColorBrush(Colors.Orange);
-        private static readonly Brush GrayBrush = new SolidColorBrush(Colors.Gray);
+        public string UserIconPath => IsCurrentUserTheBorrower
+            ? "/Assets/Images/Icons/user-red.png"
+            : "/Assets/Images/Icons/user-green.png";
 
         public Brush StatusBrush => Status switch
         {
-            DebtStatusType.Active => GreenBrush,
-            DebtStatusType.PendingBorrowerAcceptance => BlueBrush,
-            DebtStatusType.PendingOperatorApproval => OrangeBrush,
-            DebtStatusType.RejectedByOperator => RedBrush,
-            DebtStatusType.RejectedByBorrower => RedBrush,
-            _ => GrayBrush
+            DebtStatusType.Active => new SolidColorBrush(Colors.Green),
+            DebtStatusType.Defaulted => new SolidColorBrush(Colors.DarkRed),
+            DebtStatusType.AcceptedPendingVideoUpload => new SolidColorBrush(Colors.CornflowerBlue),
+            DebtStatusType.PendingBorrowerAcceptance => new SolidColorBrush(Colors.DodgerBlue),
+            DebtStatusType.PendingOperatorApproval => new SolidColorBrush(Colors.Orange),
+            DebtStatusType.RejectedByOperator => new SolidColorBrush(Colors.Red),
+            DebtStatusType.RejectedByBorrower => new SolidColorBrush(Colors.Red),
+            _ => new SolidColorBrush(Colors.Gray)
         };
 
         public string StatusText => Status switch
         {
-            DebtStatusType.PendingBorrowerAcceptance => "Status: Awaiting Video Approval",
-            DebtStatusType.PendingOperatorApproval => "Status: FinTrack Operator Approval Pending",
-            DebtStatusType.Active => "Status: Active - In force",
-            DebtStatusType.RejectedByOperator => "Status: Rejected by Operator",
-            DebtStatusType.RejectedByBorrower => "Status: Rejected by Borrower",
-            _ => "Status: Unknown"
+            DebtStatusType.PendingBorrowerAcceptance => "Onayınız Bekleniyor",
+            DebtStatusType.AcceptedPendingVideoUpload => "Video Yüklemesi Bekleniyor",
+            DebtStatusType.PendingOperatorApproval => "Operatör Onayı Bekleniyor",
+            DebtStatusType.Active => "Aktif",
+            DebtStatusType.Paid => "Ödendi",
+            DebtStatusType.Defaulted => "Vadesi Geçmiş",
+            DebtStatusType.RejectedByBorrower => "Tarafınızdan Reddedildi",
+            DebtStatusType.RejectedByOperator => "Operatör Tarafından Reddedildi",
+            _ => "Bilinmeyen Durum"
         };
 
-        public bool IsActionRequired => Status == DebtStatusType.PendingBorrowerAcceptance;
+        // Borçlunun video yüklemesi gerekip gerekmediğini kontrol eder.
+        public bool IsActionRequiredForBorrower =>
+            Status == DebtStatusType.AcceptedPendingVideoUpload && IsCurrentUserTheBorrower;
 
-        public bool IsRejected => Status == DebtStatusType.RejectedByBorrower || Status == DebtStatusType.RejectedByOperator;
-
-        public string InfoText => Status switch
-        {
-            DebtStatusType.Active => $"Final Payment: {DueDate:dd.MM.yyyy}",
-            DebtStatusType.PendingOperatorApproval => "Video uploaded",
-            DebtStatusType.RejectedByOperator => $"Reason: {RejectionReason}",
-            _ => string.Empty
-        };
+        public bool IsRejected =>
+            Status == DebtStatusType.RejectedByBorrower || Status == DebtStatusType.RejectedByOperator;
     }
 }

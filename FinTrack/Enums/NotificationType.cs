@@ -2,9 +2,9 @@
 {
     public enum NotificationType
     {
-        Suggestion,
-        GoalAchieved,
+        Info,
         Warning,
-        General
+        Error,
+        Success,
     }
 }

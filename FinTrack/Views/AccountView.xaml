@@ -72,16 +72,16 @@
                 <Border Style="{StaticResource DashboardCardStyle}" Margin="0,20,0,0">
                     <StackPanel>
                         <lvc:CartesianChart
-                Height="280"
-                Series="{Binding Series}"
-                XAxes="{Binding XAxes}"
-                YAxes="{Binding YAxes}"
-                Title="{Binding Title}"
-                LegendPosition="Bottom"
-                LegendTextPaint="{Binding Source={StaticResource TopBarTextSecondaryBrush}, Converter={StaticResource BrushToLvcPaintConverter}}"
-                TooltipPosition="Top"
-                TooltipBackgroundPaint="{Binding Source={StaticResource CardDarkerBackgroundBrush}, Converter={StaticResource BrushToLvcPaintConverter}}"
-                TooltipTextPaint="{Binding Source={StaticResource TopBarTextSecondaryBrush}, Converter={StaticResource BrushToLvcPaintConverter}}">
+                            Height="280"
+                            Series="{Binding Series}"
+                            XAxes="{Binding XAxes}"
+                            YAxes="{Binding YAxes}"
+                            Title="{Binding Title}"
+                            LegendPosition="Bottom"
+                            LegendTextPaint="{Binding Source={StaticResource TopBarTextSecondaryBrush}, Converter={StaticResource BrushToLvcPaintConverter}}"
+                            TooltipPosition="Top"
+                            TooltipBackgroundPaint="{Binding Source={StaticResource CardDarkerBackgroundBrush}, Converter={StaticResource BrushToLvcPaintConverter}}"
+                            TooltipTextPaint="{Binding Source={StaticResource TopBarTextSecondaryBrush}, Converter={StaticResource BrushToLvcPaintConverter}}">
                         </lvc:CartesianChart>
                     </StackPanel>
                 </Border>

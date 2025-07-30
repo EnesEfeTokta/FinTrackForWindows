@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using FinTrackForWindows.Dtos.SettingsDtos;
+using FinTrackForWindows.Services.Api;
 using Microsoft.Extensions.Logging;
 using System.Windows;
 
@@ -18,22 +20,35 @@ namespace FinTrackForWindows.ViewModels
 
         private readonly ILogger<ProfileSettingsContentViewModel> _logger;
 
-        public ProfileSettingsContentViewModel(ILogger<ProfileSettingsContentViewModel> logger)
+        private readonly IApiService _apiService;
+
+        public ProfileSettingsContentViewModel(ILogger<ProfileSettingsContentViewModel> logger, IApiService apiService)
         {
             _logger = logger;
-            LoadProfileData();
+            _apiService = apiService;
+            _ = LoadProfileData();
         }
 
-        private void LoadProfileData()
+        private async Task LoadProfileData()
         {
-            FullName = "John Doe";
-            Email = "johndoe@gmail.com";
-            ProfilePhotoUrl = "https://example.com/profile-photo.jpg";
+            var profile = await _apiService.GetAsync<ProfileSettingsDto>("UserSettings/ProfileSettings");
+            if (profile != null)
+            {
+                FullName = profile.FullName;
+                Email = profile.Email;
+                ProfilePhotoUrl = profile.ProfilePictureUrl ?? "N/A";
+            }
         }
 
         [RelayCommand]
-        private void ProfileSettingsContentSaveChanges()
+        private async Task ProfileSettingsContentSaveChanges()
         {
+            await _apiService.PostAsync<object>("UserSettings/ProfileSettings", new ProfileSettingsUpdateDto
+            {
+                FullName = FullName,
+                Email = Email,
+                ProfilePictureUrl = ProfilePhotoUrl
+            });
             _logger.LogInformation("Yeni profil bilgileri kaydedildi: {FullName}, {Email}, {ProfilePhotoUrl}", FullName, Email, ProfilePhotoUrl);
             MessageBox.Show("Profil bilgileri başarıyla kaydedildi.", "Bilgi", MessageBoxButton.OK, MessageBoxImage.Information);
         }

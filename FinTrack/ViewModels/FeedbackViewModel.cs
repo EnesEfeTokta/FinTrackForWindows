@@ -1,6 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using FinTrackForWindows.Dtos.FeedbackDtos;
 using FinTrackForWindows.Enums;
+using FinTrackForWindows.Services.Api;
 using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
 using System.Diagnostics;
@@ -14,7 +16,7 @@ namespace FinTrackForWindows.ViewModels
         private string? inputSubject;
 
         [ObservableProperty]
-        private FeedbackTypes selectedFeedbackType;
+        private FeedbackType selectedFeedbackType;
 
         [ObservableProperty]
         private string? inputDescription;
@@ -22,38 +24,53 @@ namespace FinTrackForWindows.ViewModels
         [ObservableProperty]
         private string? selectedFilePath;
 
-        public IEnumerable<FeedbackTypes> FeedbackTypes { get; }
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(SendFeedbackCommand))]
+        private bool isSending = false;
+
+        public IEnumerable<FeedbackType> FeedbackTypes { get; }
 
         private readonly ILogger<FeedbackViewModel> _logger;
 
-        public FeedbackViewModel(ILogger<FeedbackViewModel> logger)
+        private readonly IApiService _apiService;
+
+        public FeedbackViewModel(ILogger<FeedbackViewModel> logger, IApiService apiService)
         {
             _logger = logger;
+            _apiService = apiService;
 
-            FeedbackTypes = Enum.GetValues(typeof(FeedbackTypes)).Cast<FeedbackTypes>();
+            FeedbackTypes = Enum.GetValues(typeof(FeedbackType)).Cast<FeedbackType>();
             SelectedFeedbackType = FeedbackTypes.FirstOrDefault();
         }
 
         [RelayCommand(CanExecute = nameof(CanSendFeedback))]
-        private void SendFeedback()
+        private async Task SendFeedback()
         {
-            string subject = InputSubject ?? "The title has been left blank.";
-            string description = InputDescription ?? "The description has been left blank.";
-            string filePath = SelectedFilePath ?? "No file selected.";
-            string feedbackType = SelectedFeedbackType.ToString();
+            if (IsSending) return;
 
-            string feedbackMessage = $"Subject: {subject}\n" +
-                                      $"Type: {feedbackType}\n" +
-                                      $"Description: {description}\n" +
-                                      $"File Path: {filePath}";
+            var newFeedback = new FeedbackCreateDto
+            {
+                Subject = InputSubject ?? "The title has been left blank.",
+                Description = InputDescription ?? "The description has been left blank.",
+                SavedFilePath = SelectedFilePath ?? "No file selected.",
+                Type = SelectedFeedbackType,
+            };
 
-            // TODO: feedbackMessage should be sent to a server or an email...
+            await _apiService.PostAsync<object>("Feedback", newFeedback);
 
-            MessageBox.Show(feedbackMessage, "Feedback Submitted", MessageBoxButton.OK, MessageBoxImage.Information);
+            // TODO: Burada sisteme bir e-posta göndermekte fayda var...
+
             _logger.LogInformation("Feedback submitted: Subject: {Subject}, Type: {Type}, Description: {Description}, File Path: {FilePath}",
-                subject, feedbackType, description, filePath);
+                newFeedback.Subject, newFeedback.Type, newFeedback.Description, newFeedback.SavedFilePath);
 
             ClearForm();
+        }
+
+        private bool CanSendFeedback()
+        {
+            return !string.IsNullOrWhiteSpace(InputSubject) &&
+                   !string.IsNullOrWhiteSpace(InputDescription) &&
+                   !IsSending;
         }
 
         [RelayCommand]
@@ -86,12 +103,6 @@ namespace FinTrackForWindows.ViewModels
                 MessageBox.Show($"Link açılamadı: {ex.Message}", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
                 _logger.LogError(ex, "Link açma hatası: {Url}", url);
             }
-        }
-
-        private bool CanSendFeedback()
-        {
-            return !string.IsNullOrWhiteSpace(InputSubject) &&
-                   !string.IsNullOrWhiteSpace(InputDescription);
         }
 
         partial void OnInputSubjectChanged(string? value) => SendFeedbackCommand.NotifyCanExecuteChanged();

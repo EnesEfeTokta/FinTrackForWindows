@@ -11,38 +11,48 @@
 
     <UserControl.Resources>
         <helpers:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter"/>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <helpers:InvertedBooleanConverter x:Key="InvertedBooleanConverter"/>
+        <helpers:InvertedBooleanToVisibilityConverter x:Key="InvertedBooleanToVisibilityConverter"/>
     </UserControl.Resources>
 
     <Border Style="{StaticResource DashboardCardStyle}">
-        <StackPanel>
-            <TextBlock Text="Notification Settings" Style="{StaticResource CardTitleTextStyle}"/>
-            <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" 
-                    Margin="0,5,0,20" Opacity="0.5"/>
+        <Grid>
+            <ProgressBar IsIndeterminate="True" 
+                         VerticalAlignment="Center" 
+                         HorizontalAlignment="Center" 
+                         Width="50" Height="50"
+                         Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+            <StackPanel Visibility="{Binding IsLoading, Converter={StaticResource InvertedBooleanToVisibilityConverter}}">
+                <TextBlock Text="Notification Settings" Style="{StaticResource CardTitleTextStyle}"/>
+                <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" 
+                        Margin="0,5,0,20" Opacity="0.5"/>
 
-            <TextBlock Text="EMAIL NOTIFICATIONS" Style="{StaticResource LabelTextStyle}" Margin="0,0,0,5"/>
-            <ItemsControl ItemsSource="{Binding EmailNotificationSettings}" Margin="10,0,0,20">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <CheckBox Style="{StaticResource ModernCheckBoxStyle}" Margin="0,5"
-                                  IsChecked="{Binding IsSelected, Mode=TwoWay}"
-                                  Content="{Binding SettingType, Converter={StaticResource EnumToDescriptionConverter}}"/>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+                <TextBlock Text="EMAIL NOTIFICATIONS" Style="{StaticResource LabelTextStyle}" Margin="0,0,0,5"/>
+                <ItemsControl ItemsSource="{Binding EmailNotificationSettings}" Margin="10,0,0,20">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <CheckBox Style="{StaticResource ModernCheckBoxStyle}" Margin="0,5"
+                                      IsChecked="{Binding IsEnabled}"
+                                      Content="{Binding SettingType, Converter={StaticResource EnumToDescriptionConverter}}"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
 
-            <TextBlock Text="IN-APP NOTIFICATIONS" Style="{StaticResource LabelTextStyle}" Margin="0,10,0,5"/>
-            <StackPanel Margin="10,0,0,20">
+                <TextBlock Text="IN-APP NOTIFICATIONS" Style="{StaticResource LabelTextStyle}" Margin="0,10,0,5"/>
+                <StackPanel Margin="10,0,0,20">
+                    <CheckBox Content="Enable desktop notifications" 
+                              Style="{StaticResource ModernCheckBoxStyle}" Margin="0,5"
+                              IsChecked="{Binding EnableDesktopNotifications}"/>
+                </StackPanel>
 
-                <CheckBox Content="Enable desktop notifications" 
-                          Style="{StaticResource ModernCheckBoxStyle}" Margin="0,5"
-                          IsChecked="{Binding EnableDesktopNotifications, Mode=TwoWay}"/>
+                <Button Content="SAVE NOTIFICATION PREFERENCES" 
+                        Style="{StaticResource PrimaryButtonStyle}" 
+                        Margin="0,25,0,0"
+                        HorizontalAlignment="Stretch"
+                        Command="{Binding SaveChangesCommand}"
+                        IsEnabled="{Binding IsSaving, Converter={StaticResource InvertedBooleanConverter}}"/>
             </StackPanel>
-
-            <Button Content="SAVE NOTIFICATION PREFERENCES" 
-                    Style="{StaticResource PrimaryButtonStyle}" 
-                    Margin="0,25,0,0"
-                    HorizontalAlignment="Stretch"
-                    Command="{Binding NotificationSettingsContentChangesCommand}"/>
-        </StackPanel>
+        </Grid>
     </Border>
 </UserControl>

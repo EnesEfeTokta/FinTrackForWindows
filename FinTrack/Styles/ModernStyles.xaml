@@ -999,5 +999,121 @@
         </Setter.Value>
     </Setter>
 </Style>
+
+            <Style x:Key="MaterialDesignCircularProgressBar" TargetType="ProgressBar">
+                <Setter Property="Width" Value="50"/>
+                <Setter Property="Height" Value="50"/>
+                <Setter Property="Foreground" Value="{StaticResource PrimaryBrush}"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ProgressBar">
+                            <!-- Viewbox, ProgressBar'ın boyutlandırılmasına izin verir -->
+                            <Viewbox>
+                                <Grid Width="100" Height="100" Background="Transparent">
+                                    <!-- Arka Plan Halkası (sabit) -->
+                                    <Ellipse x:Name="BackgroundEllipse"
+                                             Width="90" Height="90"
+                                             Stroke="{StaticResource TopBarTextSecondaryBrush}"
+                                             StrokeThickness="8"
+                                             Opacity="0.3"
+                                             HorizontalAlignment="Center"
+                                             VerticalAlignment="Center"/>
+
+                                    <!-- Dönen Parça (animasyonlu) -->
+                                    <Ellipse x:Name="IndicatorEllipse"
+                                             Width="90" Height="90"
+                                             Stroke="{TemplateBinding Foreground}"
+                                             StrokeThickness="8"
+                                             StrokeDashArray="140 142"
+                                             StrokeDashCap="Round"
+                                             HorizontalAlignment="Center"
+                                             VerticalAlignment="Center">
+                                        <Ellipse.RenderTransform>
+                                            <RotateTransform Angle="0" CenterX="45" CenterY="45"/>
+                                        </Ellipse.RenderTransform>
+                                    </Ellipse>
+                                </Grid>
+                            </Viewbox>
+                            <ControlTemplate.Triggers>
+                                <!-- IsIndeterminate true olduğunda animasyonu başlat -->
+                                <Trigger Property="IsIndeterminate" Value="True">
+                                    <Trigger.EnterActions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation
+                                                    Storyboard.TargetName="IndicatorEllipse"
+                                                    Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)"
+                                                    From="0"
+                                                    To="360"
+                                                    Duration="0:0:1.2"
+                                                    RepeatBehavior="Forever"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </Trigger.EnterActions>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+    <Style x:Key="ModernCardStyle" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource CardDarkerBackgroundBrush}"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="Padding" Value="25"/>
+        <Setter Property="Margin" Value="0,0,0,20"/>
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect ShadowDepth="1" Color="#000000" Opacity="0.1" BlurRadius="10" Direction="270"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ModernTitleTextStyle" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontSize" Value="22"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Margin" Value="0,0,0,20"/>
+    </Style>
+
+    <Style x:Key="ModernActionButtonStyle" TargetType="Button">
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Background" Value="{StaticResource AccentBlueBrush}"/>
+        <Setter Property="Padding" Value="12,8"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="5">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Border.Effect>
+                            <DropShadowEffect ShadowDepth="2" Color="#000000" Opacity="0.2" BlurRadius="5" Direction="270"/>
+                        </Border.Effect>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="Opacity" Value="0.9"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="border" Property="Opacity" Value="0.7"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="border" Property="Opacity" Value="0.5"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <Style x:Key="SeparatorStyle" TargetType="Border">
+        <Setter Property="BorderBrush" Value="{StaticResource TopBarTextSecondaryBrush}"/>
+        <Setter Property="BorderThickness" Value="0,0,0,1"/>
+        <Setter Property="Margin" Value="0,15,0,15"/>
+        <Setter Property="Opacity" Value="0.2"/>
+    </Style>
         
 </ResourceDictionary>

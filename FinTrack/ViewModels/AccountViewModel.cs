@@ -69,6 +69,12 @@ namespace FinTrackForWindows.ViewModels
             {
                 CurrencyTypes.Add(currencyType);
             }
+
+            AccountTypes.Clear();
+            foreach (AccountType accountType in Enum.GetValues(typeof(AccountType)))
+            {
+                AccountTypes.Add(accountType);
+            }
         }
 
         private void InitializeEmptyChart()

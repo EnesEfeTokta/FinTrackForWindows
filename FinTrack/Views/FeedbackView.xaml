@@ -36,7 +36,7 @@
                     <TextBlock Text="TYPE OF PAPER" Style="{StaticResource LabelTextStyle}"/>
                     <ComboBox Style="{StaticResource ModernComboBoxStyle}" 
                               ItemsSource="{Binding FeedbackTypes}"
-                              SelectedItem="{Binding SelectedFeedbackType, Mode=OneWay}"
+                              SelectedItem="{Binding SelectedFeedbackType}"
                               Margin="0,0,0,15">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>

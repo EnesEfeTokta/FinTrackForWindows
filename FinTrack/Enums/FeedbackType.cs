@@ -2,7 +2,7 @@
 
 namespace FinTrackForWindows.Enums
 {
-    public enum FeedbackTypes
+    public enum FeedbackType
     {
         [Description("Bug Report")]
         BugReport,

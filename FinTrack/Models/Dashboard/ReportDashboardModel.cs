@@ -12,7 +12,7 @@ namespace FinTrackForWindows.Models.Dashboard
         [ObservableProperty]
         private string name = string.Empty;
 
-        public ObservableCollection<ExportFormat> Formats { get; set; }
+        public ObservableCollection<DocumentFormat> Formats { get; set; }
 
         private readonly ILogger<ReportDashboardModel> _logger;
 
@@ -20,16 +20,16 @@ namespace FinTrackForWindows.Models.Dashboard
         {
             _logger = logger;
 
-            Formats = new ObservableCollection<ExportFormat>();
+            Formats = new ObservableCollection<DocumentFormat>();
 
-            foreach (ExportFormat exportFormat in Enum.GetValues(typeof(ExportFormat)))
+            foreach (DocumentFormat exportFormat in Enum.GetValues(typeof(DocumentFormat)))
             {
                 Formats.Add(exportFormat);
             }
         }
 
         [RelayCommand]
-        private void Generate(ExportFormat format)
+        private void Generate(DocumentFormat format)
         {
 
             _logger.LogInformation("Rapor oluşturuluyor -> Rapor Adı: {ReportName}, Format: {Format}", this.Name, format);
