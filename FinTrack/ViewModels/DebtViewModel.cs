@@ -118,7 +118,7 @@ namespace FinTrackForWindows.ViewModels
             {
                 if (string.IsNullOrWhiteSpace(NewProposalBorrowerEmail) || NewProposalAmount <= 0)
                 {
-                    MessageBox.Show("Lütfen borçlunun e-posta adresini ve geçerli bir miktar girin.", "Doğrulama Hatası");
+                    _logger.LogWarning("New proposal validation failed: Borrower email or amount is invalid.");
                     return;
                 }
 
@@ -136,16 +136,16 @@ namespace FinTrackForWindows.ViewModels
 
                 if (result != null)
                 {
-                    MessageBox.Show("Borç teklifi başarıyla gönderildi.", "Başarılı");
                     NewProposalBorrowerEmail = string.Empty;
                     NewProposalAmount = 0;
                     await LoadDebtsAsync();
+
+                    _logger.LogInformation("Debt offer sent successfully.");
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to send debt offer.");
-                MessageBox.Show("Teklif gönderilirken bir hata oluştu.", "Hata");
             }
             finally
             {
@@ -168,15 +168,13 @@ namespace FinTrackForWindows.ViewModels
 
                 if (result)
                 {
-                    var message = decision ? "Teklif kabul edildi. Lütfen onay videosunu yükleyin." : "Teklif reddedildi.";
-                    MessageBox.Show(message, "Başarılı");
+                    _logger.LogInformation("Successfully responded to offer for DebtId: {DebtId}", debt.Id);
                     await LoadDebtsAsync();
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to respond to debt offer for DebtId: {DebtId}", debt.Id);
-                MessageBox.Show("İşlem sırasında bir hata oluştu.", "Hata");
             }
             finally
             {
@@ -205,14 +203,13 @@ namespace FinTrackForWindows.ViewModels
 
                     if (success)
                     {
-                        MessageBox.Show("Video başarıyla yüklendi. Operatör onayı bekleniyor.", "Başarılı");
+                        _logger.LogInformation("Video uploaded successfully for DebtId: {DebtId}", debt.Id);
                         await LoadDebtsAsync();
                     }
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Failed to upload video for DebtId: {DebtId}", debt.Id);
-                    MessageBox.Show("Video yüklenirken bir hata oluştu.", "Hata");
                 }
                 finally
                 {

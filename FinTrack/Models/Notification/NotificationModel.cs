@@ -5,6 +5,8 @@ namespace FinTrackForWindows.Models.Notification
 {
     public partial class NotificationModel : ObservableObject
     {
+        public int Id { get; set; }
+
         [ObservableProperty]
         private string title = string.Empty;
 
@@ -23,8 +25,9 @@ namespace FinTrackForWindows.Models.Notification
 
         public bool IsUnread => !IsRead;
 
-        public NotificationModel(string title, string message, string? timestamp, NotificationType type, bool _isRead = false)
+        public NotificationModel(int id, string title, string message, string? timestamp, NotificationType type, bool _isRead = false)
         {
+            Id = id;
             Title = title;
             Message = message;
             Type = type;

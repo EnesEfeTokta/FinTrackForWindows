@@ -7,6 +7,8 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using FinTrackForWindows.Dtos.ReportDtos;
+
 namespace FinTrackForWindows.Services.Api
 {
     public class ApiService : IApiService
@@ -271,6 +273,68 @@ namespace FinTrackForWindows.Services.Api
             {
                 _logger.LogError(ex, "Dosya yükleme sırasında genel bir hata oluştu: {Endpoint}", endpoint);
                 return false;
+            }
+        }
+
+        public async Task<(byte[] FileBytes, string FileName)?> PostAndDownloadReportAsync<T>(string endpoint, T payload)
+        {
+            _logger.LogInformation("Rapor indirme (POST) isteği başlatılıyor: {Endpoint}", endpoint);
+            if (string.IsNullOrWhiteSpace(endpoint))
+            {
+                _logger.LogError("Rapor indirme isteği sırasında endpoint boş veya null.");
+                throw new ArgumentException("Endpoint cannot be null or empty", nameof(endpoint));
+            }
+            if (payload == null)
+            {
+                _logger.LogError("Rapor indirme isteği sırasında gönderilecek veri (payload) null.");
+                throw new ArgumentNullException(nameof(payload));
+            }
+
+            try
+            {
+                AddAuthorizationHeader();
+
+                var jsonContent = JsonContent.Create(payload, options: _jsonSerializerOptions);
+
+                var response = await _httpClient.PostAsync(endpoint, jsonContent);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string fileName = response.Content.Headers.ContentDisposition?.FileName?.Trim('"');
+
+                    if (string.IsNullOrEmpty(fileName))
+                    {
+                        var format = "bin";
+                        if (payload is ReportRequestDto dto)
+                        {
+                            format = dto.ExportFormat.ToString().ToLower();
+                        }
+                        fileName = $"report_{DateTime.Now:yyyyMMddHHmmss}.{format}";
+                        _logger.LogWarning("Content-Disposition başlığı bulunamadı. Varsayılan dosya adı kullanılıyor: {FileName}", fileName);
+                    }
+
+                    byte[] fileBytes = await response.Content.ReadAsByteArrayAsync();
+
+                    _logger.LogInformation("Rapor başarıyla indirildi: {FileName}, Boyut: {Size} bytes", fileName, fileBytes.Length);
+                    return (fileBytes, fileName);
+                }
+                else
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    _logger.LogError("Rapor indirme sırasında HTTP hatası: {StatusCode} - {Error}", response.StatusCode, errorContent);
+
+                    throw new HttpRequestException($"API'den rapor alınamadı. Sunucu '{response.StatusCode}' durum kodu ile cevap verdi. Detay: {errorContent}");
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                _logger.LogError(ex, "Rapor indirme sırasında HTTP isteği hatası: {Endpoint}", endpoint);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Rapor indirme sırasında genel bir hata oluştu: {Endpoint}", endpoint);
+                throw;
             }
         }
     }

@@ -7,13 +7,17 @@
              xmlns:models="clr-namespace:FinTrackForWindows.Models.Report"
              xmlns:enums="clr-namespace:FinTrackForWindows.Enums"
              xmlns:helpers="clr-namespace:FinTrackForWindows.Helpers"
+             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance Type=viewModels:ReportsViewModel, IsDesignTimeCreatable=True}"
-             d:DesignHeight="800" d:DesignWidth="1400"
+             d:DesignHeight="850" d:DesignWidth="1400"
              Background="{StaticResource MainBackgroundBrush}">
 
     <UserControl.Resources>
         <helpers:EnumToBooleanConverter x:Key="EnumToBooleanConverter"/>
+        <helpers:InvertedBooleanConverter x:Key="InvertedBooleanConverter"/>
+        <helpers:EnumMatchToBooleanConverter x:Key="EnumMatchToBooleanConverter"/>
+        <helpers:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </UserControl.Resources>
 
     <Grid Margin="30">
@@ -23,7 +27,7 @@
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- 1. SÜTUN: RAPOR TÜRÜ SEÇİMİ -->
+        <!-- SÜTUN 1: RAPOR TÜRÜ SEÇİMİ -->
         <Border Grid.Column="0" Style="{StaticResource DashboardCardStyle}" Margin="0,0,15,0">
             <DockPanel>
                 <TextBlock DockPanel.Dock="Top" Text="1. Select Report Type" Style="{StaticResource CardTitleTextStyle}"/>
@@ -53,73 +57,106 @@
             </DockPanel>
         </Border>
 
-        <!-- 2. SÜTUN: FİLTRELEME SEÇENEKLERİ -->
+        <!-- SÜTUN 2: FİLTRELEME SEÇENEKLERİ -->
         <Border Grid.Column="1" Style="{StaticResource DashboardCardStyle}" Margin="15,0">
-            <StackPanel>
-                <TextBlock Text="2. Select Filters" Style="{StaticResource CardTitleTextStyle}"/>
-                <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,15" Opacity="0.5"/>
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <TextBlock Text="2. Select Filters" Style="{StaticResource CardTitleTextStyle}"/>
+                    <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,15" Opacity="0.5"/>
 
-                <TextBlock Text="DATE RANGE" Style="{StaticResource LabelTextStyle}"/>
-                <Grid Margin="0,0,0,15">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <DatePicker Grid.Column="0" SelectedDate="{Binding StartDate}" Style="{StaticResource ModernDatePickerStyle}"/>
-                    <TextBlock Grid.Column="1" Text="-" VerticalAlignment="Center" Margin="10,0" FontSize="18" Foreground="White"/>
-                    <DatePicker Grid.Column="2" SelectedDate="{Binding EndDate}" Style="{StaticResource ModernDatePickerStyle}"/>
-                </Grid>
+                    <TextBlock Text="DATE RANGE" Style="{StaticResource LabelTextStyle}"/>
+                    <Grid Margin="0,0,0,15">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <DatePicker Grid.Column="0" SelectedDate="{Binding StartDate}" Style="{StaticResource ModernDatePickerStyle}"/>
+                        <TextBlock Grid.Column="1" Text="-" VerticalAlignment="Center" Margin="10,0" FontSize="18" Foreground="White"/>
+                        <DatePicker Grid.Column="2" SelectedDate="{Binding EndDate}" Style="{StaticResource ModernDatePickerStyle}"/>
+                    </Grid>
 
-                <TextBlock Text="ACCOUNTS" Style="{StaticResource LabelTextStyle}"/>
-                <ListView ItemsSource="{Binding AvailableAccounts}" MaxHeight="120" Margin="0,0,0,15" BorderThickness="0" Background="Transparent">
-                    <ListView.ItemTemplate>
-                        <DataTemplate DataType="{x:Type models:SelectableOptionReport}">
-                            <CheckBox Content="{Binding Name}" IsChecked="{Binding IsSelected, Mode=TwoWay}" Foreground="White" Margin="0,2"/>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                    <TextBlock Text="ACCOUNTS" Style="{StaticResource LabelTextStyle}"/>
+                    <ListView ItemsSource="{Binding AvailableAccounts}" MaxHeight="120" Margin="0,0,0,15" BorderThickness="0" Background="Transparent">
+                        <ListView.ItemTemplate>
+                            <DataTemplate DataType="{x:Type models:SelectableOptionReport}">
+                                <CheckBox Content="{Binding Name}" IsChecked="{Binding IsSelected, Mode=TwoWay}" Foreground="White" Margin="0,2"/>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
 
-                <TextBlock Text="CATEGORIES" Style="{StaticResource LabelTextStyle}"/>
-                <ListView ItemsSource="{Binding AvailableCategories}" MaxHeight="120" Margin="0,0,0,15" BorderThickness="0" Background="Transparent">
-                    <ListView.ItemTemplate>
-                        <DataTemplate DataType="{x:Type models:SelectableOptionReport}">
-                            <CheckBox Content="{Binding Name}" IsChecked="{Binding IsSelected, Mode=TwoWay}" Foreground="White" Margin="0,2"/>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                    <TextBlock Text="BALANCE RANGE" Style="{StaticResource LabelTextStyle}"/>
+                    <Grid Margin="0,0,0,15">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" 
+                                 Text="{Binding MinBalance, UpdateSourceTrigger=PropertyChanged}" 
+                                 Style="{StaticResource ModernTextBoxStyle}" 
+                                 VerticalContentAlignment="Center">
+                            <b:Interaction.Behaviors>
+                                <helpers:TextBoxMaskBehavior Mask="Decimal"/>
+                            </b:Interaction.Behaviors>
+                        </TextBox>
+                        <TextBlock Grid.Column="1" Text="-" VerticalAlignment="Center" Margin="10,0" FontSize="18" Foreground="White"/>
+                        <TextBox Grid.Column="2" 
+                                 Text="{Binding MaxBalance, UpdateSourceTrigger=PropertyChanged}" 
+                                 Style="{StaticResource ModernTextBoxStyle}" 
+                                 VerticalContentAlignment="Center">
+                            <b:Interaction.Behaviors>
+                                <helpers:TextBoxMaskBehavior Mask="Decimal"/>
+                            </b:Interaction.Behaviors>
+                        </TextBox>
+                    </Grid>
 
-                <TextBlock Text="TRANSACTION TYPE" Style="{StaticResource LabelTextStyle}"/>
-                <StackPanel Orientation="Horizontal" Margin="0,5,0,15">
-                    <CheckBox Content="Income" IsChecked="{Binding IsIncomeSelected}" Margin="0,0,20,0" Foreground="White"/>
-                    <CheckBox Content="Expense" IsChecked="{Binding IsExpenseSelected}" Foreground="White"/>
+                    <TextBlock Text="CATEGORIES" Style="{StaticResource LabelTextStyle}"/>
+                    <ListView ItemsSource="{Binding AvailableCategories}" MaxHeight="120" Margin="0,0,0,15" BorderThickness="0" Background="Transparent">
+                        <ListView.ItemTemplate>
+                            <DataTemplate DataType="{x:Type models:SelectableOptionReport}">
+                                <CheckBox Content="{Binding Name}" IsChecked="{Binding IsSelected, Mode=TwoWay}" Foreground="White" Margin="0,2"/>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+
+                    <TextBlock Text="TRANSACTION TYPE" Style="{StaticResource LabelTextStyle}"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,15">
+                        <CheckBox Content="Income" IsChecked="{Binding IsIncomeSelected}" Margin="0,0,20,0" Foreground="White"/>
+                        <CheckBox Content="Expense" IsChecked="{Binding IsExpenseSelected}" Foreground="White"/>
+                    </StackPanel>
+
+                    <TextBlock Text="RANKING CRITERIA" Style="{StaticResource LabelTextStyle}"/>
+                    <ComboBox ItemsSource="{Binding SortingCriteria}" SelectedItem="{Binding SelectedSortingCriterion}" Margin="0,0,0,15" Style="{StaticResource ModernComboBoxStyle}"/>
                 </StackPanel>
-
-                <TextBlock Text="RANKING CRITERIA" Style="{StaticResource LabelTextStyle}"/>
-                <ComboBox ItemsSource="{Binding SortingCriteria}" SelectedItem="{Binding SelectedSortingCriterion}" Margin="0,0,0,15" Style="{StaticResource ModernComboBoxStyle}"/>
-            </StackPanel>
+            </ScrollViewer>
         </Border>
 
-        <!-- 3. SÜTUN: FORMAT VE ÇIKTI -->
+        <!-- SÜTUN 3: FORMAT VE ÇIKTI -->
         <Border Grid.Column="2" Style="{StaticResource DashboardCardStyle}" Margin="15,0,0,0">
             <StackPanel>
                 <TextBlock Text="3. Select the Format" Style="{StaticResource CardTitleTextStyle}"/>
                 <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,15" Opacity="0.5"/>
 
-                <!-- Formatlar için Liste -->
-                <ItemsControl ItemsSource="{Binding AvailableExportFormats}">
+                <ItemsControl ItemsSource="{Binding AvailableDocumentFormats}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <WrapPanel/>
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
-                        <DataTemplate DataType="{x:Type enums:ExportFormat}">
+                        <DataTemplate DataType="{x:Type enums:DocumentFormat}">
                             <RadioButton GroupName="ExportFormat" Content="{Binding}"
-                                         IsChecked="{Binding Path=., Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static enums:ExportFormat.PDF}}"
-                                         Command="{Binding DataContext.SelectExportFormatCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                         CommandParameter="{Binding}"
-                                         Style="{StaticResource ReportFormatToggleButtonStyle}" />
+                         Command="{Binding DataContext.SelectDocumentFormatCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                         CommandParameter="{Binding}"
+                         Style="{StaticResource ReportFormatToggleButtonStyle}">
+                                <RadioButton.IsChecked>
+                                    <MultiBinding Converter="{StaticResource EnumMatchToBooleanConverter}" Mode="OneWay">
+                                        <Binding Path="DataContext.SelectedDocumentFormat" RelativeSource="{RelativeSource AncestorType=UserControl}"/>
+                                        <Binding Path="."/>
+                                    </MultiBinding>
+                                </RadioButton.IsChecked>
+                            </RadioButton>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
@@ -132,7 +169,9 @@
 
                 <Button Content="CREATE REPORT" Style="{StaticResource PrimaryButtonStyle}" 
                         Command="{Binding CreateReportCommand}"
-                        Margin="0,40,0,0" Padding="15" FontSize="16"/>
+                        IsEnabled="{Binding IsBusy, Converter={StaticResource InvertedBooleanConverter}}"
+                        Margin="0,40,0,0" Padding="15" FontSize="16"
+                        helpers:IsBusyAdornerBehavior.IsBusy="{Binding IsBusy}"/>
             </StackPanel>
         </Border>
     </Grid>

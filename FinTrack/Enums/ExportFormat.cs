@@ -1,6 +1,6 @@
 ﻿namespace FinTrackForWindows.Enums
 {
-    public enum ExportFormat
+    public enum DocumentFormat
     {
         PDF,
         Word,

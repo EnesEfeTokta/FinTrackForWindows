@@ -54,7 +54,7 @@
                                     <Style TargetType="Border">
                                         <Setter Property="Background" Value="{StaticResource AccentBlueBrush}"/>
                                         <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Type}" Value="{x:Static enums:NotificationType.GoalAchieved}">
+                                            <DataTrigger Binding="{Binding Type}" Value="{x:Static enums:NotificationType.Info}">
                                                 <Setter Property="Background" Value="{StaticResource MembershipAccentGradientBrush}"/>
                                             </DataTrigger>
                                             <DataTrigger Binding="{Binding Type}" Value="{x:Static enums:NotificationType.Warning}">
@@ -69,7 +69,7 @@
                                             <!-- Varsayılan ikon -->
                                             <Setter Property="Text" Value="💡"/>
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding Type}" Value="{x:Static enums:NotificationType.GoalAchieved}">
+                                                <DataTrigger Binding="{Binding Type}" Value="{x:Static enums:NotificationType.Info}">
                                                     <Setter Property="Text" Value="🎉"/>
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding Type}" Value="{x:Static enums:NotificationType.Warning}">
