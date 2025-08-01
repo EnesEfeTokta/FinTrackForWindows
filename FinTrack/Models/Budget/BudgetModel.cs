@@ -1,6 +1,4 @@
-﻿// FinTrackForWindows.Models.Budget/BudgetModel.cs
-
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using FinTrackForWindows.Enums;
 using System.Globalization;
 

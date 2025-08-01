@@ -6,7 +6,7 @@ namespace FinTrackForWindows.Dtos.TransactionDtos
     public class TransactionDto
     {
         public int Id { get; set; }
-        public TransactionCategoriesDto Category { get; set; } = null!;
+        public TransactionCategoryDto Category { get; set; } = null!;
         public AccountDto Account { get; set; } = null!;
         public decimal Amount { get; set; }
         public BaseCurrencyType Currency { get; set; }

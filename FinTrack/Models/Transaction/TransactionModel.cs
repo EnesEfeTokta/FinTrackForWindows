@@ -19,21 +19,27 @@ namespace FinTrackForWindows.Models.Transaction
         private DateTime date = DateTime.Now;
 
         [ObservableProperty]
+        private int accountId;
+
+        [ObservableProperty]
         private string accountName = string.Empty;
 
         [ObservableProperty]
-        private string category = string.Empty;
+        private int categoryId;
 
         [ObservableProperty]
-        private string currency = "USD";
+        private string categoryName = string.Empty;
+
+        [ObservableProperty]
+        private BaseCurrencyType currency;
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(IconBackground))]
         [NotifyPropertyChangedFor(nameof(AmountForegroundColor))]
         private TransactionType type;
 
-        private static readonly Brush IncomeBrush = new SolidColorBrush(Colors.Green);
-        private static readonly Brush ExpenseBrush = new SolidColorBrush(Colors.Red);
+        private static readonly Brush IncomeBrush = new SolidColorBrush(Color.FromRgb(34, 197, 94));
+        private static readonly Brush ExpenseBrush = new SolidColorBrush(Color.FromRgb(239, 68, 68));
         private static readonly Brush DefaultBrush = new SolidColorBrush(Colors.Gray);
 
         public Brush IconBackground => Type switch

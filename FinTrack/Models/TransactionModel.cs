@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace FinTrackForWindows.Models
 {
     [Table("Transactions")]
-    public class TransactionModel
+    public class TransactionModel_
     {
         [Key]
         [Required]

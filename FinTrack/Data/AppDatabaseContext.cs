@@ -11,7 +11,7 @@ namespace FinTrackForWindows.Data
         public DbSet<UserModel> Users { get; set; }
         public DbSet<UserSettingsModel> UserSettings { get; set; }
         public DbSet<AccountModel> Accounts { get; set; }
-        public DbSet<TransactionModel> Transactions { get; set; }
+        public DbSet<TransactionModel_> Transactions { get; set; }
         public DbSet<CategoryModel> Categories { get; set; }
         public DbSet<BudgetModel> Budgets { get; set; }
         public DbSet<BudgetCategoryModel> BudgetCategories { get; set; }
@@ -85,7 +85,7 @@ namespace FinTrackForWindows.Data
                 entity.HasIndex(a => new { a.UserId, a.Name }).IsUnique();
             });
 
-            modelBuilder.Entity<TransactionModel>(entity =>
+            modelBuilder.Entity<TransactionModel_>(entity =>
             {
                 entity.ToTable("Transactions");
                 entity.HasKey(t => t.Id);

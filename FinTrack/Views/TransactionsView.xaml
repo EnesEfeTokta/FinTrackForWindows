@@ -13,6 +13,74 @@
 
     <UserControl.Resources>
         <helpers:EnumToBooleanConverter x:Key="EnumToBooleanConverter" />
+        <helpers:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter" />
+        <Style x:Key="ModernComboBoxStyle" TargetType="ComboBox">
+            <Setter Property="Background" Value="{StaticResource CardDarkerBackgroundBrush}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <ToggleButton x:Name="ToggleButton"
+                                          BorderBrush="{TemplateBinding BorderBrush}"
+                                          Background="{TemplateBinding Background}"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          Focusable="False"
+                                          IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                          ClickMode="Press">
+                                <ToggleButton.Style>
+                                    <Style TargetType="ToggleButton">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="ToggleButton">
+                                                    <Border CornerRadius="10" Background="{TemplateBinding Background}">
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="*"/>
+                                                                <ColumnDefinition Width="30"/>
+                                                            </Grid.ColumnDefinitions>
+                                                            <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                                                            <Path Grid.Column="1" x:Name="Arrow" Data="M0,0 L4,4 L8,0" Stroke="White" StrokeThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                        </Grid>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </ToggleButton.Style>
+                            </ToggleButton>
+                            <ContentPresenter Name="ContentSite"
+                                              IsHitTestVisible="False"
+                                              Content="{TemplateBinding SelectionBoxItem}"
+                                              ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                              ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                              Margin="10,0,0,0"
+                                              VerticalAlignment="Center"
+                                              HorizontalAlignment="Left"/>
+                            <Popup x:Name="Popup"
+                                   Placement="Bottom"
+                                   IsOpen="{TemplateBinding IsDropDownOpen}"
+                                   AllowsTransparency="True"
+                                   Focusable="False"
+                                   PopupAnimation="Slide">
+                                <Grid Name="DropDown" SnapsToDevicePixels="True" MinWidth="{TemplateBinding ActualWidth}" MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                    <Border x:Name="DropDownBorder" 
+                                            Background="{StaticResource CardDarkerBackgroundBrush}" 
+                                            BorderThickness="1"
+                                            BorderBrush="{StaticResource AccentBlueBrush}"
+                                            CornerRadius="10"/>
+                                    <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
+                                        <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained"/>
+                                    </ScrollViewer>
+                                </Grid>
+                            </Popup>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </UserControl.Resources>
 
     <Grid Margin="30">
@@ -83,7 +151,7 @@
                                         <TextBlock Grid.Column="2" Text="{Binding Amount, StringFormat='C'}" Foreground="{Binding AmountForegroundColor}" FontSize="16" FontWeight="Bold" VerticalAlignment="Center"/>
                                         <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center" Margin="15,0,0,0">
                                             <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Düzenle"
-                                                    Command="{Binding DataContext.EditTransactionCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                                    Command="{Binding DataContext.PrepareToEditTransactionCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
                                                     CommandParameter="{Binding}">
                                                 <Image Source="/Assets/Images/Icons/edit.png" Width="16" Height="16"/>
                                             </Button>
@@ -119,22 +187,50 @@
                     <TextBlock Text="AMOUNT" Style="{StaticResource LabelTextStyle}"/>
                     <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding EditableTransaction.Amount, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
 
-                    <TextBlock Text="CURRENCY" Style="{StaticResource LabelTextStyle}"/>
-                    <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding EditableTransaction.Currency, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
-
-                    <TextBlock Text="TRANSACTION TYPE" Style="{StaticResource LabelTextStyle}"/>
-                    <StackPanel Orientation="Horizontal" Margin="0,5,0,15">
-                        <RadioButton Content="Income" GroupName="TransactionType" Margin="0,0,20,0" Foreground="White"
-                                    IsChecked="{Binding EditableTransaction.Type, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static enums:TransactionType.Income}}"/>
-                        <RadioButton Content="Expense" GroupName="TransactionType" Foreground="White"
-                                 IsChecked="{Binding EditableTransaction.Type, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static enums:TransactionType.Expense}}"/>
-                    </StackPanel>
-
                     <TextBlock Text="ACCOUNT" Style="{StaticResource LabelTextStyle}"/>
-                    <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding EditableTransaction.AccountName, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
+                    <ComboBox ItemsSource="{Binding AllAccounts}"
+                              SelectedItem="{Binding SelectedAccountForForm, Mode=TwoWay}"
+                              DisplayMemberPath="Name"
+                              Style="{StaticResource ModernComboBoxStyle}"
+                              VerticalContentAlignment="Center"
+                              Padding="10,0,0,0"
+                              Margin="0,0,0,15"/>
+
+                    <TextBlock Text="CURRENCY" Style="{StaticResource LabelTextStyle}"/>
+                    <ComboBox Style="{StaticResource ModernComboBoxStyle}"
+                              ItemsSource="{Binding CurrencyTypes}" 
+                              SelectedItem="{Binding EditableTransaction.Currency, Mode=TwoWay}" Margin="0,0,0,15" >
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Converter={StaticResource EnumToDescriptionConverter}}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
 
                     <TextBlock Text="CATEGORY" Style="{StaticResource LabelTextStyle}"/>
-                    <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding EditableTransaction.Category, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
+                    <Grid Margin="0,0,0,15">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <ComboBox Grid.Column="0"
+                                  ItemsSource="{Binding AllCategories}"
+                                  SelectedItem="{Binding SelectedCategoryForForm, Mode=TwoWay}"
+                                  DisplayMemberPath="Name"
+                                  Style="{StaticResource ModernComboBoxStyle}"
+                                  VerticalContentAlignment="Center"
+                                  Padding="10,0,0,0"
+                                  Margin="0,0,10,0"/>
+
+                        <Button Grid.Column="1" 
+                                Command="{Binding AddNewCategoryCommand}"
+                                Style="{StaticResource IconOnlyButtonStyle}" 
+                                ToolTip="Yeni Kategori Ekle" 
+                                VerticalAlignment="Center">
+                            <Image Source="/Assets/Images/Icons/add.png" Width="16" Height="16"/>
+                        </Button>
+                    </Grid>
 
                     <TextBlock Text="DATE" Style="{StaticResource LabelTextStyle}"/>
                     <DatePicker Style="{StaticResource ModernDatePickerStyle}" 

@@ -1,9 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FinTrackForWindows.Dtos.BudgetDtos;
+using FinTrackForWindows.Dtos.CategoryDtos;
 using FinTrackForWindows.Enums;
 using FinTrackForWindows.Models.Budget;
 using FinTrackForWindows.Services.Api;
+using FinTrackForWindows.Services.Budgets;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 using System.Windows;
@@ -12,8 +14,7 @@ namespace FinTrackForWindows.ViewModels
 {
     public partial class BudgetViewModel : ObservableObject
     {
-        [ObservableProperty]
-        private ObservableCollection<BudgetModel> budgets;
+        public ReadOnlyObservableCollection<BudgetModel> Budgets => _budgetStore.Budgets;
 
         [ObservableProperty]
         private BudgetModel? selectedBudget;
@@ -25,53 +26,51 @@ namespace FinTrackForWindows.ViewModels
 
         public ObservableCollection<string> Categories { get; }
         public IEnumerable<BaseCurrencyType> CurrencyTypes => Enum.GetValues(typeof(BaseCurrencyType)).Cast<BaseCurrencyType>();
+        public string FormTitle => IsEditing ? "Bütçeyi Düzenle" : "Yeni Bütçe Ekle";
+        public string SaveButtonText => IsEditing ? "BÜTÇEYİ GÜNCELLE" : "BÜTÇE OLUŞTUR";
 
-        public string FormTitle => IsEditing ? "Edit Budget" : "Add New Budget";
-        public string SaveButtonText => IsEditing ? "UPDATE THE BUDGET" : "CREATE A BUDGET";
-
+        private readonly IBudgetStore _budgetStore;
         private readonly ILogger<BudgetViewModel> _logger;
         private readonly IApiService _apiService;
 
-        public BudgetViewModel(ILogger<BudgetViewModel> logger, IApiService apiService)
+        public BudgetViewModel(IBudgetStore budgetStore, ILogger<BudgetViewModel> logger, IApiService apiService)
         {
+            _budgetStore = budgetStore;
             _logger = logger;
             _apiService = apiService;
 
-            Budgets = new ObservableCollection<BudgetModel>();
-            Categories = new ObservableCollection<string> { "Gıda", "Fatura", "Ulaşım", "Eğlence", "Sağlık", "Diğer" };
+            Categories = new ObservableCollection<string>();
 
-            _ = LoadBudgetsAsync();
+            _ = InitializeViewModelAsync();
             PrepareForNewBudget();
         }
 
-        private async Task LoadBudgetsAsync()
+        private async Task InitializeViewModelAsync()
+        {
+            await _budgetStore.LoadBudgetsAsync();
+            await LoadCategoriesAsync();
+        }
+
+        private async Task LoadCategoriesAsync()
         {
             try
             {
-                var budgetsFromApi = await _apiService.GetAsync<List<BudgetDto>>("Budgets");
-                if (budgetsFromApi == null) return;
+                var categoriesFromApi = await _apiService.GetAsync<List<CategoryDto>>("Categories");
+                if (categoriesFromApi == null) return;
 
-                Budgets.Clear();
-                foreach (var dto in budgetsFromApi)
+                App.Current.Dispatcher.Invoke(() =>
                 {
-                    Budgets.Add(new BudgetModel
+                    Categories.Clear();
+                    foreach (var category in categoriesFromApi.OrderBy(c => c.Name))
                     {
-                        Id = dto.Id,
-                        Name = dto.Name,
-                        Description = dto.Description,
-                        Category = dto.Category,
-                        AllocatedAmount = dto.AllocatedAmount,
-                        CurrentAmount = 0, // TODO: API'den gelen veride mevcut tutar yoksa 0 olarak ayarla
-                        Currency = dto.Currency,
-                        StartDate = dto.StartDate,
-                        EndDate = dto.EndDate
-                    });
-                }
+                        Categories.Add(category.Name);
+                    }
+                });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Bütçeler yüklenirken bir hata oluştu.");
-                MessageBox.Show("Bütçeler yüklenemedi. Lütfen internet bağlantınızı kontrol edin.", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
+                _logger.LogError(ex, "Kategoriler yüklenirken hata oluştu.");
+                MessageBox.Show("Kategoriler yüklenemedi. Lütfen internet bağlantınızı kontrol edin.", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -80,7 +79,14 @@ namespace FinTrackForWindows.ViewModels
         {
             if (SelectedBudget == null || string.IsNullOrWhiteSpace(SelectedBudget.Name) || SelectedBudget.AllocatedAmount <= 0)
             {
-                MessageBox.Show("Lütfen bütçe adı ve 0'dan büyük bir hedef tutar girin.", "Eksik Bilgi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Lütfen bütçe adı ve sıfırdan büyük bir miktar girin.", "Eksik Bilgi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            string? categoryToSave = SelectedBudget.Category?.Trim();
+            if (string.IsNullOrWhiteSpace(categoryToSave))
+            {
+                MessageBox.Show("Lütfen bir kategori seçin veya yazın.", "Eksik Bilgi", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -88,7 +94,7 @@ namespace FinTrackForWindows.ViewModels
             {
                 Name = SelectedBudget.Name,
                 Description = SelectedBudget.Description,
-                Category = SelectedBudget.Category,
+                Category = categoryToSave,
                 AllocatedAmount = SelectedBudget.AllocatedAmount,
                 Currency = SelectedBudget.Currency,
                 StartDate = SelectedBudget.StartDate,
@@ -100,29 +106,20 @@ namespace FinTrackForWindows.ViewModels
             {
                 if (IsEditing)
                 {
-                    // TEST
-                    await _apiService.PutAsync<BudgetModel>($"Budgets/{SelectedBudget.Id}", budgetDto);
-                    _logger.LogInformation("Bütçe güncellendi: {BudgetId}", SelectedBudget.Id);
-
-                    var existingBudget = Budgets.FirstOrDefault(b => b.Id == SelectedBudget.Id);
-                    if (existingBudget != null)
-                    {
-                        var index = Budgets.IndexOf(existingBudget);
-                        Budgets[index] = SelectedBudget;
-                    }
+                    await _budgetStore.UpdateBudgetAsync(SelectedBudget.Id, budgetDto);
                 }
                 else
                 {
-                    var createdBudgetDto = await _apiService.PostAsync<BudgetDto>("Budgets", budgetDto);
-                    _logger.LogInformation("Yeni bütçe oluşturuldu.");
-                    Budgets.Add(SelectedBudget);
+                    await _budgetStore.AddBudgetAsync(budgetDto);
                 }
+
+                await LoadCategoriesAsync();
                 PrepareForNewBudget();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Bütçe kaydedilirken bir hata oluştu.");
-                MessageBox.Show("Bütçe kaydedilemedi.", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
+                _logger.LogError(ex, "Bütçe kaydedilirken hata oluştu.");
+                MessageBox.Show("Bütçe kaydedilemedi. Lütfen internet bağlantınızı kontrol edin.", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -136,9 +133,7 @@ namespace FinTrackForWindows.ViewModels
 
             try
             {
-                await _apiService.DeleteAsync<BudgetModel>($"Budgets/{budgetToDelete.Id}");
-                Budgets.Remove(budgetToDelete);
-                _logger.LogInformation("Bütçe silindi: {BudgetId}", budgetToDelete.Id);
+                await _budgetStore.DeleteBudgetAsync(budgetToDelete.Id);
 
                 if (SelectedBudget?.Id == budgetToDelete.Id)
                 {

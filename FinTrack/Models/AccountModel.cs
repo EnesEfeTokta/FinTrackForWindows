@@ -47,6 +47,6 @@ namespace FinTrackForWindows.Models
         [Column("IsSynced")]
         public bool IsSynced { get; set; } = false;
 
-        public virtual ICollection<TransactionModel> Transactions { get; set; } = new List<TransactionModel>();
+        public virtual ICollection<TransactionModel_> Transactions { get; set; } = new List<TransactionModel_>();
     }
 }

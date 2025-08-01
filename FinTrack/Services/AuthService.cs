@@ -16,7 +16,7 @@ namespace FinTrackForWindows.Services
             _configuration = configuration;
             _httpClient = new HttpClient
             {
-                BaseAddress = new Uri("http://localhost:5246/")
+                BaseAddress = new Uri("http://localhost:5000/")
                 //BaseAddress = new Uri(_configuration["BaseServerUrl"])
             };
 
