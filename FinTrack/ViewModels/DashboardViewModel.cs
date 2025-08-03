@@ -4,10 +4,12 @@ using FinTrackForWindows.Enums;
 using FinTrackForWindows.Models.Account;
 using FinTrackForWindows.Models.Budget;
 using FinTrackForWindows.Models.Dashboard;
+using FinTrackForWindows.Models.Debt;
 using FinTrackForWindows.Models.Transaction;
 using FinTrackForWindows.Services.Accounts;
 using FinTrackForWindows.Services.Budgets;
 using FinTrackForWindows.Services.Currencies;
+using FinTrackForWindows.Services.Debts;
 using FinTrackForWindows.Services.Memberships;
 using FinTrackForWindows.Services.Transactions;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,6 +18,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace FinTrackForWindows.ViewModels
 {
@@ -48,6 +51,9 @@ namespace FinTrackForWindows.ViewModels
         [ObservableProperty]
         private string transactionSummary = string.Empty;
 
+        [ObservableProperty]
+        private DebtModel _currentActiveDebt;
+
         private readonly ILogger<DashboardViewModel> _logger;
 
         private readonly IServiceProvider _serviceProvider;
@@ -57,15 +63,21 @@ namespace FinTrackForWindows.ViewModels
         private readonly ITransactionStore _transactionStore;
         private readonly ICurrenciesStore _currenciesStore;
         private readonly IMembershipStore _membershipStore;
+        private readonly IDebtStore _debtStore;
 
         public IEnumerable<BudgetModel> DashboardBudgets => _budgetStore.Budgets.Take(4);
         public IEnumerable<AccountModel> DashboardAccounts => _accountStore.Accounts.Take(2);
         public IEnumerable<TransactionModel> DashboardTransactions => _transactionStore.Transactions.Take(50);
+        public IEnumerable<DebtModel> DashboardDebts => _debtStore.MyDebtsList.Take(5);
 
         public event NotifyCollectionChangedEventHandler? BudgetsChanged;
         public event NotifyCollectionChangedEventHandler? AccountsChanges;
         public event NotifyCollectionChangedEventHandler? TransactionsChanges;
         public event NotifyCollectionChangedEventHandler? MembershipChanges;
+        public event NotifyCollectionChangedEventHandler? DebtsChanges;
+
+        private DispatcherTimer _debtCarouselTimer;
+        private int _currentDebtIndex = 0;
 
         public DashboardViewModel(
             ILogger<DashboardViewModel> logger,
@@ -74,7 +86,8 @@ namespace FinTrackForWindows.ViewModels
             IAccountStore accountStore,
             ITransactionStore transactionStore,
             ICurrenciesStore currenciesStore,
-            IMembershipStore membershipStore)
+            IMembershipStore membershipStore,
+            IDebtStore debtStore)
         {
             _logger = logger;
             _serviceProvider = serviceProvider;
@@ -83,11 +96,13 @@ namespace FinTrackForWindows.ViewModels
             _transactionStore = transactionStore;
             _currenciesStore = currenciesStore;
             _membershipStore = membershipStore;
+            _debtStore = debtStore;
 
             _budgetStore.BudgetsChanged += OnBudgetsChanged;
             _accountStore.AccountsChanged += OnAccountsChanged;
             _transactionStore.TransactionsChanged += OnTransactionsChanged;
             _membershipStore.CurrentUserMembershipChanged += OnMembershipChanged;
+            _debtStore.DebtsChanged += OnDebtsChanged;
 
             if (SessionManager.IsLoggedIn)
             {
@@ -103,7 +118,8 @@ namespace FinTrackForWindows.ViewModels
                 _accountStore.LoadAccountsAsync(),
                 _transactionStore.LoadTransactionsAsync(),
                 _currenciesStore.LoadCurrenciesAsync(),
-                _membershipStore.LoadAllMembershipDataAsync()
+                _membershipStore.LoadAllMembershipDataAsync(),
+                _debtStore.LoadDebtsAsync()
             );
 
             RefreshDashboardBudgets();
@@ -111,8 +127,8 @@ namespace FinTrackForWindows.ViewModels
             RefreshDashboardTransactions();
             RefreshDashboardCurrencies();
             RefreshDashboardMembership();
+            RefreshDashboardDebts();
 
-            LoadDebtData();
             LoadReportData();
 
             await CalculateTotalBalance();
@@ -339,7 +355,7 @@ namespace FinTrackForWindows.ViewModels
 
         // ------
 
-        private void LoadDebtData()
+        private void RefreshDashboardDebts()
         {
             CurrentDebt_DashboardView_Multiple = new DebtDashboard
             {
@@ -354,6 +370,56 @@ namespace FinTrackForWindows.ViewModels
                 DueDate = "01.02.2025",
                 ReviewDate = "01.03.2025"
             };
+        }
+
+        private void OnDebtsChanged()
+        {
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                _logger.LogInformation("DebtStore değişti, Dashboard borçları yenileniyor.");
+                SetupDebtCarousel();
+            });
+        }
+
+        private void SetupDebtCarousel()
+        {
+            _debtCarouselTimer?.Stop();
+
+            if (_debtStore.ActiveDebts != null && _debtStore.ActiveDebts.Any())
+            {
+                _currentDebtIndex = 0;
+                CurrentActiveDebt = _debtStore.ActiveDebts[_currentDebtIndex];
+
+                if (_debtStore.ActiveDebts.Count > 1)
+                {
+                    _debtCarouselTimer = new DispatcherTimer();
+                    _debtCarouselTimer.Interval = TimeSpan.FromSeconds(2);
+                    _debtCarouselTimer.Tick += DebtCarouselTimer_Tick;
+                    _debtCarouselTimer.Start();
+                }
+            }
+            else
+            {
+                CurrentActiveDebt = null;
+            }
+        }
+
+        private void DebtCarouselTimer_Tick(object sender, EventArgs e)
+        {
+            if (_debtStore.ActiveDebts == null || _debtStore.ActiveDebts.Count == 0)
+            {
+                _debtCarouselTimer.Stop();
+                CurrentActiveDebt = null;
+                return;
+            }
+
+            _currentDebtIndex++;
+            if (_currentDebtIndex >= _debtStore.ActiveDebts.Count)
+            {
+                _currentDebtIndex = 0;
+            }
+
+            CurrentActiveDebt = _debtStore.ActiveDebts[_currentDebtIndex];
         }
 
         // ------

@@ -1,15 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using FinTrackForWindows.Core;
-using FinTrackForWindows.Dtos.DebtDtos;
-using FinTrackForWindows.Enums;
 using FinTrackForWindows.Models.Debt;
-using FinTrackForWindows.Services.Api;
+using FinTrackForWindows.Services.Debts;
 using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
-using System.Collections.ObjectModel;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using System.Windows;
 
 namespace FinTrackForWindows.ViewModels
@@ -17,12 +11,9 @@ namespace FinTrackForWindows.ViewModels
     public partial class DebtViewModel : ObservableObject
     {
         private readonly ILogger<DebtViewModel> _logger;
-        private readonly IApiService _apiService;
+        private readonly IDebtStore _debtStore;
 
-        private readonly int _currentUserId;
-
-        [ObservableProperty]
-        private bool isLoading;
+        public IDebtStore DebtStore => _debtStore;
 
         [ObservableProperty]
         private string? newProposalBorrowerEmail;
@@ -36,120 +27,36 @@ namespace FinTrackForWindows.ViewModels
         [ObservableProperty]
         private DateTime newProposalDueDate = DateTime.Now.AddMonths(1);
 
-        [ObservableProperty]
-        private ObservableCollection<DebtModel> pendingOffers;
-
-        [ObservableProperty]
-        private ObservableCollection<DebtModel> myDebtsList;
-
-        public DebtViewModel(ILogger<DebtViewModel> logger, IApiService apiService)
+        public DebtViewModel(ILogger<DebtViewModel> logger, IDebtStore debtStore)
         {
             _logger = logger;
-            _apiService = apiService;
-
-            var handler = new JwtSecurityTokenHandler();
-            var jsonToken = handler.ReadJwtToken(SessionManager.CurrentToken);
-            _currentUserId = Convert.ToInt16(jsonToken.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value);
-
-            pendingOffers = new ObservableCollection<DebtModel>();
-            myDebtsList = new ObservableCollection<DebtModel>();
-
-            _ = LoadDebtsAsync();
-        }
-
-        [RelayCommand]
-        private async Task LoadDebtsAsync()
-        {
-            IsLoading = true;
-            _logger.LogInformation("Loading debt data from API...");
-            try
-            {
-                var debtDtos = await _apiService.GetAsync<List<DebtDto>>("Debt");
-                if (debtDtos == null) return;
-
-                PendingOffers.Clear();
-                MyDebtsList.Clear();
-
-                foreach (var dto in debtDtos)
-                {
-                    var debtModel = new DebtModel
-                    {
-                        Id = dto.Id,
-                        LenderId = dto.LenderId,
-                        BorrowerId = dto.BorrowerId,
-                        CurrentUserId = _currentUserId,
-                        LenderName = dto.LenderName,
-                        BorrowerName = dto.BorrowerName,
-                        borrowerImageUrl = dto.BorrowerProfilePicture ?? "/Assets/Images/Icons/user-red.png",
-                        lenderImageUrl = dto.LenderProfilePicture ?? "/Assets/Images/Icons/user-green.png",
-                        Amount = dto.Amount,
-                        DueDate = dto.DueDateUtc.ToLocalTime(),
-                        Status = dto.Status
-                    };
-
-                    // Bana gelen ve henüz karar vermediğim borç teklifleri
-                    if (dto.Status == DebtStatusType.PendingBorrowerAcceptance && dto.BorrowerId == _currentUserId)
-                    {
-                        PendingOffers.Add(debtModel);
-                    }
-                    else // Diğer tüm borçlarım (aktif, ödenmiş, reddedilmiş vb.)
-                    {
-                        MyDebtsList.Add(debtModel);
-                    }
-                }
-                _logger.LogInformation("Successfully loaded and processed {Count} debts.", debtDtos.Count);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to load debt data.");
-                MessageBox.Show("Borç verileri yüklenirken bir hata oluştu.", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            finally
-            {
-                IsLoading = false;
-            }
+            _debtStore = debtStore;
         }
 
         [RelayCommand]
         private async Task SendOfferAsync()
         {
-            IsLoading = true;
+            if (string.IsNullOrWhiteSpace(NewProposalBorrowerEmail) || NewProposalAmount <= 0)
+            {
+                MessageBox.Show("Lütfen borçlu e-postası ve geçerli bir miktar girin.", "Doğrulama Hatası", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
             try
             {
-                if (string.IsNullOrWhiteSpace(NewProposalBorrowerEmail) || NewProposalAmount <= 0)
-                {
-                    _logger.LogWarning("New proposal validation failed: Borrower email or amount is invalid.");
-                    return;
-                }
+                await _debtStore.SendOfferAsync(NewProposalBorrowerEmail, NewProposalAmount, "TRY", NewProposalDueDate, NewProposalDescription);
 
-                var createDto = new CreateDebtOfferRequestDto
-                {
-                    BorrowerEmail = NewProposalBorrowerEmail,
-                    Amount = NewProposalAmount,
-                    CurrencyCode = BaseCurrencyType.TRY,
-                    DueDateUtc = NewProposalDueDate,
-                    Description = NewProposalDescription
-                };
+                NewProposalBorrowerEmail = string.Empty;
+                NewProposalAmount = 0;
+                NewProposalDescription = string.Empty;
+                NewProposalDueDate = DateTime.Now.AddMonths(1);
 
-                _logger.LogInformation("Sending new debt offer to API...");
-                var result = await _apiService.PostAsync<object>("Debt/create-debt-offer", createDto);
-
-                if (result != null)
-                {
-                    NewProposalBorrowerEmail = string.Empty;
-                    NewProposalAmount = 0;
-                    await LoadDebtsAsync();
-
-                    _logger.LogInformation("Debt offer sent successfully.");
-                }
+                MessageBox.Show("Teklif başarıyla gönderildi.", "Başarılı", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to send debt offer.");
-            }
-            finally
-            {
-                IsLoading = false;
+                _logger.LogError(ex, "Failed to send debt offer from ViewModel.");
+                MessageBox.Show("Teklif gönderilirken bir hata oluştu.", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -158,27 +65,14 @@ namespace FinTrackForWindows.ViewModels
         {
             if (parameter is not object[] values || values.Length != 2 || values[0] is not DebtModel debt || values[1] is not bool decision) return;
 
-            IsLoading = true;
             try
             {
-                _logger.LogInformation("Attempting to {Action} offer for DebtId: {DebtId}", decision, debt.Id);
-
-                var requestBody = new { Accepted = decision };
-                bool result = await _apiService.PostAsync<bool>($"Debt/respond-to-offer/{debt.Id}", requestBody);
-
-                if (result)
-                {
-                    _logger.LogInformation("Successfully responded to offer for DebtId: {DebtId}", debt.Id);
-                    await LoadDebtsAsync();
-                }
+                await _debtStore.RespondToOfferAsync(debt, decision);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to respond to debt offer for DebtId: {DebtId}", debt.Id);
-            }
-            finally
-            {
-                IsLoading = false;
+                _logger.LogError(ex, "Failed to respond to offer from ViewModel for DebtId: {DebtId}", debt.Id);
+                MessageBox.Show("Teklife yanıt verilirken bir hata oluştu.", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -189,31 +83,21 @@ namespace FinTrackForWindows.ViewModels
 
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
-                Filter = "Video Files (*.mp4;*.mov;*.wmv)|*.mp4;*.mov;*.wmv|All files (*.*)|*.*",
+                Filter = "Video Files (*.mp4;*.mov;*.wmv)|*.mp4;*.mov;*.wmv",
                 Title = "Select an Approval Video"
             };
 
             if (openFileDialog.ShowDialog() == true)
             {
-                IsLoading = true;
                 try
                 {
-                    _logger.LogInformation("Uploading video for DebtId: {DebtId}", debt.Id);
-                    var success = await _apiService.UploadFileAsync($"Videos/user-upload-video?debtId={debt.Id}", openFileDialog.FileName);
-
-                    if (success)
-                    {
-                        _logger.LogInformation("Video uploaded successfully for DebtId: {DebtId}", debt.Id);
-                        await LoadDebtsAsync();
-                    }
+                    await _debtStore.UploadVideoAsync(debt, openFileDialog.FileName);
+                    MessageBox.Show("Video başarıyla yüklendi.", "Başarılı", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Failed to upload video for DebtId: {DebtId}", debt.Id);
-                }
-                finally
-                {
-                    IsLoading = false;
+                    _logger.LogError(ex, "Failed to upload video from ViewModel for DebtId: {DebtId}", debt.Id);
+                    MessageBox.Show("Video yüklenirken bir hata oluştu.", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }

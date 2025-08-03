@@ -5,6 +5,7 @@ using FinTrackForWindows.Services.Accounts;
 using FinTrackForWindows.Services.Api;
 using FinTrackForWindows.Services.Budgets;
 using FinTrackForWindows.Services.Currencies;
+using FinTrackForWindows.Services.Debts;
 using FinTrackForWindows.Services.Memberships;
 using FinTrackForWindows.Services.Transactions;
 using FinTrackForWindows.ViewModels;
@@ -85,6 +86,7 @@ namespace FinTrackForWindows
             services.AddSingleton<ITransactionStore, TransactionStore>();
             services.AddSingleton<ICurrenciesStore, CurrenciesStore>();
             services.AddSingleton<IMembershipStore, MembershipStore>();
+            services.AddSingleton<IDebtStore, DebtStore>();
         }
 
         protected override async void OnStartup(StartupEventArgs e)
