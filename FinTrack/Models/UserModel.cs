@@ -76,7 +76,7 @@ namespace FinTrackForWindows.Models
 
         public virtual UserSettingsModel? UserSettings { get; set; }
         public virtual ICollection<AccountModel> Accounts { get; set; } = new List<AccountModel>();
-        public virtual ICollection<TransactionModel> Transactions { get; set; } = new List<TransactionModel>();
+        public virtual ICollection<TransactionModel_> Transactions { get; set; } = new List<TransactionModel_>();
         public virtual ICollection<CategoryModel> Categories { get; set; } = new List<CategoryModel>();
         public virtual ICollection<BudgetModel> Budgets { get; set; } = new List<BudgetModel>();
         public virtual ICollection<NotificationModel> Notifications { get; set; } = new List<NotificationModel>();

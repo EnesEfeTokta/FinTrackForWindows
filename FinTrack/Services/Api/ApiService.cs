@@ -25,7 +25,7 @@ namespace FinTrackForWindows.Services.Api
             _logger = logger;
             _configuration = configuration;
 
-            _baseUrl = "http://localhost:5246/";
+            _baseUrl = "http://localhost:5000/";
             //_baseUrl = _configuration["BaseServerUrl"];
             _httpClient = new HttpClient
             {
@@ -230,6 +230,50 @@ namespace FinTrackForWindows.Services.Api
             {
                 _logger.LogError(ex, "PUT isteği sırasında genel bir hata oluştu: {Endpoint}", endpoint);
                 return default(T);
+            }
+        }
+
+        public async Task<bool> CreateCategoryAsync(string endpoint, object payload)
+        {
+            _logger.LogInformation("Kategori oluşturma (POST) isteği başlatılıyor: {Endpoint}", endpoint);
+            if (string.IsNullOrWhiteSpace(endpoint))
+            {
+                _logger.LogError("Kategori oluşturma isteği sırasında endpoint boş veya null.");
+                throw new ArgumentException("Endpoint cannot be null or empty", nameof(endpoint));
+            }
+            if (payload == null)
+            {
+                _logger.LogError("Kategori oluşturma isteği sırasında veri (payload) null.");
+                throw new ArgumentNullException(nameof(payload));
+            }
+
+            try
+            {
+                AddAuthorizationHeader();
+
+                var response = await _httpClient.PostAsJsonAsync(endpoint, payload, _jsonSerializerOptions);
+
+                response.EnsureSuccessStatusCode();
+
+                var result = await response.Content.ReadFromJsonAsync<bool>(_jsonSerializerOptions);
+
+                _logger.LogInformation("Kategori oluşturma (POST) isteği başarılı: {Endpoint}", endpoint);
+                return result;
+            }
+            catch (HttpRequestException ex)
+            {
+                _logger.LogError(ex, "Kategori oluşturma sırasında HTTP hatası oluştu: {Endpoint}. Status Code: {StatusCode}", endpoint, ex.StatusCode);
+                return false;
+            }
+            catch (JsonException ex)
+            {
+                _logger.LogError(ex, "Kategori oluşturma sırasında JSON deserialize hatası oluştu. API'nin 'true'/'false' döndüğünden emin olun.", endpoint);
+                return false;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Kategori oluşturma sırasında genel bir hata oluştu: {Endpoint}", endpoint);
+                return false;
             }
         }
 

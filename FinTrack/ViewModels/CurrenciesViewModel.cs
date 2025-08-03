@@ -1,7 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using FinTrackForWindows.Enums;
 using FinTrackForWindows.Models.Currency;
-using FinTrackForWindows.Services.Api;
+using FinTrackForWindows.Services.Currencies;
 using FinTrackWebApi.Dtos.CurrencyDtos;
 using LiveChartsCore;
 using LiveChartsCore.Defaults;
@@ -21,8 +22,6 @@ namespace FinTrackForWindows.ViewModels
 {
     public partial class CurrenciesViewModel : ObservableObject
     {
-        private ObservableCollection<CurrencyModel> allCurrencies = new();
-
         [ObservableProperty]
         private ObservableCollection<CurrencyModel> filteredCurrencies = new();
 
@@ -37,6 +36,9 @@ namespace FinTrackForWindows.ViewModels
         private bool isLoadingDetails = false;
 
         public bool IsCurrencySelected => SelectedCurrency != null;
+
+        [ObservableProperty]
+        private string selectedPeriod = "1M";
 
         [ObservableProperty]
         private ISeries[] series = new ISeries[0];
@@ -75,15 +77,16 @@ namespace FinTrackForWindows.ViewModels
         private double periodLowValue = 0;
 
         private readonly ILogger<CurrenciesViewModel> _logger;
-        private readonly IApiService _apiService;
+        private readonly ICurrenciesStore _currenciesStore;
         private static readonly SKColor _chartColor = SKColor.Parse("#3498DB");
 
-        public CurrenciesViewModel(ILogger<CurrenciesViewModel> logger, IApiService apiService)
+        public CurrenciesViewModel(ILogger<CurrenciesViewModel> logger, ICurrenciesStore currenciesStore)
         {
             _logger = logger;
-            _apiService = apiService;
+            _currenciesStore = currenciesStore;
+
             InitializeEmptyChart();
-            _ = LoadCurrenciesData();
+            _ = InitializeDataAsync();
         }
 
         partial void OnCurrencySearchChanged(string value)
@@ -101,47 +104,31 @@ namespace FinTrackForWindows.ViewModels
             await LoadHistoricalDataAsync(value.ToCurrencyCode);
         }
 
-        private async Task LoadCurrenciesData()
+        private async Task InitializeDataAsync()
         {
             try
             {
-                var response = await _apiService.GetAsync<LatestRatesResponseDto>("Currency/latest/USD");
-                if (response?.Rates != null)
+                await _currenciesStore.LoadCurrenciesAsync();
+                FilterCurrencies();
+
+                if (FilteredCurrencies.Any())
                 {
-                    allCurrencies.Clear();
-                    foreach (var item in response.Rates)
-                    {
-                        allCurrencies.Add(new CurrencyModel
-                        {
-                            Id = item.Id,
-                            ToCurrencyCode = item.Code,
-                            ToCurrencyName = item.CountryCode ?? "N/A",
-                            ToCurrencyFlag = item.IconUrl ?? string.Empty,
-                            ToCurrencyPrice = item.Rate
-                        });
-                    }
-                    FilterCurrencies();
-                    if (FilteredCurrencies.Any())
-                    {
-                        SelectedCurrency = FilteredCurrencies.First();
-                    }
+                    SelectedCurrency = FilteredCurrencies.First();
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Para birimi listesi yüklenirken hata oluştu.");
+                _logger.LogError(ex, "Para birimi verileri başlatılırken hata oluştu.");
                 InitializeEmptyChart("Failed to load currency list.");
             }
         }
 
-        private async Task LoadHistoricalDataAsync(string targetCurrencyCode, string period = "1M")
+        private async Task LoadHistoricalDataAsync(string targetCurrencyCode)
         {
             IsLoadingDetails = true;
             try
             {
-                string baseCurrency = "USD";
-                string endpoint = $"Currency/{baseCurrency}/history/{targetCurrencyCode}?period={period}";
-                var historyData = await _apiService.GetAsync<CurrencyHistoryDto>(endpoint);
+                var historyData = await _currenciesStore.GetHistoricalDataAsync(targetCurrencyCode, SelectedPeriod);
 
                 if (historyData == null || SelectedCurrency == null || !historyData.HistoricalRates.Any())
                 {
@@ -150,21 +137,35 @@ namespace FinTrackForWindows.ViewModels
                     return;
                 }
 
-                _logger.LogInformation("{Target} için geçmiş veriler yüklendi.", targetCurrencyCode);
+                _logger.LogInformation("{Target} için geçmiş veriler ViewModel'de işleniyor.", targetCurrencyCode);
                 var dailyHistoricalRates = UpdateChart(historyData);
                 UpdateAdditionalVisuals(dailyHistoricalRates);
                 UpdateDetails(historyData.ChangeSummary);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "{Target} için geçmiş veriler yüklenirken hata oluştu.", targetCurrencyCode);
-                InitializeEmptyChart($"Error loading data for {targetCurrencyCode}.");
+                _logger.LogError(ex, "ViewModel'de geçmiş veriler işlenirken hata oluştu.");
+                InitializeEmptyChart($"Error processing data for {targetCurrencyCode}.");
                 UpdateDetails(null);
             }
             finally
             {
                 IsLoadingDetails = false;
             }
+        }
+
+        [RelayCommand]
+        private async Task ChangePeriod(string? newPeriod)
+        {
+            if (string.IsNullOrWhiteSpace(newPeriod) || SelectedPeriod == newPeriod || SelectedCurrency == null)
+            {
+                return;
+            }
+
+            _logger.LogInformation("Grafik periyodu {NewPeriod} olarak değiştiriliyor.", newPeriod);
+            SelectedPeriod = newPeriod;
+
+            await LoadHistoricalDataAsync(SelectedCurrency.ToCurrencyCode);
         }
 
         private List<HistoricalRatePointDto> UpdateChart(CurrencyHistoryDto historyData)
@@ -261,28 +262,13 @@ namespace FinTrackForWindows.ViewModels
 
             GaugeSeries = new ISeries[]
             {
-                new PieSeries<double>
-                {
-                    Values = new double[] { currentRate },
-                    InnerRadius = 50,
-                    Fill = new SolidColorPaint(_chartColor),
-                    IsHoverable = false,
-                },
-                new PieSeries<double>
-                {
-                    Values = new double[] { periodHigh - currentRate },
-                    InnerRadius = 50,
-                    Fill = new SolidColorPaint(SKColors.DarkGray),
-                    IsHoverable = false,
-                }
+                new PieSeries<double> { Values = new double[] { currentRate }, InnerRadius = 50, Fill = new SolidColorPaint(_chartColor), IsHoverable = false, },
+                new PieSeries<double> { Values = new double[] { periodHigh - currentRate }, InnerRadius = 50, Fill = new SolidColorPaint(SKColors.DarkGray), IsHoverable = false, }
             };
 
             GaugeVisuals = Enumerable.Empty<ChartElement<SkiaSharpDrawingContext>>();
 
-            int upDays = 0;
-            int downDays = 0;
-            int noChangeDays = 0;
-
+            int upDays = 0, downDays = 0, noChangeDays = 0;
             for (int i = 1; i < dailyRates.Count; i++)
             {
                 if (dailyRates[i].Rate > dailyRates[i - 1].Rate) upDays++;
@@ -306,7 +292,6 @@ namespace FinTrackForWindows.ViewModels
             PeriodHighText = "N/A";
             PeriodLowText = "N/A";
             AverageRateText = "N/A";
-
             PeriodHighValue = 1;
             PeriodLowValue = 0;
         }
@@ -376,14 +361,15 @@ namespace FinTrackForWindows.ViewModels
 
         private void FilterCurrencies()
         {
+            var sourceList = _currenciesStore.Currencies;
             if (string.IsNullOrWhiteSpace(CurrencySearch))
             {
-                FilteredCurrencies = new ObservableCollection<CurrencyModel>(allCurrencies);
+                FilteredCurrencies = new ObservableCollection<CurrencyModel>(sourceList);
             }
             else
             {
                 var searchText = CurrencySearch.ToLowerInvariant();
-                var filtered = allCurrencies
+                var filtered = sourceList
                     .Where(c => c.ToCurrencyCode.ToLowerInvariant().Contains(searchText) ||
                                 c.ToCurrencyName.ToLowerInvariant().Contains(searchText));
                 FilteredCurrencies = new ObservableCollection<CurrencyModel>(filtered);

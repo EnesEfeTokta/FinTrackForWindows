@@ -29,7 +29,7 @@ namespace FinTrackForWindows.Models
         public bool IsSynced { get; set; } = false;
 
         public virtual ICollection<BudgetCategoryModel> BudgetAllocations { get; set; } = new List<BudgetCategoryModel>();
-        public virtual ICollection<TransactionModel> Transactions { get; set; } = new List<TransactionModel>();
+        public virtual ICollection<TransactionModel_> Transactions { get; set; } = new List<TransactionModel_>();
     }
 
     public enum CategoryType

@@ -3,9 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:FinTrackForWindows.ViewModels"
+             xmlns:viewModels="clr-namespace:FinTrackForWindows.ViewModels"
              mc:Ignorable="d" 
-             d:DataContext="{d:DesignInstance Type=local:BudgetViewModel}"
+             d:DataContext="{d:DesignInstance Type=viewModels:BudgetViewModel}"
              d:DesignHeight="800" d:DesignWidth="1200"
              Background="{StaticResource MainBackgroundBrush}">
 
@@ -24,7 +24,8 @@
                 <ListView ItemsSource="{Binding Budgets}" 
                           SelectedItem="{Binding SelectedBudget, Mode=OneWay}"
                           Background="Transparent" BorderThickness="0" 
-                          ItemContainerStyle="{StaticResource CleanListViewItemStyle}">
+                          ItemContainerStyle="{StaticResource CleanListViewItemStyle}"
+                          ScrollViewer.VerticalScrollBarVisibility="Auto">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Border Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10" Padding="15">
@@ -41,7 +42,7 @@
                                                 <ColumnDefinition Width="Auto"/>
                                             </Grid.ColumnDefinitions>
                                             <TextBlock Text="{Binding Name}" Foreground="White" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center"/>
-                                            <Border Grid.Column="1" Background="{StaticResource PrimaryBrush}" CornerRadius="5" Padding="6,3">
+                                            <Border Grid.Column="1" Background="{StaticResource PrimaryBrush}" CornerRadius="5" Padding="6,3" Margin="10,0,0,0">
                                                 <TextBlock Text="{Binding Category}" Foreground="White" FontSize="11" FontWeight="Medium"/>
                                             </Border>
                                         </Grid>
@@ -96,9 +97,13 @@
                               SelectedItem="{Binding Currency, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
 
                     <TextBlock Text="KATEGORİ" Style="{StaticResource LabelTextStyle}"/>
-                    <ComboBox Style="{StaticResource ModernComboBoxStyle}" IsEditable="True"
+                    <ComboBox Style="{StaticResource EditableModernComboBoxStyle}"
+                              IsEditable="True"
+                              IsTextSearchEnabled="True"
                               ItemsSource="{Binding DataContext.Categories, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                              Text="{Binding Category, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
+                              Text="{Binding Category, UpdateSourceTrigger=PropertyChanged}"
+                              Margin="0,0,0,15"
+                              ToolTip="Mevcut bir kategori seçin veya yeni bir kategori yazın"/>
 
                     <TextBlock Text="AÇIKLAMA (İSTEĞE BAĞLI)" Style="{StaticResource LabelTextStyle}"/>
                     <TextBox Style="{StaticResource ModernTextBoxStyle}" Height="80" TextWrapping="Wrap" AcceptsReturn="True"

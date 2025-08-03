@@ -5,15 +5,53 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:helpers="clr-namespace:FinTrackForWindows.Helpers"
              xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+             xmlns:vm="clr-namespace:FinTrackForWindows.ViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="800" d:DesignWidth="1400"
              x:Name="currenciesViewRoot"
+             d:DataContext="{d:DesignInstance Type=vm:CurrenciesViewModel, IsDesignTimeCreatable=True}"
              Background="{StaticResource MainBackgroundBrush}">
 
     <UserControl.Resources>
         <helpers:BrushToLvcPaintConverter x:Key="BrushToLvcPaintConverter"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <helpers:InvertedBooleanToVisibilityConverter x:Key="InvertedBooleanToVisibilityConverter" />
+        <helpers:EqualityToBooleanConverter x:Key="EqualityToBooleanConverter" />
+
+        <Style x:Key="PeriodButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{StaticResource TopBarTextSecondaryBrush}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="12,12,12,12"/>
+            <Setter Property="Margin" Value="10,10,10,0"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="8">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{StaticResource CardDarkerBackgroundBrush}"/>
+                </Trigger>
+                <DataTrigger Value="True">
+                    <DataTrigger.Binding>
+                        <MultiBinding Converter="{StaticResource EqualityToBooleanConverter}">
+                            <Binding Path="CommandParameter" RelativeSource="{RelativeSource Self}"/>
+                            <Binding Path="DataContext.SelectedPeriod" ElementName="currenciesViewRoot"/>
+                        </MultiBinding>
+                    </DataTrigger.Binding>
+                    <Setter Property="Background" Value="{StaticResource AccentBlueBrush}"/>
+                    <Setter Property="Foreground" Value="White"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
     </UserControl.Resources>
 
     <Grid Margin="30">
@@ -22,7 +60,6 @@
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- SOL SÜTUN: KUR LİSTESİ -->
         <Border Grid.Column="0" Style="{StaticResource DashboardCardStyle}" Margin="0,0,20,0">
             <DockPanel>
                 <TextBlock DockPanel.Dock="Top" Text="All Rates" Style="{StaticResource CardTitleTextStyle}"/>
@@ -37,7 +74,6 @@
                           VirtualizingPanel.IsVirtualizing="True"
                           VirtualizingPanel.VirtualizationMode="Recycling"
                           ScrollViewer.CanContentScroll="True">
-
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Border Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10" Padding="15" Margin="0,0,0,8">
@@ -63,7 +99,6 @@
             </DockPanel>
         </Border>
 
-        <!-- SAĞ SÜTUN: DETAY VE GRAFİK -->
         <Grid Grid.Column="1" Margin="20,0,0,0" ClipToBounds="True">
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
                           Visibility="{Binding IsCurrencySelected, Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -88,7 +123,17 @@
                                 <Run Text="{Binding ToCurrencyCode}" FontSize="20" FontWeight="SemiBold" Foreground="{StaticResource TopBarTextSecondaryBrush}"/>
                             </TextBlock>
                         </Grid>
-                        <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,0,0,20" Opacity="0.5"/>
+                        <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,0,0,15" Opacity="0.5"/>
+
+                        <Grid>
+                            <TextBlock Text="Period" Style="{StaticResource LabelTextStyle}" VerticalAlignment="Center"/>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,15">
+                                <Button Content="1D" Style="{StaticResource PeriodButtonStyle}" Command="{Binding DataContext.ChangePeriodCommand, ElementName=currenciesViewRoot}" CommandParameter="1D"/>
+                                <Button Content="1W" Style="{StaticResource PeriodButtonStyle}" Command="{Binding DataContext.ChangePeriodCommand, ElementName=currenciesViewRoot}" CommandParameter="1W"/>
+                                <Button Content="1M" Style="{StaticResource PeriodButtonStyle}" Command="{Binding DataContext.ChangePeriodCommand, ElementName=currenciesViewRoot}" CommandParameter="1M"/>
+                                <Button Content="1Y" Style="{StaticResource PeriodButtonStyle}" Command="{Binding DataContext.ChangePeriodCommand, ElementName=currenciesViewRoot}" CommandParameter="1Y"/>
+                            </StackPanel>
+                        </Grid>
 
                         <Border Height="350" Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10">
                             <lvc:CartesianChart

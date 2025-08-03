@@ -4,10 +4,16 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:viewmodels="clr-namespace:FinTrackForWindows.ViewModels"
+             xmlns:helpers="clr-namespace:FinTrackForWindows.Helpers"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance Type=viewmodels:DashboardViewModel, IsDesignTimeCreatable=True}"
              Background="{StaticResource MainBackgroundBrush}"
              Padding="15">
+
+    <UserControl.Resources>
+        <helpers:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+        <helpers:NullToVisibilityInverseConverter x:Key="NullToVisibilityInverseConverter"/>
+    </UserControl.Resources>
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -212,20 +218,11 @@
             </Grid.RowDefinitions>
             <Border Grid.Row="0" Style="{StaticResource DashboardCardStyle}">
                 <StackPanel>
-                    <TextBlock Text="Debts" Style="{StaticResource CardTitleTextStyle}"/>
+                    <TextBlock Text="Active Debts" Style="{StaticResource CardTitleTextStyle}"/>
                     <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,20" Opacity="0.5"/>
-                    <Border Background="{StaticResource DebtAccentGradientBrush}" CornerRadius="15" Padding="15,20">
-                        <Border.Style>
-                            <Style TargetType="Border">
-                                <Setter Property="Visibility" Value="Visible"/>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding CurrentDebt_DashboardView_Multiple}" Value="{x:Null}">
-                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Border.Style>
 
+                    <Border Background="{StaticResource DebtAccentGradientBrush}" CornerRadius="15" Padding="15,20"
+                            Visibility="{Binding CurrentActiveDebt, Converter={StaticResource NullToVisibilityConverter}}">
                         <StackPanel>
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -233,18 +230,18 @@
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Grid.Column="0" HorizontalAlignment="Left" TextBlock.TextAlignment="Left">
-                                    <Image Source="{Binding CurrentDebt_DashboardView_Multiple.LenderIconPath}" Width="30" Height="30" />
-                                    <TextBlock Text="{Binding CurrentDebt_DashboardView_Multiple.LenderName}" Foreground="{StaticResource StatusGreenBrush}" 
-                                               FontSize="12" Margin="0,5,0,0" TextTrimming="CharacterEllipsis"/>
+                                    <Image Source="{Binding CurrentActiveDebt.lenderImageUrl}" Width="30" Height="30" />
+                                    <TextBlock Text="{Binding CurrentActiveDebt.LenderName}" Foreground="{StaticResource StatusGreenBrush}" 
+                                       FontSize="12" Margin="0,5,0,0" TextTrimming="CharacterEllipsis"/>
                                 </StackPanel>
                                 <StackPanel Grid.Column="1" HorizontalAlignment="Right" TextBlock.TextAlignment="Right">
-                                    <Image Source="{Binding CurrentDebt_DashboardView_Multiple.BorrowerIconPath}" Width="30" Height="30" />
-                                    <TextBlock Text="{Binding CurrentDebt_DashboardView_Multiple.BorrowerName}" Foreground="{StaticResource StatusRedBrush}" 
-                                               FontSize="12" Margin="0,5,0,0" TextTrimming="CharacterEllipsis"/>
+                                    <Image Source="{Binding CurrentActiveDebt.borrowerImageUrl}" Width="30" Height="30" />
+                                    <TextBlock Text="{Binding CurrentActiveDebt.BorrowerName}" Foreground="{StaticResource StatusRedBrush}" 
+                                       FontSize="12" Margin="0,5,0,0" TextTrimming="CharacterEllipsis"/>
                                 </StackPanel>
                             </Grid>
 
-                            <Border BorderBrush="{Binding CurrentDebt_DashboardView_Multiple.StatusBrush, FallbackValue={StaticResource StatusGreenBrush}}" BorderThickness="0,1,0,0" Height="1" Opacity="0.8" Margin="0,15,0,15" />
+                            <Border BorderBrush="{Binding CurrentActiveDebt.StatusBrush, FallbackValue={StaticResource StatusGreenBrush}}" BorderThickness="0,1,0,0" Height="1" Opacity="0.8" Margin="0,15,0,15" />
 
                             <Grid VerticalAlignment="Bottom">
                                 <Grid.ColumnDefinitions>
@@ -254,28 +251,25 @@
 
                                 <StackPanel Grid.Column="0" VerticalAlignment="Bottom">
                                     <TextBlock Margin="0,2" Opacity="0.7">
-                                        <Run Text="Creation:" FontSize="10" Foreground="White"/>
-                                        <Run Text="{Binding CurrentDebt_DashboardView_Multiple.CreationDate}" FontSize="11" Foreground="White"/>
-                                    </TextBlock>
-                                    <TextBlock Margin="0,2" Opacity="0.7">
-                                        <Run Text="Final Payment:" FontSize="10" Foreground="White"/>
-                                        <Run Text="{Binding CurrentDebt_DashboardView_Multiple.DueDate}" FontSize="11" Foreground="White" FontWeight="SemiBold"/>
-                                    </TextBlock>
-                                    <TextBlock Margin="0,2" Opacity="0.7">
-                                        <Run Text="Review:" FontSize="10" Foreground="White"/>
-                                        <Run Text="{Binding CurrentDebt_DashboardView_Multiple.ReviewDate}" FontSize="11" Foreground="White"/>
+                                <Run Text="Final Payment:" FontSize="10" Foreground="White"/>
+                                <Run Text="{Binding CurrentActiveDebt.DueDate, StringFormat=dd.MM.yyyy}" FontSize="11" Foreground="White" FontWeight="SemiBold"/>
                                     </TextBlock>
                                 </StackPanel>
-                                
+
                                 <StackPanel Grid.Column="1">
-                                    <TextBlock Text="{Binding CurrentDebt_DashboardView_Multiple.Status}" 
-                                           Foreground="White" Opacity="0.9" FontSize="14" TextAlignment="Right"
-                                           TextTrimming="CharacterEllipsis" FontStyle="Italic"/>
-                                    <TextBlock Text="{Binding CurrentDebt_DashboardView_Multiple.Amount}" Margin="0,5,0,0" FontWeight="Bold" FontSize="32" Foreground="White" TextAlignment="Right"/>
+                                    <TextBlock Text="{Binding CurrentActiveDebt.StatusText}" 
+                                   Foreground="White" Opacity="0.9" FontSize="14" TextAlignment="Right"
+                                   TextTrimming="CharacterEllipsis" FontStyle="Italic"/>
+                                    <TextBlock Text="{Binding CurrentActiveDebt.Amount, StringFormat={}{0:N2} TRY}" Margin="0,5,0,0" FontWeight="Bold" FontSize="32" Foreground="White" TextAlignment="Right"/>
                                 </StackPanel>
                             </Grid>
                         </StackPanel>
                     </Border>
+
+                    <TextBlock Text="No active debts." Foreground="{StaticResource TopBarTextSecondaryBrush}" 
+                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                   Visibility="{Binding CurrentActiveDebt, Converter={StaticResource NullToVisibilityInverseConverter}, ConverterParameter=inverse}">
+                    </TextBlock>
                 </StackPanel>
             </Border>
 

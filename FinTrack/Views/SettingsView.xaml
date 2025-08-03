@@ -3,13 +3,18 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" 
              xmlns:local="clr-namespace:FinTrackForWindows.Views"
              xmlns:vm="clr-namespace:FinTrackForWindows.ViewModels"
+             xmlns:helpers="clr-namespace:FinTrackForWindows.Helpers"
+             mc:Ignorable="d" 
              d:DesignHeight="850" d:DesignWidth="1400"
              Background="{StaticResource MainBackgroundBrush}">
 
     <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <helpers:InequalityToBooleanConverter x:Key="InequalityToBooleanConverter"/>
+        <helpers:EqualityToBooleanConverter x:Key="EqualityToBooleanConverter"/>
+
         <DataTemplate DataType="{x:Type vm:ProfileSettingsContentViewModel}">
             <local:ProfileSettingsContentView/>
         </DataTemplate>
@@ -26,65 +31,113 @@
 
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="30">
         <StackPanel>
-            <!-- 1. BÖLÜM: ÜYELİK PLANLARI -->
             <Border Style="{StaticResource DashboardCardStyle}">
                 <StackPanel>
                     <TextBlock Text="Üyelik Planınız" Style="{StaticResource CardTitleTextStyle}"/>
                     <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,20" Opacity="0.5"/>
-                    <UniformGrid Columns="3">
-                        <!-- Free Plan Kartı -->
-                        <Border Style="{StaticResource MembershipCardStyle}">
-                            <StackPanel>
-                                <TextBlock Text="Free" FontSize="24" FontWeight="Bold" Foreground="{StaticResource TopBarTextSecondaryBrush}"/>
-                                <TextBlock Text="Basic Features" FontSize="14" Margin="0,5,0,15" Foreground="{StaticResource TextBrush}"/>
-                                <TextBlock Text="✓ 3 Accounts" Margin="0,2" Foreground="{StaticResource TextBrush}"/>
-                                <TextBlock Text="✓ 5 Budgets" Margin="0,2" Foreground="{StaticResource TextBrush}"/>
-                                <TextBlock Text="✓ Limited Currency Tracking" Margin="0,2" Foreground="{StaticResource TextBrush}"/>
-                                <TextBlock Text="✗ Detailed Reporting" Margin="0,2" Foreground="{StaticResource TopBarTextSecondaryBrush}" Opacity="0.6"/>
-                                <Button Content="{Binding FreeButtonStatus}" Command="{Binding SelectFreeMembershipCommand}" 
-                                        IsEnabled="{Binding IsFreeButtonEnabled}" Style="{StaticResource PrimaryButtonStyle}" Margin="0,25,0,0" Background="Transparent" BorderBrush="{StaticResource ProgressBarBackgroundBrush}" BorderThickness="1"/>
-                            </StackPanel>
-                        </Border>
-                        <!-- Plus Plan Kartı -->
-                        <Border Style="{StaticResource MembershipCardStyle}" BorderBrush="{StaticResource DebtAccentGradientBrush}" BorderThickness="2">
-                            <StackPanel>
-                                <TextBlock Text="Plus" FontSize="24" FontWeight="Bold" Foreground="{StaticResource AccentBlueBrush}"/>
-                                <TextBlock Text="$9.99 / Month" FontSize="14" Margin="0,5,0,15" Foreground="{StaticResource TextBrush}"/>
-                                <TextBlock Text="✓ 10 Accounts" Margin="0,2" Foreground="{StaticResource TextBrush}"/>
-                                <TextBlock Text="✓ Unlimited Budget" Margin="0,2" Foreground="{StaticResource TextBrush}"/>
-                                <TextBlock Text="✓ Detailed Reporting" Margin="0,2" Foreground="{StaticResource TextBrush}"/>
-                                <TextBlock Text="✓ Secure Debt System" Margin="0,2" Foreground="{StaticResource TextBrush}"/>
-                                <Button Content="{Binding PlusButtonStatus}" Command="{Binding SelectPlusMembershipCommand}" 
-                                        Style="{StaticResource PrimaryButtonStyle}" Margin="0,25,0,0"
-                                        IsEnabled="{Binding IsPlusButtonEnabled}"/>
-                            </StackPanel>
-                        </Border>
-                        <!-- Pro Plan Kartı -->
-                        <Border Style="{StaticResource MembershipCardStyle}">
-                            <StackPanel>
-                                <TextBlock Text="Pro" FontSize="24" FontWeight="Bold" Foreground="{StaticResource PrimaryAccentBrush}"/>
-                                <TextBlock Text="$19.99 / Ay" FontSize="14" Margin="0,5,0,15" Foreground="{StaticResource TextBrush}"/>
-                                <TextBlock Text="✓ Unlimited Account" Margin="0,2" Foreground="{StaticResource TextBrush}"/>
-                                <TextBlock Text="✓ All Plus Features" Margin="0,2" Foreground="{StaticResource TextBrush}"/>
-                                <TextBlock Text="✓ FinBot Priority Support" Margin="0,2" Foreground="{StaticResource TextBrush}"/>
-                                <TextBlock Text="✓ API Access" Margin="0,2" Foreground="{StaticResource TextBrush}"/>
-                                <Button Content="{Binding ProButtonStatus}" Command="{Binding SelectProMembershipCommand}" 
-                                        Style="{StaticResource PrimaryButtonStyle}" Background="{StaticResource MembershipAccentGradientBrush}" 
-                                        IsEnabled="{Binding IsProButtonEnabled}" Margin="0,25,0,0"/>
-                            </StackPanel>
-                        </Border>
-                    </UniformGrid>
+
+                    <ItemsControl ItemsSource="{Binding MembershipStore.AvailablePlans}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Columns="3" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Style="{StaticResource MembershipCardStyle}" Margin="10">
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding Name}" FontSize="24" FontWeight="Bold" Foreground="{StaticResource PrimaryAccentBrush}"/>
+
+                                        <TextBlock Margin="0,5,0,15" Foreground="{StaticResource TextBrush}">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Price}" Value="0">
+                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                            <Run Text="{Binding Price, StringFormat={}{0:C}, ConverterCulture=en-US}" />
+                                            <Run Text="/" />
+                                            <Run Text="{Binding BillingCycle}" />
+                                        </TextBlock>
+
+                                        <TextBlock Text="Ücretsiz" FontSize="14" Margin="0,5,0,15" Foreground="{StaticResource TextBrush}">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Price}" Value="0">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+
+                                        <TextBlock Margin="0,2" Foreground="{StaticResource TextBrush}">
+                                            <Run Text="✓"/>
+                                            <Run Text="{Binding Accounts.MaxBankAccounts, FallbackValue=0, TargetNullValue='Sınırsız'}" />
+                                            <Run Text=" Hesap" />
+                                        </TextBlock>
+
+                                        <TextBlock Margin="0,2" Foreground="{StaticResource TextBrush}">
+                                            <Run Text="✓"/>
+                                            <Run Text="{Binding Budgeting.MaxBudgets, FallbackValue=0, TargetNullValue='Sınırsız'}" />
+                                            <Run Text=" Bütçe" />
+                                        </TextBlock>
+
+                                        <TextBlock Margin="0,2" Foreground="{StaticResource TextBrush}" Text="✓ Gelişmiş Raporlama" Visibility="{Binding Reporting.CanExportPdf, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+                                        <TextBlock Margin="0,2" Foreground="{StaticResource TextBrush}" Text="✓ Öncelikli Destek" Visibility="{Binding PrioritySupport, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+                                        <Button Command="{Binding DataContext.SelectPlanCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
+                                                CommandParameter="{Binding}"
+                                                Style="{StaticResource PrimaryButtonStyle}" Margin="0,25,0,0">
+                                            <Button.Content>
+                                                <TextBlock>
+                                                    <TextBlock.Style>
+                                                        <Style TargetType="TextBlock">
+                                                            <Setter Property="Text" Value="Yükselt"/>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Value="True">
+                                                                    <DataTrigger.Binding>
+                                                                        <MultiBinding Converter="{StaticResource EqualityToBooleanConverter}">
+                                                                            <Binding Path="DataContext.MembershipStore.CurrentUserMembership.PlanId" RelativeSource="{RelativeSource AncestorType={x:Type ItemsControl}}"/>
+                                                                            <Binding Path="Id"/>
+                                                                        </MultiBinding>
+                                                                    </DataTrigger.Binding>
+                                                                    <Setter Property="Text" Value="Mevcut Plan"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBlock.Style>
+                                                </TextBlock>
+                                            </Button.Content>
+                                            <Button.IsEnabled>
+                                                <MultiBinding Converter="{StaticResource InequalityToBooleanConverter}">
+                                                    <Binding Path="DataContext.MembershipStore.CurrentUserMembership.PlanId" RelativeSource="{RelativeSource AncestorType={x:Type ItemsControl}}"/>
+                                                    <Binding Path="Id"/>
+                                                </MultiBinding>
+                                            </Button.IsEnabled>
+                                        </Button>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                 </StackPanel>
             </Border>
 
-            <!-- 2. BÖLÜM: AYARLAR -->
             <Grid Margin="0,30,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="3*"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- AYARLAR MENÜSÜ -->
                 <Border Grid.Column="0" Style="{StaticResource DashboardCardStyle}" Margin="0,0,20,0">
                     <StackPanel>
                         <RadioButton Content="Profil Ayarları" GroupName="Settings" IsChecked="True" 

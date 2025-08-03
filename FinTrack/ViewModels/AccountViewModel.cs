@@ -4,6 +4,7 @@ using FinTrackForWindows.Dtos.AccountDtos;
 using FinTrackForWindows.Dtos.TransactionDtos;
 using FinTrackForWindows.Enums;
 using FinTrackForWindows.Models.Account;
+using FinTrackForWindows.Services.Accounts;
 using FinTrackForWindows.Services.Api;
 using LiveChartsCore;
 using LiveChartsCore.Defaults;
@@ -13,13 +14,13 @@ using LiveChartsCore.SkiaSharpView.VisualElements;
 using Microsoft.Extensions.Logging;
 using SkiaSharp;
 using System.Collections.ObjectModel;
+using System.Windows;
 
 namespace FinTrackForWindows.ViewModels
 {
     public partial class AccountViewModel : ObservableObject
     {
-        [ObservableProperty]
-        private ObservableCollection<AccountModel> accounts = new();
+        public ReadOnlyObservableCollection<AccountModel> Accounts => _accountStore.Accounts;
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(FormTitle))]
@@ -31,6 +32,8 @@ namespace FinTrackForWindows.ViewModels
         public ObservableCollection<AccountType> AccountTypes { get; }
 
         private readonly ILogger<AccountViewModel> _logger;
+
+        private readonly IAccountStore _accountStore;
 
         public string FormTitle => IsEditing ? "Hesabı Düzenle" : "Yeni Hesap Ekle";
         public string SaveButtonText => IsEditing ? "GÜNCELLE" : "HESAP OLUŞTUR";
@@ -51,10 +54,11 @@ namespace FinTrackForWindows.ViewModels
         [ObservableProperty]
         private LabelVisual title = new LabelVisual { /* Başlık için yer tutucu */ };
 
-        public AccountViewModel(ILogger<AccountViewModel> logger, IApiService apiService)
+        public AccountViewModel(ILogger<AccountViewModel> logger, IApiService apiService, IAccountStore accountStore)
         {
             _logger = logger;
             _apiService = apiService;
+            _accountStore = accountStore;
 
             InitializeEmptyChart();
             _ = LoadData();
@@ -121,22 +125,7 @@ namespace FinTrackForWindows.ViewModels
 
         private async Task LoadData()
         {
-            var accounts = await _apiService.GetAsync<List<AccountDto>>("Account");
-            Accounts = new ObservableCollection<AccountModel>();
-            if (accounts != null)
-            {
-                foreach (var item in accounts)
-                {
-                    Accounts.Add(new AccountModel
-                    {
-                        Id = item.Id,
-                        Name = item.Name,
-                        Type = item.Type,
-                        balance = item.Balance,
-                        Currency = item.Currency,
-                    });
-                }
-            }
+            await _accountStore.LoadAccountsAsync();
         }
 
         private async Task LoadTransactionHistory(int accountId, string accountName)
@@ -238,48 +227,41 @@ namespace FinTrackForWindows.ViewModels
         {
             if (SelectedAccount == null || string.IsNullOrWhiteSpace(SelectedAccount.Name)) return;
 
-            if (IsEditing)
+            var accountDto = new AccountCreateDto
             {
-                var existingAccount = Accounts.FirstOrDefault(a => a.Id == SelectedAccount.Id);
-                if (existingAccount != null)
-                {
-                    existingAccount.Name = SelectedAccount.Name;
-                    existingAccount.Type = SelectedAccount.Type;
-                    existingAccount.Currency = SelectedAccount.Currency;
+                Name = SelectedAccount.Name,
+                Type = SelectedAccount.Type,
+                Currency = SelectedAccount.Currency,
+            };
 
-                    await _apiService.PutAsync<object>($"Account/{SelectedAccount.Id}", new AccountUpdateDto
-                    {
-                        Name = SelectedAccount.Name,
-                        Type = SelectedAccount.Type,
-                        Currency = SelectedAccount.Currency
-                    });
-                }
+            if (IsEditing && SelectedAccount.Id.HasValue)
+            {
+                int accountId = SelectedAccount.Id.Value;
+                string accountName = SelectedAccount.Name;
+
+                await _accountStore.UpdateAccountAsync(SelectedAccount.Id ?? -1, accountDto);
+
+                await LoadTransactionHistory(accountId, accountName);
             }
             else
             {
-                var newAccount = await _apiService.PostAsync<AccountResponseDto>("Account", new AccountCreateDto
-                {
-                    Name = SelectedAccount.Name,
-                    Type = SelectedAccount.Type,
-                    IsActive = true,
-                    Currency = SelectedAccount.Currency,
-                });
-
-                SelectedAccount.Id = newAccount.Id;
-
-                Accounts.Add(SelectedAccount);
+                await _accountStore.AddAccountAsync(accountDto);
             }
+
             PrepareForNewAccount();
         }
 
         [RelayCommand]
-        private async Task DeleteAccount(AccountModel accountToDelete)
+        private async Task DeleteAccount(AccountModel? accountToDelete)
         {
+            if (accountToDelete == null) return;
+
+            var result = MessageBox.Show($"'{accountToDelete.Name}' adlı hesabı silmek istediğinizden emin misiniz?", "Silme Onayı", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.No) return;
+
             if (accountToDelete != null)
             {
-                Accounts.Remove(accountToDelete);
-
-                await _apiService.DeleteAsync<object>($"Account/{accountToDelete.Id}");
+                await _accountStore.DeleteAccountAsync(SelectedAccount?.Id ?? -1);
 
                 if (SelectedAccount?.Id == accountToDelete.Id)
                 {

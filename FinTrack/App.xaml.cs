@@ -1,7 +1,13 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
 using FinTrackForWindows.Core;
 using FinTrackForWindows.Services;
+using FinTrackForWindows.Services.Accounts;
 using FinTrackForWindows.Services.Api;
+using FinTrackForWindows.Services.Budgets;
+using FinTrackForWindows.Services.Currencies;
+using FinTrackForWindows.Services.Debts;
+using FinTrackForWindows.Services.Memberships;
+using FinTrackForWindows.Services.Transactions;
 using FinTrackForWindows.ViewModels;
 using FinTrackForWindows.Views;
 using Microsoft.Extensions.DependencyInjection;
@@ -74,6 +80,13 @@ namespace FinTrackForWindows
             services.AddSingleton<IAuthService, AuthService>();
             services.AddSingleton<ISecureTokenStorage, SecureTokenStorage>();
             services.AddSingleton<IApiService, ApiService>();
+
+            services.AddSingleton<IBudgetStore, BudgetStore>();
+            services.AddSingleton<IAccountStore, AccountStore>();
+            services.AddSingleton<ITransactionStore, TransactionStore>();
+            services.AddSingleton<ICurrenciesStore, CurrenciesStore>();
+            services.AddSingleton<IMembershipStore, MembershipStore>();
+            services.AddSingleton<IDebtStore, DebtStore>();
         }
 
         protected override async void OnStartup(StartupEventArgs e)

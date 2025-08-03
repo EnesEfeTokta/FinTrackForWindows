@@ -1,113 +1,104 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using FinTrackForWindows.Dtos.MembershipDtos;
+using FinTrackForWindows.Services.Memberships;
 using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 using System.Windows;
-using System.Windows.Input;
 
 namespace FinTrackForWindows.ViewModels
 {
     public partial class SettingsViewModel : ObservableObject
     {
-        [ObservableProperty]
-        private string freeButtonStatus = string.Empty;
-
-        [ObservableProperty]
-        private string plusButtonStatus = string.Empty;
-
-        [ObservableProperty]
-        private string proButtonStatus = string.Empty;
-
-        [ObservableProperty]
-        private bool isFreeButtonEnabled = false;
-
-        [ObservableProperty]
-        private bool isPlusButtonEnabled = true;
-
-        [ObservableProperty]
-        private bool isProButtonEnabled = true;
-
         private readonly ILogger<SettingsViewModel> _logger;
+        private readonly IMembershipStore _membershipStore;
 
-        private readonly ProfileSettingsContentViewModel profileVM;
-        private readonly SecuritySettingsContentViewModel securityVM;
-        private readonly NotificationSettingsContentViewModel notificationsVM;
-        private readonly AppSettingsContentViewModel appVM;
+        private readonly ProfileSettingsContentViewModel _profileVM;
+        private readonly SecuritySettingsContentViewModel _securityVM;
+        private readonly NotificationSettingsContentViewModel _notificationsVM;
+        private readonly AppSettingsContentViewModel _appVM;
 
         [ObservableProperty]
-        private ObservableObject currentPageViewModel;
+        private ObservableObject _currentPageViewModel;
 
-        public ICommand ChangePageCommand { get; }
+        public IMembershipStore MembershipStore => _membershipStore;
 
         public SettingsViewModel(
             ILogger<SettingsViewModel> logger,
+            IMembershipStore membershipStore,
             ProfileSettingsContentViewModel profileVM,
             SecuritySettingsContentViewModel securityVM,
             NotificationSettingsContentViewModel notificationsVM,
-            AppSettingsContentViewModel appVM
-            )
+            AppSettingsContentViewModel appVM)
         {
             _logger = logger;
-            InitializeButtonStatuses();
-            this.profileVM = profileVM;
-            this.securityVM = securityVM;
-            this.notificationsVM = notificationsVM;
-            this.appVM = appVM;
+            _membershipStore = membershipStore;
+            _profileVM = profileVM;
+            _securityVM = securityVM;
+            _notificationsVM = notificationsVM;
+            _appVM = appVM;
 
-            ChangePageCommand = new RelayCommand<string>(ChangePage);
+            _currentPageViewModel = _profileVM;
 
-            CurrentPageViewModel = profileVM;
+            _ = LoadInitialData();
         }
 
+        private async Task LoadInitialData()
+        {
+            await _membershipStore.LoadAllMembershipDataAsync();
+        }
+
+        [RelayCommand]
         private void ChangePage(string pageName)
         {
-            _logger.LogInformation($"Sayfa değiştiriliyor: {pageName}");
-            switch (pageName)
+            _logger.LogInformation($"Changing settings page to: {pageName}");
+            CurrentPageViewModel = pageName switch
             {
-                case "Profile":
-                    CurrentPageViewModel = profileVM;
-                    break;
-                case "Security":
-                    CurrentPageViewModel = securityVM;
-                    break;
-                case "Notifications":
-                    CurrentPageViewModel = notificationsVM;
-                    break;
-                case "App":
-                    CurrentPageViewModel = appVM;
-                    break;
-                default:
-                    _logger.LogWarning($"Bilinmeyen sayfa adı: {pageName}");
-                    break;
+                "Profile" => _profileVM,
+                "Security" => _securityVM,
+                "Notifications" => _notificationsVM,
+                "App" => _appVM,
+                _ => CurrentPageViewModel
+            };
+        }
+
+        [RelayCommand]
+        private async Task SelectPlan(PlanFeatureDto selectedPlan)
+        {
+            if (selectedPlan == null)
+            {
+                _logger.LogWarning("SelectPlan command executed with a null parameter.");
+                return;
             }
-        }
 
-        private void InitializeButtonStatuses()
-        {
-            FreeButtonStatus = "Seçili";
-            PlusButtonStatus = "Yükselt";
-            ProButtonStatus = "Yükselt";
-            _logger.LogInformation("Üyelik düğmelerinin durumları ayarlandı.");
-        }
+            _logger.LogInformation($"Plan selection initiated for: {selectedPlan.Name} (ID: {selectedPlan.Id})");
 
-        [RelayCommand]
-        private void SelectFreeMembership()
-        {
-            _logger.LogInformation("Free üyelik seçildi.");
-            MessageBox.Show("Free üyelik seçildi.", "Üyelik Seçimi", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
+            if (MembershipStore.CurrentUserMembership != null && MembershipStore.CurrentUserMembership.PlanId == selectedPlan.Id)
+            {
+                MessageBox.Show("This is already your current plan.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
 
-        [RelayCommand]
-        private void SelectPlusMembership()
-        {
-            _logger.LogInformation("Plus üyelik seçildi.");
-            MessageBox.Show("Plus üyelik seçildi.", "Üyelik Seçimi", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
+            string checkoutUrl = await _membershipStore.SelectPlanAsync(selectedPlan.Id, true);
 
-        [RelayCommand]
-        private void SelectProMembership()
-        {
-            _logger.LogInformation("Pro üyelik seçildi.");
-            MessageBox.Show("Pro üyelik seçildi.", "Üyelik Seçimi", MessageBoxButton.OK, MessageBoxImage.Information);
+            if (!string.IsNullOrEmpty(checkoutUrl))
+            {
+                _logger.LogInformation($"Redirecting user to checkout URL: {checkoutUrl}");
+                try
+                {
+                    Process.Start(new ProcessStartInfo(checkoutUrl) { UseShellExecute = true });
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Failed to open web browser for checkout.");
+                    MessageBox.Show($"Could not open the payment page. Please copy this link and open it manually:\n\n{checkoutUrl}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            else
+            {
+                _logger.LogInformation("No checkout URL received, assuming successful subscription to a free plan or an API error occurred.");
+                MessageBox.Show("Your subscription status has been updated. Please check your profile.", "Subscription Update", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
         }
     }
 }
