@@ -1,6 +1,6 @@
 ﻿using FinTrackForWindows.Dtos.BudgetDtos;
-using System.Collections.ObjectModel;
 using FinTrackForWindows.Models.Budget;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 
 namespace FinTrackForWindows.Services.Budgets

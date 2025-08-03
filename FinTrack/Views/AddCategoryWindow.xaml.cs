@@ -1,5 +1,4 @@
-﻿using FinTrackForWindows.Models;
-using FinTrackForWindows.Models.Transaction;
+﻿using FinTrackForWindows.Models.Transaction;
 using FinTrackForWindows.Services.Api;
 using System.Windows;
 
@@ -15,7 +14,8 @@ namespace FinTrackForWindows.Views
             _viewModel = new AddCategoryViewModel(apiService);
             DataContext = _viewModel;
 
-            _viewModel.CloseWindow = () => {
+            _viewModel.CloseWindow = () =>
+            {
                 this.DialogResult = true;
                 this.Close();
             };

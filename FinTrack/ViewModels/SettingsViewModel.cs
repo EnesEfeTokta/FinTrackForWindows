@@ -3,10 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using FinTrackForWindows.Dtos.MembershipDtos;
 using FinTrackForWindows.Services.Memberships;
 using Microsoft.Extensions.Logging;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace FinTrackForWindows.ViewModels

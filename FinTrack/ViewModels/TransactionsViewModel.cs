@@ -11,7 +11,6 @@ using FinTrackForWindows.Views;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Linq;
 using System.Windows;
 
 namespace FinTrackForWindows.ViewModels

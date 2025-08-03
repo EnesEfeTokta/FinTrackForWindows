@@ -161,14 +161,14 @@ namespace FinTrackForWindows.ViewModels
         }
 
         // ------
-        
+
         private void RefreshDashboardAccounts()
         {
             Accounts_DashboardView_ItemsControl = new ObservableCollection<AccountDashboard>();
 
             foreach (var account in DashboardAccounts)
             {
-                Accounts_DashboardView_ItemsControl.Add(new AccountDashboard 
+                Accounts_DashboardView_ItemsControl.Add(new AccountDashboard
                 {
                     Name = account.Name,
                     Percentage = 70,
@@ -434,7 +434,7 @@ namespace FinTrackForWindows.ViewModels
                 CreateReport("2022 Yılı Bütçe Raporu")
             };
         }
-        
+
         private ReportDashboardModel CreateReport(string name)
         {
             var reportLogger = _serviceProvider.GetRequiredService<ILogger<ReportDashboardModel>>();

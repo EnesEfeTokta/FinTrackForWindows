@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using FinTrackForWindows.Dtos.CategoryDtos;
 using FinTrackForWindows.Dtos.TransactionDtos;
 using FinTrackForWindows.Enums;
 using FinTrackForWindows.Services.Api;

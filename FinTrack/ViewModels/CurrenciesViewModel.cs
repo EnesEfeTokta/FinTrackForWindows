@@ -2,7 +2,6 @@
 using CommunityToolkit.Mvvm.Input;
 using FinTrackForWindows.Enums;
 using FinTrackForWindows.Models.Currency;
-using FinTrackForWindows.Services.Api;
 using FinTrackForWindows.Services.Currencies;
 using FinTrackWebApi.Dtos.CurrencyDtos;
 using LiveChartsCore;

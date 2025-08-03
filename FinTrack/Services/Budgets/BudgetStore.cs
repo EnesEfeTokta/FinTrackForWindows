@@ -1,8 +1,8 @@
 ﻿using FinTrackForWindows.Dtos.BudgetDtos;
+using FinTrackForWindows.Models.Budget;
 using FinTrackForWindows.Services.Api;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
-using FinTrackForWindows.Models.Budget;
 using System.Collections.Specialized;
 
 namespace FinTrackForWindows.Services.Budgets
@@ -45,7 +45,7 @@ namespace FinTrackForWindows.Services.Budgets
                 _budgets.Clear();
                 foreach (var dto in budgetsFromApi)
                 {
-                    _budgets.Add(new BudgetModel 
+                    _budgets.Add(new BudgetModel
                     {
                         Id = dto.Id,
                         Name = dto.Name,
@@ -71,8 +71,8 @@ namespace FinTrackForWindows.Services.Budgets
             var createdBudgetDto = await _apiService.PostAsync<BudgetDto>("Budgets", newBudgetDto);
             if (createdBudgetDto != null)
             {
-                _budgets.Add(new BudgetModel 
-                { 
+                _budgets.Add(new BudgetModel
+                {
                     Id = createdBudgetDto.Id,
                     Name = createdBudgetDto.Name,
                     Description = createdBudgetDto.Description,

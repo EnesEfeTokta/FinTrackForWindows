@@ -1,9 +1,9 @@
-﻿using FinTrackForWindows.Models.Account;
+﻿using FinTrackForWindows.Dtos.AccountDtos;
+using FinTrackForWindows.Models.Account;
 using FinTrackForWindows.Services.Api;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using FinTrackForWindows.Dtos.AccountDtos;
 
 namespace FinTrackForWindows.Services.Accounts
 {

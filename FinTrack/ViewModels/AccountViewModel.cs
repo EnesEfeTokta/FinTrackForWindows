@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FinTrackForWindows.Dtos.AccountDtos;
-using FinTrackForWindows.Dtos.BudgetDtos;
 using FinTrackForWindows.Dtos.TransactionDtos;
 using FinTrackForWindows.Enums;
 using FinTrackForWindows.Models.Account;
