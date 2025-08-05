@@ -4,6 +4,7 @@ using FinTrackForWindows.Services;
 using FinTrackForWindows.Services.Accounts;
 using FinTrackForWindows.Services.Api;
 using FinTrackForWindows.Services.Budgets;
+using FinTrackForWindows.Services.Camera;
 using FinTrackForWindows.Services.Currencies;
 using FinTrackForWindows.Services.Debts;
 using FinTrackForWindows.Services.Memberships;
@@ -87,6 +88,8 @@ namespace FinTrackForWindows
             services.AddSingleton<ICurrenciesStore, CurrenciesStore>();
             services.AddSingleton<IMembershipStore, MembershipStore>();
             services.AddSingleton<IDebtStore, DebtStore>();
+
+            services.AddTransient<ICameraService, CameraService>();
         }
 
         protected override async void OnStartup(StartupEventArgs e)

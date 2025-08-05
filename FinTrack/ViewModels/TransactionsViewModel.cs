@@ -8,9 +8,18 @@ using FinTrackForWindows.Services.Accounts;
 using FinTrackForWindows.Services.Api;
 using FinTrackForWindows.Services.Transactions;
 using FinTrackForWindows.Views;
+using LiveChartsCore;
+using LiveChartsCore.Defaults;
+using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Extensions;
+using LiveChartsCore.SkiaSharpView.Painting;
 using Microsoft.Extensions.Logging;
+using SkiaSharp;
+using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace FinTrackForWindows.ViewModels
@@ -22,23 +31,52 @@ namespace FinTrackForWindows.ViewModels
         private readonly ITransactionStore _transactionStore;
         private readonly IAccountStore _accountStore;
 
+        // Renk paleti
+        private static readonly SKColor PrimaryColor = new SKColor(100, 181, 246); // Mavi
+        private static readonly SKColor SecondaryColor = new SKColor(239, 83, 80); // Kırmızı
+        private static readonly SKColor[] PieChartColors = new[]
+        {
+            new SKColor(100, 181, 246), // Mavi
+            new SKColor(239, 83, 80),   // Kırmızı
+            new SKColor(255, 167, 38),  // Turuncu
+            new SKColor(129, 199, 132), // Yeşil
+            new SKColor(171, 71, 188)   // Mor
+        };
+
+        // Koleksiyonlar
         public ReadOnlyObservableCollection<TransactionModel> Transactions => _transactionStore.Transactions;
+        public ObservableCollection<TransactionModel> FilteredTransactions { get; }
         public ReadOnlyObservableCollection<AccountModel> AllAccounts => _accountStore.Accounts;
 
         [ObservableProperty]
         private ObservableCollection<TransactionCategoryModel> allCategories;
+        public ObservableCollection<TransactionCategoryModel> CategoriesForFilter { get; }
 
+        // Filtreleme Özellikleri
+        [ObservableProperty]
+        private string? filterByDescription;
+        [ObservableProperty]
+        private string? filterByTransactionType;
+        [ObservableProperty]
+        private DateTime? filterByStartDate;
+        [ObservableProperty]
+        private DateTime? filterByEndDate;
+        [ObservableProperty]
+        private string? filterByMinAmount;
+        [ObservableProperty]
+        private string? filterByMaxAmount;
+        [ObservableProperty]
+        private TransactionCategoryModel? filterByCategory;
+        public ObservableCollection<string> TransactionTypeFilterOptions { get; }
+        private const string AllTypesFilter = "Tüm Türler";
+
+        // Form Özellikleri
         [ObservableProperty]
         private TransactionModel editableTransaction;
-
         [ObservableProperty]
         private TransactionModel? selectedTransaction;
-
         [ObservableProperty]
         private AccountModel? selectedAccountForForm;
-
-        public ObservableCollection<BaseCurrencyType> CurrencyTypes { get; } = new();
-
         private TransactionCategoryModel? _selectedCategoryForForm;
         public TransactionCategoryModel? SelectedCategoryForForm
         {
@@ -46,12 +84,11 @@ namespace FinTrackForWindows.ViewModels
             set
             {
                 SetProperty(ref _selectedCategoryForForm, value);
-                if (value != null && EditableTransaction != null)
-                {
-                    EditableTransaction.Type = value.Type;
-                }
+                if (value != null && EditableTransaction != null) { EditableTransaction.Type = value.Type; }
             }
         }
+
+        public ObservableCollection<BaseCurrencyType> CurrencyTypes { get; } = new();
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(SaveTransactionCommand))]
@@ -61,13 +98,13 @@ namespace FinTrackForWindows.ViewModels
         public string SaveButtonText => IsEditing ? "GÜNCELLE" : "İŞLEM OLUŞTUR";
 
         [ObservableProperty]
-        private string totalIncome;
+        private ISeries[] incomeVsExpenseSeries = Array.Empty<ISeries>();
 
         [ObservableProperty]
-        private string totalExpense;
+        private ISeries[] incomeByCategorySeries = Array.Empty<ISeries>();
 
         [ObservableProperty]
-        private string mostSpending;
+        private ISeries[] expenseByCategorySeries = Array.Empty<ISeries>();
 
         public TransactionsViewModel(ILogger<TransactionsViewModel> logger, IApiService apiService,
                                      ITransactionStore transactionStore, IAccountStore accountStore)
@@ -77,7 +114,17 @@ namespace FinTrackForWindows.ViewModels
             _transactionStore = transactionStore;
             _accountStore = accountStore;
 
+            // Koleksiyonları başlat
+            FilteredTransactions = new ObservableCollection<TransactionModel>();
             AllCategories = new ObservableCollection<TransactionCategoryModel>();
+            CategoriesForFilter = new ObservableCollection<TransactionCategoryModel>();
+
+            TransactionTypeFilterOptions = new ObservableCollection<string>
+            {
+                AllTypesFilter,
+                "Gelir",
+                "Gider"
+            };
 
             foreach (BaseCurrencyType currencyType in Enum.GetValues(typeof(BaseCurrencyType)))
             {
@@ -88,6 +135,285 @@ namespace FinTrackForWindows.ViewModels
 
             _ = LoadData();
             NewTransaction();
+        }
+
+        // Filtreleme Tetikleyicileri
+        partial void OnFilterByDescriptionChanged(string? value) => ApplyFilters();
+        partial void OnFilterByTransactionTypeChanged(string? value) => ApplyFilters();
+        partial void OnFilterByStartDateChanged(DateTime? value) => ApplyFilters();
+        partial void OnFilterByEndDateChanged(DateTime? value) => ApplyFilters();
+        partial void OnFilterByMinAmountChanged(string? value) => ApplyFilters();
+        partial void OnFilterByMaxAmountChanged(string? value) => ApplyFilters();
+        partial void OnFilterByCategoryChanged(TransactionCategoryModel? value) => ApplyFilters();
+
+        private void ApplyFilters()
+        {
+            _logger.LogInformation("ApplyFilters başladı...");
+
+            if (_transactionStore?.Transactions == null)
+            {
+                _logger.LogWarning("TransactionStore.Transactions null!");
+                return;
+            }
+
+            var allTransactions = _transactionStore.Transactions.ToList();
+            _logger.LogInformation($"Store'dan alınan toplam işlem sayısı: {allTransactions.Count}");
+
+            var filtered = allTransactions.AsParallel()
+                .Where(t =>
+                {
+                    bool passes = true;
+                    if (!string.IsNullOrWhiteSpace(FilterByDescription))
+                        passes &= t.NameOrDescription?.Contains(FilterByDescription, StringComparison.OrdinalIgnoreCase) == true;
+                    if (FilterByStartDate.HasValue)
+                        passes &= t.Date.Date >= FilterByStartDate.Value.Date;
+                    if (FilterByEndDate.HasValue)
+                        passes &= t.Date.Date <= FilterByEndDate.Value.Date;
+                    if (!string.IsNullOrEmpty(FilterByTransactionType) && FilterByTransactionType != AllTypesFilter)
+                        passes &= t.Type == (FilterByTransactionType == "Gelir" ? TransactionType.Income : TransactionType.Expense);
+                    if (FilterByCategory != null && FilterByCategory.Id != -1)
+                        passes &= t.CategoryId == FilterByCategory.Id;
+                    if (decimal.TryParse(FilterByMinAmount, out var minAmount))
+                        passes &= t.Amount >= minAmount;
+                    if (decimal.TryParse(FilterByMaxAmount, out var maxAmount) && maxAmount > 0)
+                        passes &= t.Amount <= maxAmount;
+                    return passes;
+                })
+                .OrderByDescending(t => t.Date)
+                .ToList();
+
+            _logger.LogInformation($"Filtrelenmiş işlem sayısı: {filtered.Count}");
+
+            FilteredTransactions.Clear();
+            foreach (var transaction in filtered)
+            {
+                FilteredTransactions.Add(transaction);
+            }
+
+            _logger.LogInformation($"FilteredTransactions güncellendi, eleman sayısı: {FilteredTransactions.Count}");
+            CalculateTotals();
+        }
+
+        [RelayCommand]
+        private void ResetFilters()
+        {
+            FilterByDescription = null;
+            FilterByTransactionType = AllTypesFilter;
+            FilterByStartDate = null;
+            FilterByEndDate = null;
+            FilterByMinAmount = null;
+            FilterByMaxAmount = null;
+            FilterByCategory = CategoriesForFilter.FirstOrDefault(c => c.Id == -1);
+            ApplyFilters();
+        }
+
+        private async Task LoadCategories()
+        {
+            var categoryDtos = await _apiService.GetAsync<List<TransactionCategoryDto>>("TransactionCategory");
+
+            AllCategories.Clear();
+            CategoriesForFilter.Clear();
+
+            var allCatOption = new TransactionCategoryModel { Id = -1, Name = "Tüm Kategoriler" };
+            CategoriesForFilter.Add(allCatOption);
+
+            if (categoryDtos != null)
+            {
+                foreach (var dto in categoryDtos.OrderBy(c => c.Name))
+                {
+                    var model = new TransactionCategoryModel { Id = dto.Id, Name = dto.Name, Type = dto.Type };
+                    AllCategories.Add(model);
+                    CategoriesForFilter.Add(model);
+                }
+            }
+
+            FilterByCategory = allCatOption;
+            _logger.LogInformation("{Count} adet kategori yüklendi.", AllCategories.Count);
+        }
+
+        private void OnTransactionsChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            _logger.LogInformation("İşlem listesi değişti, filtreler ve toplamlar yeniden uygulanıyor.");
+            if (App.Current.Dispatcher.CheckAccess())
+            {
+                ApplyFilters();
+            }
+            else
+            {
+                App.Current.Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    ApplyFilters();
+                }));
+            }
+        }
+
+        private void CalculateTotals()
+        {
+            _logger.LogInformation($"CalculateTotals başladı. FilteredTransactions Count: {FilteredTransactions?.Count ?? 0}");
+
+            // Null kontrolü
+            if (FilteredTransactions == null || !FilteredTransactions.Any())
+            {
+                _logger.LogWarning("FilteredTransactions boş veya null!");
+                IncomeVsExpenseSeries = Array.Empty<ISeries>();
+                IncomeByCategorySeries = Array.Empty<ISeries>();
+                ExpenseByCategorySeries = Array.Empty<ISeries>();
+                return;
+            }
+
+            var allTransactions = FilteredTransactions.ToList();
+            var incomeTransactions = allTransactions.Where(t => t.Type == TransactionType.Income).ToList();
+            var expenseTransactions = allTransactions.Where(t => t.Type == TransactionType.Expense).ToList();
+
+            var incomeTotal = incomeTransactions.Sum(t => t.Amount);
+            var expenseTotal = expenseTransactions.Sum(t => t.Amount);
+
+            _logger.LogInformation($"Gelir toplamı: {incomeTotal}, Gider toplamı: {expenseTotal}");
+
+            // --- 1. Gelir / Gider Oranı (Ana Grafik) ---
+            var incomeVsExpenseList = new List<ISeries>();
+
+            if (incomeTotal > 0)
+            {
+                incomeVsExpenseList.Add(new PieSeries<ObservableValue>
+                {
+                    Name = "Gelir",
+                    Values = new[] { new ObservableValue((double)incomeTotal) },
+                    Fill = new SolidColorPaint(PrimaryColor),
+                    DataLabelsPaint = new SolidColorPaint(SKColors.White),
+                    DataLabelsPosition = LiveChartsCore.Measure.PolarLabelsPosition.Middle,
+                    DataLabelsFormatter = p => $"₺{p.Coordinate.PrimaryValue:N0}",
+                    DataLabelsSize = 14
+                });
+            }
+
+            if (expenseTotal > 0)
+            {
+                incomeVsExpenseList.Add(new PieSeries<ObservableValue>
+                {
+                    Name = "Gider",
+                    Values = new[] { new ObservableValue((double)expenseTotal) },
+                    Fill = new SolidColorPaint(SecondaryColor),
+                    DataLabelsPaint = new SolidColorPaint(SKColors.White),
+                    DataLabelsPosition = LiveChartsCore.Measure.PolarLabelsPosition.Middle,
+                    DataLabelsFormatter = p => $"₺{p.Coordinate.PrimaryValue:N0}",
+                    DataLabelsSize = 14
+                });
+            }
+
+            IncomeVsExpenseSeries = incomeVsExpenseList.ToArray();
+            _logger.LogInformation($"Ana grafik oluşturuldu, eleman sayısı: {incomeVsExpenseList.Count}");
+
+            // --- 2. Gelirlerin Kategorilere Göre Dağılımı ---
+            var incomeByCategory = incomeTransactions
+                .Where(t => t.Amount > 0)
+                .GroupBy(t => string.IsNullOrEmpty(t.CategoryName) ? "Kategorisiz" : t.CategoryName)
+                .Select(g => new { Category = g.Key, Total = g.Sum(x => x.Amount) })
+                .Where(x => x.Total > 0)
+                .OrderByDescending(x => x.Total)
+                .ToList();
+
+            _logger.LogInformation($"Gelir kategorileri: {incomeByCategory.Count} adet");
+
+            var incomeSeries = new List<ISeries>();
+            if (incomeByCategory.Any())
+            {
+                for (int i = 0; i < incomeByCategory.Count; i++)
+                {
+                    var item = incomeByCategory[i];
+                    var color = PieChartColors[i % PieChartColors.Length];
+
+                    incomeSeries.Add(new PieSeries<ObservableValue>
+                    {
+                        Name = item.Category,
+                        Values = new[] { new ObservableValue((double)item.Total) },
+                        Fill = new SolidColorPaint(color),
+                        DataLabelsPaint = new SolidColorPaint(SKColors.White),
+                        DataLabelsPosition = LiveChartsCore.Measure.PolarLabelsPosition.Middle,
+                        DataLabelsFormatter = p => $"₺{p.Coordinate.PrimaryValue:N0}",
+                        DataLabelsSize = 11,
+                        // Küçük dilimler için
+                        //MinGeometrySize = 10
+                    });
+
+                    _logger.LogInformation($"Gelir Kategorisi eklendi: {item.Category} - ₺{item.Total:N0}");
+                }
+            }
+            else
+            {
+                // Veri yoksa placeholder
+                incomeSeries.Add(new PieSeries<ObservableValue>
+                {
+                    Name = "Veri Yok",
+                    Values = new[] { new ObservableValue(1) },
+                    Fill = new SolidColorPaint(SKColors.LightGray),
+                    DataLabelsPaint = new SolidColorPaint(SKColors.DarkGray),
+                    DataLabelsPosition = LiveChartsCore.Measure.PolarLabelsPosition.Middle,
+                    DataLabelsFormatter = p => "Gelir Yok"
+                });
+            }
+
+            IncomeByCategorySeries = incomeSeries.ToArray();
+            _logger.LogInformation($"Gelir kategorileri grafiği oluşturuldu: {incomeSeries.Count} seri");
+
+            // --- 3. Giderlerin Kategorilere Göre Dağılımı ---
+            var expenseByCategory = expenseTransactions
+                .Where(t => t.Amount > 0)
+                .GroupBy(t => string.IsNullOrEmpty(t.CategoryName) ? "Kategorisiz" : t.CategoryName)
+                .Select(g => new { Category = g.Key, Total = g.Sum(x => x.Amount) })
+                .Where(x => x.Total > 0)
+                .OrderByDescending(x => x.Total)
+                .ToList();
+
+            _logger.LogInformation($"Gider kategorileri: {expenseByCategory.Count} adet");
+
+            var expenseSeries = new List<ISeries>();
+            if (expenseByCategory.Any())
+            {
+                for (int i = 0; i < expenseByCategory.Count; i++)
+                {
+                    var item = expenseByCategory[i];
+                    var color = PieChartColors[i % PieChartColors.Length];
+
+                    expenseSeries.Add(new PieSeries<ObservableValue>
+                    {
+                        Name = item.Category,
+                        Values = new[] { new ObservableValue((double)item.Total) },
+                        Fill = new SolidColorPaint(color),
+                        DataLabelsPaint = new SolidColorPaint(SKColors.White),
+                        DataLabelsPosition = LiveChartsCore.Measure.PolarLabelsPosition.Middle,
+                        DataLabelsFormatter = p => $"₺{p.Coordinate.PrimaryValue:N0}",
+                        DataLabelsSize = 11,
+                        // Küçük dilimler için
+                        //MinGeometrySize = 10
+                    });
+
+                    _logger.LogInformation($"Gider Kategorisi eklendi: {item.Category} - ₺{item.Total:N0}");
+                }
+            }
+            else
+            {
+                // Veri yoksa placeholder
+                expenseSeries.Add(new PieSeries<ObservableValue>
+                {
+                    Name = "Veri Yok",
+                    Values = new[] { new ObservableValue(1) },
+                    Fill = new SolidColorPaint(SKColors.LightGray),
+                    DataLabelsPaint = new SolidColorPaint(SKColors.DarkGray),
+                    DataLabelsPosition = LiveChartsCore.Measure.PolarLabelsPosition.Middle,
+                    DataLabelsFormatter = p => "Gider Yok"
+                });
+            }
+
+            ExpenseByCategorySeries = expenseSeries.ToArray();
+            _logger.LogInformation($"Gider kategorileri grafiği oluşturuldu: {expenseSeries.Count} seri");
+
+            // Property değişikliği bildirimlerini manuel tetikle
+            OnPropertyChanged(nameof(IncomeVsExpenseSeries));
+            OnPropertyChanged(nameof(IncomeByCategorySeries));
+            OnPropertyChanged(nameof(ExpenseByCategorySeries));
+
+            _logger.LogInformation($"Tüm grafikler güncellendi - Gelir: ₺{incomeTotal:N2}, Gider: ₺{expenseTotal:N2}");
         }
 
         [RelayCommand]
@@ -204,47 +530,6 @@ namespace FinTrackForWindows.ViewModels
             await _accountStore.LoadAccountsAsync();
             await LoadCategories();
             await _transactionStore.LoadTransactionsAsync();
-        }
-
-        private async Task LoadCategories()
-        {
-            var categoryDtos = await _apiService.GetAsync<List<TransactionCategoryDto>>("TransactionCategory");
-
-            AllCategories.Clear();
-            if (categoryDtos != null)
-            {
-                foreach (var dto in categoryDtos)
-                {
-                    AllCategories.Add(new TransactionCategoryModel { Id = dto.Id, Name = dto.Name, Type = dto.Type });
-                }
-            }
-            _logger.LogInformation("{Count} adet kategori yüklendi.", AllCategories.Count);
-        }
-
-        private void OnTransactionsChanged(object? sender, NotifyCollectionChangedEventArgs e)
-        {
-            _logger.LogInformation("İşlem listesi değişti, toplamlar yeniden hesaplanıyor.");
-            App.Current.Dispatcher.Invoke(CalculateTotals);
-        }
-
-        private void CalculateTotals()
-        {
-            if (Transactions == null) return;
-
-            TotalIncome = Transactions
-                .Where(t => t.Type == TransactionType.Income)
-                .Sum(t => t.Amount).ToString("C");
-
-            TotalExpense = Transactions
-                .Where(t => t.Type == TransactionType.Expense)
-                .Sum(t => t.Amount).ToString("C");
-
-            var mostSpendingTransaction = Transactions
-                .Where(t => t.Type == TransactionType.Expense)
-                .OrderByDescending(t => t.Amount)
-                .FirstOrDefault();
-
-            MostSpending = mostSpendingTransaction?.CategoryName ?? "Henüz işlem yok";
         }
     }
 }

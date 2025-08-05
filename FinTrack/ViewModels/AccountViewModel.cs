@@ -22,24 +22,32 @@ namespace FinTrackForWindows.ViewModels
     {
         public ReadOnlyObservableCollection<AccountModel> Accounts => _accountStore.Accounts;
 
+        public ObservableCollection<AccountModel> FilteredAccounts { get; }
+
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(FormTitle))]
         [NotifyPropertyChangedFor(nameof(SaveButtonText))]
         private AccountModel? selectedAccount;
 
         public ObservableCollection<BaseCurrencyType> CurrencyTypes { get; }
-
         public ObservableCollection<AccountType> AccountTypes { get; }
 
         private readonly ILogger<AccountViewModel> _logger;
-
         private readonly IAccountStore _accountStore;
+
+        [ObservableProperty]
+        private string? filterByName;
+
+        [ObservableProperty]
+        private string? filterByMinBalance;
+
+        [ObservableProperty]
+        private string? filterByMaxBalance;
 
         public string FormTitle => IsEditing ? "Hesabı Düzenle" : "Yeni Hesap Ekle";
         public string SaveButtonText => IsEditing ? "GÜNCELLE" : "HESAP OLUŞTUR";
 
         private bool IsEditing = false;
-
         private readonly IApiService _apiService;
 
         [ObservableProperty]
@@ -52,7 +60,7 @@ namespace FinTrackForWindows.ViewModels
         private Axis[] yAxes = new Axis[0];
 
         [ObservableProperty]
-        private LabelVisual title = new LabelVisual { /* Başlık için yer tutucu */ };
+        private LabelVisual title = new LabelVisual { /* Placeholder */ };
 
         public AccountViewModel(ILogger<AccountViewModel> logger, IApiService apiService, IAccountStore accountStore)
         {
@@ -60,25 +68,16 @@ namespace FinTrackForWindows.ViewModels
             _apiService = apiService;
             _accountStore = accountStore;
 
-            InitializeEmptyChart();
-            _ = LoadData();
+            FilteredAccounts = new ObservableCollection<AccountModel>();
+            _accountStore.AccountsChanged += (s, e) => ApplyFilters();
+
+            // Sadece InitializeViewModel'i çağırarak çift yüklemeyi önle
             _ = InitializeViewModel();
+
             PrepareForNewAccount();
 
-            CurrencyTypes = new ObservableCollection<BaseCurrencyType>();
-            AccountTypes = new ObservableCollection<AccountType>();
-
-            CurrencyTypes.Clear();
-            foreach (BaseCurrencyType currencyType in Enum.GetValues(typeof(BaseCurrencyType)))
-            {
-                CurrencyTypes.Add(currencyType);
-            }
-
-            AccountTypes.Clear();
-            foreach (AccountType accountType in Enum.GetValues(typeof(AccountType)))
-            {
-                AccountTypes.Add(accountType);
-            }
+            CurrencyTypes = new ObservableCollection<BaseCurrencyType>(Enum.GetValues(typeof(BaseCurrencyType)).Cast<BaseCurrencyType>());
+            AccountTypes = new ObservableCollection<AccountType>(Enum.GetValues(typeof(AccountType)).Cast<AccountType>());
         }
 
         private void InitializeEmptyChart()
@@ -96,13 +95,10 @@ namespace FinTrackForWindows.ViewModels
         private async Task InitializeViewModel()
         {
             await LoadData();
-            if (Accounts.Any())
+
+            if (FilteredAccounts.Any())
             {
-                var firstAccount = Accounts.First();
-                if (firstAccount.Id.HasValue)
-                {
-                    SelectedAccount = firstAccount;
-                }
+                SelectedAccount = FilteredAccounts.First();
             }
         }
 
@@ -126,6 +122,8 @@ namespace FinTrackForWindows.ViewModels
         private async Task LoadData()
         {
             await _accountStore.LoadAccountsAsync();
+
+            ApplyFilters();
         }
 
         private async Task LoadTransactionHistory(int accountId, string accountName)
@@ -280,6 +278,36 @@ namespace FinTrackForWindows.ViewModels
         private void PrepareForNewAccount()
         {
             SelectedAccount = new AccountModel();
+        }
+
+        partial void OnFilterByNameChanged(string? value) => ApplyFilters();
+        partial void OnFilterByMinBalanceChanged(string? value) => ApplyFilters();
+        partial void OnFilterByMaxBalanceChanged(string? value) => ApplyFilters();
+
+        private void ApplyFilters()
+        {
+            IEnumerable<AccountModel> filtered = _accountStore.Accounts;
+
+            if (!string.IsNullOrWhiteSpace(FilterByName))
+            {
+                filtered = filtered.Where(a => a.Name.Contains(FilterByName, StringComparison.OrdinalIgnoreCase));
+            }
+
+            if (decimal.TryParse(FilterByMinBalance, out var minBalance))
+            {
+                filtered = filtered.Where(a => a.Balance.HasValue && a.Balance.Value >= minBalance);
+            }
+
+            if (decimal.TryParse(FilterByMaxBalance, out var maxBalance))
+            {
+                filtered = filtered.Where(a => a.Balance.HasValue && a.Balance.Value <= maxBalance);
+            }
+
+            FilteredAccounts.Clear();
+            foreach (var account in filtered)
+            {
+                FilteredAccounts.Add(account);
+            }
         }
     }
 }

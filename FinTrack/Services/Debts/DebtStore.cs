@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.IO;
 
 namespace FinTrackForWindows.Services.Debts
 {
@@ -77,7 +78,8 @@ namespace FinTrackForWindows.Services.Debts
                         lenderImageUrl = dto.LenderProfilePicture ?? "/Assets/Images/Icons/user-green.png",
                         Amount = dto.Amount,
                         DueDate = dto.DueDateUtc.ToLocalTime(),
-                        Status = dto.Status
+                        Status = dto.Status,
+                        VideoMetadataId = dto.VideoMetadataId
                     };
 
                     if (dto.Status == DebtStatusType.PendingBorrowerAcceptance && dto.BorrowerId == _currentUserId)
@@ -172,6 +174,60 @@ namespace FinTrackForWindows.Services.Debts
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to upload video for DebtId: {DebtId}", debt.Id);
+                throw;
+            }
+            finally
+            {
+                IsLoading = false;
+            }
+        }
+
+        public async Task MarkDebtAsDefaultedAsync(int debtId)
+        {
+            IsLoading = true;
+            _logger.LogInformation("Marking debt as defaulted via API. DebtId: {DebtId}", debtId);
+            try
+            {
+                await _apiService.PostAsync<object>($"Debt/mark-as-defaulted/{debtId}", new { });
+
+                await LoadDebtsAsync();
+
+                _logger.LogInformation("Successfully marked debt as defaulted via API. DebtId: {DebtId}", debtId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to mark debt as defaulted for DebtId: {DebtId}", debtId);
+                throw;
+            }
+            finally
+            {
+                IsLoading = false;
+            }
+        }
+
+        public async Task<(Stream? Stream, string? ContentType)> GetVideoStreamAsync(int videoId, string key)
+        {
+            IsLoading = true;
+            _logger.LogInformation("Requesting video stream via API for VideoId: {VideoId}", videoId);
+            try
+            {
+                string encodedKey = System.Net.WebUtility.UrlEncode(key);
+                string endpoint = $"Videos/video-metadata-stream/{videoId}?key={encodedKey}";
+
+                var (stream, contentType, _) = await _apiService.StreamFileAsync(endpoint);
+
+                if (stream != null)
+                {
+                    _logger.LogInformation("Video stream received for VideoId: {VideoId}", videoId);
+                    return (stream, contentType);
+                }
+
+                _logger.LogWarning("API returned a null stream for VideoId: {VideoId}", videoId);
+                return (null, null);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get video stream for VideoId: {VideoId}", videoId);
                 throw;
             }
             finally

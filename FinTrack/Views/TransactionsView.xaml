@@ -5,82 +5,15 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:FinTrackForWindows.ViewModels"
              xmlns:helpers="clr-namespace:FinTrackForWindows.Helpers"
-             xmlns:enums="clr-namespace:FinTrackForWindows.Enums"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
              mc:Ignorable="d" 
              d:DesignHeight="850" d:DesignWidth="1500"
              d:DataContext="{d:DesignInstance Type=local:TransactionsViewModel, IsDesignTimeCreatable=True}"
              Background="{StaticResource MainBackgroundBrush}">
 
     <UserControl.Resources>
-        <helpers:EnumToBooleanConverter x:Key="EnumToBooleanConverter" />
         <helpers:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter" />
-        <Style x:Key="ModernComboBoxStyle" TargetType="ComboBox">
-            <Setter Property="Background" Value="{StaticResource CardDarkerBackgroundBrush}"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Height" Value="40"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="ComboBox">
-                        <Grid>
-                            <ToggleButton x:Name="ToggleButton"
-                                          BorderBrush="{TemplateBinding BorderBrush}"
-                                          Background="{TemplateBinding Background}"
-                                          Foreground="{TemplateBinding Foreground}"
-                                          Focusable="False"
-                                          IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
-                                          ClickMode="Press">
-                                <ToggleButton.Style>
-                                    <Style TargetType="ToggleButton">
-                                        <Setter Property="Template">
-                                            <Setter.Value>
-                                                <ControlTemplate TargetType="ToggleButton">
-                                                    <Border CornerRadius="10" Background="{TemplateBinding Background}">
-                                                        <Grid>
-                                                            <Grid.ColumnDefinitions>
-                                                                <ColumnDefinition Width="*"/>
-                                                                <ColumnDefinition Width="30"/>
-                                                            </Grid.ColumnDefinitions>
-                                                            <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0"/>
-                                                            <Path Grid.Column="1" x:Name="Arrow" Data="M0,0 L4,4 L8,0" Stroke="White" StrokeThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                        </Grid>
-                                                    </Border>
-                                                </ControlTemplate>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </Style>
-                                </ToggleButton.Style>
-                            </ToggleButton>
-                            <ContentPresenter Name="ContentSite"
-                                              IsHitTestVisible="False"
-                                              Content="{TemplateBinding SelectionBoxItem}"
-                                              ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
-                                              ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
-                                              Margin="10,0,0,0"
-                                              VerticalAlignment="Center"
-                                              HorizontalAlignment="Left"/>
-                            <Popup x:Name="Popup"
-                                   Placement="Bottom"
-                                   IsOpen="{TemplateBinding IsDropDownOpen}"
-                                   AllowsTransparency="True"
-                                   Focusable="False"
-                                   PopupAnimation="Slide">
-                                <Grid Name="DropDown" SnapsToDevicePixels="True" MinWidth="{TemplateBinding ActualWidth}" MaxHeight="{TemplateBinding MaxDropDownHeight}">
-                                    <Border x:Name="DropDownBorder" 
-                                            Background="{StaticResource CardDarkerBackgroundBrush}" 
-                                            BorderThickness="1"
-                                            BorderBrush="{StaticResource AccentBlueBrush}"
-                                            CornerRadius="10"/>
-                                    <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
-                                        <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained"/>
-                                    </ScrollViewer>
-                                </Grid>
-                            </Popup>
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
+        <helpers:BrushToLvcPaintConverter x:Key="BrushToLvcPaintConverter"/>
     </UserControl.Resources>
 
     <Grid Margin="30">
@@ -89,88 +22,153 @@
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
 
-        <DockPanel Grid.Column="0" Margin="0,0,20,0">
-            <UniformGrid DockPanel.Dock="Top" Columns="3" Margin="0,0,0,20">
-                <Border Style="{StaticResource DashboardCardStyle}">
-                    <StackPanel TextBlock.TextAlignment="Center">
-                        <TextBlock Text="TOTAL INCOME" Style="{StaticResource LabelTextStyle}" Margin="0"/>
-                        <TextBlock Text="{Binding TotalIncome}" Foreground="{StaticResource StatusGreenBrush}" FontSize="32" FontWeight="Bold" Margin="0,10,0,0"/>
-                    </StackPanel>
-                </Border>
-                <Border Style="{StaticResource DashboardCardStyle}">
-                    <StackPanel TextBlock.TextAlignment="Center">
-                        <TextBlock Text="TOTAL EXPENSES" Style="{StaticResource LabelTextStyle}" Margin="0"/>
-                        <TextBlock Text="{Binding TotalExpense}" Foreground="{StaticResource StatusRedBrush}" FontSize="32" FontWeight="Bold" Margin="0,10,0,0"/>
-                    </StackPanel>
-                </Border>
-                <Border Style="{StaticResource DashboardCardStyle}">
-                    <StackPanel TextBlock.TextAlignment="Center">
-                        <TextBlock Text="MOST EXPENSIVE" Style="{StaticResource LabelTextStyle}" Margin="0"/>
-                        <TextBlock Text="{Binding MostSpending}" Foreground="{StaticResource AccentBlueBrush}" FontSize="32" FontWeight="Bold" Margin="0,10,0,0"/>
-                    </StackPanel>
-                </Border>
-            </UniformGrid>
-
-            <Border Style="{StaticResource DashboardCardStyle}">
-                <DockPanel>
-                    <Grid DockPanel.Dock="Top" Margin="0,0,0,15">
-                        <TextBlock Text="All Transactions" Style="{StaticResource CardTitleTextStyle}"/>
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                            <TextBox Text="Search..." Style="{StaticResource ModernTextBoxStyle}" Width="150" Margin="0,0,10,0"/>
-                            <Button Content="Filter" Style="{StaticResource PrimaryButtonStyle}" Padding="15,8" Width="70"/>
+        <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <DockPanel Margin="0,0,20,0">
+                <!-- Özet Kartları -->
+                <UniformGrid DockPanel.Dock="Top" Columns="3" Margin="0,0,0,20">
+                    <!-- 1. Gelir / Gider Oranı -->
+                    <Border Style="{StaticResource DashboardCardStyle}" Margin="5">
+                        <StackPanel>
+                            <TextBlock Text="Gelir / Gider Oranı" 
+                       Style="{StaticResource LabelTextStyle}" 
+                       HorizontalAlignment="Center"
+                       Margin="0,0,0,10"/>
+                            <lvc:PieChart Series="{Binding IncomeVsExpenseSeries, Mode=OneWay}" 
+                          LegendPosition="Bottom"
+                          Height="280"
+                          AnimationsSpeed="00:00:01"
+                          LegendTextSize="12"/>
                         </StackPanel>
-                    </Grid>
-                    <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" DockPanel.Dock="Top" BorderThickness="0,0,0,1" Margin="0,0,0,15" Opacity="0.5"/>
+                    </Border>
 
-                    <ListView ItemsSource="{Binding Transactions}"
-                              SelectedItem="{Binding SelectedTransaction, Mode=OneWayToSource}"
-                              Background="Transparent" BorderThickness="0" 
-                              ItemContainerStyle="{StaticResource CleanListViewItemStyle}"
-                              ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <Border Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10" Padding="15" Margin="0,0,0,8">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="Auto"/>
-                                            <ColumnDefinition Width="Auto"/>
-                                        </Grid.ColumnDefinitions>
-                                        <Border Grid.Column="0" Background="{Binding IconBackground}" CornerRadius="20" Width="40" Height="40">
-                                            <Image Source="/Assets/Images/Icons/money.png" Width="20" Height="20"/>
-                                        </Border>
-                                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="15,0">
-                                            <TextBlock Text="{Binding NameOrDescription}" Foreground="White" FontSize="15" FontWeight="SemiBold"/>
-                                            <TextBlock Foreground="{StaticResource TopBarTextSecondaryBrush}" FontSize="12">
-                                                <Run Text="{Binding Date, StringFormat='dd MMMM yyyy'}" />
-                                                <Run Text=" - " />
-                                                <Run Text="{Binding AccountName}" />
-                                            </TextBlock>
-                                        </StackPanel>
-                                        <TextBlock Grid.Column="2" Text="{Binding Amount, StringFormat='C'}" Foreground="{Binding AmountForegroundColor}" FontSize="16" FontWeight="Bold" VerticalAlignment="Center"/>
-                                        <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center" Margin="15,0,0,0">
-                                            <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Düzenle"
-                                                    Command="{Binding DataContext.PrepareToEditTransactionCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
-                                                    CommandParameter="{Binding}">
-                                                <Image Source="/Assets/Images/Icons/edit.png" Width="16" Height="16"/>
-                                            </Button>
-                                            <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Sil"
-                                                    Command="{Binding DataContext.DeleteTransactionCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
-                                                    CommandParameter="{Binding}">
-                                                <Image Source="/Assets/Images/Icons/delete.png" Width="16" Height="16"/>
-                                            </Button>
-                                        </StackPanel>
-                                    </Grid>
-                                </Border>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                </DockPanel>
-            </Border>
-        </DockPanel>
+                    <!-- 2. Gelirlerin Kategorilere Göre Dağılımı -->
+                    <Border Style="{StaticResource DashboardCardStyle}" Margin="5">
+                        <StackPanel>
+                            <TextBlock Text="Gelirlerin Dağılımı" 
+                       Style="{StaticResource LabelTextStyle}" 
+                       HorizontalAlignment="Center"
+                       Margin="0,0,0,10"/>
+                            <lvc:PieChart Series="{Binding IncomeByCategorySeries, Mode=OneWay}" 
+                          LegendPosition="Bottom"
+                          Height="280"
+                          AnimationsSpeed="00:00:01"
+                          LegendTextSize="10"/>
+                        </StackPanel>
+                    </Border>
 
-        <ScrollViewer Grid.Column="1">
+                    <!-- 3. Giderlerin Kategorilere Göre Dağılımı -->
+                    <Border Style="{StaticResource DashboardCardStyle}" Margin="5">
+                        <StackPanel>
+                            <TextBlock Text="Giderlerin Dağılımı" 
+                       Style="{StaticResource LabelTextStyle}" 
+                       HorizontalAlignment="Center"
+                       Margin="0,0,0,10"/>
+                            <lvc:PieChart Series="{Binding ExpenseByCategorySeries, Mode=OneWay}" 
+                          LegendPosition="Bottom"
+                          Height="280"
+                          AnimationsSpeed="00:00:01"
+                          LegendTextSize="10"/>
+                        </StackPanel>
+                    </Border>
+                </UniformGrid>
+
+                <!-- Filtreler ve Liste Kartı -->
+                <Border Style="{StaticResource DashboardCardStyle}">
+                    <DockPanel>
+                        <!-- Filtreleme Paneli -->
+                        <Border DockPanel.Dock="Top" Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10" Padding="15" Margin="0,0,0,15">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,10,10">
+                                    <TextBlock Text="AÇIKLAMAYA GÖRE ARA" Style="{StaticResource LabelTextStyle}"/>
+                                    <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding FilterByDescription, UpdateSourceTrigger=PropertyChanged}"/>
+                                </StackPanel>
+                                <StackPanel Grid.Row="0" Grid.Column="1" Margin="0,0,10,10">
+                                    <TextBlock Text="İŞLEM TÜRÜ" Style="{StaticResource LabelTextStyle}"/>
+                                    <ComboBox Style="{StaticResource ModernComboBoxStyle}" ItemsSource="{Binding TransactionTypeFilterOptions}" SelectedItem="{Binding FilterByTransactionType}"/>
+                                </StackPanel>
+                                <StackPanel Grid.Row="0" Grid.Column="2" Margin="0,0,10,10">
+                                    <TextBlock Text="KATEGORİ" Style="{StaticResource LabelTextStyle}"/>
+                                    <ComboBox Style="{StaticResource ModernComboBoxStyle}" ItemsSource="{Binding CategoriesForFilter}" SelectedItem="{Binding FilterByCategory}" DisplayMemberPath="Name"/>
+                                </StackPanel>
+                                <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,0,10,10">
+                                    <TextBlock Text="BAŞLANGIÇ TARİHİ" Style="{StaticResource LabelTextStyle}"/>
+                                    <DatePicker Style="{StaticResource ModernDatePickerStyle}" SelectedDate="{Binding FilterByStartDate}"/>
+                                </StackPanel>
+                                <StackPanel Grid.Row="1" Grid.Column="1" Margin="0,0,10,10">
+                                    <TextBlock Text="BİTİŞ TARİHİ" Style="{StaticResource LabelTextStyle}"/>
+                                    <DatePicker Style="{StaticResource ModernDatePickerStyle}" SelectedDate="{Binding FilterByEndDate}"/>
+                                </StackPanel>
+                                <StackPanel Grid.Row="2" Grid.Column="0" Margin="0,0,10,0">
+                                    <TextBlock Text="MİN. TUTAR" Style="{StaticResource LabelTextStyle}"/>
+                                    <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding FilterByMinAmount, UpdateSourceTrigger=PropertyChanged}"/>
+                                </StackPanel>
+                                <StackPanel Grid.Row="2" Grid.Column="1" Margin="0,0,10,0">
+                                    <TextBlock Text="MAKS. TUTAR" Style="{StaticResource LabelTextStyle}"/>
+                                    <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding FilterByMaxAmount, UpdateSourceTrigger=PropertyChanged}"/>
+                                </StackPanel>
+                                <Button Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" Content="Filtreleri Temizle" Style="{StaticResource PrimaryButtonStyle}" Command="{Binding ResetFiltersCommand}" VerticalAlignment="Center" Height="40"/>
+                            </Grid>
+                        </Border>
+
+                        <TextBlock DockPanel.Dock="Top" Text="İşlemler" Style="{StaticResource CardTitleTextStyle}" Margin="0,0,0,5"/>
+                        <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" DockPanel.Dock="Top" BorderThickness="0,0,0,1" Margin="0,0,0,15" Opacity="0.5"/>
+
+                        <!-- İşlem Listesi -->
+                        <ListView ItemsSource="{Binding FilteredTransactions}"
+                                  SelectedItem="{Binding SelectedTransaction, Mode=TwoWay}"
+                                  Background="Transparent" BorderThickness="0" 
+                                  ItemContainerStyle="{StaticResource CleanListViewItemStyle}"
+                                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10" Padding="15" Margin="0,0,0,8">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Border Grid.Column="0" Background="{Binding IconBackground}" CornerRadius="20" Width="40" Height="40">
+                                                <Image Source="/Assets/Images/Icons/money.png" Width="20" Height="20"/>
+                                            </Border>
+                                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="15,0">
+                                                <TextBlock Text="{Binding NameOrDescription}" Foreground="White" FontSize="15" FontWeight="SemiBold"/>
+                                                <TextBlock Foreground="{StaticResource TopBarTextSecondaryBrush}" FontSize="12">
+                                                    <Run Text="{Binding Date, StringFormat='dd MMMM yyyy'}"/><Run Text=" - "/><Run Text="{Binding AccountName}"/>
+                                                </TextBlock>
+                                            </StackPanel>
+                                            <TextBlock Grid.Column="2" Text="{Binding Amount, StringFormat='C'}" Foreground="{Binding AmountForegroundColor}" FontSize="16" FontWeight="Bold" VerticalAlignment="Center"/>
+                                            <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center" Margin="15,0,0,0">
+                                                <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Düzenle" Command="{Binding DataContext.PrepareToEditTransactionCommand, RelativeSource={RelativeSource AncestorType=ListView}}" CommandParameter="{Binding}">
+                                                    <Image Source="/Assets/Images/Icons/edit.png" Width="16" Height="16"/>
+                                                </Button>
+                                                <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Sil" Margin="5,0,0,0" Command="{Binding DataContext.DeleteTransactionCommand, RelativeSource={RelativeSource AncestorType=ListView}}" CommandParameter="{Binding}">
+                                                    <Image Source="/Assets/Images/Icons/delete.png" Width="16" Height="16"/>
+                                                </Button>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </DockPanel>
+                </Border>
+            </DockPanel>
+        </ScrollViewer>
+
+        <!-- SAĞ SÜTUN: Ekle/Düzenle Formu -->
+        <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
             <Border Style="{StaticResource DashboardCardStyle}" Margin="20,0,0,0">
                 <StackPanel>
                     <Grid>
@@ -180,65 +178,34 @@
                         </Button>
                     </Grid>
                     <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,20" Opacity="0.5"/>
-
-                    <TextBlock Text="PROCESS DESCRIPTION" Style="{StaticResource LabelTextStyle}"/>
+                    <TextBlock Text="İŞLEM AÇIKLAMASI" Style="{StaticResource LabelTextStyle}"/>
                     <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding EditableTransaction.NameOrDescription, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
-
-                    <TextBlock Text="AMOUNT" Style="{StaticResource LabelTextStyle}"/>
+                    <TextBlock Text="TUTAR" Style="{StaticResource LabelTextStyle}"/>
                     <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding EditableTransaction.Amount, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
-
-                    <TextBlock Text="ACCOUNT" Style="{StaticResource LabelTextStyle}"/>
-                    <ComboBox ItemsSource="{Binding AllAccounts}"
-                              SelectedItem="{Binding SelectedAccountForForm, Mode=TwoWay}"
-                              DisplayMemberPath="Name"
-                              Style="{StaticResource ModernComboBoxStyle}"
-                              VerticalContentAlignment="Center"
-                              Padding="10,0,0,0"
-                              Margin="0,0,0,15"/>
-
-                    <TextBlock Text="CURRENCY" Style="{StaticResource LabelTextStyle}"/>
-                    <ComboBox Style="{StaticResource ModernComboBoxStyle}"
-                              ItemsSource="{Binding CurrencyTypes}" 
-                              SelectedItem="{Binding EditableTransaction.Currency, Mode=TwoWay}" Margin="0,0,0,15" >
+                    <TextBlock Text="HESAP" Style="{StaticResource LabelTextStyle}"/>
+                    <ComboBox ItemsSource="{Binding AllAccounts}" SelectedItem="{Binding SelectedAccountForForm, Mode=TwoWay}" DisplayMemberPath="Name" Style="{StaticResource ModernComboBoxStyle}" VerticalContentAlignment="Center" Padding="10,0,0,0" Margin="0,0,0,15"/>
+                    <TextBlock Text="PARA BİRİMİ" Style="{StaticResource LabelTextStyle}"/>
+                    <ComboBox Style="{StaticResource ModernComboBoxStyle}" ItemsSource="{Binding CurrencyTypes}" SelectedItem="{Binding EditableTransaction.Currency, Mode=TwoWay}" Margin="0,0,0,15">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Converter={StaticResource EnumToDescriptionConverter}}"/>
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>
-
-                    <TextBlock Text="CATEGORY" Style="{StaticResource LabelTextStyle}"/>
+                    <TextBlock Text="KATEGORİ" Style="{StaticResource LabelTextStyle}"/>
                     <Grid Margin="0,0,0,15">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-
-                        <ComboBox Grid.Column="0"
-                                  ItemsSource="{Binding AllCategories}"
-                                  SelectedItem="{Binding SelectedCategoryForForm, Mode=TwoWay}"
-                                  DisplayMemberPath="Name"
-                                  Style="{StaticResource ModernComboBoxStyle}"
-                                  VerticalContentAlignment="Center"
-                                  Padding="10,0,0,0"
-                                  Margin="0,0,10,0"/>
-
-                        <Button Grid.Column="1" 
-                                Command="{Binding AddNewCategoryCommand}"
-                                Style="{StaticResource IconOnlyButtonStyle}" 
-                                ToolTip="Yeni Kategori Ekle" 
-                                VerticalAlignment="Center">
+                        <ComboBox Grid.Column="0" ItemsSource="{Binding AllCategories}" SelectedItem="{Binding SelectedCategoryForForm, Mode=TwoWay}" DisplayMemberPath="Name" Style="{StaticResource ModernComboBoxStyle}" VerticalContentAlignment="Center" Padding="10,0,0,0" Margin="0,0,10,0"/>
+                        <Button Grid.Column="1" Command="{Binding AddNewCategoryCommand}" Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Yeni Kategori Ekle" VerticalAlignment="Center">
                             <Image Source="/Assets/Images/Icons/add.png" Width="16" Height="16"/>
                         </Button>
                     </Grid>
-
-                    <TextBlock Text="DATE" Style="{StaticResource LabelTextStyle}"/>
-                    <DatePicker Style="{StaticResource ModernDatePickerStyle}" 
-                                SelectedDate="{Binding EditableTransaction.Date, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,20"/>
-
-                    <Button Content="{Binding SaveButtonText}" 
-                            Command="{Binding SaveTransactionCommand}"
-                            Style="{StaticResource PrimaryButtonStyle}"/>
+                    <TextBlock Text="TARİH" Style="{StaticResource LabelTextStyle}"/>
+                    <DatePicker Style="{StaticResource ModernDatePickerStyle}" SelectedDate="{Binding EditableTransaction.Date, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,20"/>
+                    <Button Content="{Binding SaveButtonText}" Command="{Binding SaveTransactionCommand}" Style="{StaticResource PrimaryButtonStyle}"/>
                 </StackPanel>
             </Border>
         </ScrollViewer>

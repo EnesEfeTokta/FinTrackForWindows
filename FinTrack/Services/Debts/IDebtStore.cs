@@ -1,5 +1,6 @@
 ﻿using FinTrackForWindows.Models.Debt;
 using System.Collections.ObjectModel;
+using System.IO;
 
 namespace FinTrackForWindows.Services.Debts
 {
@@ -17,5 +18,9 @@ namespace FinTrackForWindows.Services.Debts
         Task UploadVideoAsync(DebtModel debt, string filePath);
 
         event Action DebtsChanged;
+
+        Task MarkDebtAsDefaultedAsync(int debtId);
+
+        Task<(Stream? Stream, string? ContentType)> GetVideoStreamAsync(int videoId, string key);
     }
 }

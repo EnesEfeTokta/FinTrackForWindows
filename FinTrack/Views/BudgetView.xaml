@@ -21,8 +21,49 @@
                 <TextBlock Text="Mevcut Bütçeler" Style="{StaticResource CardTitleTextStyle}"/>
                 <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,20" Opacity="0.5"/>
 
-                <ListView ItemsSource="{Binding Budgets}" 
-                          SelectedItem="{Binding SelectedBudget, Mode=OneWay}"
+                <Grid Margin="0,0,0,20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto" MinWidth="150"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,10,0">
+                        <TextBlock Text="İSME GÖRE ARA" Style="{StaticResource LabelTextStyle}"/>
+                        <TextBox Style="{StaticResource ModernTextBoxStyle}" 
+                                 Text="{Binding FilterByName, UpdateSourceTrigger=PropertyChanged}"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="0" Grid.Column="1">
+                        <TextBlock Text="KATEGORİ" Style="{StaticResource LabelTextStyle}"/>
+                        <ComboBox Style="{StaticResource ModernComboBoxStyle}"
+                                  ItemsSource="{Binding CategoriesForFilter}"
+                                  SelectedItem="{Binding SelectedFilterCategory}"/>
+                    </StackPanel>
+
+                    <Grid Grid.Row="1" Grid.ColumnSpan="2" Margin="0,10,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" Margin="0,0,5,0">
+                            <TextBlock Text="MİN. TUTAR" Style="{StaticResource LabelTextStyle}"/>
+                            <TextBox Style="{StaticResource ModernTextBoxStyle}"
+                                     Text="{Binding FilterByMinAmount, UpdateSourceTrigger=PropertyChanged}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Margin="5,0,0,0">
+                            <TextBlock Text="MAKS. TUTAR" Style="{StaticResource LabelTextStyle}"/>
+                            <TextBox Style="{StaticResource ModernTextBoxStyle}"
+                                     Text="{Binding FilterByMaxAmount, UpdateSourceTrigger=PropertyChanged}"/>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+
+                <ListView ItemsSource="{Binding FilteredBudgets}" 
+                          SelectedItem="{Binding SelectedBudget, Mode=TwoWay}"
                           Background="Transparent" BorderThickness="0" 
                           ItemContainerStyle="{StaticResource CleanListViewItemStyle}"
                           ScrollViewer.VerticalScrollBarVisibility="Auto">
@@ -34,7 +75,6 @@
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
-
                                     <StackPanel Grid.Column="0" VerticalAlignment="Center">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
@@ -46,26 +86,19 @@
                                                 <TextBlock Text="{Binding Category}" Foreground="White" FontSize="11" FontWeight="Medium"/>
                                             </Border>
                                         </Grid>
-
                                         <ProgressBar Value="{Binding ProgressValue, Mode=OneWay}" Height="8" Margin="0,10" Background="{StaticResource ProgressBarBackgroundBrush}" Foreground="{StaticResource PrimaryBrush}"/>
-
                                         <Grid>
                                             <TextBlock HorizontalAlignment="Left" Foreground="{StaticResource TopBarTextSecondaryBrush}" Text="{Binding ProgressText, Mode=OneWay}"/>
                                             <TextBlock HorizontalAlignment="Right" Foreground="{StaticResource TopBarTextSecondaryBrush}" Text="{Binding RemainingTimeText, Mode=OneWay}"/>
                                         </Grid>
                                     </StackPanel>
-
                                     <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="15,0,0,0">
                                         <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Düzenle"
                                                 Command="{Binding DataContext.PrepareToEditBudgetCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
-                                                CommandParameter="{Binding}">
-                                            <Image Source="/Assets/Images/Icons/edit.png" Width="16" Height="16"/>
-                                        </Button>
+                                                CommandParameter="{Binding}"/>
                                         <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Sil" Margin="5,0,0,0"
                                                 Command="{Binding DataContext.DeleteBudgetCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
-                                                CommandParameter="{Binding}">
-                                            <Image Source="/Assets/Images/Icons/delete.png" Width="16" Height="16"/>
-                                        </Button>
+                                                CommandParameter="{Binding}"/>
                                     </StackPanel>
                                 </Grid>
                             </Border>
@@ -100,8 +133,7 @@
                     <ComboBox Style="{StaticResource EditableModernComboBoxStyle}"
                               IsEditable="True"
                               IsTextSearchEnabled="True"
-                              ItemsSource="{Binding DataContext.Categories, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                              Text="{Binding Category, UpdateSourceTrigger=PropertyChanged}"
+                              ItemsSource="{Binding DataContext.CategoriesForForm, RelativeSource={RelativeSource AncestorType=UserControl}}"                              Text="{Binding Category, UpdateSourceTrigger=PropertyChanged}"
                               Margin="0,0,0,15"
                               ToolTip="Mevcut bir kategori seçin veya yeni bir kategori yazın"/>
 
