@@ -3,11 +3,13 @@ using FinTrackForWindows.Core;
 using FinTrackForWindows.Services;
 using FinTrackForWindows.Services.Accounts;
 using FinTrackForWindows.Services.Api;
+using FinTrackForWindows.Services.AppInNotifications;
 using FinTrackForWindows.Services.Budgets;
 using FinTrackForWindows.Services.Camera;
 using FinTrackForWindows.Services.Currencies;
 using FinTrackForWindows.Services.Debts;
 using FinTrackForWindows.Services.Memberships;
+using FinTrackForWindows.Services.Reports;
 using FinTrackForWindows.Services.Transactions;
 using FinTrackForWindows.ViewModels;
 using FinTrackForWindows.Views;
@@ -88,8 +90,11 @@ namespace FinTrackForWindows
             services.AddSingleton<ICurrenciesStore, CurrenciesStore>();
             services.AddSingleton<IMembershipStore, MembershipStore>();
             services.AddSingleton<IDebtStore, DebtStore>();
+            services.AddSingleton<IReportStore, ReportStore>();
 
             services.AddTransient<ICameraService, CameraService>();
+
+            services.AddSingleton<INotificationService, HandyControlNotificationService>();
         }
 
         protected override async void OnStartup(StartupEventArgs e)

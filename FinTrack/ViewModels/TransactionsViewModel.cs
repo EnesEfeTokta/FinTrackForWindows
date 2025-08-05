@@ -27,19 +27,22 @@ namespace FinTrackForWindows.ViewModels
         private readonly ITransactionStore _transactionStore;
         private readonly IAccountStore _accountStore;
 
-        // Renk paleti
-        private static readonly SKColor PrimaryColor = new SKColor(100, 181, 246); // Mavi
-        private static readonly SKColor SecondaryColor = new SKColor(239, 83, 80); // Kırmızı
+        private static readonly SKColor PrimaryColor = new SKColor(100, 181, 246);
+        private static readonly SKColor SecondaryColor = new SKColor(239, 83, 80);
         private static readonly SKColor[] PieChartColors = new[]
         {
             new SKColor(100, 181, 246), // Mavi
-            new SKColor(239, 83, 80),   // Kırmızı
+            new SKColor(239, 83, 80),   // Kırmızı  
             new SKColor(255, 167, 38),  // Turuncu
             new SKColor(129, 199, 132), // Yeşil
-            new SKColor(171, 71, 188)   // Mor
+            new SKColor(171, 71, 188),  // Mor
+            new SKColor(255, 193, 7),   // Sarı
+            new SKColor(96, 125, 139),  // Gri-Mavi
+            new SKColor(233, 30, 99),   // Pembe
+            new SKColor(156, 39, 176),  // Menekşe
+            new SKColor(63, 81, 181)    // İndigo
         };
 
-        // Koleksiyonlar
         public ReadOnlyObservableCollection<TransactionModel> Transactions => _transactionStore.Transactions;
         public ObservableCollection<TransactionModel> FilteredTransactions { get; }
         public ReadOnlyObservableCollection<AccountModel> AllAccounts => _accountStore.Accounts;
@@ -48,31 +51,38 @@ namespace FinTrackForWindows.ViewModels
         private ObservableCollection<TransactionCategoryModel> allCategories;
         public ObservableCollection<TransactionCategoryModel> CategoriesForFilter { get; }
 
-        // Filtreleme Özellikleri
         [ObservableProperty]
         private string? filterByDescription;
+
         [ObservableProperty]
         private string? filterByTransactionType;
+
         [ObservableProperty]
         private DateTime? filterByStartDate;
+
         [ObservableProperty]
         private DateTime? filterByEndDate;
+
         [ObservableProperty]
         private string? filterByMinAmount;
+
         [ObservableProperty]
         private string? filterByMaxAmount;
+
         [ObservableProperty]
         private TransactionCategoryModel? filterByCategory;
         public ObservableCollection<string> TransactionTypeFilterOptions { get; }
         private const string AllTypesFilter = "Tüm Türler";
 
-        // Form Özellikleri
         [ObservableProperty]
         private TransactionModel editableTransaction;
+
         [ObservableProperty]
         private TransactionModel? selectedTransaction;
+
         [ObservableProperty]
         private AccountModel? selectedAccountForForm;
+
         private TransactionCategoryModel? _selectedCategoryForForm;
         public TransactionCategoryModel? SelectedCategoryForForm
         {
@@ -110,7 +120,7 @@ namespace FinTrackForWindows.ViewModels
             _transactionStore = transactionStore;
             _accountStore = accountStore;
 
-            // Koleksiyonları başlat
+
             FilteredTransactions = new ObservableCollection<TransactionModel>();
             AllCategories = new ObservableCollection<TransactionCategoryModel>();
             CategoriesForFilter = new ObservableCollection<TransactionCategoryModel>();
@@ -133,7 +143,6 @@ namespace FinTrackForWindows.ViewModels
             NewTransaction();
         }
 
-        // Filtreleme Tetikleyicileri
         partial void OnFilterByDescriptionChanged(string? value) => ApplyFilters();
         partial void OnFilterByTransactionTypeChanged(string? value) => ApplyFilters();
         partial void OnFilterByStartDateChanged(DateTime? value) => ApplyFilters();
@@ -247,7 +256,6 @@ namespace FinTrackForWindows.ViewModels
         {
             _logger.LogInformation($"CalculateTotals başladı. FilteredTransactions Count: {FilteredTransactions?.Count ?? 0}");
 
-            // Null kontrolü
             if (FilteredTransactions == null || !FilteredTransactions.Any())
             {
                 _logger.LogWarning("FilteredTransactions boş veya null!");
@@ -266,7 +274,6 @@ namespace FinTrackForWindows.ViewModels
 
             _logger.LogInformation($"Gelir toplamı: {incomeTotal}, Gider toplamı: {expenseTotal}");
 
-            // --- 1. Gelir / Gider Oranı (Ana Grafik) ---
             var incomeVsExpenseList = new List<ISeries>();
 
             if (incomeTotal > 0)
@@ -300,7 +307,6 @@ namespace FinTrackForWindows.ViewModels
             IncomeVsExpenseSeries = incomeVsExpenseList.ToArray();
             _logger.LogInformation($"Ana grafik oluşturuldu, eleman sayısı: {incomeVsExpenseList.Count}");
 
-            // --- 2. Gelirlerin Kategorilere Göre Dağılımı ---
             var incomeByCategory = incomeTransactions
                 .Where(t => t.Amount > 0)
                 .GroupBy(t => string.IsNullOrEmpty(t.CategoryName) ? "Kategorisiz" : t.CategoryName)
@@ -329,7 +335,7 @@ namespace FinTrackForWindows.ViewModels
                         DataLabelsFormatter = p => $"₺{p.Coordinate.PrimaryValue:N0}",
                         DataLabelsSize = 11,
                         // Küçük dilimler için
-                        //MinGeometrySize = 10
+                        MiniatureShapeSize = 10
                     });
 
                     _logger.LogInformation($"Gelir Kategorisi eklendi: {item.Category} - ₺{item.Total:N0}");
@@ -381,7 +387,7 @@ namespace FinTrackForWindows.ViewModels
                         DataLabelsFormatter = p => $"₺{p.Coordinate.PrimaryValue:N0}",
                         DataLabelsSize = 11,
                         // Küçük dilimler için
-                        //MinGeometrySize = 10
+                        MiniatureShapeSize = 10
                     });
 
                     _logger.LogInformation($"Gider Kategorisi eklendi: {item.Category} - ₺{item.Total:N0}");

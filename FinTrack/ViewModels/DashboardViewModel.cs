@@ -7,10 +7,12 @@ using FinTrackForWindows.Models.Dashboard;
 using FinTrackForWindows.Models.Debt;
 using FinTrackForWindows.Models.Transaction;
 using FinTrackForWindows.Services.Accounts;
+using FinTrackForWindows.Services.AppInNotifications;
 using FinTrackForWindows.Services.Budgets;
 using FinTrackForWindows.Services.Currencies;
 using FinTrackForWindows.Services.Debts;
 using FinTrackForWindows.Services.Memberships;
+using FinTrackForWindows.Services.Reports;
 using FinTrackForWindows.Services.Transactions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -64,6 +66,8 @@ namespace FinTrackForWindows.ViewModels
         private readonly ICurrenciesStore _currenciesStore;
         private readonly IMembershipStore _membershipStore;
         private readonly IDebtStore _debtStore;
+        private readonly IReportStore _reportStore;
+        private readonly IAppInNotificationService _appInNotificationService;
 
         public IEnumerable<BudgetModel> DashboardBudgets => _budgetStore.Budgets.Take(4);
         public IEnumerable<AccountModel> DashboardAccounts => _accountStore.Accounts.Take(2);
@@ -87,7 +91,9 @@ namespace FinTrackForWindows.ViewModels
             ITransactionStore transactionStore,
             ICurrenciesStore currenciesStore,
             IMembershipStore membershipStore,
-            IDebtStore debtStore)
+            IDebtStore debtStore,
+            IReportStore reportStore,
+            IAppInNotificationService appInNotificationService)
         {
             _logger = logger;
             _serviceProvider = serviceProvider;
@@ -97,6 +103,8 @@ namespace FinTrackForWindows.ViewModels
             _currenciesStore = currenciesStore;
             _membershipStore = membershipStore;
             _debtStore = debtStore;
+            _reportStore = reportStore;
+            _appInNotificationService = appInNotificationService;
 
             _budgetStore.BudgetsChanged += OnBudgetsChanged;
             _accountStore.AccountsChanged += OnAccountsChanged;
@@ -109,6 +117,8 @@ namespace FinTrackForWindows.ViewModels
                 _logger.LogInformation("Kullanıcı zaten giriş yapmış. DashboardViewModel verileri yüklüyor.");
                 _ = LoadInitialDataAsync();
             }
+
+            _appInNotificationService.ShowWarning("Could not create report. No data found or a server error occurred.");
         }
 
         private async Task LoadInitialDataAsync()
@@ -428,19 +438,19 @@ namespace FinTrackForWindows.ViewModels
         {
             Reports_DashboardView_ItemsControl = new ObservableCollection<ReportDashboardModel>
             {
-                CreateReport("2025 Yılı Finansal Raporu"),
-                CreateReport("2024 Yılı Tasarruf Raporu"),
-                CreateReport("2023 Yılı Gelir-Gider Raporu"),
-                CreateReport("2022 Yılı Bütçe Raporu")
+                CreateReport("2025 Yılı Hesap Raporu", ReportType.Account),
+                CreateReport("2025 Yılı Gelir-Gider Raporu", ReportType.Transaction),
+                CreateReport("2025 Yılı Bütçe Raporu", ReportType.Budget),
             };
         }
 
-        private ReportDashboardModel CreateReport(string name)
+        private ReportDashboardModel CreateReport(string name, ReportType type)
         {
             var reportLogger = _serviceProvider.GetRequiredService<ILogger<ReportDashboardModel>>();
-            var report = new ReportDashboardModel(reportLogger)
+            var report = new ReportDashboardModel(reportLogger, _reportStore)
             {
                 Name = name,
+                Type = type
             };
             return report;
         }
