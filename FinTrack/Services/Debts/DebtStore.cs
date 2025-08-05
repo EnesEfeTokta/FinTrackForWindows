@@ -7,8 +7,8 @@ using FinTrackForWindows.Services.Api;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using System.IO;
+using System.Security.Claims;
 
 namespace FinTrackForWindows.Services.Debts
 {

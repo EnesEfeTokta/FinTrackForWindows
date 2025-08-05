@@ -8,7 +8,6 @@ using FinTrackForWindows.Services.Api;
 using FinTrackForWindows.Services.Budgets;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
-using System.Linq; // LINQ için using eklemeyi unutmayın
 using System.Windows;
 
 namespace FinTrackForWindows.ViewModels

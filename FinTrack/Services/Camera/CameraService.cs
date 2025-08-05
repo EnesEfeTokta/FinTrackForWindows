@@ -39,7 +39,7 @@ namespace FinTrackForWindows.Services.Camera
                 _timer.Start();
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to initialize camera.");
                 return false;
