@@ -1,4 +1,6 @@
-﻿namespace FinTrackForWindows.Services.Api
+﻿using System.IO;
+
+namespace FinTrackForWindows.Services.Api
 {
     public interface IApiService
     {
@@ -9,5 +11,6 @@
         Task<bool> CreateCategoryAsync(string endpoint, object payload);
         Task<bool> UploadFileAsync(string endpoint, string filePath);
         Task<(byte[] FileBytes, string FileName)?> PostAndDownloadReportAsync<T>(string endpoint, T payload);
+        Task<(Stream? Stream, string? ContentType, string? FileName)> StreamFileAsync(string endpoint);
     }
 }

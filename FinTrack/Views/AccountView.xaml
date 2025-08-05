@@ -28,7 +28,34 @@
                     <StackPanel>
                         <TextBlock Text="Current Accounts" Style="{StaticResource CardTitleTextStyle}"/>
                         <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,15" Opacity="0.5"/>
-                        <ListView ItemsSource="{Binding Accounts}" 
+
+                        <Grid Margin="0,0,0,15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                <TextBlock Text="FILTER BY NAME" Style="{StaticResource LabelTextStyle}"/>
+                                <TextBox Style="{StaticResource ModernTextBoxStyle}" 
+                                         Text="{Binding FilterByName, UpdateSourceTrigger=PropertyChanged}"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1" Margin="5,0,5,0">
+                                <TextBlock Text="MIN BALANCE" Style="{StaticResource LabelTextStyle}"/>
+                                <TextBox Style="{StaticResource ModernTextBoxStyle}"
+                                         Text="{Binding FilterByMinBalance, UpdateSourceTrigger=PropertyChanged}"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="2" Margin="10,0,0,0">
+                                <TextBlock Text="MAX BALANCE" Style="{StaticResource LabelTextStyle}"/>
+                                <TextBox Style="{StaticResource ModernTextBoxStyle}"
+                                         Text="{Binding FilterByMaxBalance, UpdateSourceTrigger=PropertyChanged}"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <ListView ItemsSource="{Binding FilteredAccounts}" 
                                   SelectedItem="{Binding SelectedAccount, Mode=TwoWay}"
                                   Background="Transparent" BorderThickness="0" 
                                   ItemContainerStyle="{StaticResource CleanListViewItemStyle}" 

@@ -14,7 +14,10 @@ namespace FinTrackForWindows.ViewModels
 {
     public partial class BudgetViewModel : ObservableObject
     {
+        private const string AllCategoriesFilter = "Tüm Kategoriler";
+
         public ReadOnlyObservableCollection<BudgetModel> Budgets => _budgetStore.Budgets;
+        public ObservableCollection<BudgetModel> FilteredBudgets { get; }
 
         [ObservableProperty]
         private BudgetModel? selectedBudget;
@@ -24,7 +27,20 @@ namespace FinTrackForWindows.ViewModels
         [NotifyPropertyChangedFor(nameof(SaveButtonText))]
         private bool isEditing;
 
-        public ObservableCollection<string> Categories { get; }
+        // Filtreleme Özellikleri
+        [ObservableProperty]
+        private string? filterByName;
+        [ObservableProperty]
+        private string? filterByMinAmount;
+        [ObservableProperty]
+        private string? filterByMaxAmount;
+        [ObservableProperty]
+        private string? selectedFilterCategory;
+
+        // Kategori listeleri
+        public ObservableCollection<string> CategoriesForForm { get; }
+        public ObservableCollection<string> CategoriesForFilter { get; }
+
         public IEnumerable<BaseCurrencyType> CurrencyTypes => Enum.GetValues(typeof(BaseCurrencyType)).Cast<BaseCurrencyType>();
         public string FormTitle => IsEditing ? "Bütçeyi Düzenle" : "Yeni Bütçe Ekle";
         public string SaveButtonText => IsEditing ? "BÜTÇEYİ GÜNCELLE" : "BÜTÇE OLUŞTUR";
@@ -39,16 +55,29 @@ namespace FinTrackForWindows.ViewModels
             _logger = logger;
             _apiService = apiService;
 
-            Categories = new ObservableCollection<string>();
+            FilteredBudgets = new ObservableCollection<BudgetModel>();
+            CategoriesForForm = new ObservableCollection<string>();
+            CategoriesForFilter = new ObservableCollection<string>();
+
+            _budgetStore.BudgetsChanged += (s, e) => ApplyFilters();
 
             _ = InitializeViewModelAsync();
-            PrepareForNewBudget();
         }
 
         private async Task InitializeViewModelAsync()
         {
-            await _budgetStore.LoadBudgetsAsync();
             await LoadCategoriesAsync();
+            await _budgetStore.LoadBudgetsAsync();
+            ApplyFilters();
+
+            if (!FilteredBudgets.Any())
+            {
+                PrepareForNewBudget();
+            }
+            else
+            {
+                SelectedBudget = FilteredBudgets.FirstOrDefault();
+            }
         }
 
         private async Task LoadCategoriesAsync()
@@ -60,17 +89,79 @@ namespace FinTrackForWindows.ViewModels
 
                 App.Current.Dispatcher.Invoke(() =>
                 {
-                    Categories.Clear();
+                    CategoriesForForm.Clear();
+                    CategoriesForFilter.Clear();
+
+                    CategoriesForFilter.Add(AllCategoriesFilter);
+
                     foreach (var category in categoriesFromApi.OrderBy(c => c.Name))
                     {
-                        Categories.Add(category.Name);
+                        CategoriesForForm.Add(category.Name);
+                        CategoriesForFilter.Add(category.Name);
                     }
+
+                    SelectedFilterCategory = AllCategoriesFilter;
                 });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Kategoriler yüklenirken hata oluştu.");
                 MessageBox.Show("Kategoriler yüklenemedi. Lütfen internet bağlantınızı kontrol edin.", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        partial void OnFilterByNameChanged(string? value) => ApplyFilters();
+        partial void OnFilterByMinAmountChanged(string? value) => ApplyFilters();
+        partial void OnFilterByMaxAmountChanged(string? value) => ApplyFilters();
+        partial void OnSelectedFilterCategoryChanged(string? value) => ApplyFilters();
+
+        private void ApplyFilters()
+        {
+            var previouslySelectedId = SelectedBudget?.Id;
+
+            IEnumerable<BudgetModel> filtered = _budgetStore.Budgets;
+
+            if (!string.IsNullOrWhiteSpace(FilterByName))
+            {
+                filtered = filtered.Where(b => b.Name.Contains(FilterByName, StringComparison.OrdinalIgnoreCase));
+            }
+
+            if (!string.IsNullOrEmpty(SelectedFilterCategory) && SelectedFilterCategory != AllCategoriesFilter)
+            {
+                filtered = filtered.Where(b => b.Category.Equals(SelectedFilterCategory, StringComparison.OrdinalIgnoreCase));
+            }
+
+            if (decimal.TryParse(FilterByMinAmount, out var minAmount))
+            {
+                filtered = filtered.Where(b => b.AllocatedAmount >= minAmount);
+            }
+
+            if (decimal.TryParse(FilterByMaxAmount, out var maxAmount) && maxAmount > 0)
+            {
+                filtered = filtered.Where(b => b.AllocatedAmount <= maxAmount);
+            }
+
+            FilteredBudgets.Clear();
+            foreach (var budget in filtered.OrderByDescending(b => b.StartDate))
+            {
+                FilteredBudgets.Add(budget);
+            }
+
+            if (previouslySelectedId.HasValue)
+            {
+                var reselectBudget = FilteredBudgets.FirstOrDefault(b => b.Id == previouslySelectedId.Value);
+                if (reselectBudget != null)
+                {
+                    SelectedBudget = reselectBudget;
+                }
+                else if (!FilteredBudgets.Any())
+                {
+                    PrepareForNewBudget();
+                }
+                else
+                {
+                    SelectedBudget = FilteredBudgets.FirstOrDefault();
+                }
             }
         }
 

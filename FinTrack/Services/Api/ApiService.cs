@@ -25,7 +25,7 @@ namespace FinTrackForWindows.Services.Api
             _logger = logger;
             _configuration = configuration;
 
-            _baseUrl = "http://localhost:5000/";
+            _baseUrl = "http://localhost:8090/";
             //_baseUrl = _configuration["BaseServerUrl"];
             _httpClient = new HttpClient
             {
@@ -379,6 +379,37 @@ namespace FinTrackForWindows.Services.Api
             {
                 _logger.LogError(ex, "Rapor indirme sırasında genel bir hata oluştu: {Endpoint}", endpoint);
                 throw;
+            }
+        }
+
+        public async Task<(Stream? Stream, string? ContentType, string? FileName)> StreamFileAsync(string endpoint)
+        {
+            _logger.LogInformation("Streaming file request started: {Endpoint}", endpoint);
+            try
+            {
+                AddAuthorizationHeader();
+
+                var response = await _httpClient.GetAsync(endpoint, HttpCompletionOption.ResponseHeadersRead);
+
+                response.EnsureSuccessStatusCode();
+
+                var stream = await response.Content.ReadAsStreamAsync();
+
+                var contentType = response.Content.Headers.ContentType?.ToString();
+                var fileName = response.Content.Headers.ContentDisposition?.FileName?.Trim('"');
+
+                _logger.LogInformation("File stream successfully retrieved from {Endpoint}", endpoint);
+                return (stream, contentType, fileName);
+            }
+            catch (HttpRequestException ex)
+            {
+                _logger.LogError(ex, "HTTP error during file stream: {Endpoint}. Status: {StatusCode}", endpoint, ex.StatusCode);
+                return (null, null, null);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Generic error during file stream: {Endpoint}", endpoint);
+                return (null, null, null);
             }
         }
     }

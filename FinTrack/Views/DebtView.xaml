@@ -31,7 +31,7 @@
                        HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </Border>
 
-        <ScrollViewer Grid.Column="0" Margin="0,0,20,0">
+        <ScrollViewer Grid.Column="0" Margin="0,0,20,0" VerticalScrollBarVisibility="Auto">
             <StackPanel>
                 <Border Style="{StaticResource DashboardCardStyle}">
                     <StackPanel>
@@ -104,7 +104,7 @@
                 <TextBlock DockPanel.Dock="Top" Text="All My Debts (Given and Received)" Style="{StaticResource CardTitleTextStyle}"/>
                 <Border DockPanel.Dock="Top" BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,15" Opacity="0.5"/>
 
-                <ListView ItemsSource="{Binding DebtStore.MyDebtsList}" Background="Transparent" BorderThickness="0" ItemContainerStyle="{StaticResource CleanListViewItemStyle}">
+                <ListView ItemsSource="{Binding DebtStore.MyDebtsList}" Background="Transparent" BorderThickness="0" ItemContainerStyle="{StaticResource CleanListViewItemStyle}" ScrollViewer.VerticalScrollBarVisibility="Auto">
                     <ListView.ItemTemplate>
                         <DataTemplate DataType="{x:Type models:DebtModel}">
                             <Border Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10" Padding="15" Margin="0,0,0,10">
@@ -138,8 +138,20 @@
                                                 Command="{Binding DataContext.UploadVideoCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                 CommandParameter="{Binding}"/>
 
-                                        <TextBlock Text="{Binding InfoText}" HorizontalAlignment="Right" Foreground="{StaticResource TopBarTextSecondaryBrush}"
-                                                   Visibility="{Binding IsActionRequiredForBorrower, ConverterParameter=Inverse, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                        <Button Content="Mark as Defaulted" HorizontalAlignment="Right"
+                                                Style="{StaticResource PrimaryButtonStyle}" Background="{StaticResource DebtAccentGradientBrush}"
+                                                Padding="10,5" Width="180"
+                                                Visibility="{Binding CanMarkAsDefaulted, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                Command="{Binding DataContext.MarkAsDefaultedCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                CommandParameter="{Binding}"/>
+
+                                        <Button Content="View Guarantee Video" HorizontalAlignment="Right" 
+                                                Style="{StaticResource PrimaryButtonStyle}" Background="{StaticResource TotalBalanceGradientBrush}"
+                                                Padding="10,5" Width="180"
+                                                Visibility="{Binding IsVideoViewableForLender, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                Command="{Binding DataContext.ViewVideoCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                CommandParameter="{Binding}"/>
+
                                     </Grid>
                                 </StackPanel>
                             </Border>
