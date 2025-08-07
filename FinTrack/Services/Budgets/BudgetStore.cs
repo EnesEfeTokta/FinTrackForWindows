@@ -33,7 +33,7 @@ namespace FinTrackForWindows.Services.Budgets
         {
             if (_budgets.Any())
             {
-                _logger.LogInformation("Bütçeler zaten yüklü. API çağrısı atlanıyor.");
+                _logger.LogInformation("Budgets are already loaded. Skipping API call.");
                 return;
             }
 
@@ -57,13 +57,12 @@ namespace FinTrackForWindows.Services.Budgets
                         EndDate = dto.EndDate,
                     });
                 }
-                _logger.LogInformation("{Count} adet bütçe BudgetStore'a yüklendi.", _budgets.Count);
+                _logger.LogInformation("{Count} budgets loaded into BudgetStore.", _budgets.Count);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "BudgetStore'da bütçeler yüklenirken hata oluştu.");
+                _logger.LogError(ex, "An error occurred while loading budgets in BudgetStore.");
             }
-
         }
 
         public async Task AddBudgetAsync(BudgetCreateDto newBudgetDto)

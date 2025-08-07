@@ -5,7 +5,7 @@ using FinTrackForWindows.Models.Notification;
 using FinTrackForWindows.Services.Api;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
-using System.Windows;
+using FinTrackForWindows.Services.AppInNotifications;
 
 namespace FinTrackForWindows.ViewModels
 {
@@ -26,11 +26,13 @@ namespace FinTrackForWindows.ViewModels
 
         private readonly ILogger<NotificationViewModel> _logger;
         private readonly IApiService _apiService;
+        private readonly IAppInNotificationService _appInNotificationService;
 
-        public NotificationViewModel(ILogger<NotificationViewModel> logger, IApiService apiService)
+        public NotificationViewModel(ILogger<NotificationViewModel> logger, IApiService apiService, IAppInNotificationService appInNotificationService)
         {
             _logger = logger;
             _apiService = apiService;
+            _appInNotificationService = appInNotificationService;
 
             _ = LoadNotifications();
         }
@@ -59,7 +61,7 @@ namespace FinTrackForWindows.ViewModels
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to load notifications.");
-                MessageBox.Show("Could not load notifications. Please check your connection and try again.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                _appInNotificationService.ShowError("Could not load notifications. Please check your connection and try again.", ex);
                 Notifications.Clear();
             }
             finally
@@ -89,7 +91,7 @@ namespace FinTrackForWindows.ViewModels
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to mark all notifications as read.");
-                MessageBox.Show("An error occurred. Could not mark all notifications as read.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                _appInNotificationService.ShowError("An error occurred while marking notifications as read.", ex);
             }
         }
 
@@ -107,7 +109,7 @@ namespace FinTrackForWindows.ViewModels
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to clear all notifications.");
-                MessageBox.Show("An error occurred. Could not clear all notifications.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                _appInNotificationService.ShowError("An error occurred while clearing notifications.", ex);
             }
         }
 
@@ -125,7 +127,7 @@ namespace FinTrackForWindows.ViewModels
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to mark notification {NotificationId} as read.", notification.Id);
-                MessageBox.Show("An error occurred. The notification could not be marked as read.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                _appInNotificationService.ShowError("An error occurred while marking the notification as read.", ex);
             }
         }
 
@@ -143,7 +145,7 @@ namespace FinTrackForWindows.ViewModels
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to delete notification {NotificationId}.", notification.Id);
-                MessageBox.Show("An error occurred. The notification could not be deleted.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                _appInNotificationService.ShowError("An error occurred while deleting the notification.", ex);
             }
         }
     }

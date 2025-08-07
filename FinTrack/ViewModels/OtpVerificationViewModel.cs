@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using FinTrackForWindows.Core;
 using FinTrackForWindows.Services;
+using FinTrackForWindows.Services.AppInNotifications;
 using Microsoft.Extensions.Logging;
 using System.Windows;
 
@@ -24,11 +25,13 @@ namespace FinTrackForWindows.ViewModels
 
         private readonly IAuthService _authService;
         private readonly ILogger<OtpVerificationViewModel> _logger;
+        private readonly IAppInNotificationService _appInNotificationService;
 
-        public OtpVerificationViewModel(IAuthService authService, ILogger<OtpVerificationViewModel> logger)
+        public OtpVerificationViewModel(IAuthService authService, ILogger<OtpVerificationViewModel> logger, IAppInNotificationService appInNotificationService)
         {
             _authService = authService;
             _logger = logger;
+            _appInNotificationService = appInNotificationService;
         }
 
         public void StartCounter()
@@ -52,24 +55,24 @@ namespace FinTrackForWindows.ViewModels
         {
             if (string.IsNullOrWhiteSpace(VerificationCode_OtpVerificationView_TextBox) || VerificationCode_OtpVerificationView_TextBox.Length != 6)
             {
-                MessageBox.Show("Lütfen geçerli bir OTP kodu girin (6 haneli).", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                _logger.LogWarning("Geçersiz OTP kodu girişi. Kullanıcıdan tekrar denemesi istendi.");
+                _appInNotificationService.ShowError("Please enter a valid 6-digit OTP code.");
+                _logger.LogWarning("Invalid OTP code entry. Prompted user to try again.");
                 return;
             }
 
             bool isVerify = await _authService.VerifyOtpAndRegisterCodeAsync(NewUserInformationManager.Email ?? null!, VerificationCode_OtpVerificationView_TextBox ?? null!);
             if (!isVerify)
             {
-                MessageBox.Show("OTP doğrulama başarısız oldu. Lütfen kodu kontrol edin ve tekrar deneyin.", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
-                _logger.LogError("OTP doğrulama başarısız. E-posta: {Email}, Kod: {Code}", NewUserInformationManager.Email, VerificationCode_OtpVerificationView_TextBox);
+                _appInNotificationService.ShowError("OTP verification failed. Please check the code and try again.");
+                _logger.LogError("OTP verification failed. Email: {Email}, Code: {Code}", NewUserInformationManager.Email, VerificationCode_OtpVerificationView_TextBox);
                 return;
             }
-            MessageBox.Show("OTP doğrulama başarılı! Hoş geldiniz!", "Bilgi", MessageBoxButton.OK, MessageBoxImage.Information);
-            _logger.LogInformation("OTP doğrulama başarılı. Kullanıcı kaydı tamamlandı. E-posta: {Email}", NewUserInformationManager.Email);
+            _appInNotificationService.ShowSuccess("OTP verification successful! Welcome!");
+            _logger.LogInformation("OTP verification successful. User registration completed. Email: {Email}", NewUserInformationManager.Email);
 
-            NewUserInformationManager.FullName = null; // Clear the stored user information
-            NewUserInformationManager.Email = null; // Clear the stored user information
-            NewUserInformationManager.Password = null; // Clear the stored user information
+            NewUserInformationManager.FullName = null;
+            NewUserInformationManager.Email = null;
+            NewUserInformationManager.Password = null;
 
             NavigateToLoginRequested?.Invoke();
         }
@@ -83,24 +86,24 @@ namespace FinTrackForWindows.ViewModels
                 string.IsNullOrEmpty(NewUserInformationManager.Password))
             {
                 bool isInitiateRegistration = await _authService.InitiateRegistrationAsnc(
-                    NewUserInformationManager.FirstName,
-                    NewUserInformationManager.LastName,
-                    NewUserInformationManager.Email,
-                    NewUserInformationManager.Password);
+                    NewUserInformationManager.FirstName ?? string.Empty,
+                    NewUserInformationManager.LastName ?? string.Empty,
+                    NewUserInformationManager.Email ?? string.Empty,
+                    NewUserInformationManager.Password ?? string.Empty);
 
                 if (!isInitiateRegistration)
                 {
-                    MessageBox.Show("Kayıt işlemi başarısız oldu. Lütfen daha sonra tekrar deneyin.", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
-                    _logger.LogError("Kayıt işlemi başarısız. E-posta: {Email}", NewUserInformationManager.Email);
+                    _appInNotificationService.ShowError("Registration failed. Please try again later.");
+                    _logger.LogError("Registration failed. Email: {Email}", NewUserInformationManager.Email);
                     return;
                 }
-                MessageBox.Show("Doğrulama kodu tekrar gönderildi.", "Bilgi", MessageBoxButton.OK, MessageBoxImage.Information);
-                _logger.LogInformation("Doğrulama kodu tekrar gönderildi. E-posta: {Email}", NewUserInformationManager.Email);
+                _appInNotificationService.ShowInfo("Verification code has been resent. Please check your email.");
+                _logger.LogInformation("Verification code resent. Email: {Email}", NewUserInformationManager.Email);
             }
             else
             {
-                MessageBox.Show("Kod gönderirken bir sorun oluştu. Bilgileri doğru giriniz.", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
-                _logger.LogWarning("Kod gönderme sırasında eksik kullanıcı bilgileri. Kullanıcı kayıt sayfasına yönlendiriliyor.");
+                _appInNotificationService.ShowError("An issue occurred while sending the code. Please check your information.");
+                _logger.LogWarning("Missing user information during code sending. Redirecting user to registration page.");
                 NavigateToRegisterRequested?.Invoke();
             }
         }
@@ -109,7 +112,7 @@ namespace FinTrackForWindows.ViewModels
         private void NavigateToRegister_OtpVerificationView_Button()
         {
             NavigateToRegisterRequested?.Invoke();
-            _logger.LogInformation("Kullanıcı giriş sayfasına yönlendirildi.");
+            _logger.LogInformation("User redirected to the registration page.");
         }
     }
 }

@@ -28,7 +28,7 @@ namespace FinTrackForWindows.Services.Currencies
         {
             if (_currencies.Any())
             {
-                _logger.LogInformation("Para birimleri zaten yüklü. API çağrısı atlanıyor.");
+                _logger.LogInformation("Currencies are already loaded. Skipping API call.");
                 return;
             }
 
@@ -49,12 +49,12 @@ namespace FinTrackForWindows.Services.Currencies
                             ToCurrencyPrice = item.Rate
                         });
                     }
-                    _logger.LogInformation("{Count} adet para birimi CurrenciesStore'a yüklendi.", _currencies.Count);
+                    _logger.LogInformation("{Count} currencies loaded into CurrenciesStore.", _currencies.Count);
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "CurrenciesStore'da para birimi listesi yüklenirken hata oluştu.");
+                _logger.LogError(ex, "An error occurred while loading the currency list in CurrenciesStore.");
             }
         }
 
@@ -62,7 +62,7 @@ namespace FinTrackForWindows.Services.Currencies
         {
             try
             {
-                _logger.LogInformation("{Target} için geçmiş veriler {Period} periyoduyla isteniyor.", targetCurrencyCode, period);
+                _logger.LogInformation("Historical data for {Target} is requested with {Period} period.", targetCurrencyCode, period);
 
                 string baseCurrency = "USD";
                 string endpoint = $"Currency/{baseCurrency}/history/{targetCurrencyCode}?period={period}";
@@ -72,7 +72,7 @@ namespace FinTrackForWindows.Services.Currencies
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "{Target} için geçmiş veriler yüklenirken CurrenciesStore'da hata oluştu.", targetCurrencyCode);
+                _logger.LogError(ex, "An error occurred while loading historical data for {Target} in CurrenciesStore.", targetCurrencyCode);
                 return null;
             }
         }
@@ -81,7 +81,7 @@ namespace FinTrackForWindows.Services.Currencies
         {
             try
             {
-                _logger.LogInformation("{From} para biriminden {To} para birimine {Amount} miktarı dönüştürülüyor.", fromCurrencyCode, toCurrencyCode, amount);
+                _logger.LogInformation("Converting {Amount} from {From} to {To}.", amount, fromCurrencyCode, toCurrencyCode);
                 string endpoint = $"Currency/convert?from={fromCurrencyCode}&to={toCurrencyCode}&amount={amount}";
                 var response = await _apiService.GetAsync<ConvertResponseDto>(endpoint);
                 if (response != null)
@@ -90,13 +90,13 @@ namespace FinTrackForWindows.Services.Currencies
                 }
                 else
                 {
-                    _logger.LogWarning("Dönüştürme işlemi için geçerli bir yanıt alınamadı.");
+                    _logger.LogWarning("A valid response could not be obtained for the conversion operation.");
                     return 0;
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "{From} para biriminden {To} para birimine dönüştürme işlemi sırasında hata oluştu.", fromCurrencyCode, toCurrencyCode);
+                _logger.LogError(ex, "An error occurred during the conversion from {From} to {To} in CurrenciesStore.", fromCurrencyCode, toCurrencyCode);
                 return 0;
             }
         }

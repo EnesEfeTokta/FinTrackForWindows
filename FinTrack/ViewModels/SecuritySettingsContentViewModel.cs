@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using FinTrackForWindows.Services.AppInNotifications;
 using Microsoft.Extensions.Logging;
-using System.Windows;
 
 namespace FinTrackForWindows.ViewModels
 {
@@ -15,16 +15,19 @@ namespace FinTrackForWindows.ViewModels
 
         readonly ILogger<SecuritySettingsContentViewModel> _logger;
 
-        public SecuritySettingsContentViewModel(ILogger<SecuritySettingsContentViewModel> logger)
+        private readonly IAppInNotificationService _appInNotificationService;
+
+        public SecuritySettingsContentViewModel(ILogger<SecuritySettingsContentViewModel> logger, IAppInNotificationService appInNotificationService)
         {
             _logger = logger;
+            _appInNotificationService = appInNotificationService;
         }
 
         [RelayCommand]
         private void SecuritySettingsContentSaveChanges()
         {
-            _logger.LogInformation("Güvenlik ayarları kaydedildi.");
-            MessageBox.Show("Güvenlik ayarları kaydedildi.", "Ayarlar", MessageBoxButton.OK, MessageBoxImage.Information);
+            _logger.LogInformation("Security settings saved.");
+            _appInNotificationService.ShowSuccess("Security settings saved.");
         }
     }
 }

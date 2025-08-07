@@ -31,7 +31,9 @@ namespace FinTrackForWindows.ViewModels
             _cameraService = cameraService;
             _closeWindowAction = closeWindowAction;
 
-            CommitmentText = $"Ben, {debt.BorrowerName}, {debt.LenderName} kişisinden {DateTime.UtcNow:dd.MM.yyyy} tarihinde almış olduğum {debt.Amount:N2} TRY tutarındaki borcu, en geç {debt.DueDate:dd.MM.yyyy} tarihinde ödemeyi taahhüt ediyorum. Eğer borcu belirtilen zamanda ve miktarda geri ödemezsem, bu video kaydının borç veren {debt.LenderName} kişisinin erişimine açılacağını ve yasal delil olarak kullanılabileceğini kabul ediyorum.";
+            CommitmentText = $"Ben, {debt.BorrowerName}, {debt.LenderName} kişisinden {DateTime.UtcNow:dd.MM.yyyy} tarihinde almış olduğum {debt.Amount:N2} TRY tutarındaki borcu, " +
+                $"en geç {debt.DueDate:dd.MM.yyyy} tarihinde ödemeyi taahhüt ediyorum. Eğer borcu belirtilen zamanda ve miktarda geri ödemezsem, " +
+                $"bu video kaydının borç veren {debt.LenderName} kişisinin erişimine açılacağını ve yasal delil olarak kullanılabileceğini kabul ediyorum.";
 
             _cameraService.OnFrameReady = (frame) => CameraFrame = frame;
 

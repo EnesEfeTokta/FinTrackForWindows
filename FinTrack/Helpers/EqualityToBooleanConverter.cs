@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Windows;
 using System.Windows.Data;
 
 namespace FinTrackForWindows.Helpers
@@ -7,10 +8,19 @@ namespace FinTrackForWindows.Helpers
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            if (values == null || values.Length < 2 || values[0] == null || values[1] == null)
+            if (values.Any(v => v == null || v == DependencyProperty.UnsetValue))
+            {
                 return false;
+            }
 
-            return values[0].Equals(values[1]);
+            for (int i = 1; i < values.Length; i++)
+            {
+                if (!object.Equals(values[0], values[i]))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)

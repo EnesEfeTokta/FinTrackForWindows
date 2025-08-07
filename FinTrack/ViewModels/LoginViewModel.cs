@@ -4,8 +4,8 @@ using CommunityToolkit.Mvvm.Messaging;
 using FinTrackForWindows.Core;
 using FinTrackForWindows.Messages;
 using FinTrackForWindows.Services;
+using FinTrackForWindows.Services.AppInNotifications;
 using Microsoft.Extensions.Logging;
-using System.Windows;
 
 namespace FinTrackForWindows.ViewModels
 {
@@ -31,39 +31,45 @@ namespace FinTrackForWindows.ViewModels
 
         private readonly ILogger<LoginViewModel> _logger;
 
+        private readonly IAppInNotificationService _appInNotificationService;
+
         public LoginViewModel(
             IAuthService authService,
             ILogger<LoginViewModel> logger,
-            ISecureTokenStorage secureTokenStorage)
+            ISecureTokenStorage secureTokenStorage,
+            IAppInNotificationService appInNotificationService)
         {
             _authService = authService;
             _logger = logger;
             _secureTokenStorage = secureTokenStorage;
+            _appInNotificationService = appInNotificationService;
         }
 
         [RelayCommand]
         private async Task Login_LoginView_Button()
         {
-            _logger.LogInformation("Kullanıcı giriş yapmaya çalışıyor. E-posta: {Email}", Email_LoginView_TextBox);
+            _logger.LogInformation("User attempting to log in. Email: {Email}", Email_LoginView_TextBox);
 
             if (string.IsNullOrEmpty(Email_LoginView_TextBox) || string.IsNullOrEmpty(Password_LoginView_TextBox))
             {
-                MessageBox.Show("Lütfen e-posta ve şifre alanlarını doldurun.", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
-                _logger.LogWarning("Kullanıcı giriş yapmaya çalıştı ancak e-posta veya şifre alanları boş.");
+                _appInNotificationService.ShowInfo("Please enter both your email and password.");
+                _logger.LogWarning("Login attempt failed: Email or password field is empty.");
                 return;
             }
 
             string token = await _authService.LoginAsync(Email_LoginView_TextBox, Password_LoginView_TextBox);
             if (string.IsNullOrEmpty(token))
             {
-                MessageBox.Show("Giriş başarısız oldu. Lütfen e-posta ve şifrenizi kontrol edin.", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
-                _logger.LogError("Kullanıcı giriş yapmaya çalıştı ancak token alınamadı. E-posta veya şifre hatalı olabilir.");
+                _appInNotificationService.ShowError("Login failed. Please check your email and password and try again.");
+                _logger.LogError("Login attempt failed: Unable to retrieve token. Invalid email or password.");
                 return;
             }
 
             SessionManager.SetToken(token);
             _secureTokenStorage.SaveToken(token);
-            _logger.LogInformation("Kullanıcı giriş yaptı ve token kaydedildi.");
+            _logger.LogInformation("User logged in successfully. Token has been saved.");
+
+            _appInNotificationService.ShowSuccess("Login successful. Redirecting to the main page.");
 
             WeakReferenceMessenger.Default.Send(new LoginSuccessMessage());
         }
@@ -76,21 +82,21 @@ namespace FinTrackForWindows.ViewModels
             EyeIconSource_LoginView_Image = IsPasswordVisible_LoginView_PasswordBoxAndTextBox
                 ? "/Assets/Images/Icons/eyeopen.png"
                 : "/Assets/Images/Icons/eyeclose.png";
-            _logger.LogInformation("Şifre görünürlüğü değiştirildi. Şifre {0}.", IsPasswordVisible_LoginView_PasswordBoxAndTextBox ? "görünür" : "gizli");
+            _logger.LogInformation("Password visibility toggled. Password is now {0}.", IsPasswordVisible_LoginView_PasswordBoxAndTextBox ? "visible" : "hidden");
         }
 
         [RelayCommand]
         private void NavigateToRegister_LoginView_Button()
         {
             NavigateToRegisterRequested?.Invoke();
-            _logger.LogInformation("Kullanıcı kayıt sayfasına yönlendirildi.");
+            _logger.LogInformation("Navigating to the registration page.");
         }
 
         [RelayCommand]
         private void NavigateToForgotPassword_LoginView_Button()
         {
             NavigateToForgotPasswordRequested?.Invoke();
-            _logger.LogInformation("Kullanıcı şifremi unuttum sayfasına yönlendirildi.");
+            _logger.LogInformation("Navigating to the forgot password page.");
         }
     }
 }

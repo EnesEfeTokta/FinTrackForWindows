@@ -334,7 +334,6 @@ namespace FinTrackForWindows.ViewModels
                         DataLabelsPosition = LiveChartsCore.Measure.PolarLabelsPosition.Middle,
                         DataLabelsFormatter = p => $"₺{p.Coordinate.PrimaryValue:N0}",
                         DataLabelsSize = 11,
-                        // Küçük dilimler için
                         MiniatureShapeSize = 10
                     });
 
@@ -343,7 +342,6 @@ namespace FinTrackForWindows.ViewModels
             }
             else
             {
-                // Veri yoksa placeholder
                 incomeSeries.Add(new PieSeries<ObservableValue>
                 {
                     Name = "Veri Yok",
@@ -358,7 +356,6 @@ namespace FinTrackForWindows.ViewModels
             IncomeByCategorySeries = incomeSeries.ToArray();
             _logger.LogInformation($"Gelir kategorileri grafiği oluşturuldu: {incomeSeries.Count} seri");
 
-            // --- 3. Giderlerin Kategorilere Göre Dağılımı ---
             var expenseByCategory = expenseTransactions
                 .Where(t => t.Amount > 0)
                 .GroupBy(t => string.IsNullOrEmpty(t.CategoryName) ? "Kategorisiz" : t.CategoryName)
@@ -386,7 +383,6 @@ namespace FinTrackForWindows.ViewModels
                         DataLabelsPosition = LiveChartsCore.Measure.PolarLabelsPosition.Middle,
                         DataLabelsFormatter = p => $"₺{p.Coordinate.PrimaryValue:N0}",
                         DataLabelsSize = 11,
-                        // Küçük dilimler için
                         MiniatureShapeSize = 10
                     });
 
@@ -395,7 +391,6 @@ namespace FinTrackForWindows.ViewModels
             }
             else
             {
-                // Veri yoksa placeholder
                 expenseSeries.Add(new PieSeries<ObservableValue>
                 {
                     Name = "Veri Yok",
@@ -410,7 +405,6 @@ namespace FinTrackForWindows.ViewModels
             ExpenseByCategorySeries = expenseSeries.ToArray();
             _logger.LogInformation($"Gider kategorileri grafiği oluşturuldu: {expenseSeries.Count} seri");
 
-            // Property değişikliği bildirimlerini manuel tetikle
             OnPropertyChanged(nameof(IncomeVsExpenseSeries));
             OnPropertyChanged(nameof(IncomeByCategorySeries));
             OnPropertyChanged(nameof(ExpenseByCategorySeries));

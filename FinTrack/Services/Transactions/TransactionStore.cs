@@ -64,7 +64,7 @@ namespace FinTrackForWindows.Services.Transactions
         {
             if (_transactions.Any())
             {
-                _logger.LogInformation("İşlemler zaten yüklü. API çağrısı atlanıyor.");
+                _logger.LogInformation("Transactions are already loaded. Skipping API call.");
                 return;
             }
 
@@ -89,11 +89,11 @@ namespace FinTrackForWindows.Services.Transactions
                         Currency = dto.Currency
                     });
                 }
-                _logger.LogInformation("{Count} adet işlem Transactionstore'a yüklendi.", _transactions.Count);
+                _logger.LogInformation("{Count} transactions loaded into TransactionStore.", _transactions.Count);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Transactionstore'da işlemler yüklenirken hata oluştu.");
+                _logger.LogError(ex, "An error occurred while loading transactions in TransactionStore.");
             }
         }
 

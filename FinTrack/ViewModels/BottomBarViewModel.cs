@@ -27,14 +27,14 @@ namespace FinTrackForWindows.ViewModels
             Company = $"© {year} FinTrack Inc.";
 
             Version = "v1.0.0";
-            LastSyncStatus = "Son Senkronizasyon: Başarılı";
+            LastSyncStatus = "Last Synchronization: Successful";
         }
 
         [RelayCommand]
         private void AddNewTransaction()
         {
-            _logger.LogInformation("Yeni işlem ekleniyor...");
-            MessageBox.Show("Yeni işlem ekleme özelliği henüz uygulanmadı.", "Bilgi", MessageBoxButton.OK, MessageBoxImage.Information);
+            _logger.LogInformation("Adding new transaction...");
+            MessageBox.Show("The add new transaction feature is not implemented yet.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 }

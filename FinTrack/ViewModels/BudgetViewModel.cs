@@ -5,6 +5,7 @@ using FinTrackForWindows.Dtos.CategoryDtos;
 using FinTrackForWindows.Enums;
 using FinTrackForWindows.Models.Budget;
 using FinTrackForWindows.Services.Api;
+using FinTrackForWindows.Services.AppInNotifications;
 using FinTrackForWindows.Services.Budgets;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
@@ -14,7 +15,7 @@ namespace FinTrackForWindows.ViewModels
 {
     public partial class BudgetViewModel : ObservableObject
     {
-        private const string AllCategoriesFilter = "Tüm Kategoriler";
+        private const string AllCategoriesFilter = "All Categories";
 
         public ReadOnlyObservableCollection<BudgetModel> Budgets => _budgetStore.Budgets;
         public ObservableCollection<BudgetModel> FilteredBudgets { get; }
@@ -27,17 +28,17 @@ namespace FinTrackForWindows.ViewModels
         [NotifyPropertyChangedFor(nameof(SaveButtonText))]
         private bool isEditing;
 
-        // Filtreleme Özellikleri
         [ObservableProperty]
-        private string? filterByName;
-        [ObservableProperty]
-        private string? filterByMinAmount;
-        [ObservableProperty]
-        private string? filterByMaxAmount;
-        [ObservableProperty]
-        private string? selectedFilterCategory;
+        [NotifyPropertyChangedFor(nameof(HasFilteredBudgets))]
+        private bool isFilterActive; 
 
-        // Kategori listeleri
+        [ObservableProperty] private string? filterByName;
+        [ObservableProperty] private string? filterByMinAmount;
+        [ObservableProperty] private string? filterByMaxAmount;
+        [ObservableProperty] private string? selectedFilterCategory;
+
+        public bool HasFilteredBudgets => FilteredBudgets.Any();
+
         public ObservableCollection<string> CategoriesForForm { get; }
         public ObservableCollection<string> CategoriesForFilter { get; }
 
@@ -48,16 +49,20 @@ namespace FinTrackForWindows.ViewModels
         private readonly IBudgetStore _budgetStore;
         private readonly ILogger<BudgetViewModel> _logger;
         private readonly IApiService _apiService;
+        private readonly IAppInNotificationService _notificationService;
 
-        public BudgetViewModel(IBudgetStore budgetStore, ILogger<BudgetViewModel> logger, IApiService apiService)
+        public BudgetViewModel(IBudgetStore budgetStore, ILogger<BudgetViewModel> logger, IApiService apiService, IAppInNotificationService appInNotificationService)
         {
             _budgetStore = budgetStore;
             _logger = logger;
             _apiService = apiService;
+            _notificationService = appInNotificationService;
 
             FilteredBudgets = new ObservableCollection<BudgetModel>();
             CategoriesForForm = new ObservableCollection<string>();
             CategoriesForFilter = new ObservableCollection<string>();
+
+            FilteredBudgets.CollectionChanged += (s, e) => OnPropertyChanged(nameof(HasFilteredBudgets));
 
             _budgetStore.BudgetsChanged += (s, e) => ApplyFilters();
 
@@ -68,16 +73,8 @@ namespace FinTrackForWindows.ViewModels
         {
             await LoadCategoriesAsync();
             await _budgetStore.LoadBudgetsAsync();
-            ApplyFilters();
 
-            if (!FilteredBudgets.Any())
-            {
-                PrepareForNewBudget();
-            }
-            else
-            {
-                SelectedBudget = FilteredBudgets.FirstOrDefault();
-            }
+            PrepareForNewBudget();
         }
 
         private async Task LoadCategoriesAsync()
@@ -91,7 +88,6 @@ namespace FinTrackForWindows.ViewModels
                 {
                     CategoriesForForm.Clear();
                     CategoriesForFilter.Clear();
-
                     CategoriesForFilter.Add(AllCategoriesFilter);
 
                     foreach (var category in categoriesFromApi.OrderBy(c => c.Name))
@@ -99,14 +95,13 @@ namespace FinTrackForWindows.ViewModels
                         CategoriesForForm.Add(category.Name);
                         CategoriesForFilter.Add(category.Name);
                     }
-
                     SelectedFilterCategory = AllCategoriesFilter;
                 });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Kategoriler yüklenirken hata oluştu.");
-                MessageBox.Show("Kategoriler yüklenemedi. Lütfen internet bağlantınızı kontrol edin.", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
+                _logger.LogError(ex, "Kategoriler yüklenirken bir hata oluştu.");
+                _notificationService.ShowError("Kategoriler yüklenemedi. Lütfen internet bağlantınızı kontrol edin.");
             }
         }
 
@@ -117,52 +112,49 @@ namespace FinTrackForWindows.ViewModels
 
         private void ApplyFilters()
         {
-            var previouslySelectedId = SelectedBudget?.Id;
-
             IEnumerable<BudgetModel> filtered = _budgetStore.Budgets;
+            bool activeFilter = false;
 
             if (!string.IsNullOrWhiteSpace(FilterByName))
             {
                 filtered = filtered.Where(b => b.Name.Contains(FilterByName, StringComparison.OrdinalIgnoreCase));
+                activeFilter = true;
             }
 
             if (!string.IsNullOrEmpty(SelectedFilterCategory) && SelectedFilterCategory != AllCategoriesFilter)
             {
                 filtered = filtered.Where(b => b.Category.Equals(SelectedFilterCategory, StringComparison.OrdinalIgnoreCase));
+                activeFilter = true;
             }
 
             if (decimal.TryParse(FilterByMinAmount, out var minAmount))
             {
                 filtered = filtered.Where(b => b.AllocatedAmount >= minAmount);
+                activeFilter = true;
             }
 
             if (decimal.TryParse(FilterByMaxAmount, out var maxAmount) && maxAmount > 0)
             {
                 filtered = filtered.Where(b => b.AllocatedAmount <= maxAmount);
+                activeFilter = true;
             }
+
+            IsFilterActive = activeFilter;
 
             FilteredBudgets.Clear();
             foreach (var budget in filtered.OrderByDescending(b => b.StartDate))
             {
                 FilteredBudgets.Add(budget);
             }
+        }
 
-            if (previouslySelectedId.HasValue)
-            {
-                var reselectBudget = FilteredBudgets.FirstOrDefault(b => b.Id == previouslySelectedId.Value);
-                if (reselectBudget != null)
-                {
-                    SelectedBudget = reselectBudget;
-                }
-                else if (!FilteredBudgets.Any())
-                {
-                    PrepareForNewBudget();
-                }
-                else
-                {
-                    SelectedBudget = FilteredBudgets.FirstOrDefault();
-                }
-            }
+        [RelayCommand]
+        private void ClearFilters()
+        {
+            FilterByName = string.Empty;
+            FilterByMinAmount = string.Empty;
+            FilterByMaxAmount = string.Empty;
+            SelectedFilterCategory = AllCategoriesFilter;
         }
 
         [RelayCommand]
@@ -170,15 +162,21 @@ namespace FinTrackForWindows.ViewModels
         {
             if (SelectedBudget == null || string.IsNullOrWhiteSpace(SelectedBudget.Name) || SelectedBudget.AllocatedAmount <= 0)
             {
-                MessageBox.Show("Lütfen bütçe adı ve sıfırdan büyük bir miktar girin.", "Eksik Bilgi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                _notificationService.ShowWarning("Bütçe adı ve tutarı boş veya sıfırdan küçük olamaz.");
                 return;
             }
 
             string? categoryToSave = SelectedBudget.Category?.Trim();
             if (string.IsNullOrWhiteSpace(categoryToSave))
             {
-                MessageBox.Show("Lütfen bir kategori seçin veya yazın.", "Eksik Bilgi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                _notificationService.ShowWarning("Lütfen bir kategori seçin veya yazın.");
                 return;
+            }
+
+            if (!CategoriesForForm.Contains(categoryToSave))
+            {
+                CategoriesForForm.Add(categoryToSave);
+                CategoriesForFilter.Add(categoryToSave);
             }
 
             var budgetDto = new BudgetCreateDto
@@ -204,13 +202,12 @@ namespace FinTrackForWindows.ViewModels
                     await _budgetStore.AddBudgetAsync(budgetDto);
                 }
 
-                await LoadCategoriesAsync();
                 PrepareForNewBudget();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Bütçe kaydedilirken hata oluştu.");
-                MessageBox.Show("Bütçe kaydedilemedi. Lütfen internet bağlantınızı kontrol edin.", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
+                _logger.LogError(ex, "Bütçe kaydedilirken bir hata oluştu.");
+                _notificationService.ShowError("Bütçe kaydedilemedi. Lütfen internet bağlantınızı kontrol edin.");
             }
         }
 
@@ -233,8 +230,8 @@ namespace FinTrackForWindows.ViewModels
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Bütçe silinirken hata oluştu: {BudgetId}", budgetToDelete.Id);
-                MessageBox.Show("Bütçe silinemedi.", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
+                _logger.LogError(ex, "Bütçe silinirken bir hata oluştu: {BudgetId}", budgetToDelete.Id);
+                _notificationService.ShowError("Bütçe silinemedi. Lütfen internet bağlantınızı kontrol edin.");
             }
         }
 
@@ -259,11 +256,6 @@ namespace FinTrackForWindows.ViewModels
         }
 
         [RelayCommand]
-        private void CleanForm()
-        {
-            PrepareForNewBudget();
-        }
-
         private void PrepareForNewBudget()
         {
             SelectedBudget = new BudgetModel();

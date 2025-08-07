@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Messaging;
 using FinTrackForWindows.Core;
 using FinTrackForWindows.Messages;
+using FinTrackForWindows.Services.AppInNotifications;
 using Microsoft.Extensions.Logging;
 using System.Windows;
 
@@ -21,6 +22,7 @@ namespace FinTrackForWindows.ViewModels
         private readonly ISecureTokenStorage _secureToken;
 
         private readonly ILogger<AuthenticatorViewModel> _logger;
+        private readonly IAppInNotificationService _appInNotificationService;
 
         public AuthenticatorViewModel(
             LoginViewModel loginViewModel,
@@ -29,7 +31,8 @@ namespace FinTrackForWindows.ViewModels
             ForgotPasswordViewModel forgotPasswordViewModel,
             ApplicationRecognizeSlideViewModel applicationRecognizeSlideViewModel,
             ISecureTokenStorage secureToken,
-            ILogger<AuthenticatorViewModel> logger)
+            ILogger<AuthenticatorViewModel> logger,
+            IAppInNotificationService appInNotificationService)
         {
             _loginViewModel = loginViewModel;
             _registerViewModel = registerViewModel;
@@ -37,6 +40,7 @@ namespace FinTrackForWindows.ViewModels
             _forgotPasswordViewModel = forgotPasswordViewModel;
             _applicationRecognizeSlideViewModel = applicationRecognizeSlideViewModel;
             _currentViewModel = _applicationRecognizeSlideViewModel;
+            _appInNotificationService = appInNotificationService;
 
             _applicationRecognizeSlideViewModel.NavigateToLoginRequested += () => CurrentViewModel = _loginViewModel;
 
@@ -74,19 +78,21 @@ namespace FinTrackForWindows.ViewModels
                 bool isValid = TokenValidator.IsTokenValid(token);
                 if (!isValid)
                 {
-                    MessageBox.Show("Token geçersiz. Lütfen tekrar giriş yapın.", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
-                    _logger.LogWarning("Geçersiz token bulundu. Kullanıcıdan yeni giriş yapması istendi.");
+                    _appInNotificationService.ShowWarning("Invalid token. Please log in again.");
+                    _logger.LogWarning("Invalid token found. User is required to log in again.");
                     SessionManager.ClearToken();
                     _secureToken.ClearToken();
                 }
-
-                SessionManager.SetToken(token);
-                _logger.LogInformation("Kullanıcı zaten giriş yapmış. Token kullanıldı.");
-                WeakReferenceMessenger.Default.Send(new LoginSuccessMessage());
+                else
+                {
+                    SessionManager.SetToken(token);
+                    _logger.LogInformation("User already logged in. Token used.");
+                    WeakReferenceMessenger.Default.Send(new LoginSuccessMessage());
+                }
             }
             else
             {
-                _logger.LogInformation("Kullanıcı henüz giriş yapmamış. Uygulama tanıtım slaytları gösteriliyor.");
+                _logger.LogInformation("User has not logged in yet. Application introduction slides are being shown.");
             }
         }
     }

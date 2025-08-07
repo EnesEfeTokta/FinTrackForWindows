@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using FinTrackForWindows.Dtos.SettingsDtos;
 using FinTrackForWindows.Services.Api;
+using FinTrackForWindows.Services.AppInNotifications;
 using Microsoft.Extensions.Logging;
 using System.Windows;
 
@@ -22,10 +23,14 @@ namespace FinTrackForWindows.ViewModels
 
         private readonly IApiService _apiService;
 
-        public ProfileSettingsContentViewModel(ILogger<ProfileSettingsContentViewModel> logger, IApiService apiService)
+        private readonly IAppInNotificationService _appInNotificationService;
+
+        public ProfileSettingsContentViewModel(ILogger<ProfileSettingsContentViewModel> logger, IApiService apiService, IAppInNotificationService appInNotificationService)
         {
             _logger = logger;
             _apiService = apiService;
+            _appInNotificationService = appInNotificationService;
+
             _ = LoadProfileData();
         }
 
@@ -49,8 +54,8 @@ namespace FinTrackForWindows.ViewModels
                 Email = Email,
                 ProfilePictureUrl = ProfilePhotoUrl
             });
-            _logger.LogInformation("Yeni profil bilgileri kaydedildi: {FullName}, {Email}, {ProfilePhotoUrl}", FullName, Email, ProfilePhotoUrl);
-            MessageBox.Show("Profil bilgileri başarıyla kaydedildi.", "Bilgi", MessageBoxButton.OK, MessageBoxImage.Information);
+            _logger.LogInformation("New profile information saved: {FullName}, {Email}, {ProfilePhotoUrl}", FullName, Email, ProfilePhotoUrl);
+            _appInNotificationService.ShowSuccess("Your profile information has been successfully saved.");
         }
     }
 }

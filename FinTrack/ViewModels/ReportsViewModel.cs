@@ -3,10 +3,12 @@ using CommunityToolkit.Mvvm.Input;
 using FinTrackForWindows.Dtos.ReportDtos;
 using FinTrackForWindows.Enums;
 using FinTrackForWindows.Helpers;
+using FinTrackForWindows.Models.Report;
+using FinTrackForWindows.Services.AppInNotifications;
 using FinTrackForWindows.Services.Reports;
 using Microsoft.Extensions.Logging;
+using System.Collections.ObjectModel;
 using System.Text;
-using System.Windows;
 
 namespace FinTrackForWindows.ViewModels
 {
@@ -14,8 +16,13 @@ namespace FinTrackForWindows.ViewModels
     {
         private readonly ILogger<ReportsViewModel> _logger;
         private readonly IReportStore _reportStore;
+        private readonly IAppInNotificationService _notificationService;
 
-        public IReportStore ReportStore => _reportStore;
+        public ObservableCollection<ReportType> AvailableReportTypes { get; }
+        public ObservableCollection<SelectableOptionReport> AvailableAccounts { get; }
+        public ObservableCollection<SelectableOptionReport> AvailableCategories { get; }
+        public ObservableCollection<string> SortingCriteria { get; }
+        public ObservableCollection<DocumentFormat> AvailableDocumentFormats { get; }
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(ReportSummary))]
@@ -62,10 +69,17 @@ namespace FinTrackForWindows.ViewModels
             }
         }
 
-        public ReportsViewModel(ILogger<ReportsViewModel> logger, IReportStore reportStore)
+        public ReportsViewModel(ILogger<ReportsViewModel> logger, IReportStore reportStore, IAppInNotificationService appInNotificationService)
         {
             _logger = logger;
             _reportStore = reportStore;
+            _notificationService = appInNotificationService;
+
+            AvailableReportTypes = _reportStore.AvailableReportTypes;
+            AvailableAccounts = _reportStore.AvailableAccounts;
+            AvailableCategories = _reportStore.AvailableCategories;
+            SortingCriteria = _reportStore.SortingCriteria;
+            AvailableDocumentFormats = _reportStore.AvailableDocumentFormats;
 
             _ = LoadInitialDataAsync();
         }
@@ -77,14 +91,14 @@ namespace FinTrackForWindows.ViewModels
             {
                 await _reportStore.LoadInitialDataAsync();
 
-                SelectedReportType = _reportStore.AvailableReportTypes.FirstOrDefault();
-                SelectedSortingCriterion = _reportStore.SortingCriteria?.FirstOrDefault();
-                SelectedDocumentFormat = _reportStore.AvailableDocumentFormats.FirstOrDefault();
+                SelectedReportType = AvailableReportTypes.FirstOrDefault();
+                SelectedSortingCriterion = SortingCriteria?.FirstOrDefault();
+                SelectedDocumentFormat = AvailableDocumentFormats.FirstOrDefault();
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to load initial data for reports from the Store.");
-                MessageBox.Show("Could not load report options. Please check your internet connection or restart the application.", "Connection Error");
+                _notificationService.ShowError("Could not load report options. Please check your internet connection.");
             }
             finally
             {
@@ -117,11 +131,11 @@ namespace FinTrackForWindows.ViewModels
                     IsIncomeSelected = IsIncomeSelected,
                     IsExpenseSelected = IsExpenseSelected,
                     SelectedSortingCriterion = SelectedSortingCriterion,
-                    SelectedAccountIds = _reportStore.AvailableAccounts
+                    SelectedAccountIds = AvailableAccounts
                         .Where(acc => acc.IsSelected)
                         .Select(acc => acc.Id)
                         .ToList(),
-                    SelectedCategoryIds = _reportStore.AvailableCategories
+                    SelectedCategoryIds = AvailableCategories
                         .Where(cat => cat.IsSelected)
                         .Select(cat => cat.Id)
                         .ToList()
@@ -133,19 +147,19 @@ namespace FinTrackForWindows.ViewModels
 
                 if (!string.IsNullOrEmpty(savedPath))
                 {
-                    MessageBox.Show($"Report created successfully and saved to '{savedPath}'.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    _notificationService.ShowSuccess($"Report created successfully and saved to '{savedPath}'.");
                     FileSaver.OpenContainingFolder(savedPath);
                 }
                 else
                 {
-                    _logger.LogWarning("ReportStore reported failure in report creation (no data or server error).");
-                    MessageBox.Show("Could not create report. No data found for the specified criteria or a server error occurred.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    _logger.LogWarning("ReportStore reported failure in report creation.");
+                    _notificationService.ShowWarning("Could not create report. No data found for the specified criteria.");
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An unexpected error occurred in ViewModel while creating the report.");
-                MessageBox.Show($"An unexpected error occurred:\n\n{ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                _notificationService.ShowError($"An unexpected error occurred: {ex.Message}");
             }
             finally
             {

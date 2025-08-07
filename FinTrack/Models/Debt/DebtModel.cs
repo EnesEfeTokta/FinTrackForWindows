@@ -26,9 +26,13 @@ namespace FinTrackForWindows.Models.Debt
         [NotifyPropertyChangedFor(nameof(CanMarkAsDefaulted))]
         private DateTime dueDate;
 
-        public string borrowerImageUrl = string.Empty;
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(UserIconPath))]
+        private string lenderImageUrl = string.Empty;
 
-        public string lenderImageUrl = string.Empty;
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(UserIconPath))]
+        private string borrowerImageUrl = string.Empty;
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(StatusText))]
@@ -47,8 +51,8 @@ namespace FinTrackForWindows.Models.Debt
             : $"Borçlu: {BorrowerName}";
 
         public string UserIconPath => IsCurrentUserTheBorrower
-            ? "/Assets/Images/Icons/user-red.png"
-            : "/Assets/Images/Icons/user-green.png";
+            ? lenderImageUrl
+            : borrowerImageUrl;
 
         public Brush StatusBrush => Status switch
         {

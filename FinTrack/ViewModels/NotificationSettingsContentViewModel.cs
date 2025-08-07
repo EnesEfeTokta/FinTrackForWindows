@@ -6,7 +6,7 @@ using FinTrackForWindows.Models.Settings;
 using FinTrackForWindows.Services.Api;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
-using System.Windows;
+using FinTrackForWindows.Services.AppInNotifications;
 
 namespace FinTrackForWindows.ViewModels
 {
@@ -26,11 +26,13 @@ namespace FinTrackForWindows.ViewModels
 
         private readonly ILogger<NotificationSettingsContentViewModel> _logger;
         private readonly IApiService _apiService;
+        private readonly IAppInNotificationService _appInNotificationService;
 
-        public NotificationSettingsContentViewModel(ILogger<NotificationSettingsContentViewModel> logger, IApiService apiService)
+        public NotificationSettingsContentViewModel(ILogger<NotificationSettingsContentViewModel> logger, IApiService apiService, IAppInNotificationService appInNotificationService)
         {
             _logger = logger;
             _apiService = apiService;
+            _appInNotificationService = appInNotificationService;
 
             EmailNotificationSettings = new ObservableCollection<NotificationSettingItemModel>();
             _ = LoadSettings();
@@ -62,7 +64,7 @@ namespace FinTrackForWindows.ViewModels
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to load notification settings.");
-                MessageBox.Show("Could not load notification settings. Default values will be used.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                _appInNotificationService.ShowError("Failed to load notification settings. Default values will be used.", ex);
                 InitializeDefaultSettings();
             }
             finally
@@ -89,12 +91,12 @@ namespace FinTrackForWindows.ViewModels
                 await _apiService.PostAsync<object>("UserSettings/UserNotificationSettings", settingsUpdateDto);
 
                 _logger.LogInformation("User notification settings have been successfully saved.");
-                MessageBox.Show("Your notification settings have been saved.", "Notification Settings", MessageBoxButton.OK, MessageBoxImage.Information);
+                _appInNotificationService.ShowInfo("Your notification settings have been saved successfully.");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to save notification settings.");
-                MessageBox.Show("An error occurred while saving your settings. Please try again.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                _appInNotificationService.ShowError("Failed to save notification settings.", ex);
             }
             finally
             {

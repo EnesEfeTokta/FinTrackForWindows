@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System.Windows;
+using FinTrackForWindows.Services.AppInNotifications;
+using Microsoft.Extensions.Logging;
 
 namespace FinTrackForWindows.ViewModels
 {
@@ -11,17 +12,30 @@ namespace FinTrackForWindows.ViewModels
 
         public event Action? NavigateToLoginRequested;
 
+        private readonly ILogger<ForgotPasswordViewModel> _logger;
+        private readonly IAppInNotificationService _appInNotificationService;
+
+        public ForgotPasswordViewModel(ILogger<ForgotPasswordViewModel> logger, IAppInNotificationService appInNotificationService)
+        {
+            _logger = logger;
+            _appInNotificationService = appInNotificationService;
+
+            _logger.LogInformation("ForgotPasswordViewModel initialized.");
+        }
+
         [RelayCommand]
         private void ResetPassword_ForgotPasswordView_Button()
         {
 
             if (!string.IsNullOrEmpty(Email_ForgotPasswordView_TextBox))
             {
-                MessageBox.Show($"Şifre sıfırlama bağlantısı {Email_ForgotPasswordView_TextBox} adresine gönderildi.");
+                _appInNotificationService.ShowInfo($"The password reset link has been sent to {Email_ForgotPasswordView_TextBox}.");
+                _logger.LogInformation($"Password reset link sent to {Email_ForgotPasswordView_TextBox}.");
             }
             else
             {
-                MessageBox.Show("Lütfen geçerli bir e-posta adresi girin.");
+                _appInNotificationService.ShowError("Please enter a valid email address.");
+                _logger.LogWarning("Password reset attempted with an empty email field.");
             }
         }
 

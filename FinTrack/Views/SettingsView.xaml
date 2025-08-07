@@ -96,33 +96,27 @@
 
                                         <Button Command="{Binding DataContext.SelectPlanCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
                                                 CommandParameter="{Binding}"
-                                                Style="{StaticResource PrimaryButtonStyle}" Margin="0,25,0,0">
-                                            <Button.Content>
-                                                <TextBlock>
-                                                    <TextBlock.Style>
-                                                        <Style TargetType="TextBlock">
-                                                            <Setter Property="Text" Value="Yükselt"/>
-                                                            <Style.Triggers>
-                                                                <DataTrigger Value="True">
-                                                                    <DataTrigger.Binding>
-                                                                        <MultiBinding Converter="{StaticResource EqualityToBooleanConverter}">
-                                                                            <Binding Path="DataContext.MembershipStore.CurrentUserMembership.PlanId" RelativeSource="{RelativeSource AncestorType={x:Type ItemsControl}}"/>
-                                                                            <Binding Path="Id"/>
-                                                                        </MultiBinding>
-                                                                    </DataTrigger.Binding>
-                                                                    <Setter Property="Text" Value="Mevcut Plan"/>
-                                                                </DataTrigger>
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </TextBlock.Style>
-                                                </TextBlock>
-                                            </Button.Content>
-                                            <Button.IsEnabled>
-                                                <MultiBinding Converter="{StaticResource InequalityToBooleanConverter}">
-                                                    <Binding Path="DataContext.MembershipStore.CurrentUserMembership.PlanId" RelativeSource="{RelativeSource AncestorType={x:Type ItemsControl}}"/>
-                                                    <Binding Path="Id"/>
-                                                </MultiBinding>
-                                            </Button.IsEnabled>
+                                                Margin="0,25,0,0">
+                                            <Button.Style>
+                                                <Style TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
+                                                    <Setter Property="Content" Value="Yükselt" />
+                                                    <Setter Property="IsEnabled" Value="True" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Value="True">
+                                                            <DataTrigger.Binding>
+                                                                <MultiBinding Converter="{StaticResource EqualityToBooleanConverter}">
+                                                                    <Binding Path="DataContext.MembershipStore.CurrentUserMembership.PlanId"
+                                                                             RelativeSource="{RelativeSource AncestorType={x:Type ItemsControl}}"
+                                                                             FallbackValue="0"/>
+                                                                    <Binding Path="Id"/>
+                                                                </MultiBinding>
+                                                            </DataTrigger.Binding>
+                                                            <Setter Property="Content" Value="Mevcut Plan"/>
+                                                            <Setter Property="IsEnabled" Value="False"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Button.Style>
                                         </Button>
                                     </StackPanel>
                                 </Border>

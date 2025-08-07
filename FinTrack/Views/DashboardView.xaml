@@ -13,6 +13,7 @@
     <UserControl.Resources>
         <helpers:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
         <helpers:NullToVisibilityInverseConverter x:Key="NullToVisibilityInverseConverter"/>
+        <helpers:ValueToVisibilityConverter x:Key="ValueToVisibilityConverter"/>
     </UserControl.Resources>
 
     <Grid>
@@ -113,29 +114,69 @@
 
             <Border Grid.Row="0" Style="{StaticResource DashboardCardStyle}">
                 <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <StackPanel Grid.Column="0">
-                        <TextBlock Text="Accounts" Style="{StaticResource CardTitleTextStyle}"/>
-                        <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,20" Opacity="0.5"/>
-                        <ItemsControl ItemsSource="{Binding Accounts_DashboardView_ItemsControl}" Margin="0,15,0,0">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid Margin="0,5">
-                                        <TextBlock Text="{Binding Name}" Foreground="{StaticResource TopBarTextPrimaryBrush}" FontSize="14"/>
-                                        <ProgressBar Value="{Binding Percentage}" Height="8" Background="{StaticResource ProgressBarBackgroundBrush}" Foreground="{Binding ProgressBarBrush}" Margin="0,20,0,0"/>
-                                        <TextBlock Text="{Binding Balance}" HorizontalAlignment="Right" Foreground="{StaticResource TopBarTextPrimaryBrush}" FontSize="14"/>
-                                    </Grid>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0">
+                        <TextBlock Text="Accounts" Style="{StaticResource CardTitleTextStyle}" HorizontalAlignment="Left" />
+                        <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" 
+                    BorderThickness="0,1,0,0" 
+                    Opacity="0.5" 
+                    Margin="0,8,0,0"/>
                     </StackPanel>
-                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="20,0,0,0">
-                        <TextBlock Text="Total:" Foreground="{StaticResource TopBarTextSecondaryBrush}" HorizontalAlignment="Center" FontSize="14"/>
-                        <TextBlock Text="{Binding TotalBalance_DashboardView_TextBlock}" Style="{StaticResource LargeMetricTextStyle}" Foreground="{StaticResource TotalBalanceGradientBrush}"/>
-                    </StackPanel>
+
+                    <Grid Grid.Row="1" Margin="0,10,0,10">
+                        <TextBlock Text="Total:" 
+                       Foreground="{StaticResource TopBarTextSecondaryBrush}" 
+                       FontSize="12" 
+                       VerticalAlignment="Center" 
+                       HorizontalAlignment="Left"/>
+
+                        <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center">
+                            <TextBlock.Foreground>
+                                <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
+                                    <GradientStop Color="#4CAF50" Offset="0.0" />
+                                    <GradientStop Color="#FFEB3B" Offset="0.5" />
+                                    <GradientStop Color="#F44336" Offset="1.0" />
+                                </LinearGradientBrush>
+                            </TextBlock.Foreground>
+                <Run Text="{Binding TotalBalanceIntegerPart}" FontSize="28" FontWeight="Bold"/>
+                <Run Text="{Binding TotalBalanceFractionalPart}" FontSize="20" FontWeight="SemiBold"/>
+                <Run Text=" "/>
+                <Run Text="{Binding TotalBalanceCurrency}" FontSize="22" FontWeight="Bold"/>
+                        </TextBlock>
+                    </Grid>
+
+                    <ItemsControl Grid.Row="2" ItemsSource="{Binding Accounts_DashboardView_ItemsControl}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <StackPanel Margin="0,8">
+                                        <Grid>
+                                            <TextBlock Text="{Binding Name}" Foreground="{StaticResource TopBarTextPrimaryBrush}" FontSize="14" FontWeight="SemiBold"/>
+                                            <TextBlock Text="{Binding Balance}" HorizontalAlignment="Right" Foreground="{StaticResource TopBarTextPrimaryBrush}" FontSize="14"/>
+                                        </Grid>
+                                        <Grid Height="5" Margin="0,5,0,0">
+                                            <Border Background="{StaticResource StatusRedBrush}" CornerRadius="2.5"/>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="{Binding IncomePercentage, StringFormat={}{0}*}"/>
+                                                    <ColumnDefinition Width="{Binding ExpensePercentage, StringFormat={}{0}*}"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Border Grid.Column="0" Background="{StaticResource StatusGreenBrush}" CornerRadius="2.5,0,0,2.5" />
+                                                <Border Grid.Column="1" Background="{StaticResource StatusRedBrush}" CornerRadius="0,2.5,2.5,0" />
+                                            </Grid>
+                                        </Grid>
+                                    </StackPanel>
+
+                                    <Border BorderBrush="{StaticResource ProgressBarBackgroundBrush}" BorderThickness="0,0,0,1" Opacity="0.7"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                 </Grid>
             </Border>
 
@@ -230,14 +271,14 @@
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Grid.Column="0" HorizontalAlignment="Left" TextBlock.TextAlignment="Left">
-                                    <Image Source="{Binding CurrentActiveDebt.lenderImageUrl}" Width="30" Height="30" />
+                                    <Image Source="{Binding CurrentActiveDebt.LenderImageUrl}" Width="30" Height="30" />
                                     <TextBlock Text="{Binding CurrentActiveDebt.LenderName}" Foreground="{StaticResource StatusGreenBrush}" 
-                                       FontSize="12" Margin="0,5,0,0" TextTrimming="CharacterEllipsis"/>
+                                                FontSize="12" Margin="0,5,0,0" TextTrimming="CharacterEllipsis"/>
                                 </StackPanel>
                                 <StackPanel Grid.Column="1" HorizontalAlignment="Right" TextBlock.TextAlignment="Right">
-                                    <Image Source="{Binding CurrentActiveDebt.borrowerImageUrl}" Width="30" Height="30" />
+                                    <Image Source="{Binding CurrentActiveDebt.BorrowerImageUrl}" Width="30" Height="30" />
                                     <TextBlock Text="{Binding CurrentActiveDebt.BorrowerName}" Foreground="{StaticResource StatusRedBrush}" 
-                                       FontSize="12" Margin="0,5,0,0" TextTrimming="CharacterEllipsis"/>
+                                                FontSize="12" Margin="0,5,0,0" TextTrimming="CharacterEllipsis"/>
                                 </StackPanel>
                             </Grid>
 

@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using FinTrackForWindows.Dtos.FeedbackDtos;
 using FinTrackForWindows.Enums;
 using FinTrackForWindows.Services.Api;
+using FinTrackForWindows.Services.AppInNotifications;
 using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
 using System.Diagnostics;
@@ -34,10 +35,13 @@ namespace FinTrackForWindows.ViewModels
 
         private readonly IApiService _apiService;
 
-        public FeedbackViewModel(ILogger<FeedbackViewModel> logger, IApiService apiService)
+        private readonly IAppInNotificationService _appInNotificationService;
+
+        public FeedbackViewModel(ILogger<FeedbackViewModel> logger, IApiService apiService, IAppInNotificationService appInNotificationService)
         {
             _logger = logger;
             _apiService = apiService;
+            _appInNotificationService = appInNotificationService;
 
             FeedbackTypes = Enum.GetValues(typeof(FeedbackType)).Cast<FeedbackType>();
             SelectedFeedbackType = FeedbackTypes.FirstOrDefault();
@@ -58,7 +62,7 @@ namespace FinTrackForWindows.ViewModels
 
             await _apiService.PostAsync<object>("Feedback", newFeedback);
 
-            // TODO: Burada sisteme bir e-posta göndermekte fayda var...
+            // TODO: It may be useful to send an email to the system here...
 
             _logger.LogInformation("Feedback submitted: Subject: {Subject}, Type: {Type}, Description: {Description}, File Path: {FilePath}",
                 newFeedback.Subject, newFeedback.Type, newFeedback.Description, newFeedback.SavedFilePath);
@@ -85,7 +89,7 @@ namespace FinTrackForWindows.ViewModels
             if (openFileDialog.ShowDialog() == true)
             {
                 SelectedFilePath = openFileDialog.FileName;
-                _logger.LogInformation("Seçilen dosya: {FilePath}", SelectedFilePath);
+                _logger.LogInformation("Selected file: {FilePath}", SelectedFilePath);
             }
         }
 
@@ -100,8 +104,8 @@ namespace FinTrackForWindows.ViewModels
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Link açılamadı: {ex.Message}", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
-                _logger.LogError(ex, "Link açma hatası: {Url}", url);
+                _appInNotificationService.ShowError("The link could not be opened.", ex);
+                _logger.LogError(ex, "Error opening link: {Url}", url);
             }
         }
 

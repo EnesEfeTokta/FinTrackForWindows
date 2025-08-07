@@ -1,10 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FinTrackForWindows.Dtos.MembershipDtos;
+using FinTrackForWindows.Services.AppInNotifications;
 using FinTrackForWindows.Services.Memberships;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
-using System.Windows;
 
 namespace FinTrackForWindows.ViewModels
 {
@@ -23,13 +23,16 @@ namespace FinTrackForWindows.ViewModels
 
         public IMembershipStore MembershipStore => _membershipStore;
 
+        private readonly IAppInNotificationService _appInNotificationService;
+
         public SettingsViewModel(
             ILogger<SettingsViewModel> logger,
             IMembershipStore membershipStore,
             ProfileSettingsContentViewModel profileVM,
             SecuritySettingsContentViewModel securityVM,
             NotificationSettingsContentViewModel notificationsVM,
-            AppSettingsContentViewModel appVM)
+            AppSettingsContentViewModel appVM,
+            IAppInNotificationService appInNotificationService)
         {
             _logger = logger;
             _membershipStore = membershipStore;
@@ -37,6 +40,7 @@ namespace FinTrackForWindows.ViewModels
             _securityVM = securityVM;
             _notificationsVM = notificationsVM;
             _appVM = appVM;
+            _appInNotificationService = appInNotificationService;
 
             _currentPageViewModel = _profileVM;
 
@@ -75,7 +79,8 @@ namespace FinTrackForWindows.ViewModels
 
             if (MembershipStore.CurrentUserMembership != null && MembershipStore.CurrentUserMembership.PlanId == selectedPlan.Id)
             {
-                MessageBox.Show("This is already your current plan.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                _logger.LogInformation($"User is already subscribed to the selected plan: {selectedPlan.Name}");
+                _appInNotificationService.ShowInfo($"You are already subscribed to the {selectedPlan.Name} plan.");
                 return;
             }
 
@@ -91,13 +96,13 @@ namespace FinTrackForWindows.ViewModels
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Failed to open web browser for checkout.");
-                    MessageBox.Show($"Could not open the payment page. Please copy this link and open it manually:\n\n{checkoutUrl}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    _appInNotificationService.ShowError($"Could not open the payment page. Please copy this link and open it manually:\n\n{checkoutUrl}");
                 }
             }
             else
             {
                 _logger.LogInformation("No checkout URL received, assuming successful subscription to a free plan or an API error occurred.");
-                MessageBox.Show("Your subscription status has been updated. Please check your profile.", "Subscription Update", MessageBoxButton.OK, MessageBoxImage.Information);
+                _appInNotificationService.ShowSuccess("Your subscription status has been updated. Please check your profile.");
             }
         }
     }
