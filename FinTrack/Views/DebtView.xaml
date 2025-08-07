@@ -15,6 +15,7 @@
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <helpers:ObjectArrayConverter x:Key="ObjectArrayConverter"/>
+        <helpers:VideoStatusConverter x:Key="VideoStatusConverter"/>
         <sys:Boolean x:Key="TrueBoolean">True</sys:Boolean>
         <sys:Boolean x:Key="FalseBoolean">False</sys:Boolean>
     </UserControl.Resources>
@@ -25,22 +26,22 @@
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
 
-        <Border Grid.ColumnSpan="2" Background="#80000000" CornerRadius="10"
+        <Border Grid.ColumnSpan="2" Background="#80000000" CornerRadius="10" Panel.ZIndex="10"
                 Visibility="{Binding DebtStore.IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}">
             <TextBlock Text="Yükleniyor..." Foreground="White" FontSize="24"
                        HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </Border>
 
-        <ScrollViewer Grid.Column="0" Margin="0,0,20,0" VerticalScrollBarVisibility="Auto">
+        <ScrollViewer Grid.Column="0" Margin="0,0,20,0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
             <StackPanel>
                 <Border Style="{StaticResource DashboardCardStyle}">
                     <StackPanel>
                         <TextBlock Text="Create a New Debt Proposal" Style="{StaticResource CardTitleTextStyle}"/>
-                        <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,15" Opacity="0.5"/>
+                        <Border Style="{StaticResource CardSeparatorStyle}"/>
                         <TextBlock Text="BORROWER'S E-MAIL ADDRESS" Style="{StaticResource LabelTextStyle}"/>
                         <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding NewProposalBorrowerEmail, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
-                        <TextBlock Text="AMOUNT OF EXPLANATION" Style="{StaticResource LabelTextStyle}"/>
-                        <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding NewProposalDescription, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
+                        <TextBlock Text="DESCRIPTION" Style="{StaticResource LabelTextStyle}"/>
+                        <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding NewProposalDescription, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15" MinHeight="60" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"/>
                         <TextBlock Text="AMOUNT OF DEBT" Style="{StaticResource LabelTextStyle}"/>
                         <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding NewProposalAmount, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}" Margin="0,0,0,15"/>
                         <TextBlock Text="FINAL PAYMENT DATE" Style="{StaticResource LabelTextStyle}"/>
@@ -52,25 +53,24 @@
                 <Border Style="{StaticResource DashboardCardStyle}" Margin="0,20,0,0">
                     <StackPanel>
                         <TextBlock Text="Pending Offers" Style="{StaticResource CardTitleTextStyle}"/>
-                        <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,15" Opacity="0.5"/>
-
+                        <Border Style="{StaticResource CardSeparatorStyle}"/>
                         <ItemsControl ItemsSource="{Binding DebtStore.PendingOffers}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate DataType="{x:Type models:DebtModel}">
                                     <Border Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10" Padding="15" Margin="0,0,0,10">
                                         <StackPanel>
-                                            <TextBlock Foreground="White">
+                                            <TextBlock Foreground="White" TextWrapping="Wrap">
                                                 <Run Text="{Binding LenderName}" FontWeight="Bold"/>
                                                 <Run Text="sent you a debt offer."/>
                                             </TextBlock>
                                             <TextBlock Foreground="{StaticResource TopBarTextSecondaryBrush}" Margin="0,5,0,10">
                                                 <Run Text="Amount:"/>
                                                 <Run Text="{Binding Amount, StringFormat={}{0:N2} TRY}"/>
-                                                <Run Text="| Final Payment:"/>
+                                                <Run Text="| Due:"/>
                                                 <Run Text="{Binding DueDate, StringFormat=dd.MM.yyyy}"/>
                                             </TextBlock>
                                             <StackPanel Orientation="Horizontal">
-                                                <Button Content="Confirm" Style="{StaticResource PrimaryButtonStyle}" Background="{StaticResource StatusGreenBrush}" Width="80"
+                                                <Button Content="Confirm" Style="{StaticResource SuccessButtonStyle}" Width="80"
                                                         Command="{Binding DataContext.RespondToOfferCommand, RelativeSource={RelativeSource AncestorType=UserControl}}">
                                                     <Button.CommandParameter>
                                                         <MultiBinding Converter="{StaticResource ObjectArrayConverter}">
@@ -79,7 +79,7 @@
                                                         </MultiBinding>
                                                     </Button.CommandParameter>
                                                 </Button>
-                                                <Button Content="Reject" Style="{StaticResource PrimaryButtonStyle}" Background="{StaticResource StatusRedBrush}" Width="80" Margin="10,0,0,0"
+                                                <Button Content="Reject" Style="{StaticResource DangerButtonStyle}" Width="80" Margin="10,0,0,0"
                                                         Command="{Binding DataContext.RespondToOfferCommand, RelativeSource={RelativeSource AncestorType=UserControl}}">
                                                     <Button.CommandParameter>
                                                         <MultiBinding Converter="{StaticResource ObjectArrayConverter}">
@@ -102,59 +102,155 @@
         <Border Grid.Column="1" Style="{StaticResource DashboardCardStyle}" Margin="20,0,0,0">
             <DockPanel>
                 <TextBlock DockPanel.Dock="Top" Text="All My Debts (Given and Received)" Style="{StaticResource CardTitleTextStyle}"/>
-                <Border DockPanel.Dock="Top" BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,15" Opacity="0.5"/>
-
-                <ListView ItemsSource="{Binding DebtStore.MyDebtsList}" Background="Transparent" BorderThickness="0" ItemContainerStyle="{StaticResource CleanListViewItemStyle}" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <Border DockPanel.Dock="Top" Style="{StaticResource CardSeparatorStyle}"/>
+                <ListView ItemsSource="{Binding DebtStore.MyDebtsList}"
+                          Background="Transparent" BorderThickness="0"
+                          ItemContainerStyle="{StaticResource CleanListViewItemStyle}"
+                          ScrollViewer.VerticalScrollBarVisibility="Auto">
                     <ListView.ItemTemplate>
                         <DataTemplate DataType="{x:Type models:DebtModel}">
-                            <Border Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10" Padding="15" Margin="0,0,0,10">
-                                <Border.Style>
-                                    <Style TargetType="Border">
-                                        <Setter Property="Opacity" Value="1.0" />
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsRejected}" Value="True">
-                                                <Setter Property="Opacity" Value="0.6" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Border.Style>
+                            <ToggleButton IsChecked="{Binding IsExpanded, Mode=TwoWay}" 
+                                          Style="{StaticResource ExpandableListItemToggleButtonStyle}">
                                 <StackPanel>
-                                    <Grid>
-                                        <StackPanel Orientation="Horizontal">
-                                            <Image Source="{Binding UserIconPath}" Width="25" Height="25"/>
-                                            <TextBlock Text="{Binding DebtTitle}" Foreground="White" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                                    <Grid Height="60">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Border Grid.Column="0" Width="40" Height="40" CornerRadius="20" Margin="0,0,15,0">
+                                            <Border.Background>
+                                                <ImageBrush ImageSource="{Binding CounterPartyImageUrl}" />
+                                            </Border.Background>
+                                        </Border>
+
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding CounterPartyName}" Foreground="{StaticResource TopBarTextPrimaryBrush}" FontSize="16" FontWeight="SemiBold"/>
+                                            <TextBlock Text="{Binding StatusText}" Foreground="{Binding StatusBrush}" FontSize="12" FontWeight="Normal"/>
                                         </StackPanel>
-                                        <TextBlock Text="{Binding Amount, StringFormat={}{0:N2} TRY}" Foreground="White" FontSize="16" FontWeight="SemiBold" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+
+                                        <TextBlock Grid.Column="2" Text="{Binding Amount, StringFormat={}{0:N2} TRY}" Foreground="{StaticResource TopBarTextPrimaryBrush}" FontSize="18" FontWeight="Bold" VerticalAlignment="Center" Margin="15,0"/>
+
+                                        <Path x:Name="Arrow" Grid.Column="3" Data="M 0 4 L 4 0 L 8 4" Stroke="{StaticResource TopBarTextSecondaryBrush}" StrokeThickness="1.5" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                            <Path.RenderTransform>
+                                                <RotateTransform Angle="0" CenterX="4" CenterY="2"/>
+                                            </Path.RenderTransform>
+                                        </Path>
                                     </Grid>
 
-                                    <Separator Margin="0,10" Background="{StaticResource ProgressBarBackgroundBrush}"/>
+                                    <Border x:Name="DetailsPanel" Visibility="Collapsed"
+                                            Background="{StaticResource CardDarkerBackgroundBrush}"
+                                            Margin="0,10,-15,-15" Padding="15">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
 
-                                    <Grid>
-                                        <TextBlock Text="{Binding StatusText}" Foreground="{Binding StatusBrush}" VerticalAlignment="Center"/>
+                                            <Grid Grid.Row="0">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                                                    <Border Width="35" Height="35" CornerRadius="17.5">
+                                                        <Border.Background>
+                                                            <ImageBrush ImageSource="{Binding LenderImageUrl}" />
+                                                        </Border.Background>
+                                                    </Border>
+                                                    <StackPanel VerticalAlignment="Center" Margin="10,0,0,0">
+                                                        <TextBlock Text="{Binding LenderName}" Style="{StaticResource DetailValueTextStyle}"/>
+                                                        <TextBlock Text="{Binding LenderEmail}" Style="{StaticResource DetailLabelTextStyle}"/>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                                <Separator Grid.Column="1" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Margin="15,0"/>
+                                                <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                                    <Border Width="35" Height="35" CornerRadius="17.5">
+                                                        <Border.Background>
+                                                            <ImageBrush ImageSource="{Binding BorrowerImageUrl}"/>
+                                                        </Border.Background>
+                                                    </Border>
+                                                    <StackPanel VerticalAlignment="Center" Margin="10,0,0,0">
+                                                        <TextBlock Text="{Binding BorrowerName}" Style="{StaticResource DetailValueTextStyle}"/>
+                                                        <TextBlock Text="{Binding BorrowerEmail}" Style="{StaticResource DetailLabelTextStyle}"/>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </Grid>
 
-                                        <Button Content="Upload Approval Video" HorizontalAlignment="Right" Style="{StaticResource PrimaryButtonStyle}" 
-                                                Background="{StaticResource AccentBlueBrush}" Padding="10,5" Width="180"
-                                                Visibility="{Binding IsActionRequiredForBorrower, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                                Command="{Binding DataContext.UploadVideoCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                CommandParameter="{Binding}"/>
+                                            <Border Grid.Row="1" Style="{StaticResource DetailSeparatorStyle}"/>
+                                            <Grid Grid.Row="2">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0">
+                                                    <TextBlock Text="DEBT AMOUNT" Style="{StaticResource DetailLabelTextStyle}"/>
+                                                    <TextBlock Style="{StaticResource DetailValueTextStyle}" FontSize="16">
+                                                        <Run Text="{Binding Amount}"/>
+                                                        <Run Text=""/>
+                                                        <Run Text="{Binding Currency}" FontSize="10"/>
+                                                    </TextBlock>
+                                                    <TextBlock Text="DEBT STATUS" Style="{StaticResource DetailLabelTextStyle}" Margin="0,10,0,0"/>
+                                                    <TextBlock Text="{Binding StatusText}" Foreground="{Binding StatusBrush}" Style="{StaticResource DetailValueTextStyle}"/>
+                                                </StackPanel>
+                                                <StackPanel Grid.Column="1">
+                                                    <TextBlock Text="DEBT DESCRIPTION" Style="{StaticResource DetailLabelTextStyle}"/>
+                                                    <TextBlock Text="{Binding Description, FallbackValue='No description provided'}" Style="{StaticResource DetailValueTextStyle}" TextWrapping="Wrap"/>
+                                                    <TextBlock Text="DEBT DUE" Style="{StaticResource DetailLabelTextStyle}" Margin="0,10,0,0"/>
+                                                    <TextBlock Style="{StaticResource DetailValueTextStyle}">
+                                                        <Run Text="{Binding DueDate, StringFormat=D}"/>
+                                                        <Run Text="{Binding DaysUntilDue, StringFormat=' ({0} days left)', Mode=OneWay}" Foreground="{StaticResource TopBarTextSecondaryBrush}"/>
+                                                    </TextBlock>
+                                                </StackPanel>
+                                            </Grid>
 
-                                        <Button Content="Mark as Defaulted" HorizontalAlignment="Right"
-                                                Style="{StaticResource PrimaryButtonStyle}" Background="{StaticResource DebtAccentGradientBrush}"
-                                                Padding="10,5" Width="180"
-                                                Visibility="{Binding CanMarkAsDefaulted, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                                Command="{Binding DataContext.MarkAsDefaultedCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                CommandParameter="{Binding}"/>
+                                            <Border Grid.Row="3" Style="{StaticResource DetailSeparatorStyle}"/>
+                                            <Grid Grid.Row="4" Margin="0,10,0,0">
+                                                <StackPanel VerticalAlignment="Bottom" TextBlock.LineHeight="18">
+                                                    <TextBlock Text="Approved Date of Borrowing:" Style="{StaticResource DetailLabelTextStyle}"/>
+                                                    <TextBlock Text="{Binding AcceptanceDate, StringFormat=g, FallbackValue='N/A'}" Style="{StaticResource DetailValueTextStyle}"/>
+                                                    <TextBlock Text="Operator Approved Date:" Style="{StaticResource DetailLabelTextStyle}" />
+                                                    <TextBlock Text="{Binding OperatorApprovalDate, StringFormat=g, FallbackValue='N/A'}" Style="{StaticResource DetailValueTextStyle}"/>
+                                                    <TextBlock Text="Payment Approval Date:" Style="{StaticResource DetailLabelTextStyle}" />
+                                                    <TextBlock Text="{Binding PaymentDate, StringFormat=g, FallbackValue='N/A'}" Style="{StaticResource DetailValueTextStyle}"/>
+                                                </StackPanel>
 
-                                        <Button Content="View Guarantee Video" HorizontalAlignment="Right" 
-                                                Style="{StaticResource PrimaryButtonStyle}" Background="{StaticResource TotalBalanceGradientBrush}"
-                                                Padding="10,5" Width="180"
-                                                Visibility="{Binding IsVideoViewableForLender, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                                Command="{Binding DataContext.ViewVideoCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                CommandParameter="{Binding}"/>
-
-                                    </Grid>
+                                                <StackPanel HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                                                    <Button Content="Upload Approval Video" Style="{StaticResource AccentButtonStyle}" 
+                                                            Visibility="{Binding IsActionRequiredForBorrower, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                            Command="{Binding DataContext.UploadVideoCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                            CommandParameter="{Binding}"/>
+                                                    <Button Content="View Guarantee Video" Style="{StaticResource PrimaryButtonStyle}" Margin="0,5,0,0"
+                                                            Visibility="{Binding IsVideoViewableForLender, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                            Command="{Binding DataContext.ViewVideoCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                            CommandParameter="{Binding}"/>
+                                                    <Button Content="Mark as Defaulted" Style="{StaticResource DangerButtonStyle}" Margin="0,5,0,0"
+                                                            Visibility="{Binding CanMarkAsDefaulted, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                            Command="{Binding DataContext.MarkAsDefaultedCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                            CommandParameter="{Binding}"/>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Grid>
+                                    </Border>
                                 </StackPanel>
-                            </Border>
+                            </ToggleButton>
+
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding IsExpanded}" Value="True">
+                                    <Setter TargetName="DetailsPanel" Property="Visibility" Value="Visible"/>
+                                    <Setter TargetName="Arrow" Property="RenderTransform">
+                                        <Setter.Value>
+                                            <RotateTransform Angle="180" CenterX="4" CenterY="2"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>

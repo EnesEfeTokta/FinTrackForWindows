@@ -76,7 +76,13 @@ namespace FinTrackForWindows.Services.Debts
                         BorrowerName = dto.BorrowerName,
                         BorrowerImageUrl = dto.BorrowerProfilePicture ?? "/Assets/Images/Icons/user-red.png",
                         LenderImageUrl = dto.LenderProfilePicture ?? "/Assets/Images/Icons/user-green.png",
+                        BorrowerEmail = dto.BorrowerEmail,
+                        LenderEmail = dto.LenderEmail,
+                        Description = dto.Description,
+                        PaymentDate = dto.PaidAtUtc,
+                        OperatorApprovalDate = dto.OperatorApprovalAtUtc,
                         Amount = dto.Amount,
+                        Currency = dto.Currency,
                         DueDate = dto.DueDateUtc.ToLocalTime(),
                         Status = dto.Status,
                         VideoMetadataId = dto.VideoMetadataId

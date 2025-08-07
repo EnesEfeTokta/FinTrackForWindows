@@ -4,12 +4,12 @@
     <!-- 1. RENK PALETİ ve TEMEL KAYNAKLAR -->
     <SolidColorBrush x:Key="BackgroundBrush" Color="#0A0E14"/>
     <SolidColorBrush x:Key="CardBackgroundBrush" Color="#2A2D4D"/> <!-- Unified definition -->
-    <SolidColorBrush x:Key="BorderBrush" Color="#30363D"/>
+    <SolidColorBrush x:Key="BorderBrush" Color="#afb2b6ff"/>
     <SolidColorBrush x:Key="PrimaryButtonBrush" Color="#238636"/>
     <SolidColorBrush x:Key="PrimaryButtonHoverBrush" Color="#2EA043"/>
     <SolidColorBrush x:Key="PrimaryButtonPressedBrush" Color="#1C6E2C"/> <!-- Darker shade for pressed state -->
     <SolidColorBrush x:Key="TextBrush" Color="#C9D1D9"/>
-    <SolidColorBrush x:Key="SecondaryTextBrush" Color="#8B949E"/>
+    <SolidColorBrush x:Key="SecondaryTextBrush" Color="#e2e8efff"/>
     <SolidColorBrush x:Key="ErrorBrush" Color="#F85149"/>
     <SolidColorBrush x:Key="AccentBrush" Color="#58A6FF"/>
 
@@ -856,6 +856,33 @@
     </Setter>
 </Style>
 
+<Style x:Key="InvisibleButtonStyle" TargetType="Button">
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Template">
+        <Setter.Value>
+            <ControlTemplate TargetType="Button">
+                <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Border>
+            </ControlTemplate>
+        </Setter.Value>
+    </Setter>
+</Style>
+
+<!-- Detay etiketleri için stil -->
+<Style x:Key="DetailLabelTextStyle" TargetType="TextBlock">
+    <Setter Property="Foreground" Value="{StaticResource TopBarTextSecondaryBrush}"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Margin" Value="0,0,10,5"/>
+</Style>
+
+<!-- Detay değerleri için stil -->
+<Style x:Key="DetailValueTextStyle" TargetType="TextBlock">
+    <Setter Property="Foreground" Value="{StaticResource TopBarTextPrimaryBrush}"/>
+    <Setter Property="Margin" Value="0,0,0,5"/>
+</Style>
+
 <!-- 3. ComboBox Öğesi (Item) Stili -->
 <Style TargetType="{x:Type ComboBoxItem}">
     <Setter Property="Foreground" Value="{StaticResource TopBarTextPrimaryBrush}"/>
@@ -982,6 +1009,51 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style x:Key="ExpandableListItemToggleButtonStyle" TargetType="ToggleButton">
+    <Setter Property="Background" Value="{StaticResource CardDarkerBackgroundBrush}"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Margin" Value="0,0,0,10"/>
+    <Setter Property="Padding" Value="15"/>
+    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+    <Setter Property="Template">
+        <Setter.Value>
+            <ControlTemplate TargetType="ToggleButton">
+                <Border x:Name="RootBorder" 
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="10">
+                    <!-- Animasyonlu geçiş için Border içine alıyoruz -->
+                    <Border.CacheMode>
+                        <BitmapCache />
+                    </Border.CacheMode>
+                    <ContentPresenter />
+                </Border>
+                <ControlTemplate.Triggers>
+                    <!-- Fare üzerine gelince hafif bir parlama efekti -->
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter TargetName="RootBorder" Property="Background" Value="#3A3F5E" />
+                    </Trigger>
+                    <!-- Seçiliyken (genişletilmişken) farklı bir arka plan -->
+                    <Trigger Property="IsChecked" Value="True">
+                        <Setter TargetName="RootBorder" Property="Background" Value="{StaticResource MainBackgroundBrush}" />
+                        <Setter TargetName="RootBorder" Property="BorderBrush" Value="{StaticResource TopBarTextSecondaryBrush}" />
+                        <Setter TargetName="RootBorder" Property="BorderThickness" Value="1" />
+                    </Trigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+        </Setter.Value>
+    </Setter>
+</Style>
+
+<!-- Detay bölümlerini ayıran çizgi stili -->
+<Style x:Key="DetailSeparatorStyle" TargetType="Border">
+    <Setter Property="BorderBrush" Value="{StaticResource ProgressBarBackgroundBrush}"/>
+    <Setter Property="BorderThickness" Value="0,1,0,0"/>
+    <Setter Property="Margin" Value="0,10,0,10"/>
+    <Setter Property="Opacity" Value="0.5"/>
+</Style>
 
     <!-- ScrollBar -->
 <Style x:Key="ModernScrollBarThumb" TargetType="{x:Type Thumb}">
@@ -1297,5 +1369,22 @@
         <Setter Property="Margin" Value="0,15,0,15"/>
         <Setter Property="Opacity" Value="0.2"/>
     </Style>
-   
+
+    <Style x:Key="CardSeparatorStyle" TargetType="Border">
+    <Setter Property="BorderBrush" Value="{StaticResource TopBarTextSecondaryBrush}"/>
+    <Setter Property="BorderThickness" Value="0,1,0,0"/>
+    <Setter Property="Opacity" Value="0.5"/>
+    <Setter Property="Margin" Value="0,10,0,15"/>
+</Style>
+
+<!-- Başarı (Yeşil) Düğme Stili -->
+<Style x:Key="SuccessButtonStyle" TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
+    <Setter Property="Background" Value="{StaticResource StatusGreenBrush}"/>
+</Style>
+
+<!-- Tehlike (Kırmızı) Düğme Stili -->
+    <Style x:Key="DangerButtonStyle" TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
+        <Setter Property="Background" Value="{StaticResource StatusRedBrush}"/>
+    </Style>
+
 </ResourceDictionary>

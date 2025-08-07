@@ -10,7 +10,6 @@ namespace FinTrackForWindows.Models.Debt
         public int LenderId { get; set; }
         public int BorrowerId { get; set; }
         public int CurrentUserId { get; set; }
-
         public int? VideoMetadataId { get; set; }
 
         [ObservableProperty]
@@ -23,16 +22,38 @@ namespace FinTrackForWindows.Models.Debt
         private decimal amount;
 
         [ObservableProperty]
+        private BaseCurrencyType currency;
+
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(DaysUntilDue))]
         [NotifyPropertyChangedFor(nameof(CanMarkAsDefaulted))]
         private DateTime dueDate;
 
         [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(UserIconPath))]
+        [NotifyPropertyChangedFor(nameof(CounterPartyImageUrl))]
         private string lenderImageUrl = string.Empty;
 
         [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(UserIconPath))]
+        [NotifyPropertyChangedFor(nameof(CounterPartyImageUrl))]
         private string borrowerImageUrl = string.Empty;
+
+        [ObservableProperty]
+        private string lenderEmail = string.Empty;
+
+        [ObservableProperty]
+        private string borrowerEmail = string.Empty;
+
+        [ObservableProperty]
+        private string? description;
+
+        [ObservableProperty]
+        private DateTime? acceptanceDate;
+
+        [ObservableProperty]
+        private DateTime? operatorApprovalDate;
+
+        [ObservableProperty]
+        private DateTime? paymentDate;
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(StatusText))]
@@ -43,16 +64,16 @@ namespace FinTrackForWindows.Models.Debt
         [NotifyPropertyChangedFor(nameof(CanMarkAsDefaulted))]
         private DebtStatusType status;
 
+        [ObservableProperty]
+        private bool isExpanded;
+
         public bool IsCurrentUserTheBorrower => BorrowerId == CurrentUserId;
         public bool IsCurrentUserTheLender => LenderId == CurrentUserId;
 
-        public string DebtTitle => IsCurrentUserTheBorrower
-            ? $"Alacaklı: {LenderName}"
-            : $"Borçlu: {BorrowerName}";
+        public int DaysUntilDue => (DueDate.Date - DateTime.Now.Date).Days;
 
-        public string UserIconPath => IsCurrentUserTheBorrower
-            ? lenderImageUrl
-            : borrowerImageUrl;
+        public string CounterPartyName => IsCurrentUserTheBorrower ? LenderName : BorrowerName;
+        public string CounterPartyImageUrl => IsCurrentUserTheBorrower ? LenderImageUrl : BorrowerImageUrl;
 
         public Brush StatusBrush => Status switch
         {
@@ -86,20 +107,14 @@ namespace FinTrackForWindows.Models.Debt
         public bool IsRejected =>
             Status == DebtStatusType.RejectedByBorrower || Status == DebtStatusType.RejectedByOperator;
 
-        /// <summary>
-        /// "Teminat Videosunu İzle" düğmesinin görünür olup olmayacağını belirler.
-        /// </summary>
         public bool IsVideoViewableForLender =>
-            Status == DebtStatusType.Defaulted &&    // Durum 'Defaulted' olmalı
-            IsCurrentUserTheLender &&                // Kullanıcı borç veren olmalı
-            VideoMetadataId.HasValue;                // İlişkili bir video olmalı
+            Status == DebtStatusType.Defaulted &&
+            IsCurrentUserTheLender &&
+            VideoMetadataId.HasValue;
 
-        /// <summary>
-        /// "Temerrüde Düştü Olarak İşaretle" düğmesinin görünür olup olmayacağını belirleyecek.
-        /// </summary>
         public bool CanMarkAsDefaulted =>
-            Status == DebtStatusType.Active &&       // Durum 'Active' olmalı
-            IsCurrentUserTheLender &&                // Kullanıcı borç veren olmalı
-            DueDate < DateTime.Now;                  // Vadesi geçmiş olmalı
+            Status == DebtStatusType.Active &&
+            IsCurrentUserTheLender &&
+            DueDate.Date < DateTime.Now.Date;
     }
 }

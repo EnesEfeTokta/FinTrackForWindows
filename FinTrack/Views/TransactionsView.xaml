@@ -24,58 +24,52 @@
 
         <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
             <DockPanel Margin="0,0,20,0">
-                <!-- Özet Kartları -->
                 <UniformGrid DockPanel.Dock="Top" Columns="3" Margin="0,0,0,20">
-                    <!-- 1. Gelir / Gider Oranı -->
                     <Border Style="{StaticResource DashboardCardStyle}" Margin="5">
                         <StackPanel>
-                            <TextBlock Text="Gelir / Gider Oranı" 
-                       Style="{StaticResource LabelTextStyle}" 
-                       HorizontalAlignment="Center"
-                       Margin="0,0,0,10"/>
+                            <TextBlock Text="Income vs. Expense Ratio" 
+                                       Style="{StaticResource LabelTextStyle}" 
+                                       HorizontalAlignment="Center"
+                                       Margin="0,0,0,10"/>
                             <lvc:PieChart Series="{Binding IncomeVsExpenseSeries, Mode=OneWay}" 
-                          LegendPosition="Bottom"
-                          Height="280"
-                          AnimationsSpeed="00:00:01"
-                          LegendTextSize="12"/>
+                                          LegendPosition="Bottom"
+                                          Height="280"
+                                          AnimationsSpeed="00:00:01"
+                                          LegendTextSize="12"/>
                         </StackPanel>
                     </Border>
 
-                    <!-- 2. Gelirlerin Kategorilere Göre Dağılımı -->
                     <Border Style="{StaticResource DashboardCardStyle}" Margin="5">
                         <StackPanel>
-                            <TextBlock Text="Gelirlerin Dağılımı" 
-                       Style="{StaticResource LabelTextStyle}" 
-                       HorizontalAlignment="Center"
-                       Margin="0,0,0,10"/>
+                            <TextBlock Text="Income Distribution" 
+                                       Style="{StaticResource LabelTextStyle}" 
+                                       HorizontalAlignment="Center"
+                                       Margin="0,0,0,10"/>
                             <lvc:PieChart Series="{Binding IncomeByCategorySeries, Mode=OneWay}" 
-                          LegendPosition="Bottom"
-                          Height="280"
-                          AnimationsSpeed="00:00:01"
-                          LegendTextSize="10"/>
+                                          LegendPosition="Bottom"
+                                          Height="280"
+                                          AnimationsSpeed="00:00:01"
+                                          LegendTextSize="10"/>
                         </StackPanel>
                     </Border>
 
-                    <!-- 3. Giderlerin Kategorilere Göre Dağılımı -->
                     <Border Style="{StaticResource DashboardCardStyle}" Margin="5">
                         <StackPanel>
-                            <TextBlock Text="Giderlerin Dağılımı" 
-                       Style="{StaticResource LabelTextStyle}" 
-                       HorizontalAlignment="Center"
-                       Margin="0,0,0,10"/>
+                            <TextBlock Text="Expense Distribution" 
+                                       Style="{StaticResource LabelTextStyle}" 
+                                       HorizontalAlignment="Center"
+                                       Margin="0,0,0,10"/>
                             <lvc:PieChart Series="{Binding ExpenseByCategorySeries, Mode=OneWay}" 
-                          LegendPosition="Bottom"
-                          Height="280"
-                          AnimationsSpeed="00:00:01"
-                          LegendTextSize="10"/>
+                                          LegendPosition="Bottom"
+                                          Height="280"
+                                          AnimationsSpeed="00:00:01"
+                                          LegendTextSize="10"/>
                         </StackPanel>
                     </Border>
                 </UniformGrid>
 
-                <!-- Filtreler ve Liste Kartı -->
                 <Border Style="{StaticResource DashboardCardStyle}">
                     <DockPanel>
-                        <!-- Filtreleme Paneli -->
                         <Border DockPanel.Dock="Top" Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10" Padding="15" Margin="0,0,0,15">
                             <Grid>
                                 <Grid.RowDefinitions>
@@ -89,41 +83,40 @@
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,10,10">
-                                    <TextBlock Text="AÇIKLAMAYA GÖRE ARA" Style="{StaticResource LabelTextStyle}"/>
+                                    <TextBlock Text="SEARCH BY DESCRIPTION" Style="{StaticResource LabelTextStyle}"/>
                                     <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding FilterByDescription, UpdateSourceTrigger=PropertyChanged}"/>
                                 </StackPanel>
                                 <StackPanel Grid.Row="0" Grid.Column="1" Margin="0,0,10,10">
-                                    <TextBlock Text="İŞLEM TÜRÜ" Style="{StaticResource LabelTextStyle}"/>
+                                    <TextBlock Text="TRANSACTION TYPE" Style="{StaticResource LabelTextStyle}"/>
                                     <ComboBox Style="{StaticResource ModernComboBoxStyle}" ItemsSource="{Binding TransactionTypeFilterOptions}" SelectedItem="{Binding FilterByTransactionType}"/>
                                 </StackPanel>
                                 <StackPanel Grid.Row="0" Grid.Column="2" Margin="0,0,10,10">
-                                    <TextBlock Text="KATEGORİ" Style="{StaticResource LabelTextStyle}"/>
+                                    <TextBlock Text="CATEGORY" Style="{StaticResource LabelTextStyle}"/>
                                     <ComboBox Style="{StaticResource ModernComboBoxStyle}" ItemsSource="{Binding CategoriesForFilter}" SelectedItem="{Binding FilterByCategory}" DisplayMemberPath="Name"/>
                                 </StackPanel>
                                 <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,0,10,10">
-                                    <TextBlock Text="BAŞLANGIÇ TARİHİ" Style="{StaticResource LabelTextStyle}"/>
+                                    <TextBlock Text="START DATE" Style="{StaticResource LabelTextStyle}"/>
                                     <DatePicker Style="{StaticResource ModernDatePickerStyle}" SelectedDate="{Binding FilterByStartDate}"/>
                                 </StackPanel>
                                 <StackPanel Grid.Row="1" Grid.Column="1" Margin="0,0,10,10">
-                                    <TextBlock Text="BİTİŞ TARİHİ" Style="{StaticResource LabelTextStyle}"/>
+                                    <TextBlock Text="END DATE" Style="{StaticResource LabelTextStyle}"/>
                                     <DatePicker Style="{StaticResource ModernDatePickerStyle}" SelectedDate="{Binding FilterByEndDate}"/>
                                 </StackPanel>
                                 <StackPanel Grid.Row="2" Grid.Column="0" Margin="0,0,10,0">
-                                    <TextBlock Text="MİN. TUTAR" Style="{StaticResource LabelTextStyle}"/>
+                                    <TextBlock Text="MIN. AMOUNT" Style="{StaticResource LabelTextStyle}"/>
                                     <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding FilterByMinAmount, UpdateSourceTrigger=PropertyChanged}"/>
                                 </StackPanel>
                                 <StackPanel Grid.Row="2" Grid.Column="1" Margin="0,0,10,0">
-                                    <TextBlock Text="MAKS. TUTAR" Style="{StaticResource LabelTextStyle}"/>
+                                    <TextBlock Text="MAX. AMOUNT" Style="{StaticResource LabelTextStyle}"/>
                                     <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding FilterByMaxAmount, UpdateSourceTrigger=PropertyChanged}"/>
                                 </StackPanel>
-                                <Button Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" Content="Filtreleri Temizle" Style="{StaticResource PrimaryButtonStyle}" Command="{Binding ResetFiltersCommand}" VerticalAlignment="Center" Height="40"/>
+                                <Button Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" Content="Clear Filters" Style="{StaticResource PrimaryButtonStyle}" Command="{Binding ResetFiltersCommand}" VerticalAlignment="Center" Height="40"/>
                             </Grid>
                         </Border>
 
-                        <TextBlock DockPanel.Dock="Top" Text="İşlemler" Style="{StaticResource CardTitleTextStyle}" Margin="0,0,0,5"/>
+                        <TextBlock DockPanel.Dock="Top" Text="Transactions" Style="{StaticResource CardTitleTextStyle}" Margin="0,0,0,5"/>
                         <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" DockPanel.Dock="Top" BorderThickness="0,0,0,1" Margin="0,0,0,15" Opacity="0.5"/>
 
-                        <!-- İşlem Listesi -->
                         <ListView ItemsSource="{Binding FilteredTransactions}"
                                   SelectedItem="{Binding SelectedTransaction, Mode=TwoWay}"
                                   Background="Transparent" BorderThickness="0" 
@@ -150,10 +143,10 @@
                                             </StackPanel>
                                             <TextBlock Grid.Column="2" Text="{Binding Amount, StringFormat='C'}" Foreground="{Binding AmountForegroundColor}" FontSize="16" FontWeight="Bold" VerticalAlignment="Center"/>
                                             <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center" Margin="15,0,0,0">
-                                                <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Düzenle" Command="{Binding DataContext.PrepareToEditTransactionCommand, RelativeSource={RelativeSource AncestorType=ListView}}" CommandParameter="{Binding}">
+                                                <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Edit" Command="{Binding DataContext.PrepareToEditTransactionCommand, RelativeSource={RelativeSource AncestorType=ListView}}" CommandParameter="{Binding}">
                                                     <Image Source="/Assets/Images/Icons/edit.png" Width="16" Height="16"/>
                                                 </Button>
-                                                <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Sil" Margin="5,0,0,0" Command="{Binding DataContext.DeleteTransactionCommand, RelativeSource={RelativeSource AncestorType=ListView}}" CommandParameter="{Binding}">
+                                                <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Delete" Margin="5,0,0,0" Command="{Binding DataContext.DeleteTransactionCommand, RelativeSource={RelativeSource AncestorType=ListView}}" CommandParameter="{Binding}">
                                                     <Image Source="/Assets/Images/Icons/delete.png" Width="16" Height="16"/>
                                                 </Button>
                                             </StackPanel>
@@ -167,24 +160,23 @@
             </DockPanel>
         </ScrollViewer>
 
-        <!-- SAĞ SÜTUN: Ekle/Düzenle Formu -->
         <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
             <Border Style="{StaticResource DashboardCardStyle}" Margin="20,0,0,0">
                 <StackPanel>
                     <Grid>
                         <TextBlock Text="{Binding FormTitle}" Style="{StaticResource CardTitleTextStyle}"/>
-                        <Button Command="{Binding NewTransactionCommand}" Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Yeni İşlem Formunu Temizle" HorizontalAlignment="Right">
+                        <Button Command="{Binding NewTransactionCommand}" Style="{StaticResource IconOnlyButtonStyle}" ToolTip="New Transaction" HorizontalAlignment="Right">
                             <Image Source="/Assets/Images/Icons/add.png" Width="16" Height="16"/>
                         </Button>
                     </Grid>
                     <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,20" Opacity="0.5"/>
-                    <TextBlock Text="İŞLEM AÇIKLAMASI" Style="{StaticResource LabelTextStyle}"/>
+                    <TextBlock Text="TRANSACTION DESCRIPTION" Style="{StaticResource LabelTextStyle}"/>
                     <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding EditableTransaction.NameOrDescription, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
-                    <TextBlock Text="TUTAR" Style="{StaticResource LabelTextStyle}"/>
+                    <TextBlock Text="AMOUNT" Style="{StaticResource LabelTextStyle}"/>
                     <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding EditableTransaction.Amount, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
-                    <TextBlock Text="HESAP" Style="{StaticResource LabelTextStyle}"/>
+                    <TextBlock Text="ACCOUNT" Style="{StaticResource LabelTextStyle}"/>
                     <ComboBox ItemsSource="{Binding AllAccounts}" SelectedItem="{Binding SelectedAccountForForm, Mode=TwoWay}" DisplayMemberPath="Name" Style="{StaticResource ModernComboBoxStyle}" VerticalContentAlignment="Center" Padding="10,0,0,0" Margin="0,0,0,15"/>
-                    <TextBlock Text="PARA BİRİMİ" Style="{StaticResource LabelTextStyle}"/>
+                    <TextBlock Text="CURRENCY" Style="{StaticResource LabelTextStyle}"/>
                     <ComboBox Style="{StaticResource ModernComboBoxStyle}" ItemsSource="{Binding CurrencyTypes}" SelectedItem="{Binding EditableTransaction.Currency, Mode=TwoWay}" Margin="0,0,0,15">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
@@ -192,18 +184,18 @@
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>
-                    <TextBlock Text="KATEGORİ" Style="{StaticResource LabelTextStyle}"/>
+                    <TextBlock Text="CATEGORY" Style="{StaticResource LabelTextStyle}"/>
                     <Grid Margin="0,0,0,15">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <ComboBox Grid.Column="0" ItemsSource="{Binding AllCategories}" SelectedItem="{Binding SelectedCategoryForForm, Mode=TwoWay}" DisplayMemberPath="Name" Style="{StaticResource ModernComboBoxStyle}" VerticalContentAlignment="Center" Padding="10,0,0,0" Margin="0,0,10,0"/>
-                        <Button Grid.Column="1" Command="{Binding AddNewCategoryCommand}" Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Yeni Kategori Ekle" VerticalAlignment="Center">
+                        <Button Grid.Column="1" Command="{Binding AddNewCategoryCommand}" Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Add New Category" VerticalAlignment="Center">
                             <Image Source="/Assets/Images/Icons/add.png" Width="16" Height="16"/>
                         </Button>
                     </Grid>
-                    <TextBlock Text="TARİH" Style="{StaticResource LabelTextStyle}"/>
+                    <TextBlock Text="DATE" Style="{StaticResource LabelTextStyle}"/>
                     <DatePicker Style="{StaticResource ModernDatePickerStyle}" SelectedDate="{Binding EditableTransaction.Date, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,20"/>
                     <Button Content="{Binding SaveButtonText}" Command="{Binding SaveTransactionCommand}" Style="{StaticResource PrimaryButtonStyle}"/>
                 </StackPanel>

@@ -20,15 +20,15 @@
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- SOL SÜTUN: BÜTÇE LİSTESİ -->
+        <!-- LEFT COLUMN: BUDGET LIST -->
         <Border Grid.Column="0" Style="{StaticResource DashboardCardStyle}" Margin="0,0,20,0">
             <DockPanel>
                 <StackPanel DockPanel.Dock="Top">
-                    <TextBlock Text="Mevcut Bütçeler" Style="{StaticResource CardTitleTextStyle}"/>
+                    <TextBlock Text="Current Budgets" Style="{StaticResource CardTitleTextStyle}"/>
                     <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,20" Opacity="0.5"/>
 
-                    <!-- Filtreleme Alanı -->
-                    <Expander Header="Filtrele" IsExpanded="True" Style="{StaticResource ModernExpanderStyle}" Margin="0,0,0,15">
+                    <!-- Filter Area -->
+                    <Expander Header="Filter" IsExpanded="True" Style="{StaticResource ModernExpanderStyle}" Margin="0,0,0,15">
                         <StackPanel Margin="15,10,15,5">
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -37,12 +37,12 @@
                                 </Grid.ColumnDefinitions>
 
                                 <StackPanel Grid.Column="0" Margin="0,0,10,10">
-                                    <TextBlock Text="İSME GÖRE ARA" Style="{StaticResource LabelTextStyle}"/>
+                                    <TextBlock Text="SEARCH BY NAME" Style="{StaticResource LabelTextStyle}"/>
                                     <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding FilterByName, UpdateSourceTrigger=PropertyChanged}"/>
                                 </StackPanel>
 
                                 <StackPanel Grid.Column="1" Margin="0,0,0,10">
-                                    <TextBlock Text="KATEGORİ" Style="{StaticResource LabelTextStyle}"/>
+                                    <TextBlock Text="CATEGORY" Style="{StaticResource LabelTextStyle}"/>
                                     <ComboBox Style="{StaticResource ModernComboBoxStyle}" ItemsSource="{Binding CategoriesForFilter}" SelectedItem="{Binding SelectedFilterCategory}"/>
                                 </StackPanel>
                             </Grid>
@@ -55,16 +55,16 @@
                                 </Grid.ColumnDefinitions>
 
                                 <StackPanel Grid.Column="0" Margin="0,0,5,0">
-                                    <TextBlock Text="MİN. TUTAR" Style="{StaticResource LabelTextStyle}"/>
+                                    <TextBlock Text="MIN. AMOUNT" Style="{StaticResource LabelTextStyle}"/>
                                     <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding FilterByMinAmount, UpdateSourceTrigger=PropertyChanged}"/>
                                 </StackPanel>
 
                                 <StackPanel Grid.Column="1" Margin="5,0,5,0">
-                                    <TextBlock Text="MAKS. TUTAR" Style="{StaticResource LabelTextStyle}"/>
+                                    <TextBlock Text="MAX. AMOUNT" Style="{StaticResource LabelTextStyle}"/>
                                     <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding FilterByMaxAmount, UpdateSourceTrigger=PropertyChanged}"/>
                                 </StackPanel>
 
-                                <Button Grid.Column="2" Content="Temizle" Style="{StaticResource LinkButtonStyle}"
+                                <Button Grid.Column="2" Content="Clear" Style="{StaticResource LinkButtonStyle}"
                                         VerticalAlignment="Bottom" Margin="10,0,0,3"
                                         Command="{Binding ClearFiltersCommand}"
                                         Visibility="{Binding IsFilterActive, Converter={StaticResource BooleanToVisibilityConverter}}"/>
@@ -74,7 +74,7 @@
                 </StackPanel>
 
                 <Grid>
-                    <!-- Bütçe Listesi -->
+                    <!-- Budget List -->
                     <ListView ItemsSource="{Binding FilteredBudgets}" 
                               Background="Transparent" BorderThickness="0" 
                               ItemContainerStyle="{StaticResource CleanListViewItemStyle}"
@@ -108,12 +108,12 @@
                                         </StackPanel>
 
                                         <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="15,0,0,0">
-                                            <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Düzenle"
+                                            <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Edit"
                                                     Command="{Binding DataContext.PrepareToEditBudgetCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
                                                     CommandParameter="{Binding}">
                                                 <Image Source="/Assets/Images/Icons/edit.png" Width="16" Height="16"/>
                                             </Button>
-                                            <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Sil" Margin="5,0,0,0"
+                                            <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Delete" Margin="5,0,0,0"
                                                     Command="{Binding DataContext.DeleteBudgetCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
                                                     CommandParameter="{Binding}">
                                                 <Image Source="/Assets/Images/Icons/delete.png" Width="16" Height="16"/>
@@ -125,7 +125,7 @@
                         </ListView.ItemTemplate>
                     </ListView>
 
-                    <TextBlock Text="Gösterilecek bütçe bulunamadı." 
+                    <TextBlock Text="No budgets found to display." 
                                HorizontalAlignment="Center" VerticalAlignment="Center"
                                FontSize="16" Foreground="{StaticResource TopBarTextSecondaryBrush}"
                                Visibility="{Binding HasFilteredBudgets, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=invert}"/>
@@ -133,39 +133,39 @@
             </DockPanel>
         </Border>
 
-        <!-- SAĞ SÜTUN: EKLE/DÜZENLE FORMU -->
+        <!-- RIGHT COLUMN: ADD/EDIT FORM -->
         <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
             <Border Style="{StaticResource DashboardCardStyle}" Margin="20,0,0,0">
                 <StackPanel>
                     <TextBlock Text="{Binding FormTitle}" Style="{StaticResource CardTitleTextStyle}"/>
                     <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,20" Opacity="0.5"/>
 
-                    <TextBlock Text="BÜTÇE ADI" Style="{StaticResource LabelTextStyle}"/>
+                    <TextBlock Text="BUDGET NAME" Style="{StaticResource LabelTextStyle}"/>
                     <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding SelectedBudget.Name, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
 
-                    <TextBlock Text="HEDEF TUTAR" Style="{StaticResource LabelTextStyle}"/>
+                    <TextBlock Text="TARGET AMOUNT" Style="{StaticResource LabelTextStyle}"/>
                     <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding SelectedBudget.AllocatedAmount, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}" Margin="0,0,0,15"/>
 
-                    <TextBlock Text="PARA BİRİMİ" Style="{StaticResource LabelTextStyle}"/>
+                    <TextBlock Text="CURRENCY" Style="{StaticResource LabelTextStyle}"/>
                     <ComboBox Style="{StaticResource ModernComboBoxStyle}" ItemsSource="{Binding CurrencyTypes}" SelectedItem="{Binding SelectedBudget.Currency, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
 
-                    <TextBlock Text="KATEGORİ" Style="{StaticResource LabelTextStyle}"/>
+                    <TextBlock Text="CATEGORY" Style="{StaticResource LabelTextStyle}"/>
                     <ComboBox Style="{StaticResource EditableModernComboBoxStyle}" IsEditable="True" IsTextSearchEnabled="True"
                               ItemsSource="{Binding CategoriesForForm}" Text="{Binding SelectedBudget.Category, UpdateSourceTrigger=PropertyChanged}"
-                              Margin="0,0,0,15" ToolTip="Mevcut bir kategori seçin veya yeni bir kategori yazın"/>
+                              Margin="0,0,0,15" ToolTip="Select an existing category or type to create a new one"/>
 
-                    <TextBlock Text="AÇIKLAMA (İSTEĞE BAĞLI)" Style="{StaticResource LabelTextStyle}"/>
+                    <TextBlock Text="DESCRIPTION (OPTIONAL)" Style="{StaticResource LabelTextStyle}"/>
                     <TextBox Style="{StaticResource ModernTextBoxStyle}" Height="80" TextWrapping="Wrap" AcceptsReturn="True"
                              Text="{Binding SelectedBudget.Description, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
 
-                    <TextBlock Text="BAŞLANGIÇ TARİHİ" Style="{StaticResource LabelTextStyle}"/>
+                    <TextBlock Text="START DATE" Style="{StaticResource LabelTextStyle}"/>
                     <DatePicker Style="{StaticResource ModernDatePickerStyle}" SelectedDate="{Binding SelectedBudget.StartDate, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
 
-                    <TextBlock Text="BİTİŞ TARİHİ" Style="{StaticResource LabelTextStyle}"/>
+                    <TextBlock Text="END DATE" Style="{StaticResource LabelTextStyle}"/>
                     <DatePicker Style="{StaticResource ModernDatePickerStyle}" SelectedDate="{Binding SelectedBudget.EndDate, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,25"/>
 
                     <Button Content="{Binding SaveButtonText}" Command="{Binding SaveBudgetCommand}" Style="{StaticResource PrimaryButtonStyle}"/>
-                    <Button Content="Formu Temizle" Command="{Binding PrepareForNewBudgetCommand}" Style="{StaticResource LinkButtonStyle}" HorizontalAlignment="Right" Margin="0,10,0,0"/>
+                    <Button Content="Clear Form" Command="{Binding PrepareForNewBudgetCommand}" Style="{StaticResource LinkButtonStyle}" HorizontalAlignment="Right" Margin="0,10,0,0"/>
                 </StackPanel>
             </Border>
         </ScrollViewer>
