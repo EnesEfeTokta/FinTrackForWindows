@@ -115,7 +115,7 @@ namespace FinTrackForWindows.Services.Debts
             }
         }
 
-        public async Task SendOfferAsync(string borrowerEmail, decimal amount, string currency, DateTime dueDate, string description)
+        public async Task SendOfferAsync(string borrowerEmail, decimal amount, BaseCurrencyType currency, DateTime dueDate, string description)
         {
             IsLoading = true;
             try
@@ -124,7 +124,7 @@ namespace FinTrackForWindows.Services.Debts
                 {
                     BorrowerEmail = borrowerEmail,
                     Amount = amount,
-                    CurrencyCode = BaseCurrencyType.TRY,
+                    CurrencyCode = currency,
                     DueDateUtc = dueDate.ToUniversalTime(),
                     Description = description
                 };

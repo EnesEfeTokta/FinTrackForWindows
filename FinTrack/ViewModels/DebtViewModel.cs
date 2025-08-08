@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using FinTrackForWindows.Enums;
 using FinTrackForWindows.Models.Debt;
 using FinTrackForWindows.Services.AppInNotifications;
 using FinTrackForWindows.Services.Camera;
@@ -7,6 +8,7 @@ using FinTrackForWindows.Services.Debts;
 using FinTrackForWindows.Views;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows;
 
@@ -30,6 +32,11 @@ namespace FinTrackForWindows.ViewModels
         private decimal newProposalAmount;
 
         [ObservableProperty]
+        private BaseCurrencyType newCurrencyType;
+
+        public ObservableCollection<BaseCurrencyType> CurrencyTypes { get; }
+
+        [ObservableProperty]
         private string? newProposalDescription;
 
         [ObservableProperty]
@@ -44,6 +51,8 @@ namespace FinTrackForWindows.ViewModels
             _debtStore = debtStore;
             _serviceProvider = serviceProvider;
             _appInNotificationService = appInNotificationService;
+
+            CurrencyTypes = new ObservableCollection<BaseCurrencyType>(Enum.GetValues(typeof(BaseCurrencyType)).Cast<BaseCurrencyType>());
         }
 
         [RelayCommand]
@@ -57,7 +66,7 @@ namespace FinTrackForWindows.ViewModels
 
             try
             {
-                await _debtStore.SendOfferAsync(NewProposalBorrowerEmail, NewProposalAmount, "TRY", NewProposalDueDate, NewProposalDescription);
+                await _debtStore.SendOfferAsync(NewProposalBorrowerEmail, NewProposalAmount, NewCurrencyType, NewProposalDueDate, NewProposalDescription);
 
                 NewProposalBorrowerEmail = string.Empty;
                 NewProposalAmount = 0;
@@ -119,7 +128,7 @@ namespace FinTrackForWindows.ViewModels
                 }
             };
 
-            var videoRecorderViewModel = new VideoRecorderViewModel(debt, cameraService, closeAction);
+            var videoRecorderViewModel = new VideoRecorderViewModel(debt, cameraService, closeAction, _logger, _appInNotificationService);
             var videoRecorderWindow = new VideoRecorderWindow
             {
                 DataContext = videoRecorderViewModel
@@ -142,7 +151,6 @@ namespace FinTrackForWindows.ViewModels
                 }
                 finally
                 {
-                    // Delete the temporary file whether upload succeeded or failed.
                     try
                     {
                         File.Delete(videoPathToProcess);
@@ -157,7 +165,6 @@ namespace FinTrackForWindows.ViewModels
             }
             else if (!string.IsNullOrEmpty(videoPathToProcess))
             {
-                // If user canceled, delete the temporary file.
                 try
                 {
                     File.Delete(videoPathToProcess);
