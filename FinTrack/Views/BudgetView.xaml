@@ -20,14 +20,12 @@
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- LEFT COLUMN: BUDGET LIST -->
         <Border Grid.Column="0" Style="{StaticResource DashboardCardStyle}" Margin="0,0,20,0">
             <DockPanel>
                 <StackPanel DockPanel.Dock="Top">
                     <TextBlock Text="Current Budgets" Style="{StaticResource CardTitleTextStyle}"/>
                     <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,20" Opacity="0.5"/>
 
-                    <!-- Filter Area -->
                     <Expander Header="Filter" IsExpanded="True" Style="{StaticResource ModernExpanderStyle}" Margin="0,0,0,15">
                         <StackPanel Margin="15,10,15,5">
                             <Grid>
@@ -74,7 +72,6 @@
                 </StackPanel>
 
                 <Grid>
-                    <!-- Budget List -->
                     <ListView ItemsSource="{Binding FilteredBudgets}" 
                               Background="Transparent" BorderThickness="0" 
                               ItemContainerStyle="{StaticResource CleanListViewItemStyle}"
@@ -100,7 +97,40 @@
                                                     <TextBlock Text="{Binding Category, FallbackValue=N/A}" Foreground="White" FontSize="11" FontWeight="Medium"/>
                                                 </Border>
                                             </Grid>
-                                            <ProgressBar Value="{Binding ProgressValue, Mode=OneWay}" Height="8" Margin="0,10" Background="{StaticResource ProgressBarBackgroundBrush}" Foreground="{StaticResource PrimaryBrush}"/>
+
+                                            <Grid Margin="0,8,0,5">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <TextBlock Grid.Column="0" Text="Amount Reached:" Foreground="{StaticResource TopBarTextSecondaryBrush}" VerticalAlignment="Center"/>
+
+                                                <Grid Grid.Column="1">
+                                                    <TextBlock Text="{Binding ReachedAmountDisplayText}" 
+                                                                Foreground="White" FontWeight="SemiBold"
+                                                                Visibility="{Binding IsEditingReachedAmount, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=invert}"
+                                                                ToolTip="Click to edit">
+                                                        <TextBlock.InputBindings>
+                                                            <MouseBinding MouseAction="LeftClick" 
+                                                                Command="{Binding DataContext.StartEditReachedAmountCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                                                CommandParameter="{Binding}"/>
+                                                        </TextBlock.InputBindings>
+                                                    </TextBlock>
+
+                                                    <TextBox Style="{StaticResource ModernTextBoxStyle}"
+                                                             Text="{Binding ReachedAmount, UpdateSourceTrigger=PropertyChanged}"
+                                                             Visibility="{Binding IsEditingReachedAmount, Converter={StaticResource BooleanToVisibilityConverter}, StringFormat=N2}">
+                                                        <TextBox.InputBindings>
+                                                            <KeyBinding Key="Enter" 
+                                                                        Command="{Binding DataContext.SaveReachedAmountCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                                                        CommandParameter="{Binding}"/>
+                                                        </TextBox.InputBindings>
+                                                    </TextBox>
+                                                </Grid>
+                                            </Grid>
+
+                                            <ProgressBar Value="{Binding ProgressValue, Mode=OneWay}" Height="8" Margin="0,5" Background="{StaticResource ProgressBarBackgroundBrush}" Foreground="{StaticResource PrimaryBrush}"/>
                                             <Grid>
                                                 <TextBlock HorizontalAlignment="Left" Foreground="{StaticResource TopBarTextSecondaryBrush}" Text="{Binding ProgressText, Mode=OneWay}"/>
                                                 <TextBlock HorizontalAlignment="Right" Foreground="{StaticResource TopBarTextSecondaryBrush}" Text="{Binding RemainingTimeText, Mode=OneWay}"/>
@@ -133,7 +163,6 @@
             </DockPanel>
         </Border>
 
-        <!-- RIGHT COLUMN: ADD/EDIT FORM -->
         <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
             <Border Style="{StaticResource DashboardCardStyle}" Margin="20,0,0,0">
                 <StackPanel>
@@ -145,6 +174,9 @@
 
                     <TextBlock Text="TARGET AMOUNT" Style="{StaticResource LabelTextStyle}"/>
                     <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding SelectedBudget.AllocatedAmount, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}" Margin="0,0,0,15"/>
+
+                    <TextBlock Text="REACHED AMOUNT" Style="{StaticResource LabelTextStyle}"/>
+                    <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding SelectedBudget.ReachedAmount, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}" Margin="0,0,0,15"/>
 
                     <TextBlock Text="CURRENCY" Style="{StaticResource LabelTextStyle}"/>
                     <ComboBox Style="{StaticResource ModernComboBoxStyle}" ItemsSource="{Binding CurrencyTypes}" SelectedItem="{Binding SelectedBudget.Currency, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>

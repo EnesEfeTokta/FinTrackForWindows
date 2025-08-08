@@ -43,8 +43,8 @@ namespace FinTrackForWindows.ViewModels
         public ObservableCollection<string> CategoriesForFilter { get; }
 
         public IEnumerable<BaseCurrencyType> CurrencyTypes => Enum.GetValues(typeof(BaseCurrencyType)).Cast<BaseCurrencyType>();
-        public string FormTitle => IsEditing ? "Bütçeyi Düzenle" : "Yeni Bütçe Ekle";
-        public string SaveButtonText => IsEditing ? "BÜTÇEYİ GÜNCELLE" : "BÜTÇE OLUŞTUR";
+        public string FormTitle => IsEditing ? "Edit Budget" : "Add New Budget";
+        public string SaveButtonText => IsEditing ? "UPDATE THE BUDGET" : "CREATE A BUDGET";
 
         private readonly IBudgetStore _budgetStore;
         private readonly ILogger<BudgetViewModel> _logger;
@@ -185,6 +185,7 @@ namespace FinTrackForWindows.ViewModels
                 Description = SelectedBudget.Description,
                 Category = categoryToSave,
                 AllocatedAmount = SelectedBudget.AllocatedAmount,
+                ReachedAmount = SelectedBudget.ReachedAmount,
                 Currency = SelectedBudget.Currency,
                 StartDate = SelectedBudget.StartDate,
                 EndDate = SelectedBudget.EndDate,
@@ -247,6 +248,7 @@ namespace FinTrackForWindows.ViewModels
                 Description = budgetToEdit.Description,
                 Category = budgetToEdit.Category,
                 AllocatedAmount = budgetToEdit.AllocatedAmount,
+                ReachedAmount = budgetToEdit.ReachedAmount,
                 CurrentAmount = budgetToEdit.CurrentAmount,
                 Currency = budgetToEdit.Currency,
                 StartDate = budgetToEdit.StartDate,
@@ -260,6 +262,54 @@ namespace FinTrackForWindows.ViewModels
         {
             SelectedBudget = new BudgetModel();
             IsEditing = false;
+        }
+
+        [RelayCommand]
+        private void StartEditReachedAmount(BudgetModel? budget)
+        {
+            if (budget == null) return;
+
+            foreach (var b in FilteredBudgets)
+            {
+                if (b.IsEditingReachedAmount)
+                {
+                    b.IsEditingReachedAmount = false;
+                }
+            }
+
+            budget.IsEditingReachedAmount = true;
+        }
+
+        [RelayCommand]
+        private async Task SaveReachedAmountAsync(BudgetModel? budget)
+        {
+            if (budget == null || !budget.IsEditingReachedAmount) return;
+
+            budget.IsEditingReachedAmount = false;
+
+            if (!budget.ReachedAmount.HasValue)
+            {
+                _notificationService.ShowWarning("Ulaşılan miktar geçerli bir değer olmalıdır.");
+                return;
+            }
+
+            try
+            {
+                var dto = new BudgetUpdateReachedAmountDto
+                {
+                    BudgetId = budget.Id,
+                    ReachedAmount = budget.ReachedAmount.Value
+                };
+
+                await _budgetStore.UpdateReachedAmountAsync(dto);
+
+                _notificationService.ShowSuccess($"'{budget.Name}' bütçesinin ulaşılan miktarı güncellendi.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ulaşılan miktar güncellenirken hata oluştu: {BudgetId}", budget.Id);
+                _notificationService.ShowError("Miktar güncellenemedi. Lütfen tekrar deneyin.");
+            }
         }
     }
 }

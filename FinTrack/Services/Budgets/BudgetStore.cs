@@ -52,6 +52,7 @@ namespace FinTrackForWindows.Services.Budgets
                         Description = dto.Description,
                         Category = dto.Category,
                         AllocatedAmount = dto.AllocatedAmount,
+                        ReachedAmount = dto.ReachedAmount,
                         Currency = dto.Currency,
                         StartDate = dto.StartDate,
                         EndDate = dto.EndDate,
@@ -77,6 +78,7 @@ namespace FinTrackForWindows.Services.Budgets
                     Description = createdBudgetDto.Description,
                     Category = createdBudgetDto.Category,
                     AllocatedAmount = createdBudgetDto.AllocatedAmount,
+                    ReachedAmount = createdBudgetDto.ReachedAmount,
                     Currency = createdBudgetDto.Currency,
                     StartDate = createdBudgetDto.StartDate,
                     EndDate = createdBudgetDto.EndDate
@@ -107,9 +109,25 @@ namespace FinTrackForWindows.Services.Budgets
                         item.Description = updatedBudget.Description;
                         item.Category = updatedBudget.Category;
                         item.AllocatedAmount = updatedBudget.AllocatedAmount;
+                        item.ReachedAmount = updatedBudget.ReachedAmount;
                         item.Currency = updatedBudget.Currency;
                         item.StartDate = updatedBudget.StartDate;
                         item.EndDate = updatedBudget.EndDate;
+                    }
+                }
+            }
+        }
+
+        public async Task UpdateReachedAmountAsync(BudgetUpdateReachedAmountDto updatedBudget)
+        {
+            var updateBudgetDto = await _apiService.PutAsync<BudgetDto>($"Budgets/Update-Reached-Amount", updatedBudget);
+            if (updateBudgetDto != null)
+            {
+                foreach (var item in _budgets)
+                {
+                    if (item.Id == updateBudgetDto.Id)
+                    {
+                        item.ReachedAmount = updatedBudget.ReachedAmount;
                     }
                 }
             }

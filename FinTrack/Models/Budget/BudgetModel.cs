@@ -29,7 +29,17 @@ namespace FinTrackForWindows.Models.Budget
         private decimal currentAmount;
 
         [ObservableProperty]
-        private BaseCurrencyType currency = BaseCurrencyType.USD;
+        [NotifyPropertyChangedFor(nameof(ProgressValue))]
+        [NotifyPropertyChangedFor(nameof(ProgressText))]
+        private decimal? reachedAmount;
+
+        [ObservableProperty]
+        private bool isEditingReachedAmount = false;
+
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(ProgressText))]
+        [NotifyPropertyChangedFor(nameof(ReachedAmountDisplayText))]
+        private BaseCurrencyType currency;
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(RemainingTimeText))]
@@ -39,14 +49,31 @@ namespace FinTrackForWindows.Models.Budget
         [NotifyPropertyChangedFor(nameof(RemainingTimeText))]
         private DateTime endDate = DateTime.Today.AddMonths(1);
 
-        public double ProgressValue => AllocatedAmount <= 0 ? 0 : Math.Max(0, Math.Min(100, (double)(CurrentAmount / AllocatedAmount) * 100));
+        public double ProgressValue => AllocatedAmount <= 0 ? 0 : Math.Max(0, Math.Min(100, (double)((ReachedAmount ?? 0) / AllocatedAmount) * 100));
 
         public string ProgressText
         {
             get
             {
-                var culture = new CultureInfo("tr-TR");
-                return $"{CurrentAmount.ToString("C", culture)} / {AllocatedAmount.ToString("C", culture)}";
+                var current = ReachedAmount ?? 0;
+                string currencyCode = Currency.ToString();
+                var culture = CultureInfo.CurrentCulture;
+
+                string currentText = current.ToString("N2", culture);
+                string allocatedText = AllocatedAmount.ToString("N2", culture);
+
+                return $"{currentText} {currencyCode} / {allocatedText} {currencyCode}";
+            }
+        }
+
+        public string ReachedAmountDisplayText
+        {
+            get
+            {
+                var current = ReachedAmount ?? 0;
+                string currencyCode = Currency.ToString();
+                var culture = CultureInfo.CurrentCulture;
+                return $"{current.ToString("N2", culture)} {currencyCode}";
             }
         }
 
