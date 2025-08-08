@@ -30,7 +30,7 @@ namespace FinTrackForWindows.ViewModels
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(HasFilteredBudgets))]
-        private bool isFilterActive; 
+        private bool isFilterActive;
 
         [ObservableProperty] private string? filterByName;
         [ObservableProperty] private string? filterByMinAmount;

@@ -1,6 +1,4 @@
-﻿using System.Windows.Media;
-
-namespace FinTrackForWindows.Models.Dashboard
+﻿namespace FinTrackForWindows.Models.Dashboard
 {
     public class AccountDashboard
     {

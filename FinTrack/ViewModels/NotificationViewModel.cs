@@ -3,9 +3,9 @@ using CommunityToolkit.Mvvm.Input;
 using FinTrackForWindows.Dtos.NotificationDtos;
 using FinTrackForWindows.Models.Notification;
 using FinTrackForWindows.Services.Api;
+using FinTrackForWindows.Services.AppInNotifications;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
-using FinTrackForWindows.Services.AppInNotifications;
 
 namespace FinTrackForWindows.ViewModels
 {

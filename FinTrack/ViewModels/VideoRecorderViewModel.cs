@@ -31,8 +31,8 @@ namespace FinTrackForWindows.ViewModels
         private readonly ILogger<DebtViewModel> _logger;
         private readonly IAppInNotificationService _appInNotificationService;
 
-        public VideoRecorderViewModel(DebtModel debt, 
-            ICameraService cameraService, 
+        public VideoRecorderViewModel(DebtModel debt,
+            ICameraService cameraService,
             Action<bool, string?> closeWindowAction,
             ILogger<DebtViewModel> logger,
             IAppInNotificationService appInNotificationService)

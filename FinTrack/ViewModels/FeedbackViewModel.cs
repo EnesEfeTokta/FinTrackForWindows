@@ -7,7 +7,6 @@ using FinTrackForWindows.Services.AppInNotifications;
 using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
 using System.Diagnostics;
-using System.Windows;
 
 namespace FinTrackForWindows.ViewModels
 {

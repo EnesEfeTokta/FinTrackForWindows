@@ -1,6 +1,6 @@
 ﻿namespace FinTrackForWindows.Services.AppInNotifications
 {
-    public interface IAppInNotificationService: IDisposable
+    public interface IAppInNotificationService : IDisposable
     {
         void ShowSuccess(string message);
         void ShowInfo(string message);

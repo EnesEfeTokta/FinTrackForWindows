@@ -4,7 +4,6 @@ using FinTrackForWindows.Dtos.SettingsDtos;
 using FinTrackForWindows.Services.Api;
 using FinTrackForWindows.Services.AppInNotifications;
 using Microsoft.Extensions.Logging;
-using System.Windows;
 
 namespace FinTrackForWindows.ViewModels
 {

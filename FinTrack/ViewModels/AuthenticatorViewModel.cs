@@ -4,7 +4,6 @@ using FinTrackForWindows.Core;
 using FinTrackForWindows.Messages;
 using FinTrackForWindows.Services.AppInNotifications;
 using Microsoft.Extensions.Logging;
-using System.Windows;
 
 namespace FinTrackForWindows.ViewModels
 {
