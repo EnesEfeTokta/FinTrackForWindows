@@ -7,10 +7,12 @@ using FinTrackForWindows.Models.Dashboard;
 using FinTrackForWindows.Models.Debt;
 using FinTrackForWindows.Models.Transaction;
 using FinTrackForWindows.Services.Accounts;
+using FinTrackForWindows.Services.AppInNotifications;
 using FinTrackForWindows.Services.Budgets;
 using FinTrackForWindows.Services.Currencies;
 using FinTrackForWindows.Services.Debts;
 using FinTrackForWindows.Services.Memberships;
+using FinTrackForWindows.Services.Reports;
 using FinTrackForWindows.Services.Transactions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -35,6 +37,15 @@ namespace FinTrackForWindows.ViewModels
 
         [ObservableProperty]
         private string _totalBalance_DashboardView_TextBlock = string.Empty;
+
+        [ObservableProperty]
+        private string _totalBalanceIntegerPart = "0";
+
+        [ObservableProperty]
+        private string _totalBalanceFractionalPart = ",00";
+
+        [ObservableProperty]
+        private string _totalBalanceCurrency = "TRY";
 
         [ObservableProperty]
         private ObservableCollection<TransactionDashboard>? _transactions_DashboardView_ListView;
@@ -64,6 +75,8 @@ namespace FinTrackForWindows.ViewModels
         private readonly ICurrenciesStore _currenciesStore;
         private readonly IMembershipStore _membershipStore;
         private readonly IDebtStore _debtStore;
+        private readonly IReportStore _reportStore;
+        private readonly IAppInNotificationService _appInNotificationService;
 
         public IEnumerable<BudgetModel> DashboardBudgets => _budgetStore.Budgets.Take(4);
         public IEnumerable<AccountModel> DashboardAccounts => _accountStore.Accounts.Take(2);
@@ -87,7 +100,9 @@ namespace FinTrackForWindows.ViewModels
             ITransactionStore transactionStore,
             ICurrenciesStore currenciesStore,
             IMembershipStore membershipStore,
-            IDebtStore debtStore)
+            IDebtStore debtStore,
+            IReportStore reportStore,
+            IAppInNotificationService appInNotificationService)
         {
             _logger = logger;
             _serviceProvider = serviceProvider;
@@ -97,6 +112,8 @@ namespace FinTrackForWindows.ViewModels
             _currenciesStore = currenciesStore;
             _membershipStore = membershipStore;
             _debtStore = debtStore;
+            _reportStore = reportStore;
+            _appInNotificationService = appInNotificationService;
 
             _budgetStore.BudgetsChanged += OnBudgetsChanged;
             _accountStore.AccountsChanged += OnAccountsChanged;
@@ -127,7 +144,6 @@ namespace FinTrackForWindows.ViewModels
             RefreshDashboardTransactions();
             RefreshDashboardCurrencies();
             RefreshDashboardMembership();
-            RefreshDashboardDebts();
 
             LoadReportData();
 
@@ -145,7 +161,7 @@ namespace FinTrackForWindows.ViewModels
                     Name = budget.Name,
                     DueDate = budget.EndDate.ToString("dd.MM.yyyy"),
                     Amount = $"{budget.AllocatedAmount} {budget.Currency}",
-                    RemainingTime = $"Son {(budget.EndDate - budget.StartDate).Days} gün kaldı.",
+                    RemainingTime = $"Only {(budget.EndDate - budget.StartDate).Days} days left.",
                     StatusBrush = (Brush)Application.Current.FindResource("StatusGreenBrush")
                 });
             }
@@ -164,18 +180,62 @@ namespace FinTrackForWindows.ViewModels
 
         private void RefreshDashboardAccounts()
         {
-            Accounts_DashboardView_ItemsControl = new ObservableCollection<AccountDashboard>();
+            var newAccountList = new ObservableCollection<AccountDashboard>();
+            _logger.LogInformation("Refreshing dashboard accounts...");
+
+            if (_transactionStore.Transactions == null || !_transactionStore.Transactions.Any())
+            {
+                _logger.LogWarning("Transaction store is empty. Account income/expense ratios cannot be calculated.");
+            }
 
             foreach (var account in DashboardAccounts)
             {
-                Accounts_DashboardView_ItemsControl.Add(new AccountDashboard
+                var accountTransactions = _transactionStore.Transactions
+                    .Where(t => t.AccountId == account.Id)
+                    .ToList();
+
+                _logger.LogInformation("Account '{AccountName}' (ID: {AccountId}): Found {TransactionCount} transactions.",
+                                        account.Name, account.Id, accountTransactions.Count);
+
+                decimal totalIncome = accountTransactions
+                    .Where(t => t.Type == TransactionType.Income)
+                    .Sum(t => t.Amount);
+
+                decimal totalExpense = accountTransactions
+                    .Where(t => t.Type == TransactionType.Expense)
+                    .Sum(t => t.Amount);
+
+                decimal grandTotal = totalIncome + totalExpense;
+
+                double incomePercentage = 0;
+                double expensePercentage = 0;
+
+                if (grandTotal > 0)
+                {
+                    incomePercentage = (double)(totalIncome / grandTotal * 100);
+                    expensePercentage = (double)(totalExpense / grandTotal * 100);
+                }
+                else if (account.Balance > 0 && !accountTransactions.Any())
+                {
+                    incomePercentage = 100;
+                }
+
+                _logger.LogInformation("Account '{AccountName}': Income={Income}, Expense={Expense}, Income%={IncomePerc}, Expense%={ExpensePerc}",
+                                        account.Name, totalIncome, totalExpense, incomePercentage, expensePercentage);
+
+                newAccountList.Add(new AccountDashboard
                 {
                     Name = account.Name,
-                    Percentage = 70,
-                    Balance = "Test",
-                    ProgressBarBrush = (Brush)Application.Current.FindResource("StatusGreenBrush")
+                    Balance = $"{account.Balance:N2} {account.Currency}",
+                    IncomePercentage = incomePercentage,
+                    ExpensePercentage = expensePercentage,
+                    IncomeAmountText = $"+{totalIncome:N2}",
+                    ExpenseAmountText = $"-{totalExpense:N2}"
                 });
             }
+
+            Accounts_DashboardView_ItemsControl = newAccountList;
+            _logger.LogInformation("Dashboard accounts UI model updated.");
         }
 
         private void OnAccountsChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -193,7 +253,9 @@ namespace FinTrackForWindows.ViewModels
         {
             if (_accountStore.Accounts == null || !_accountStore.Accounts.Any())
             {
-                TotalBalance_DashboardView_TextBlock = "0.00 TRY";
+                TotalBalanceIntegerPart = "0";
+                TotalBalanceFractionalPart = ",00";
+                TotalBalanceCurrency = "TRY";
                 return;
             }
 
@@ -201,14 +263,11 @@ namespace FinTrackForWindows.ViewModels
             decimal totalBalanceInTargetCurrency = 0;
 
             var conversionTasks = new List<Task<decimal>>();
-
             foreach (var account in _accountStore.Accounts)
             {
                 decimal balance = account.Balance ?? 0;
                 string accountCurrency = account.Currency.ToString();
-
                 if (balance == 0) continue;
-
                 if (accountCurrency == targetCurrency)
                 {
                     totalBalanceInTargetCurrency += balance;
@@ -220,11 +279,25 @@ namespace FinTrackForWindows.ViewModels
                     );
                 }
             }
-            var convertedAmounts = await Task.WhenAll(conversionTasks);
 
+            var convertedAmounts = await Task.WhenAll(conversionTasks);
             totalBalanceInTargetCurrency += convertedAmounts.Sum();
 
-            TotalBalance_DashboardView_TextBlock = $"{totalBalanceInTargetCurrency:N2} {targetCurrency}";
+            string formattedBalance = totalBalanceInTargetCurrency.ToString("N2");
+
+            var parts = formattedBalance.Split(',');
+            if (parts.Length == 2)
+            {
+                TotalBalanceIntegerPart = parts[0];
+                TotalBalanceFractionalPart = "," + parts[1];
+            }
+            else
+            {
+                TotalBalanceIntegerPart = formattedBalance;
+                TotalBalanceFractionalPart = ",00";
+            }
+
+            TotalBalanceCurrency = targetCurrency;
         }
 
         // ------
@@ -262,10 +335,10 @@ namespace FinTrackForWindows.ViewModels
             double remainingBalance = totalIncome - totalExpense;
 
             TransactionSummary =
-                $"Toplam {Transactions_DashboardView_ListView.Count} işlem bulundu. " +
-                $"Gelir: +{totalIncome} {Transactions_DashboardView_ListView.FirstOrDefault()?.Amount?.Split(' ')?.LastOrDefault() ?? ""}, " +
-                $"Gider: -{totalExpense} {Transactions_DashboardView_ListView.FirstOrDefault()?.Amount?.Split(' ')?.LastOrDefault() ?? ""} " +
-                $"Kalan: {remainingBalance} {Transactions_DashboardView_ListView.FirstOrDefault()?.Amount?.Split(' ')?.LastOrDefault() ?? ""}";
+                $"A total of {Transactions_DashboardView_ListView.Count} transactions found. " +
+                $"Income: +{totalIncome} {Transactions_DashboardView_ListView.FirstOrDefault()?.Amount?.Split(' ')?.LastOrDefault() ?? ""}, " +
+                $"Expense: -{totalExpense} {Transactions_DashboardView_ListView.FirstOrDefault()?.Amount?.Split(' ')?.LastOrDefault() ?? ""} " +
+                $"Remaining: {remainingBalance} {Transactions_DashboardView_ListView.FirstOrDefault()?.Amount?.Split(' ')?.LastOrDefault() ?? ""}";
         }
 
         private void OnTransactionsChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -355,28 +428,11 @@ namespace FinTrackForWindows.ViewModels
 
         // ------
 
-        private void RefreshDashboardDebts()
-        {
-            CurrentDebt_DashboardView_Multiple = new DebtDashboard
-            {
-                LenderName = "Ali Veli",
-                LenderIconPath = "https://i.pinimg.com/236x/be/a3/49/bea3491915571d34a026753f4a872000.jpg",
-                BorrowerName = "Ahmet Mehmet",
-                BorrowerIconPath = "https://pbs.twimg.com/profile_images/1144861916734451712/D76C3ugh_400x400.jpg",
-                Status = "Ödenmemiş",
-                StatusBrush = (Brush)Application.Current.FindResource("StatusGreenBrush"),
-                Amount = "1.000$",
-                CreationDate = "01.01.2025",
-                DueDate = "01.02.2025",
-                ReviewDate = "01.03.2025"
-            };
-        }
-
         private void OnDebtsChanged()
         {
             App.Current.Dispatcher.Invoke(() =>
             {
-                _logger.LogInformation("DebtStore değişti, Dashboard borçları yenileniyor.");
+                _logger.LogInformation("DebtStore has changed, Dashboard debts are being renewed.");
                 SetupDebtCarousel();
             });
         }
@@ -392,8 +448,10 @@ namespace FinTrackForWindows.ViewModels
 
                 if (_debtStore.ActiveDebts.Count > 1)
                 {
-                    _debtCarouselTimer = new DispatcherTimer();
-                    _debtCarouselTimer.Interval = TimeSpan.FromSeconds(2);
+                    _debtCarouselTimer = new DispatcherTimer
+                    {
+                        Interval = TimeSpan.FromSeconds(5)
+                    };
                     _debtCarouselTimer.Tick += DebtCarouselTimer_Tick;
                     _debtCarouselTimer.Start();
                 }
@@ -428,19 +486,19 @@ namespace FinTrackForWindows.ViewModels
         {
             Reports_DashboardView_ItemsControl = new ObservableCollection<ReportDashboardModel>
             {
-                CreateReport("2025 Yılı Finansal Raporu"),
-                CreateReport("2024 Yılı Tasarruf Raporu"),
-                CreateReport("2023 Yılı Gelir-Gider Raporu"),
-                CreateReport("2022 Yılı Bütçe Raporu")
+                CreateReport("2025 Yılı Hesap Raporu", ReportType.Account),
+                CreateReport("2025 Yılı Gelir-Gider Raporu", ReportType.Transaction),
+                CreateReport("2025 Yılı Bütçe Raporu", ReportType.Budget),
             };
         }
 
-        private ReportDashboardModel CreateReport(string name)
+        private ReportDashboardModel CreateReport(string name, ReportType type)
         {
             var reportLogger = _serviceProvider.GetRequiredService<ILogger<ReportDashboardModel>>();
-            var report = new ReportDashboardModel(reportLogger)
+            var report = new ReportDashboardModel(reportLogger, _reportStore)
             {
                 Name = name,
+                Type = type
             };
             return report;
         }

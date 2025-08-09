@@ -2,9 +2,9 @@
 using CommunityToolkit.Mvvm.Input;
 using FinTrackForWindows.Core;
 using FinTrackForWindows.Services;
+using FinTrackForWindows.Services.AppInNotifications;
 using Microsoft.Extensions.Logging;
 using System.Text.RegularExpressions;
-using System.Windows;
 
 namespace FinTrackForWindows.ViewModels
 {
@@ -33,13 +33,17 @@ namespace FinTrackForWindows.ViewModels
 
         private readonly ILogger<RegisterViewModel> _logger;
         private readonly IAuthService _authService;
+        private readonly IAppInNotificationService _appInNotificationService;
 
         public event EventHandler SendOtpVerificationRequested;
 
-        public RegisterViewModel(ILogger<RegisterViewModel> logger, IAuthService authService)
+        public RegisterViewModel(ILogger<RegisterViewModel> logger,
+            IAuthService authService,
+            IAppInNotificationService appInNotificationService)
         {
             _logger = logger;
             _authService = authService;
+            _appInNotificationService = appInNotificationService;
         }
 
         [RelayCommand]
@@ -51,23 +55,23 @@ namespace FinTrackForWindows.ViewModels
                 string.IsNullOrEmpty(Email_RegisterView_TextBox) ||
                 string.IsNullOrEmpty(Password_RegisterView_TextBox))
             {
-                MessageBox.Show("Lütfen tüm alanları doldurun.", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
-                _logger.LogWarning("Kayıt işlemi için gerekli alanlar boş bırakıldı.");
+                _appInNotificationService.ShowWarning("Please fill in all required fields.");
+                _logger.LogWarning("Registration attempt failed: Required fields are missing.");
                 return;
             }
 
             bool isValidEmail = Email_RegisterView_TextBox.Contains("@") && Email_RegisterView_TextBox.Contains(".");
             if (!isValidEmail)
             {
-                MessageBox.Show("Lütfen geçerli bir e-posta adresi girin.", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
-                _logger.LogWarning("Kayıt işlemi için geçersiz e-posta adresi girildi: {Email}", Email_RegisterView_TextBox);
+                _appInNotificationService.ShowError("Please enter a valid email address.");
+                _logger.LogWarning("Registration attempt failed: Invalid email address provided: {Email}", Email_RegisterView_TextBox);
                 return;
             }
 
-            if (IsPasswordValid(Password_RegisterView_TextBox) == false)
+            if (!IsPasswordValid(Password_RegisterView_TextBox))
             {
-                MessageBox.Show("Şifre en az 8 karakter uzunluğunda, en az bir büyük harf, bir küçük harf, bir rakam ve bir özel karakter içermelidir.", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
-                _logger.LogWarning("Kayıt işlemi için geçersiz şifre girildi.");
+                _appInNotificationService.ShowError("Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one digit, and one special character.");
+                _logger.LogWarning("Registration attempt failed: Password does not meet complexity requirements.");
                 return;
             }
 
@@ -78,15 +82,14 @@ namespace FinTrackForWindows.ViewModels
                 Password_RegisterView_TextBox);
             if (!isInitiateRegistration)
             {
-                MessageBox.Show("Kayıt işlemi başarısız oldu. Lütfen daha sonra tekrar deneyin.", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
-                _logger.LogError("Kayıt işlemi başarısız oldu. E-posta: {Email}", Email_RegisterView_TextBox);
+                _appInNotificationService.ShowError("Registration failed. Please try again later.");
+                _logger.LogError("Registration process failed for email: {Email}", Email_RegisterView_TextBox);
                 return;
             }
             SendOtpVerificationRequested?.Invoke(this, EventArgs.Empty);
-            MessageBox.Show("Kayıt işlemi başarılı! Lütfen e-posta adresinize gelen doğrulama kodunu girin.", "Bilgi", MessageBoxButton.OK, MessageBoxImage.Information);
-            _logger.LogInformation("Kayıt işlemi başarılı. E-posta: {Email}", Email_RegisterView_TextBox);
+            _appInNotificationService.ShowSuccess("Registration successful! Please enter the verification code sent to your email address.");
+            _logger.LogInformation("Registration successful for email: {Email}", Email_RegisterView_TextBox);
 
-            // Store user information in the static manager
             NewUserInformationManager.FirstName = FirstName_RegisterView_TextBox;
             NewUserInformationManager.LastName = LastName_RegisterView_TextBox;
             NewUserInformationManager.FullName = FirstName_RegisterView_TextBox.Replace(" ", "").Trim() + "_" + LastName_RegisterView_TextBox.Replace(" ", "").Trim();
@@ -111,14 +114,14 @@ namespace FinTrackForWindows.ViewModels
             EyeIconSource_RegisterView_Image = IsPasswordVisible_RegisterView_PasswordBoxAndTextBox
                 ? "/Assets/Images/Icons/eyeopen.png"
                 : "/Assets/Images/Icons/eyeclose.png";
-            _logger.LogInformation("Şifre görünürlüğü değiştirildi. Yeni durum: {IsVisible}", IsPasswordVisible_RegisterView_PasswordBoxAndTextBox);
+            _logger.LogInformation("Password visibility toggled. New state: {IsVisible}", IsPasswordVisible_RegisterView_PasswordBoxAndTextBox);
         }
 
         [RelayCommand]
         private void NavigateToLogin_RegisterView_Button()
         {
             NavigateToLoginRequested?.Invoke();
-            _logger.LogInformation("Kullanıcı kayıt ekranından giriş ekranına yönlendirildi.");
+            _logger.LogInformation("User navigated from registration to login view.");
         }
     }
 }

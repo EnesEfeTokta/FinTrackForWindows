@@ -118,7 +118,7 @@ namespace FinTrackForWindows.ViewModels
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Para birimi verileri başlatılırken hata oluştu.");
+                _logger.LogError(ex, "An error occurred while initializing currency data.");
                 InitializeEmptyChart("Failed to load currency list.");
             }
         }
@@ -137,14 +137,14 @@ namespace FinTrackForWindows.ViewModels
                     return;
                 }
 
-                _logger.LogInformation("{Target} için geçmiş veriler ViewModel'de işleniyor.", targetCurrencyCode);
+                _logger.LogInformation("Processing historical data for {Target} in ViewModel.", targetCurrencyCode);
                 var dailyHistoricalRates = UpdateChart(historyData);
                 UpdateAdditionalVisuals(dailyHistoricalRates);
                 UpdateDetails(historyData.ChangeSummary);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "ViewModel'de geçmiş veriler işlenirken hata oluştu.");
+                _logger.LogError(ex, "An error occurred while processing historical data in ViewModel.");
                 InitializeEmptyChart($"Error processing data for {targetCurrencyCode}.");
                 UpdateDetails(null);
             }
@@ -162,7 +162,7 @@ namespace FinTrackForWindows.ViewModels
                 return;
             }
 
-            _logger.LogInformation("Grafik periyodu {NewPeriod} olarak değiştiriliyor.", newPeriod);
+            _logger.LogInformation("Changing chart period to {NewPeriod}.", newPeriod);
             SelectedPeriod = newPeriod;
 
             await LoadHistoricalDataAsync(SelectedCurrency.ToCurrencyCode);
@@ -374,7 +374,7 @@ namespace FinTrackForWindows.ViewModels
                                 c.ToCurrencyName.ToLowerInvariant().Contains(searchText));
                 FilteredCurrencies = new ObservableCollection<CurrencyModel>(filtered);
             }
-            _logger.LogInformation("Para birimleri '{SearchText}' metnine göre filtrelendi.", CurrencySearch);
+            _logger.LogInformation("Currencies filtered by search text: '{SearchText}'.", CurrencySearch);
         }
     }
 }

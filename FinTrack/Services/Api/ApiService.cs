@@ -19,7 +19,6 @@ namespace FinTrackForWindows.Services.Api
         private readonly JsonSerializerOptions _jsonSerializerOptions;
         private readonly IConfiguration _configuration;
 
-
         public ApiService(ILogger<ApiService> logger, IConfiguration configuration)
         {
             _logger = logger;
@@ -52,10 +51,10 @@ namespace FinTrackForWindows.Services.Api
 
         public async Task<T?> DeleteAsync<T>(string endpoint)
         {
-            _logger.LogInformation("DELETE isteği başlatılıyor: {Endpoint}", endpoint);
+            _logger.LogInformation("Initiating DELETE request: {Endpoint}", endpoint);
             if (string.IsNullOrWhiteSpace(endpoint))
             {
-                _logger.LogError("DELETE isteği sırasında endpoint boş veya null: {Endpoint}", endpoint);
+                _logger.LogError("DELETE request failed: endpoint is null or empty. Endpoint: {Endpoint}", endpoint);
                 throw new ArgumentException("Endpoint cannot be null or empty", nameof(endpoint));
             }
 
@@ -69,24 +68,24 @@ namespace FinTrackForWindows.Services.Api
                 var stream = await response.Content.ReadAsStreamAsync();
                 var result = await JsonSerializer.DeserializeAsync<T>(stream, _jsonSerializerOptions);
 
-                _logger.LogInformation("DELETE isteği başarılı: {Endpoint}", endpoint);
+                _logger.LogInformation("DELETE request succeeded: {Endpoint}", endpoint);
                 return result;
             }
             catch (HttpRequestException ex)
             {
-                _logger.LogError(ex, "DELETE isteği sırasında HTTP hatası oluştu: {Endpoint}. Status Code: {StatusCode}", endpoint, ex.StatusCode);
+                _logger.LogError(ex, "HTTP error during DELETE request. Endpoint: {Endpoint}. Status Code: {StatusCode}", endpoint, ex.StatusCode);
                 return default(T);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "DELETE isteği sırasında genel bir hata oluştu: {Endpoint}", endpoint);
+                _logger.LogError(ex, "Unexpected error during DELETE request. Endpoint: {Endpoint}", endpoint);
                 return default(T);
             }
         }
 
         public async Task<T?> GetAsync<T>(string endpoint)
         {
-            _logger.LogInformation("GET isteği başlatılıyor: {Endpoint}", endpoint);
+            _logger.LogInformation("Initiating GET request: {Endpoint}", endpoint);
             try
             {
                 AddAuthorizationHeader();
@@ -97,29 +96,29 @@ namespace FinTrackForWindows.Services.Api
                 var strean = await response.Content.ReadAsStreamAsync();
                 var result = await _httpClient.GetFromJsonAsync<T>(endpoint, _jsonSerializerOptions);
 
-                _logger.LogInformation("GET isteği başarılı: {Endpoint}", endpoint);
+                _logger.LogInformation("GET request succeeded: {Endpoint}", endpoint);
                 return result;
             }
             catch (HttpRequestException ex)
             {
-                _logger.LogError(ex, "GET isteği sırasında HTTP hatası oluştu: {Endpoint}. Status Code: {StatusCode}", endpoint, ex.StatusCode);
+                _logger.LogError(ex, "HTTP error during GET request. Endpoint: {Endpoint}. Status Code: {StatusCode}", endpoint, ex.StatusCode);
                 return default(T);
             }
             catch (JsonException ex)
             {
-                _logger.LogError(ex, "GET isteği sırasında JSON serileştirme hatası oluştu: {Endpoint}", endpoint);
+                _logger.LogError(ex, "JSON deserialization error during GET request. Endpoint: {Endpoint}", endpoint);
                 return default(T);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "GET isteği sırasında beklenmeyen bir hata oluştu: {Endpoint}", endpoint);
+                _logger.LogError(ex, "Unexpected error during GET request. Endpoint: {Endpoint}", endpoint);
                 return default(T);
             }
         }
 
         public async Task<List<T>?> GetsAsync<T>(string endpoint)
         {
-            _logger.LogInformation("GET (list) isteği başlatılıyor: {Endpoint}", endpoint);
+            _logger.LogInformation("Initiating GET (list) request: {Endpoint}", endpoint);
             try
             {
                 AddAuthorizationHeader();
@@ -129,37 +128,37 @@ namespace FinTrackForWindows.Services.Api
 
                 var result = await _httpClient.GetFromJsonAsync<List<T>>(endpoint, _jsonSerializerOptions);
 
-                _logger.LogInformation("GET (list) isteği başarılı: {Endpoint}", endpoint);
+                _logger.LogInformation("GET (list) request succeeded: {Endpoint}", endpoint);
                 return result;
             }
             catch (HttpRequestException ex)
             {
-                _logger.LogError(ex, "GET (list) isteği sırasında HTTP hatası oluştu: {Endpoint}. Status Code: {StatusCode}", endpoint, ex.StatusCode);
+                _logger.LogError(ex, "HTTP error during GET (list) request. Endpoint: {Endpoint}. Status Code: {StatusCode}", endpoint, ex.StatusCode);
                 return default(List<T>);
             }
             catch (JsonException ex)
             {
-                _logger.LogError(ex, "GET (list) isteği sırasında JSON serileştirme hatası oluştu: {Endpoint}", endpoint);
+                _logger.LogError(ex, "JSON deserialization error during GET (list) request. Endpoint: {Endpoint}", endpoint);
                 return default(List<T>);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "GET (list) isteği sırasında beklenmeyen bir hata oluştu: {Endpoint}", endpoint);
+                _logger.LogError(ex, "Unexpected error during GET (list) request. Endpoint: {Endpoint}", endpoint);
                 return default(List<T>);
             }
         }
 
         public async Task<T?> PostAsync<T>(string endpoint, object data)
         {
-            _logger.LogInformation("POST isteği başlatılıyor: {Endpoint}", endpoint);
+            _logger.LogInformation("Initiating POST request: {Endpoint}", endpoint);
             if (string.IsNullOrWhiteSpace(endpoint))
             {
-                _logger.LogError("POST isteği sırasında endpoint boş veya null: {Endpoint}", endpoint);
+                _logger.LogError("POST request failed: endpoint is null or empty. Endpoint: {Endpoint}", endpoint);
                 throw new ArgumentException("Endpoint cannot be null or empty", nameof(endpoint));
             }
             if (data == null)
             {
-                _logger.LogError("POST isteği sırasında veri null: {Endpoint}", endpoint);
+                _logger.LogError("POST request failed: data is null. Endpoint: {Endpoint}", endpoint);
                 throw new ArgumentNullException(nameof(data), "Data cannot be null");
             }
 
@@ -176,32 +175,32 @@ namespace FinTrackForWindows.Services.Api
                 var stream = await response.Content.ReadAsStreamAsync();
                 var result = await JsonSerializer.DeserializeAsync<T>(stream, _jsonSerializerOptions);
 
-                _logger.LogInformation("POST isteği başarılı: {Endpoint}", endpoint);
+                _logger.LogInformation("POST request succeeded: {Endpoint}", endpoint);
                 return result;
             }
             catch (HttpRequestException ex)
             {
-                _logger.LogError(ex, "POST isteği sırasında HTTP hatası oluştu: {Endpoint}. Status Code: {StatusCode}", endpoint, ex.StatusCode);
+                _logger.LogError(ex, "HTTP error during POST request. Endpoint: {Endpoint}. Status Code: {StatusCode}", endpoint, ex.StatusCode);
                 return default(T);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "POST isteği sırasında genel bir hata oluştu: {Endpoint}", endpoint);
+                _logger.LogError(ex, "Unexpected error during POST request. Endpoint: {Endpoint}", endpoint);
                 return default(T);
             }
         }
 
         public async Task<T?> PutAsync<T>(string endpoint, object data)
         {
-            _logger.LogInformation("PUT isteği başlatılıyor: {Endpoint}", endpoint);
+            _logger.LogInformation("Initiating PUT request: {Endpoint}", endpoint);
             if (string.IsNullOrWhiteSpace(endpoint))
             {
-                _logger.LogError("PUT isteği sırasında endpoint boş veya null: {Endpoint}", endpoint);
+                _logger.LogError("PUT request failed: endpoint is null or empty. Endpoint: {Endpoint}", endpoint);
                 throw new ArgumentException("Endpoint cannot be null or empty", nameof(endpoint));
             }
             if (data == null)
             {
-                _logger.LogError("PUT isteği sırasında veri null: {Endpoint}", endpoint);
+                _logger.LogError("PUT request failed: data is null. Endpoint: {Endpoint}", endpoint);
                 throw new ArgumentNullException(nameof(data), "Data cannot be null");
             }
 
@@ -218,32 +217,32 @@ namespace FinTrackForWindows.Services.Api
                 var stream = await response.Content.ReadAsStreamAsync();
                 var result = await JsonSerializer.DeserializeAsync<T>(stream, _jsonSerializerOptions);
 
-                _logger.LogInformation("PUT isteği başarılı: {Endpoint}", endpoint);
+                _logger.LogInformation("PUT request succeeded: {Endpoint}", endpoint);
                 return result;
             }
             catch (HttpRequestException ex)
             {
-                _logger.LogError(ex, "PUT isteği sırasında HTTP hatası oluştu: {Endpoint}. Status Code: {StatusCode}", endpoint, ex.StatusCode);
+                _logger.LogError(ex, "HTTP error during PUT request. Endpoint: {Endpoint}. Status Code: {StatusCode}", endpoint, ex.StatusCode);
                 return default(T);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "PUT isteği sırasında genel bir hata oluştu: {Endpoint}", endpoint);
+                _logger.LogError(ex, "Unexpected error during PUT request. Endpoint: {Endpoint}", endpoint);
                 return default(T);
             }
         }
 
         public async Task<bool> CreateCategoryAsync(string endpoint, object payload)
         {
-            _logger.LogInformation("Kategori oluşturma (POST) isteği başlatılıyor: {Endpoint}", endpoint);
+            _logger.LogInformation("Initiating category creation (POST) request: {Endpoint}", endpoint);
             if (string.IsNullOrWhiteSpace(endpoint))
             {
-                _logger.LogError("Kategori oluşturma isteği sırasında endpoint boş veya null.");
+                _logger.LogError("Category creation request failed: endpoint is null or empty.");
                 throw new ArgumentException("Endpoint cannot be null or empty", nameof(endpoint));
             }
             if (payload == null)
             {
-                _logger.LogError("Kategori oluşturma isteği sırasında veri (payload) null.");
+                _logger.LogError("Category creation request failed: payload is null.");
                 throw new ArgumentNullException(nameof(payload));
             }
 
@@ -257,32 +256,32 @@ namespace FinTrackForWindows.Services.Api
 
                 var result = await response.Content.ReadFromJsonAsync<bool>(_jsonSerializerOptions);
 
-                _logger.LogInformation("Kategori oluşturma (POST) isteği başarılı: {Endpoint}", endpoint);
+                _logger.LogInformation("Category creation (POST) request succeeded: {Endpoint}", endpoint);
                 return result;
             }
             catch (HttpRequestException ex)
             {
-                _logger.LogError(ex, "Kategori oluşturma sırasında HTTP hatası oluştu: {Endpoint}. Status Code: {StatusCode}", endpoint, ex.StatusCode);
+                _logger.LogError(ex, "HTTP error during category creation. Endpoint: {Endpoint}. Status Code: {StatusCode}", endpoint, ex.StatusCode);
                 return false;
             }
             catch (JsonException ex)
             {
-                _logger.LogError(ex, "Kategori oluşturma sırasında JSON deserialize hatası oluştu. API'nin 'true'/'false' döndüğünden emin olun.", endpoint);
+                _logger.LogError(ex, "JSON deserialization error during category creation. Ensure the API returns 'true' or 'false'. Endpoint: {Endpoint}", endpoint);
                 return false;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Kategori oluşturma sırasında genel bir hata oluştu: {Endpoint}", endpoint);
+                _logger.LogError(ex, "Unexpected error during category creation. Endpoint: {Endpoint}", endpoint);
                 return false;
             }
         }
 
         public async Task<bool> UploadFileAsync(string endpoint, string filePath)
         {
-            _logger.LogInformation("Dosya yükleme isteği başlatılıyor: {Endpoint}, Dosya: {FilePath}", endpoint, filePath);
+            _logger.LogInformation("Initiating file upload request: {Endpoint}, File: {FilePath}", endpoint, filePath);
             if (!File.Exists(filePath))
             {
-                _logger.LogError("Yüklenecek dosya bulunamadı: {FilePath}", filePath);
+                _logger.LogError("File upload failed: file not found. File: {FilePath}", filePath);
                 return false;
             }
 
@@ -302,35 +301,35 @@ namespace FinTrackForWindows.Services.Api
 
                     if (response.IsSuccessStatusCode)
                     {
-                        _logger.LogInformation("Dosya başarıyla yüklendi: {Endpoint}", endpoint);
+                        _logger.LogInformation("File uploaded successfully: {Endpoint}", endpoint);
                         return true;
                     }
                     else
                     {
                         var errorContent = await response.Content.ReadAsStringAsync();
-                        _logger.LogError("Dosya yükleme sırasında HTTP hatası: {StatusCode} - {Error}", response.StatusCode, errorContent);
+                        _logger.LogError("HTTP error during file upload. Status Code: {StatusCode}. Error: {Error}", response.StatusCode, errorContent);
                         return false;
                     }
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Dosya yükleme sırasında genel bir hata oluştu: {Endpoint}", endpoint);
+                _logger.LogError(ex, "Unexpected error during file upload. Endpoint: {Endpoint}", endpoint);
                 return false;
             }
         }
 
         public async Task<(byte[] FileBytes, string FileName)?> PostAndDownloadReportAsync<T>(string endpoint, T payload)
         {
-            _logger.LogInformation("Rapor indirme (POST) isteği başlatılıyor: {Endpoint}", endpoint);
+            _logger.LogInformation("Initiating report download (POST) request: {Endpoint}", endpoint);
             if (string.IsNullOrWhiteSpace(endpoint))
             {
-                _logger.LogError("Rapor indirme isteği sırasında endpoint boş veya null.");
+                _logger.LogError("Report download request failed: endpoint is null or empty.");
                 throw new ArgumentException("Endpoint cannot be null or empty", nameof(endpoint));
             }
             if (payload == null)
             {
-                _logger.LogError("Rapor indirme isteği sırasında gönderilecek veri (payload) null.");
+                _logger.LogError("Report download request failed: payload is null.");
                 throw new ArgumentNullException(nameof(payload));
             }
 
@@ -354,37 +353,37 @@ namespace FinTrackForWindows.Services.Api
                             format = dto.ExportFormat.ToString().ToLower();
                         }
                         fileName = $"report_{DateTime.Now:yyyyMMddHHmmss}.{format}";
-                        _logger.LogWarning("Content-Disposition başlığı bulunamadı. Varsayılan dosya adı kullanılıyor: {FileName}", fileName);
+                        _logger.LogWarning("Content-Disposition header not found. Using default file name: {FileName}", fileName);
                     }
 
                     byte[] fileBytes = await response.Content.ReadAsByteArrayAsync();
 
-                    _logger.LogInformation("Rapor başarıyla indirildi: {FileName}, Boyut: {Size} bytes", fileName, fileBytes.Length);
+                    _logger.LogInformation("Report downloaded successfully: {FileName}, Size: {Size} bytes", fileName, fileBytes.Length);
                     return (fileBytes, fileName);
                 }
                 else
                 {
                     var errorContent = await response.Content.ReadAsStringAsync();
-                    _logger.LogError("Rapor indirme sırasında HTTP hatası: {StatusCode} - {Error}", response.StatusCode, errorContent);
+                    _logger.LogError("HTTP error during report download. Status Code: {StatusCode}. Error: {Error}", response.StatusCode, errorContent);
 
-                    throw new HttpRequestException($"API'den rapor alınamadı. Sunucu '{response.StatusCode}' durum kodu ile cevap verdi. Detay: {errorContent}");
+                    throw new HttpRequestException($"Failed to download report from API. Server responded with status code '{response.StatusCode}'. Details: {errorContent}");
                 }
             }
             catch (HttpRequestException ex)
             {
-                _logger.LogError(ex, "Rapor indirme sırasında HTTP isteği hatası: {Endpoint}", endpoint);
+                _logger.LogError(ex, "HTTP error during report download. Endpoint: {Endpoint}", endpoint);
                 throw;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Rapor indirme sırasında genel bir hata oluştu: {Endpoint}", endpoint);
+                _logger.LogError(ex, "Unexpected error during report download. Endpoint: {Endpoint}", endpoint);
                 throw;
             }
         }
 
         public async Task<(Stream? Stream, string? ContentType, string? FileName)> StreamFileAsync(string endpoint)
         {
-            _logger.LogInformation("Streaming file request started: {Endpoint}", endpoint);
+            _logger.LogInformation("Initiating file streaming request: {Endpoint}", endpoint);
             try
             {
                 AddAuthorizationHeader();
@@ -398,17 +397,17 @@ namespace FinTrackForWindows.Services.Api
                 var contentType = response.Content.Headers.ContentType?.ToString();
                 var fileName = response.Content.Headers.ContentDisposition?.FileName?.Trim('"');
 
-                _logger.LogInformation("File stream successfully retrieved from {Endpoint}", endpoint);
+                _logger.LogInformation("File stream retrieved successfully from {Endpoint}", endpoint);
                 return (stream, contentType, fileName);
             }
             catch (HttpRequestException ex)
             {
-                _logger.LogError(ex, "HTTP error during file stream: {Endpoint}. Status: {StatusCode}", endpoint, ex.StatusCode);
+                _logger.LogError(ex, "HTTP error during file streaming. Endpoint: {Endpoint}. Status Code: {StatusCode}", endpoint, ex.StatusCode);
                 return (null, null, null);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Generic error during file stream: {Endpoint}", endpoint);
+                _logger.LogError(ex, "Unexpected error during file streaming. Endpoint: {Endpoint}", endpoint);
                 return (null, null, null);
             }
         }

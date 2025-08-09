@@ -12,11 +12,11 @@ namespace FinTrackForWindows.Models.Report
         [ObservableProperty]
         private bool isSelected;
 
-        public SelectableOptionReport(int _id, string _name, bool _isSelected = false)
+        public SelectableOptionReport(int id, string name, bool isSelected = false)
         {
-            name = _name;
-            isSelected = _isSelected;
-            Id = _id;
+            this.Id = id;
+            this.name = name;
+            this.isSelected = isSelected;
         }
     }
 }

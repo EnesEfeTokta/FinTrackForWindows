@@ -33,7 +33,7 @@ namespace FinTrackForWindows.Services.Accounts
         {
             if (_accounts.Any())
             {
-                _logger.LogInformation("Hesaplar zaten yüklü. API çağrısı atlanıyor.");
+                _logger.LogInformation("Accounts are already loaded. Skipping API call.");
                 return;
             }
 
@@ -54,11 +54,11 @@ namespace FinTrackForWindows.Services.Accounts
                         Balance = dto.Balance,
                     });
                 }
-                _logger.LogInformation("{Count} adet hesap Accountstore'a yüklendi.", _accounts.Count);
+                _logger.LogInformation("{Count} accounts loaded into AccountStore.", _accounts.Count);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Accountstore'da hesaplar yüklenirken hata oluştu.");
+                _logger.LogError(ex, "An error occurred while loading accounts in AccountStore.");
             }
         }
 

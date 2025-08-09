@@ -1,7 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FinTrackForWindows.Models.Debt;
+using FinTrackForWindows.Services.AppInNotifications;
 using FinTrackForWindows.Services.Camera;
+using Microsoft.Extensions.Logging;
 using System.Windows.Media.Imaging;
 
 namespace FinTrackForWindows.ViewModels
@@ -26,18 +28,31 @@ namespace FinTrackForWindows.ViewModels
         public string RecordButtonText => IsRecording ? "Stop Recording" : "Start Recording";
         public string CommitmentText { get; }
 
-        public VideoRecorderViewModel(DebtModel debt, ICameraService cameraService, Action<bool, string?> closeWindowAction)
+        private readonly ILogger<DebtViewModel> _logger;
+        private readonly IAppInNotificationService _appInNotificationService;
+
+        public VideoRecorderViewModel(DebtModel debt,
+            ICameraService cameraService,
+            Action<bool, string?> closeWindowAction,
+            ILogger<DebtViewModel> logger,
+            IAppInNotificationService appInNotificationService)
         {
             _cameraService = cameraService;
             _closeWindowAction = closeWindowAction;
 
-            CommitmentText = $"Ben, {debt.BorrowerName}, {debt.LenderName} kişisinden {DateTime.UtcNow:dd.MM.yyyy} tarihinde almış olduğum {debt.Amount:N2} TRY tutarındaki borcu, en geç {debt.DueDate:dd.MM.yyyy} tarihinde ödemeyi taahhüt ediyorum. Eğer borcu belirtilen zamanda ve miktarda geri ödemezsem, bu video kaydının borç veren {debt.LenderName} kişisinin erişimine açılacağını ve yasal delil olarak kullanılabileceğini kabul ediyorum.";
+            _logger = logger;
+            _appInNotificationService = appInNotificationService;
+
+            CommitmentText = $"I, {debt.BorrowerName}, acknowledge that I have received a loan in the amount of {debt.Amount:N2} {debt.Currency} from {debt.LenderName} on {DateTime.UtcNow:dd.MM.yyyy}. " +
+                $"I undertake to make the payment no later than {debt.DueDate:dd.MM.yyyy}. If I fail to repay the debt in the specified amount and on the specified date, " +
+                $"I acknowledge that this video recording will be made available to the lender {debt.LenderName} and may be used as legal evidence.";
 
             _cameraService.OnFrameReady = (frame) => CameraFrame = frame;
 
             if (!_cameraService.InitializeCamera())
             {
-                // TODO: Show a user-friendly error message.
+                _logger.LogError("There was a problem while recording the video.");
+                _appInNotificationService.ShowError("There was a problem while recording the video.");
                 _closeWindowAction(false, null);
             }
         }
@@ -76,7 +91,6 @@ namespace FinTrackForWindows.ViewModels
         [RelayCommand]
         private void Cleanup()
         {
-            // Bu metot, pencere kapandığında çağrılır.
             _cameraService.Release();
         }
     }

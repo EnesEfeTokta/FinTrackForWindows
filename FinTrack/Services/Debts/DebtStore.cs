@@ -74,9 +74,15 @@ namespace FinTrackForWindows.Services.Debts
                         CurrentUserId = _currentUserId,
                         LenderName = dto.LenderName,
                         BorrowerName = dto.BorrowerName,
-                        borrowerImageUrl = dto.BorrowerProfilePicture ?? "/Assets/Images/Icons/user-red.png",
-                        lenderImageUrl = dto.LenderProfilePicture ?? "/Assets/Images/Icons/user-green.png",
+                        BorrowerImageUrl = dto.BorrowerProfilePicture ?? "/Assets/Images/Icons/user-red.png",
+                        LenderImageUrl = dto.LenderProfilePicture ?? "/Assets/Images/Icons/user-green.png",
+                        BorrowerEmail = dto.BorrowerEmail,
+                        LenderEmail = dto.LenderEmail,
+                        Description = dto.Description,
+                        PaymentDate = dto.PaidAtUtc,
+                        OperatorApprovalDate = dto.OperatorApprovalAtUtc,
                         Amount = dto.Amount,
+                        Currency = dto.Currency,
                         DueDate = dto.DueDateUtc.ToLocalTime(),
                         Status = dto.Status,
                         VideoMetadataId = dto.VideoMetadataId
@@ -109,7 +115,7 @@ namespace FinTrackForWindows.Services.Debts
             }
         }
 
-        public async Task SendOfferAsync(string borrowerEmail, decimal amount, string currency, DateTime dueDate, string description)
+        public async Task SendOfferAsync(string borrowerEmail, decimal amount, BaseCurrencyType currency, DateTime dueDate, string description)
         {
             IsLoading = true;
             try
@@ -118,7 +124,7 @@ namespace FinTrackForWindows.Services.Debts
                 {
                     BorrowerEmail = borrowerEmail,
                     Amount = amount,
-                    CurrencyCode = BaseCurrencyType.TRY,
+                    CurrencyCode = currency,
                     DueDateUtc = dueDate.ToUniversalTime(),
                     Description = description
                 };

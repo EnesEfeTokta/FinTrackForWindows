@@ -52,7 +52,8 @@
                         Margin="0,0,20,0">
 
                 <Button Style="{StaticResource AccentButtonStyle}"
-                        Command="{Binding AddNewTransactionCommand}">
+                        Command="{Binding AddNewTransactionCommand}"
+                        Visibility="Hidden">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/Assets/Images/Icons/add.png" Width="16" Height="16" Margin="0,0,8,0"/>
                         <TextBlock Text="ADD TRANSACTION"/>

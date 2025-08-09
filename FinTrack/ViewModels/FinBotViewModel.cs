@@ -6,7 +6,6 @@ using FinTrackForWindows.Models.FinBot;
 using FinTrackForWindows.Services.Api;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
-using System.Text;
 
 namespace FinTrackForWindows.ViewModels
 {
@@ -16,14 +15,14 @@ namespace FinTrackForWindows.ViewModels
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(SendMessageCommand))]
-        private string messageInput = string.Empty;
+        private string _messageInput = string.Empty;
+
+        [ObservableProperty]
+        private bool _isAwaitingBotResponse = false;
 
         private readonly ILogger<FinBotViewModel> _logger;
-
         private readonly IApiService _apiService;
-
-        private const string chars = "qQwWeErRtTyYuUiIoOpPaAsSdDfFgGhHjJkKlLzZxXcCvVbBnNmM0123456789+-*/|<>£&()='!#${[]}";
-        private readonly string? clientChatSessionId;
+        private readonly string _clientChatSessionId;
 
         public FinBotViewModel(ILogger<FinBotViewModel> logger, IApiService apiService)
         {
@@ -31,13 +30,10 @@ namespace FinTrackForWindows.ViewModels
             _apiService = apiService;
             Messages = new ObservableCollection<ChatMessageModel>();
 
+            const string chars = "qQwWeErRtTyYuUiIoOpPaAsSdDfFgGhHjJkKlLzZxXcCvVbBnNmM0123456789";
             Random random = new Random();
-            StringBuilder result = new StringBuilder(10);
-            for (int i = 0; i < 10; i++)
-            {
-                result.Append(chars[random.Next(chars.Length)]);
-            }
-            clientChatSessionId = result.ToString();
+            _clientChatSessionId = new string(Enumerable.Repeat(chars, 10)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
 
             LoadInitialMessage();
         }
@@ -50,85 +46,89 @@ namespace FinTrackForWindows.ViewModels
                 {
                     "List All My Accounts",
                     "List All My Budgets",
-                    "List All My Transacitons",
+                    "List All My Transactions",
                     "Total Income Amount",
                     "Total Expense Amount"
                 }
             };
             Messages.Add(initialMessage);
-            _logger.LogInformation("Initial message loaded: {MessageText}", initialMessage.Text);
         }
+
+        private bool CanSendMessage() => !string.IsNullOrWhiteSpace(MessageInput) && !IsAwaitingBotResponse;
 
         [RelayCommand(CanExecute = nameof(CanSendMessage))]
         private async Task SendMessageAsync()
         {
-            if (!CanSendMessage) return;
+            if (!CanSendMessage()) return;
 
-            var userMessage = new ChatMessageModel(MessageInput, MessageAuthor.User);
+            var userMessageText = MessageInput;
+            var userMessage = new ChatMessageModel(userMessageText, MessageAuthor.User);
             Messages.Add(userMessage);
-
             MessageInput = string.Empty;
 
-            _logger.LogInformation("Kullanıcı mesaj yazdı. {MessageText}", userMessage.Text);
+            _logger.LogInformation("User sent a message: {MessageText}", userMessage.Text);
 
-            var chatResponse = await _apiService.PostAsync<ChatResponseDto>("Chat/send", new ChatRequestDto
-            {
-                Message = userMessage.Text,
-                ClientChatSessionId = clientChatSessionId,
-            });
-
-            if (chatResponse != null)
-            {
-                var botResponse = new ChatMessageModel(chatResponse.Reply ?? "N/A", MessageAuthor.Bot);
-                Messages.Add(botResponse);
-            }
+            await GetBotResponseAsync(userMessageText);
         }
-
-        private bool CanSendMessage => !string.IsNullOrWhiteSpace(MessageInput);
 
         [RelayCommand]
         private async Task SendQuickActionAsync(string actionText)
         {
-            if (string.IsNullOrWhiteSpace(actionText)) return;
+            if (string.IsNullOrWhiteSpace(actionText) || IsAwaitingBotResponse) return;
 
-            string actionMessage = string.Empty;
-            switch (actionText)
+            string botCommandMessage = actionText switch
             {
-                case "List All My Accounts":
-                    actionMessage = "List all my accounts. Don't give too long explanations.";
-                    return;
-                case "List All My Budgets":
-                    actionMessage = "List all my budgets. Don't give too long explanations.";
-                    return;
-                case "List All My Transacitons":
-                    actionMessage = "List all my transacitons. Don't give too long explanations.";
-                    return;
-                case "Total Income Amount":
-                    actionMessage = "The sum of all my income. Don't give too long explanations.";
-                    return;
-                case "Total Expense Amount":
-                    actionMessage = "The sum of all my expense. Don't give too long explanations.";
-                    return;
-            }
+                "List All My Accounts" => "List all my accounts. Don't give too long explanations.",
+                "List All My Budgets" => "List all my budgets. Don't give too long explanations.",
+                "List All My Transactions" => "List all my transacitons. Don't give too long explanations.",
+                "Total Income Amount" => "The sum of all my income. Don't give too long explanations.",
+                "Total Expense Amount" => "The sum of all my expense. Don't give too long explanations.",
+                _ => actionText
+            };
 
-            var userMessage = new ChatMessageModel(actionMessage, MessageAuthor.User);
+            var userMessage = new ChatMessageModel(actionText, MessageAuthor.User);
             Messages.Add(userMessage);
 
-            _logger.LogInformation("Kullanıcı hızlı eylem seçti: {ActionText}", actionText);
+            _logger.LogInformation("User selected a quick action: {ActionText}", actionText);
 
-            await ProcessBotResponseAsync(actionMessage);
+            await GetBotResponseAsync(botCommandMessage);
         }
 
-        private async Task ProcessBotResponseAsync(string userMessage)
+        private async Task GetBotResponseAsync(string messageForBot)
         {
-            await Task.Delay(1000); // Bot "yazıyor..." efekti için küçük bir bekleme
+            IsAwaitingBotResponse = true;
+            SendMessageCommand.NotifyCanExecuteChanged();
 
-            ChatMessageModel botResponse;
-            string lowerUserMessage = userMessage.ToLower();
+            try
+            {
+                var chatResponse = await _apiService.PostAsync<ChatResponseDto>("Chat/send", new ChatRequestDto
+                {
+                    Message = messageForBot,
+                    ClientChatSessionId = _clientChatSessionId,
+                });
 
-            botResponse = new ChatMessageModel(lowerUserMessage, MessageAuthor.Bot);
-
-            Messages.Add(botResponse);
+                if (chatResponse != null)
+                {
+                    var botResponse = new ChatMessageModel(chatResponse.Reply ?? "Sorry, I couldn't process that.", MessageAuthor.Bot);
+                    Messages.Add(botResponse);
+                }
+                else
+                {
+                    var errorResponse = new ChatMessageModel("I seem to be having trouble connecting. Please try again later.", MessageAuthor.Bot);
+                    Messages.Add(errorResponse);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting response from Chat API.");
+                var errorResponse = new ChatMessageModel("An error occurred. I can't respond right now.", MessageAuthor.Bot);
+                Messages.Add(errorResponse);
+            }
+            finally
+            {
+                IsAwaitingBotResponse = false;
+                SendMessageCommand.NotifyCanExecuteChanged();
+            }
         }
     }
 }

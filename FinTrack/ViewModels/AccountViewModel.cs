@@ -71,7 +71,6 @@ namespace FinTrackForWindows.ViewModels
             FilteredAccounts = new ObservableCollection<AccountModel>();
             _accountStore.AccountsChanged += (s, e) => ApplyFilters();
 
-            // Sadece InitializeViewModel'i çağırarak çift yüklemeyi önle
             _ = InitializeViewModel();
 
             PrepareForNewAccount();

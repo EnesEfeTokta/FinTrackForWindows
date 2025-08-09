@@ -4,10 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:viewModels="clr-namespace:FinTrackForWindows.ViewModels"
+             xmlns:helpers="clr-namespace:FinTrackForWindows.Helpers"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance Type=viewModels:BudgetViewModel}"
              d:DesignHeight="800" d:DesignWidth="1200"
              Background="{StaticResource MainBackgroundBrush}">
+
+    <UserControl.Resources>
+        <helpers:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </UserControl.Resources>
 
     <Grid Margin="30">
         <Grid.ColumnDefinitions>
@@ -15,149 +20,184 @@
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- SOL SÜTUN: BÜTÇE LİSTESİ -->
         <Border Grid.Column="0" Style="{StaticResource DashboardCardStyle}" Margin="0,0,20,0">
-            <StackPanel>
-                <TextBlock Text="Mevcut Bütçeler" Style="{StaticResource CardTitleTextStyle}"/>
-                <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,20" Opacity="0.5"/>
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Top">
+                    <TextBlock Text="Current Budgets" Style="{StaticResource CardTitleTextStyle}"/>
+                    <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,20" Opacity="0.5"/>
 
-                <Grid Margin="0,0,0,20">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto" MinWidth="150"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
+                    <Expander Header="Filter" IsExpanded="True" Style="{StaticResource ModernExpanderStyle}" Margin="0,0,0,15">
+                        <StackPanel Margin="15,10,15,5">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto" MinWidth="150"/>
+                                </Grid.ColumnDefinitions>
 
-                    <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,10,0">
-                        <TextBlock Text="İSME GÖRE ARA" Style="{StaticResource LabelTextStyle}"/>
-                        <TextBox Style="{StaticResource ModernTextBoxStyle}" 
-                                 Text="{Binding FilterByName, UpdateSourceTrigger=PropertyChanged}"/>
-                    </StackPanel>
+                                <StackPanel Grid.Column="0" Margin="0,0,10,10">
+                                    <TextBlock Text="SEARCH BY NAME" Style="{StaticResource LabelTextStyle}"/>
+                                    <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding FilterByName, UpdateSourceTrigger=PropertyChanged}"/>
+                                </StackPanel>
 
-                    <StackPanel Grid.Row="0" Grid.Column="1">
-                        <TextBlock Text="KATEGORİ" Style="{StaticResource LabelTextStyle}"/>
-                        <ComboBox Style="{StaticResource ModernComboBoxStyle}"
-                                  ItemsSource="{Binding CategoriesForFilter}"
-                                  SelectedItem="{Binding SelectedFilterCategory}"/>
-                    </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="0,0,0,10">
+                                    <TextBlock Text="CATEGORY" Style="{StaticResource LabelTextStyle}"/>
+                                    <ComboBox Style="{StaticResource ModernComboBoxStyle}" ItemsSource="{Binding CategoriesForFilter}" SelectedItem="{Binding SelectedFilterCategory}"/>
+                                </StackPanel>
+                            </Grid>
 
-                    <Grid Grid.Row="1" Grid.ColumnSpan="2" Margin="0,10,0,0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <StackPanel Grid.Column="0" Margin="0,0,5,0">
-                            <TextBlock Text="MİN. TUTAR" Style="{StaticResource LabelTextStyle}"/>
-                            <TextBox Style="{StaticResource ModernTextBoxStyle}"
-                                     Text="{Binding FilterByMinAmount, UpdateSourceTrigger=PropertyChanged}"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Grid.Column="0" Margin="0,0,5,0">
+                                    <TextBlock Text="MIN. AMOUNT" Style="{StaticResource LabelTextStyle}"/>
+                                    <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding FilterByMinAmount, UpdateSourceTrigger=PropertyChanged}"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="1" Margin="5,0,5,0">
+                                    <TextBlock Text="MAX. AMOUNT" Style="{StaticResource LabelTextStyle}"/>
+                                    <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding FilterByMaxAmount, UpdateSourceTrigger=PropertyChanged}"/>
+                                </StackPanel>
+
+                                <Button Grid.Column="2" Content="Clear" Style="{StaticResource LinkButtonStyle}"
+                                        VerticalAlignment="Bottom" Margin="10,0,0,3"
+                                        Command="{Binding ClearFiltersCommand}"
+                                        Visibility="{Binding IsFilterActive, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                            </Grid>
                         </StackPanel>
-                        <StackPanel Grid.Column="1" Margin="5,0,0,0">
-                            <TextBlock Text="MAKS. TUTAR" Style="{StaticResource LabelTextStyle}"/>
-                            <TextBox Style="{StaticResource ModernTextBoxStyle}"
-                                     Text="{Binding FilterByMaxAmount, UpdateSourceTrigger=PropertyChanged}"/>
-                        </StackPanel>
-                    </Grid>
+                    </Expander>
+                </StackPanel>
+
+                <Grid>
+                    <ListView ItemsSource="{Binding FilteredBudgets}" 
+                              Background="Transparent" BorderThickness="0" 
+                              ItemContainerStyle="{StaticResource CleanListViewItemStyle}"
+                              ScrollViewer.VerticalScrollBarVisibility="Auto"
+                              Visibility="{Binding HasFilteredBudgets, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10" Padding="15" Margin="0,0,0,10">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Text="{Binding Name}" Foreground="White" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                                <Border Grid.Column="1" Background="{StaticResource PrimaryBrush}" CornerRadius="5" Padding="6,3" Margin="10,0,0,0">
+                                                    <TextBlock Text="{Binding Category, FallbackValue=N/A}" Foreground="White" FontSize="11" FontWeight="Medium"/>
+                                                </Border>
+                                            </Grid>
+
+                                            <Grid Margin="0,8,0,5">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <TextBlock Grid.Column="0" Text="Amount Reached:" Foreground="{StaticResource TopBarTextSecondaryBrush}" VerticalAlignment="Center"/>
+
+                                                <Grid Grid.Column="1">
+                                                    <TextBlock Text="{Binding ReachedAmountDisplayText}" 
+                                                                Foreground="White" FontWeight="SemiBold"
+                                                                Visibility="{Binding IsEditingReachedAmount, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=invert}"
+                                                                ToolTip="Click to edit">
+                                                        <TextBlock.InputBindings>
+                                                            <MouseBinding MouseAction="LeftClick" 
+                                                                Command="{Binding DataContext.StartEditReachedAmountCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                                                CommandParameter="{Binding}"/>
+                                                        </TextBlock.InputBindings>
+                                                    </TextBlock>
+
+                                                    <TextBox Style="{StaticResource ModernTextBoxStyle}"
+                                                             Text="{Binding ReachedAmount, UpdateSourceTrigger=PropertyChanged}"
+                                                             Visibility="{Binding IsEditingReachedAmount, Converter={StaticResource BooleanToVisibilityConverter}, StringFormat=N2}">
+                                                        <TextBox.InputBindings>
+                                                            <KeyBinding Key="Enter" 
+                                                                        Command="{Binding DataContext.SaveReachedAmountCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                                                        CommandParameter="{Binding}"/>
+                                                        </TextBox.InputBindings>
+                                                    </TextBox>
+                                                </Grid>
+                                            </Grid>
+
+                                            <ProgressBar Value="{Binding ProgressValue, Mode=OneWay}" Height="8" Margin="0,5" Background="{StaticResource ProgressBarBackgroundBrush}" Foreground="{StaticResource PrimaryBrush}"/>
+                                            <Grid>
+                                                <TextBlock HorizontalAlignment="Left" Foreground="{StaticResource TopBarTextSecondaryBrush}" Text="{Binding ProgressText, Mode=OneWay}"/>
+                                                <TextBlock HorizontalAlignment="Right" Foreground="{StaticResource TopBarTextSecondaryBrush}" Text="{Binding RemainingTimeText, Mode=OneWay}"/>
+                                            </Grid>
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="15,0,0,0">
+                                            <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Edit"
+                                                    Command="{Binding DataContext.PrepareToEditBudgetCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                                    CommandParameter="{Binding}">
+                                                <Image Source="/Assets/Images/Icons/edit.png" Width="16" Height="16"/>
+                                            </Button>
+                                            <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Delete" Margin="5,0,0,0"
+                                                    Command="{Binding DataContext.DeleteBudgetCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                                    CommandParameter="{Binding}">
+                                                <Image Source="/Assets/Images/Icons/delete.png" Width="16" Height="16"/>
+                                            </Button>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+
+                    <TextBlock Text="No budgets found to display." 
+                               HorizontalAlignment="Center" VerticalAlignment="Center"
+                               FontSize="16" Foreground="{StaticResource TopBarTextSecondaryBrush}"
+                               Visibility="{Binding HasFilteredBudgets, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=invert}"/>
                 </Grid>
-
-                <ListView ItemsSource="{Binding FilteredBudgets}" 
-                          SelectedItem="{Binding SelectedBudget, Mode=TwoWay}"
-                          Background="Transparent" BorderThickness="0" 
-                          ItemContainerStyle="{StaticResource CleanListViewItemStyle}"
-                          ScrollViewer.VerticalScrollBarVisibility="Auto">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <Border Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10" Padding="15">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="Auto"/>
-                                            </Grid.ColumnDefinitions>
-                                            <TextBlock Text="{Binding Name}" Foreground="White" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center"/>
-                                            <Border Grid.Column="1" Background="{StaticResource PrimaryBrush}" CornerRadius="5" Padding="6,3" Margin="10,0,0,0">
-                                                <TextBlock Text="{Binding Category}" Foreground="White" FontSize="11" FontWeight="Medium"/>
-                                            </Border>
-                                        </Grid>
-                                        <ProgressBar Value="{Binding ProgressValue, Mode=OneWay}" Height="8" Margin="0,10" Background="{StaticResource ProgressBarBackgroundBrush}" Foreground="{StaticResource PrimaryBrush}"/>
-                                        <Grid>
-                                            <TextBlock HorizontalAlignment="Left" Foreground="{StaticResource TopBarTextSecondaryBrush}" Text="{Binding ProgressText, Mode=OneWay}"/>
-                                            <TextBlock HorizontalAlignment="Right" Foreground="{StaticResource TopBarTextSecondaryBrush}" Text="{Binding RemainingTimeText, Mode=OneWay}"/>
-                                        </Grid>
-                                    </StackPanel>
-                                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="15,0,0,0">
-                                        <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Düzenle"
-                                                Command="{Binding DataContext.PrepareToEditBudgetCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
-                                                CommandParameter="{Binding}"/>
-                                        <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Sil" Margin="5,0,0,0"
-                                                Command="{Binding DataContext.DeleteBudgetCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
-                                                CommandParameter="{Binding}"/>
-                                    </StackPanel>
-                                </Grid>
-                            </Border>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-            </StackPanel>
+            </DockPanel>
         </Border>
 
-        <!-- SAĞ SÜTUN: EKLE/DÜZENLE FORMU -->
         <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
             <Border Style="{StaticResource DashboardCardStyle}" Margin="20,0,0,0">
-                <StackPanel DataContext="{Binding SelectedBudget}">
-                    <TextBlock Text="{Binding DataContext.FormTitle, RelativeSource={RelativeSource AncestorType=UserControl}}" Style="{StaticResource CardTitleTextStyle}"/>
-                    <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" 
-                        BorderThickness="0,0,0,1" Margin="0,5,0,20" Opacity="0.5"/>
+                <StackPanel>
+                    <TextBlock Text="{Binding FormTitle}" Style="{StaticResource CardTitleTextStyle}"/>
+                    <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,20" Opacity="0.5"/>
 
-                    <TextBlock Text="BÜTÇE ADI" Style="{StaticResource LabelTextStyle}"/>
-                    <TextBox Style="{StaticResource ModernTextBoxStyle}" 
-                         Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
+                    <TextBlock Text="BUDGET NAME" Style="{StaticResource LabelTextStyle}"/>
+                    <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding SelectedBudget.Name, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
 
-                    <TextBlock Text="HEDEF TUTAR" Style="{StaticResource LabelTextStyle}"/>
-                    <TextBox Style="{StaticResource ModernTextBoxStyle}"
-                         Text="{Binding AllocatedAmount, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}" Margin="0,0,0,15"/>
+                    <TextBlock Text="TARGET AMOUNT" Style="{StaticResource LabelTextStyle}"/>
+                    <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding SelectedBudget.AllocatedAmount, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}" Margin="0,0,0,15"/>
 
-                    <TextBlock Text="PARA BİRİMİ" Style="{StaticResource LabelTextStyle}"/>
-                    <ComboBox Style="{StaticResource ModernComboBoxStyle}"
-                              ItemsSource="{Binding DataContext.CurrencyTypes, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                              SelectedItem="{Binding Currency, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
+                    <TextBlock Text="REACHED AMOUNT" Style="{StaticResource LabelTextStyle}"/>
+                    <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding SelectedBudget.ReachedAmount, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}" Margin="0,0,0,15"/>
 
-                    <TextBlock Text="KATEGORİ" Style="{StaticResource LabelTextStyle}"/>
-                    <ComboBox Style="{StaticResource EditableModernComboBoxStyle}"
-                              IsEditable="True"
-                              IsTextSearchEnabled="True"
-                              ItemsSource="{Binding DataContext.CategoriesForForm, RelativeSource={RelativeSource AncestorType=UserControl}}"                              Text="{Binding Category, UpdateSourceTrigger=PropertyChanged}"
-                              Margin="0,0,0,15"
-                              ToolTip="Mevcut bir kategori seçin veya yeni bir kategori yazın"/>
+                    <TextBlock Text="CURRENCY" Style="{StaticResource LabelTextStyle}"/>
+                    <ComboBox Style="{StaticResource ModernComboBoxStyle}" ItemsSource="{Binding CurrencyTypes}" SelectedItem="{Binding SelectedBudget.Currency, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
 
-                    <TextBlock Text="AÇIKLAMA (İSTEĞE BAĞLI)" Style="{StaticResource LabelTextStyle}"/>
+                    <TextBlock Text="CATEGORY" Style="{StaticResource LabelTextStyle}"/>
+                    <ComboBox Style="{StaticResource EditableModernComboBoxStyle}" IsEditable="True" IsTextSearchEnabled="True"
+                              ItemsSource="{Binding CategoriesForForm}" Text="{Binding SelectedBudget.Category, UpdateSourceTrigger=PropertyChanged}"
+                              Margin="0,0,0,15" ToolTip="Select an existing category or type to create a new one"/>
+
+                    <TextBlock Text="DESCRIPTION (OPTIONAL)" Style="{StaticResource LabelTextStyle}"/>
                     <TextBox Style="{StaticResource ModernTextBoxStyle}" Height="80" TextWrapping="Wrap" AcceptsReturn="True"
-                         Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
+                             Text="{Binding SelectedBudget.Description, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
 
-                    <TextBlock Text="BAŞLANGIÇ TARİHİ" Style="{StaticResource LabelTextStyle}"/>
-                    <DatePicker Style="{StaticResource ModernDatePickerStyle}" 
-                                SelectedDate="{Binding StartDate, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
+                    <TextBlock Text="START DATE" Style="{StaticResource LabelTextStyle}"/>
+                    <DatePicker Style="{StaticResource ModernDatePickerStyle}" SelectedDate="{Binding SelectedBudget.StartDate, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
 
-                    <TextBlock Text="BİTİŞ TARİHİ" Style="{StaticResource LabelTextStyle}"/>
-                    <DatePicker Style="{StaticResource ModernDatePickerStyle}" 
-                                SelectedDate="{Binding EndDate, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,25"/>
+                    <TextBlock Text="END DATE" Style="{StaticResource LabelTextStyle}"/>
+                    <DatePicker Style="{StaticResource ModernDatePickerStyle}" SelectedDate="{Binding SelectedBudget.EndDate, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,25"/>
 
-                    <Button Content="{Binding DataContext.SaveButtonText, RelativeSource={RelativeSource AncestorType=UserControl}}" 
-                            Command="{Binding DataContext.SaveBudgetCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                            Style="{StaticResource PrimaryButtonStyle}"/>
-
-                    <Button Content="Formu Temizle" 
-                            Command="{Binding DataContext.CleanFormCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                            Style="{StaticResource LinkButtonStyle}"
-                            HorizontalAlignment="Right" Margin="0,10,0,0"/>
-
+                    <Button Content="{Binding SaveButtonText}" Command="{Binding SaveBudgetCommand}" Style="{StaticResource PrimaryButtonStyle}"/>
+                    <Button Content="Clear Form" Command="{Binding PrepareForNewBudgetCommand}" Style="{StaticResource LinkButtonStyle}" HorizontalAlignment="Right" Margin="0,10,0,0"/>
                 </StackPanel>
             </Border>
         </ScrollViewer>

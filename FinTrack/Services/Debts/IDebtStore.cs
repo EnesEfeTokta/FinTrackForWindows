@@ -1,4 +1,5 @@
-﻿using FinTrackForWindows.Models.Debt;
+﻿using FinTrackForWindows.Enums;
+using FinTrackForWindows.Models.Debt;
 using System.Collections.ObjectModel;
 using System.IO;
 
@@ -13,7 +14,7 @@ namespace FinTrackForWindows.Services.Debts
         bool IsLoading { get; }
 
         Task LoadDebtsAsync();
-        Task SendOfferAsync(string borrowerEmail, decimal amount, string currency, DateTime dueDate, string description);
+        Task SendOfferAsync(string borrowerEmail, decimal amount, BaseCurrencyType currency, DateTime dueDate, string description);
         Task RespondToOfferAsync(DebtModel debt, bool accepted);
         Task UploadVideoAsync(DebtModel debt, string filePath);
 

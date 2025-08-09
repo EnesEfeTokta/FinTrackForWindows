@@ -1,8 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FinTrackForWindows.Core;
-using FinTrackForWindows.Dtos;
 using FinTrackForWindows.Services.Api;
+using FinTrackForWindows.Services.Users;
 using Microsoft.Extensions.Logging;
 
 namespace FinTrackForWindows.ViewModels
@@ -36,14 +36,17 @@ namespace FinTrackForWindows.ViewModels
         private readonly ILogger<TopBarViewModel> _logger;
         private readonly IApiService _apiService;
 
-        public TopBarViewModel(ILogger<TopBarViewModel> logger, IApiService apiService)
+        private readonly IUserStore _userStore;
+
+        public TopBarViewModel(ILogger<TopBarViewModel> logger, IApiService apiService, IUserStore userStore)
         {
             _logger = logger;
             _apiService = apiService;
+            _userStore = userStore;
 
             if (SessionManager.IsLoggedIn)
             {
-                _logger.LogInformation("Kullanıcı zaten giriş yapmış. TopBarViewModel profil bilgilerini yüklüyor.");
+                _logger.LogInformation("User is already logged in. Loading profile information in TopBarViewModel.");
                 _ = LoadProfile();
             }
         }
@@ -52,23 +55,26 @@ namespace FinTrackForWindows.ViewModels
         {
             if (!SessionManager.IsLoggedIn)
             {
-                _logger.LogWarning("Kullanıcı oturumu açık değil, profil bilgileri yüklenemedi.");
+                _logger.LogWarning("User session is not active. Unable to load profile information.");
                 return;
             }
-            var userProfile = await _apiService.GetAsync<UserProfileDto>("User");
+
+            await _userStore.LoadCurrentUserAsync();
+
+            var userProfile = _userStore.CurrentUser;
 
             if (userProfile != null)
             {
-                UserAvatar = userProfile.ProfilePicture;
+                UserAvatar = userProfile.ProfilePictureUrl;
                 UserFullName = userProfile.UserName;
                 UserEmail = userProfile.Email;
-                UserMembershipType = userProfile.MembershipType;
-                _logger.LogInformation("Kullanıcı profili başarıyla yüklendi. Kullanıcı Adı: {UserName}, Email: {Email}, Üyelik Tipi: {MembershipType}",
-                    userProfile.UserName, userProfile.Email, userProfile.MembershipType);
+                UserMembershipType = $"{userProfile.MembershipPlan} Member";
+                _logger.LogInformation("User profile loaded successfully. Name: {UserName}, Email: {Email}, Membership Type: {MembershipType}",
+                    userProfile.UserName, userProfile.Email, userProfile.MembershipPlan);
             }
             else
             {
-                _logger.LogWarning("Kullanıcı profili yüklenemedi.");
+                _logger.LogWarning("Failed to load user profile.");
             }
         }
 
@@ -76,77 +82,77 @@ namespace FinTrackForWindows.ViewModels
         private void NavigateToDashboard_TopBarView_Button()
         {
             NavigateToDashboardRequested?.Invoke();
-            _logger.LogInformation("Kullanıcı Dashboard paneline geçti.");
+            _logger.LogInformation("Navigated to Dashboard panel.");
         }
 
         [RelayCommand]
         private void NavigateToAccount_TopBarView_Button()
         {
             NavigateToAccountRequested?.Invoke();
-            _logger.LogInformation("Kullanıcı Account paneline geçti.");
+            _logger.LogInformation("Navigated to Account panel.");
         }
 
         [RelayCommand]
         private void NavigateToBudget_TopBarView_Button()
         {
             NavigateToBudegtRequested?.Invoke();
-            _logger.LogInformation("Kullanıcı Budget paneline geçti.");
+            _logger.LogInformation("Navigated to Budget panel.");
         }
 
         [RelayCommand]
         private void NavigateToTransactions_TopBarView_Button()
         {
             NavigateToTransactionsRequested?.Invoke();
-            _logger.LogInformation("Kullanıcı Transactions paneline geçti.");
+            _logger.LogInformation("Navigated to Transactions panel.");
         }
 
         [RelayCommand]
         private void NavigateToCurrencies_TopBarView_Button()
         {
             NavigateToCurrenciesRequested?.Invoke();
-            _logger.LogInformation("Kullanıcı Currencies paneline geçti.");
+            _logger.LogInformation("Navigated to Currencies panel.");
         }
 
         [RelayCommand]
         private void NavigateToDebt_TopBarView_Button()
         {
             NavigateToDebtRequested?.Invoke();
-            _logger.LogInformation("Kullanıcı Debt paneline geçti.");
+            _logger.LogInformation("Navigated to Debt panel.");
         }
 
         [RelayCommand]
         private void NavigateToReports_TopBarView_Button()
         {
             NavigateToReportsRequested?.Invoke();
-            _logger.LogInformation("Kullanıcı Reports paneline geçti.");
+            _logger.LogInformation("Navigated to Reports panel.");
         }
 
         [RelayCommand]
         private void NavigateToFinBot_TopBarView_Button()
         {
             NavigateToFinBotRequested?.Invoke();
-            _logger.LogInformation("Kullanıcı FinBot paneline geçti.");
+            _logger.LogInformation("Navigated to FinBot panel.");
         }
 
         [RelayCommand]
         private void NavigateToFeedback_TopBarView_Button()
         {
             NavigateToFeedbackRequested?.Invoke();
-            _logger.LogInformation("Kullanıcı Feedback paneline geçti.");
+            _logger.LogInformation("Navigated to Feedback panel.");
         }
 
         [RelayCommand]
         private void NavigateToNotification_TopBarView_Button()
         {
             NavigateToNotificationRequested?.Invoke();
-            _logger.LogInformation("Kullanıcı Notification paneline geçti.");
+            _logger.LogInformation("Navigated to Notification panel.");
         }
 
         [RelayCommand]
         private void NavigateToSettings_TopBarView_Button()
         {
             NavigateToSettingsRequested?.Invoke();
-            _logger.LogInformation("Kullanıcı Settings paneline geçti.");
+            _logger.LogInformation("Navigated to Settings panel.");
         }
     }
 }

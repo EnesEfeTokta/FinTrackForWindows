@@ -12,6 +12,11 @@ namespace FinTrackForWindows.Views
             InitializeComponent();
             _mainViewModel = mainViewModel;
             DataContext = _mainViewModel;
+
+            this.Closing += (s, e) =>
+            {
+                Application.Current.Shutdown();
+            };
         }
     }
 }

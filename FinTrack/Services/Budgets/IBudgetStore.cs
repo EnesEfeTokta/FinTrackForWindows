@@ -15,6 +15,7 @@ namespace FinTrackForWindows.Services.Budgets
 
         Task AddBudgetAsync(BudgetCreateDto newBudget);
         Task UpdateBudgetAsync(int budgetId, BudgetCreateDto updatedBudget);
+        Task UpdateReachedAmountAsync(BudgetUpdateReachedAmountDto newBudget);
         Task DeleteBudgetAsync(int budgetId);
     }
 }

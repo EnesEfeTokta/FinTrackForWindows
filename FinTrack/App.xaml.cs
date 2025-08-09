@@ -3,12 +3,15 @@ using FinTrackForWindows.Core;
 using FinTrackForWindows.Services;
 using FinTrackForWindows.Services.Accounts;
 using FinTrackForWindows.Services.Api;
+using FinTrackForWindows.Services.AppInNotifications;
 using FinTrackForWindows.Services.Budgets;
 using FinTrackForWindows.Services.Camera;
 using FinTrackForWindows.Services.Currencies;
 using FinTrackForWindows.Services.Debts;
 using FinTrackForWindows.Services.Memberships;
+using FinTrackForWindows.Services.Reports;
 using FinTrackForWindows.Services.Transactions;
+using FinTrackForWindows.Services.Users;
 using FinTrackForWindows.ViewModels;
 using FinTrackForWindows.Views;
 using Microsoft.Extensions.DependencyInjection;
@@ -88,8 +91,12 @@ namespace FinTrackForWindows
             services.AddSingleton<ICurrenciesStore, CurrenciesStore>();
             services.AddSingleton<IMembershipStore, MembershipStore>();
             services.AddSingleton<IDebtStore, DebtStore>();
+            services.AddSingleton<IReportStore, ReportStore>();
+            services.AddSingleton<IUserStore, UserStore>();
 
             services.AddTransient<ICameraService, CameraService>();
+
+            services.AddSingleton<IAppInNotificationService, AppInNotificationService>();
         }
 
         protected override async void OnStartup(StartupEventArgs e)
@@ -126,11 +133,17 @@ namespace FinTrackForWindows
 
         protected override async void OnExit(ExitEventArgs e)
         {
+            var notificationService = _host.Services.GetService<IAppInNotificationService>();
+            notificationService?.Dispose();
+
             using (_host)
             {
                 await _host.StopAsync(TimeSpan.FromSeconds(5));
+                _host.Dispose();
             }
+
             base.OnExit(e);
         }
+
     }
 }

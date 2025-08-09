@@ -33,7 +33,7 @@ namespace FinTrackForWindows.Services.Budgets
         {
             if (_budgets.Any())
             {
-                _logger.LogInformation("Bütçeler zaten yüklü. API çağrısı atlanıyor.");
+                _logger.LogInformation("Budgets are already loaded. Skipping API call.");
                 return;
             }
 
@@ -52,18 +52,18 @@ namespace FinTrackForWindows.Services.Budgets
                         Description = dto.Description,
                         Category = dto.Category,
                         AllocatedAmount = dto.AllocatedAmount,
+                        ReachedAmount = dto.ReachedAmount,
                         Currency = dto.Currency,
                         StartDate = dto.StartDate,
                         EndDate = dto.EndDate,
                     });
                 }
-                _logger.LogInformation("{Count} adet bütçe BudgetStore'a yüklendi.", _budgets.Count);
+                _logger.LogInformation("{Count} budgets loaded into BudgetStore.", _budgets.Count);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "BudgetStore'da bütçeler yüklenirken hata oluştu.");
+                _logger.LogError(ex, "An error occurred while loading budgets in BudgetStore.");
             }
-
         }
 
         public async Task AddBudgetAsync(BudgetCreateDto newBudgetDto)
@@ -78,6 +78,7 @@ namespace FinTrackForWindows.Services.Budgets
                     Description = createdBudgetDto.Description,
                     Category = createdBudgetDto.Category,
                     AllocatedAmount = createdBudgetDto.AllocatedAmount,
+                    ReachedAmount = createdBudgetDto.ReachedAmount,
                     Currency = createdBudgetDto.Currency,
                     StartDate = createdBudgetDto.StartDate,
                     EndDate = createdBudgetDto.EndDate
@@ -108,9 +109,25 @@ namespace FinTrackForWindows.Services.Budgets
                         item.Description = updatedBudget.Description;
                         item.Category = updatedBudget.Category;
                         item.AllocatedAmount = updatedBudget.AllocatedAmount;
+                        item.ReachedAmount = updatedBudget.ReachedAmount;
                         item.Currency = updatedBudget.Currency;
                         item.StartDate = updatedBudget.StartDate;
                         item.EndDate = updatedBudget.EndDate;
+                    }
+                }
+            }
+        }
+
+        public async Task UpdateReachedAmountAsync(BudgetUpdateReachedAmountDto updatedBudget)
+        {
+            var updateBudgetDto = await _apiService.PutAsync<BudgetDto>($"Budgets/Update-Reached-Amount", updatedBudget);
+            if (updateBudgetDto != null)
+            {
+                foreach (var item in _budgets)
+                {
+                    if (item.Id == updateBudgetDto.Id)
+                    {
+                        item.ReachedAmount = updatedBudget.ReachedAmount;
                     }
                 }
             }
