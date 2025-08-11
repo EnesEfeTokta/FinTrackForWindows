@@ -160,6 +160,10 @@
                                 <TextBlock Text="{Binding DailyHigh}" FontSize="18" Foreground="White"/>
                             </StackPanel>
                             <StackPanel Margin="0,20,0,0">
+                                <TextBlock Text="DAILY CHANGE" Style="{StaticResource LabelTextStyle}"/>
+                                <TextBlock Text="{Binding DailyChange}" FontSize="18" Foreground="{Binding DailyChangeForeground}"/>
+                            </StackPanel>
+                            <StackPanel Margin="0,20,0,0">
                                 <TextBlock Text="WEEKLY CHANGE" Style="{StaticResource LabelTextStyle}"/>
                                 <TextBlock Text="{Binding WeeklyChange}" FontSize="18" Foreground="{Binding WeeklyChangeForeground}"/>
                             </StackPanel>

@@ -34,6 +34,9 @@ namespace FinTrackForWindows.Models.Currency
         private string dailyHigh = "N/A";
 
         [ObservableProperty]
+        private string dailyChange = "N/A";
+
+        [ObservableProperty]
         private string weeklyChange = "N/A";
 
         [ObservableProperty]
@@ -47,11 +50,22 @@ namespace FinTrackForWindows.Models.Currency
         [NotifyPropertyChangedFor(nameof(MonthlyChangeForeground))]
         private CurrencyConversionType monthlyChangeType = CurrencyConversionType.Neutral;
 
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(WeeklyChangeForeground))]
+        private CurrencyConversionType dailyChangeType = CurrencyConversionType.Neutral;
+
         private static readonly Brush IncreaseBrush = new SolidColorBrush(Color.FromRgb(46, 204, 113));
         private static readonly Brush DecreaseBrush = new SolidColorBrush(Color.FromRgb(231, 76, 60));
         private static readonly Brush DefaultBrush = new SolidColorBrush(Colors.Gray);
 
         public Brush ToCurrencyChangeForeground => Type switch
+        {
+            CurrencyConversionType.Increase => IncreaseBrush,
+            CurrencyConversionType.Decrease => DecreaseBrush,
+            _ => DefaultBrush
+        };
+
+        public Brush DailyChangeForeground => DailyChangeType switch
         {
             CurrencyConversionType.Increase => IncreaseBrush,
             CurrencyConversionType.Decrease => DecreaseBrush,

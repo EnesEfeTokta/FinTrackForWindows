@@ -314,9 +314,9 @@ namespace FinTrackForWindows.ViewModels
                 return;
             }
 
-            SelectedCurrency.DailyLow = "N/A";
-            SelectedCurrency.DailyHigh = "N/A";
-
+            SelectedCurrency.DailyHigh = summary.DailyHigh.ToString() ?? "N/A";
+            SelectedCurrency.DailyLow = summary.DailyLow.ToString() ?? "N/A";
+            (SelectedCurrency.DailyChange, SelectedCurrency.WeeklyChangeType) = FormatChangeValue(summary.DailyChangePercentage);
             (SelectedCurrency.WeeklyChange, SelectedCurrency.WeeklyChangeType) = FormatChangeValue(summary.WeeklyChangePercentage);
             (SelectedCurrency.MonthlyChange, SelectedCurrency.MonthlyChangeType) = FormatChangeValue(summary.MonthlyChangePercentage);
             (SelectedCurrency.ToCurrencyChange, SelectedCurrency.Type) = FormatChangeValue(summary.DailyChangePercentage);
