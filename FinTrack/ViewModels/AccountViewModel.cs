@@ -93,7 +93,7 @@ namespace FinTrackForWindows.ViewModels
 
         private async Task InitializeViewModel()
         {
-            await LoadData();
+            ApplyFilters();
 
             if (FilteredAccounts.Any())
             {
@@ -116,13 +116,6 @@ namespace FinTrackForWindows.ViewModels
             {
                 InitializeEmptyChart();
             }
-        }
-
-        private async Task LoadData()
-        {
-            await _accountStore.LoadAccountsAsync();
-
-            ApplyFilters();
         }
 
         private async Task LoadTransactionHistory(int accountId, string accountName)

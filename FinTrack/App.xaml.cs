@@ -8,8 +8,10 @@ using FinTrackForWindows.Services.Budgets;
 using FinTrackForWindows.Services.Camera;
 using FinTrackForWindows.Services.Currencies;
 using FinTrackForWindows.Services.Debts;
+using FinTrackForWindows.Services.Dialog;
 using FinTrackForWindows.Services.Memberships;
 using FinTrackForWindows.Services.Reports;
+using FinTrackForWindows.Services.StoresRefresh;
 using FinTrackForWindows.Services.Transactions;
 using FinTrackForWindows.Services.Users;
 using FinTrackForWindows.ViewModels;
@@ -95,6 +97,8 @@ namespace FinTrackForWindows
             services.AddSingleton<IUserStore, UserStore>();
 
             services.AddTransient<ICameraService, CameraService>();
+            services.AddSingleton<IDialogService, WpfDialogService>();
+            services.AddSingleton<IStoresRefresh, StoresRefresh>();
 
             services.AddSingleton<IAppInNotificationService, AppInNotificationService>();
         }

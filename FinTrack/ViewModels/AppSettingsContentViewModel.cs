@@ -2,10 +2,12 @@
 using CommunityToolkit.Mvvm.Input;
 using FinTrackForWindows.Dtos.SettingsDtos;
 using FinTrackForWindows.Enums;
-using FinTrackForWindows.Services.Api;
+using FinTrackForWindows.Services.AppInNotifications;
+using FinTrackForWindows.Services.Users;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.ObjectModel;
-using System.Windows;
+using System.Threading.Tasks;
 
 namespace FinTrackForWindows.ViewModels
 {
@@ -21,9 +23,6 @@ namespace FinTrackForWindows.ViewModels
         private BaseCurrencyType _selectedCurrencyType;
 
         [ObservableProperty]
-        private bool _startWithWindows;
-
-        [ObservableProperty]
         private bool _isLoading;
 
         [ObservableProperty]
@@ -31,41 +30,36 @@ namespace FinTrackForWindows.ViewModels
         private bool _isSaving;
 
         private readonly ILogger<AppSettingsContentViewModel> _logger;
-        private readonly IApiService _apiService;
+        private readonly IUserStore _userStore;
+        private readonly IAppInNotificationService _appInNotificationService;
 
-        public AppSettingsContentViewModel(ILogger<AppSettingsContentViewModel> logger, IApiService apiService)
+        public AppSettingsContentViewModel(ILogger<AppSettingsContentViewModel> logger, IUserStore userStore, IAppInNotificationService appInNotificationService)
         {
             _logger = logger;
-            _apiService = apiService;
+            _userStore = userStore;
+            _appInNotificationService = appInNotificationService;
 
             AppearanceTypes = new ObservableCollection<AppearanceType>(Enum.GetValues<AppearanceType>());
             CurrencyTypes = new ObservableCollection<BaseCurrencyType>(Enum.GetValues<BaseCurrencyType>());
 
-            _ = LoadAppSettings();
+            _userStore.UserChanged += OnUserChanged;
+            LoadDataFromStore();
         }
 
-        private async Task LoadAppSettings()
+        private void OnUserChanged()
+        {
+            LoadDataFromStore();
+        }
+
+        private void LoadDataFromStore()
         {
             IsLoading = true;
-            try
+            if (_userStore.CurrentUser != null)
             {
-                var settings = await _apiService.GetAsync<UserAppSettingsDto>("UserSettings/AppSettings");
-                if (settings != null)
-                {
-                    SelectedAppearanceType = settings.Appearance;
-                    SelectedCurrencyType = settings.Currency;
-                    // StartWithWindows = settings.StartWithWindows; // DTO'ya eklendiğinde bu satır açılmalı
-                }
+                SelectedAppearanceType = _userStore.CurrentUser.Thema;
+                SelectedCurrencyType = _userStore.CurrentUser.Currency;
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to load application settings.");
-                MessageBox.Show("Could not load application settings. Default values will be used.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-            }
-            finally
-            {
-                IsLoading = false;
-            }
+            IsLoading = false;
         }
 
         [RelayCommand(CanExecute = nameof(CanSaveChanges))]
@@ -78,21 +72,24 @@ namespace FinTrackForWindows.ViewModels
                 {
                     Appearance = SelectedAppearanceType,
                     Currency = SelectedCurrencyType
-                    // StartWithWindows = this.StartWithWindows; // DTO'ya eklendiğinde bu satır açılmalı
                 };
 
-                await _apiService.PostAsync<object>("UserSettings/AppSettings", settingsToUpdate);
-
-                // TODO: StartWithWindows ayarını gerçekten sisteme uygulayacak bir servis çağrısı burada yapılmalı.
-                // Örneğin: _startupService.SetStartup(this.StartWithWindows);
-
-                _logger.LogInformation("Application settings have been updated by the user.");
-                MessageBox.Show("Settings saved successfully!", "Application Settings", MessageBoxButton.OK, MessageBoxImage.Information);
+                bool success = await _userStore.UpdateAppSettingsAsync(settingsToUpdate);
+                if (success)
+                {
+                    _logger.LogInformation("Application settings have been updated by the user.");
+                    _appInNotificationService.ShowSuccess("Application settings saved successfully!");
+                }
+                else
+                {
+                    _logger.LogError("Failed to save application settings via UserStore.");
+                    _appInNotificationService.ShowError("An error occurred while saving your settings. Please try again.");
+                }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to save application settings.");
-                MessageBox.Show("An error occurred while saving your settings. Please try again.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                _logger.LogError(ex, "An exception occurred while saving application settings.");
+                _appInNotificationService.ShowError("An unexpected error occurred. Please try again.");
             }
             finally
             {

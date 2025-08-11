@@ -4,6 +4,7 @@ using FinTrackForWindows.Services.Api;
 using FinTrackWebApi.Dtos.CurrencyDtos;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 
 namespace FinTrackForWindows.Services.Currencies
 {
@@ -15,6 +16,8 @@ namespace FinTrackForWindows.Services.Currencies
 
         public ReadOnlyObservableCollection<CurrencyModel> Currencies { get; }
 
+        public event NotifyCollectionChangedEventHandler? CurrenciesChanged;
+
         public CurrenciesStore(IApiService apiService, ILogger<CurrenciesStore> logger)
         {
             _apiService = apiService;
@@ -22,6 +25,11 @@ namespace FinTrackForWindows.Services.Currencies
 
             _currencies = new ObservableCollection<CurrencyModel>();
             Currencies = new ReadOnlyObservableCollection<CurrencyModel>(_currencies);
+
+            _currencies.CollectionChanged += (sender, e) =>
+            {
+                CurrenciesChanged?.Invoke(this, e);
+            };
         }
 
         public async Task LoadCurrenciesAsync()

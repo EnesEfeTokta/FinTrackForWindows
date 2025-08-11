@@ -65,12 +65,12 @@ namespace FinTrackForWindows.ViewModels
 
             if (userProfile != null)
             {
-                UserAvatar = userProfile.ProfilePictureUrl;
+                UserAvatar = userProfile.ProfilePictureUrl ?? string.Empty;
                 UserFullName = userProfile.UserName;
                 UserEmail = userProfile.Email;
-                UserMembershipType = $"{userProfile.MembershipPlan} Member";
+                UserMembershipType = $"{userProfile.CurrentMembershipPlanType} Member";
                 _logger.LogInformation("User profile loaded successfully. Name: {UserName}, Email: {Email}, Membership Type: {MembershipType}",
-                    userProfile.UserName, userProfile.Email, userProfile.MembershipPlan);
+                    userProfile.UserName, userProfile.Email, userProfile.CurrentMembershipPlanType);
             }
             else
             {

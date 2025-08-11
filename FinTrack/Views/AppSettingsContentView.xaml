@@ -37,11 +37,13 @@
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
-
+            
+            <!-- 
             <TextBlock Text="GENERAL" Style="{StaticResource LabelTextStyle}" Margin="0,10,0,5"/>
             <CheckBox Content="Start FinTrack when the computer starts up" 
                       IsChecked="{Binding StartWithWindows}" 
                       Style="{StaticResource ModernCheckBoxStyle}" Margin="0,5"/>
+            -->
 
             <Button Content="SAVE APPLICATION SETTINGS" 
                     Style="{StaticResource PrimaryButtonStyle}" 

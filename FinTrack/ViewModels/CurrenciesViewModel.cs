@@ -16,6 +16,7 @@ using LiveChartsCore.SkiaSharpView.VisualElements;
 using Microsoft.Extensions.Logging;
 using SkiaSharp;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Globalization;
 
 namespace FinTrackForWindows.ViewModels
@@ -86,7 +87,9 @@ namespace FinTrackForWindows.ViewModels
             _currenciesStore = currenciesStore;
 
             InitializeEmptyChart();
-            _ = InitializeDataAsync();
+            InitializeData();
+
+            _currenciesStore.CurrenciesChanged += OnCurrenciesStoreChanged;
         }
 
         partial void OnCurrencySearchChanged(string value)
@@ -104,14 +107,13 @@ namespace FinTrackForWindows.ViewModels
             await LoadHistoricalDataAsync(value.ToCurrencyCode);
         }
 
-        private async Task InitializeDataAsync()
+        private void InitializeData()
         {
             try
             {
-                await _currenciesStore.LoadCurrenciesAsync();
                 FilterCurrencies();
 
-                if (FilteredCurrencies.Any())
+                if (FilteredCurrencies.Any() && SelectedCurrency == null)
                 {
                     SelectedCurrency = FilteredCurrencies.First();
                 }
@@ -376,5 +378,26 @@ namespace FinTrackForWindows.ViewModels
             }
             _logger.LogInformation("Currencies filtered by search text: '{SearchText}'.", CurrencySearch);
         }
+
+        private void OnCurrenciesStoreChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                _logger.LogInformation("CurrenciesStore has been updated in the background. Re-filtering the list.");
+                var previouslySelectedCode = SelectedCurrency?.ToCurrencyCode;
+                FilterCurrencies();
+
+                if (previouslySelectedCode != null)
+                {
+                    SelectedCurrency = FilteredCurrencies.FirstOrDefault(c => c.ToCurrencyCode == previouslySelectedCode);
+                }
+
+                if (SelectedCurrency == null && FilteredCurrencies.Any())
+                {
+                    SelectedCurrency = FilteredCurrencies.FirstOrDefault();
+                }
+            });
+        }
+
     }
 }
