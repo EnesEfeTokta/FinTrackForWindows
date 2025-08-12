@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:viewmodels="clr-namespace:FinTrackForWindows.ViewModels"
+             xmlns:helpers="clr-namespace:FinTrackForWindows.Helpers"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance Type=viewmodels:TopBarViewModel, IsDesignTimeCreatable=True}"
              d:DesignWidth="1920">
@@ -62,35 +63,35 @@
 
             <DockPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal">
-                    <RadioButton Content="Dashboard" GroupName="TopNav" 
+                    <RadioButton Content="{helpers:Translate Dashboard_Nav_Title}" GroupName="TopNav" 
                                  Style="{StaticResource NavigationRadioButtonStyle}" Margin="15,0" 
                                  IsChecked="True" Command="{Binding NavigateToDashboard_TopBarView_ButtonCommand}"/>
 
-                    <RadioButton Content="Accounts" GroupName="TopNav" 
+                    <RadioButton Content="{helpers:Translate Accounts_Nav_Title}" GroupName="TopNav" 
                                  Style="{StaticResource NavigationRadioButtonStyle}" Margin="15,0" 
                                  IsChecked="False" Command="{Binding NavigateToAccount_TopBarView_ButtonCommand}"/>
 
-                    <RadioButton Content="Budgets" GroupName="TopNav" 
+                    <RadioButton Content="{helpers:Translate Budgets_Nav_Title}" GroupName="TopNav" 
                                  Style="{StaticResource NavigationRadioButtonStyle}" Margin="15,0" 
                                  IsChecked="False" Command="{Binding NavigateToBudget_TopBarView_ButtonCommand}"/>
 
-                    <RadioButton Content="Transactions" GroupName="TopNav" 
+                    <RadioButton Content="{helpers:Translate Transactions_Nav_Title}" GroupName="TopNav" 
                                  Style="{StaticResource NavigationRadioButtonStyle}" Margin="15,0" 
                                  IsChecked="False" Command="{Binding NavigateToTransactions_TopBarView_ButtonCommand}"/>
 
-                    <RadioButton Content="Currencies" GroupName="TopNav" 
+                    <RadioButton Content="{helpers:Translate Currencies_Nav_Title}" GroupName="TopNav" 
                                  Style="{StaticResource NavigationRadioButtonStyle}" Margin="15,0" 
                                  IsChecked="False" Command="{Binding NavigateToCurrencies_TopBarView_ButtonCommand}"/>
 
-                    <RadioButton Content="Debts" GroupName="TopNav" 
+                    <RadioButton Content="{helpers:Translate Debts_Nav_Title}" GroupName="TopNav" 
                                  Style="{StaticResource NavigationRadioButtonStyle}" Margin="15,0" 
                                  IsChecked="False" Command="{Binding NavigateToDebt_TopBarView_ButtonCommand}"/>
 
-                    <RadioButton Content="Reports" GroupName="TopNav" 
+                    <RadioButton Content="{helpers:Translate Reports_Nav_Title}" GroupName="TopNav" 
                                  Style="{StaticResource NavigationRadioButtonStyle}" Margin="15,0" 
                                  IsChecked="False" Command="{Binding NavigateToReports_TopBarView_ButtonCommand}"/>
 
-                    <RadioButton Content="FinBot" GroupName="TopNav" 
+                    <RadioButton Content="{helpers:Translate FinBot_Nav_Title}" GroupName="TopNav" 
                                  Style="{StaticResource NavigationRadioButtonStyle}" Margin="15,0" 
                                  IsChecked="False" Command="{Binding NavigateToFinBot_TopBarView_ButtonCommand}"/>
                 </StackPanel>

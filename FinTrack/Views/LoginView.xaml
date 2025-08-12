@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:cmd="clr-namespace:System.Windows.Input"
              xmlns:helpers="clr-namespace:FinTrackForWindows.Helpers"
              xmlns:viewmodels="clr-namespace:FinTrackForWindows.ViewModels"
              mc:Ignorable="d"  
@@ -13,6 +14,10 @@
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
         <helpers:InvertedBooleanToVisibilityConverter x:Key="InvertedBoolToVisibilityConverter"/>
     </UserControl.Resources>
+
+    <UserControl.InputBindings>
+        <KeyBinding Key="Enter" Command="{Binding Login_LoginView_ButtonCommand}" />
+    </UserControl.InputBindings>
 
     <UserControl.Triggers>
         <EventTrigger RoutedEvent="Loaded">

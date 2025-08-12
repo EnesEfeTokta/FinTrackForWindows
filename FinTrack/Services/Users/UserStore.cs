@@ -162,6 +162,7 @@ namespace FinTrackForWindows.Services.Users
 
                 CurrentUser.Thema = settingsDto.Appearance;
                 CurrentUser.Currency = settingsDto.Currency;
+                CurrentUser.Language = settingsDto.Language;
                 OnUserChanged();
                 return true;
             }

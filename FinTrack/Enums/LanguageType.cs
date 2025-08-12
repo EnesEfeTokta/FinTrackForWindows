@@ -1,12 +1,25 @@
-﻿namespace FinTrackForWindows.Enums
+﻿using System.ComponentModel;
+
+namespace FinTrackForWindows.Enums
 {
     public enum LanguageType
     {
-        Turkish,
-        English,
-        German,
-        French,
-        Spanish,
-        Italian
+        [Description("Turkish")]
+        tr_TR,
+
+        [Description("English")]
+        en_EN,
+
+        [Description("German")]
+        de_DE,
+
+        [Description("French")]
+        fr_FR,
+
+        [Description("Spanish")]
+        es_ES,
+
+        [Description("Italian")]
+        it_IT,
     }
 }

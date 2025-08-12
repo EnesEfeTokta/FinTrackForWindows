@@ -15,12 +15,16 @@ namespace FinTrackForWindows.ViewModels
     {
         public ObservableCollection<AppearanceType> AppearanceTypes { get; }
         public ObservableCollection<BaseCurrencyType> CurrencyTypes { get; }
+        public ObservableCollection<LanguageType> LanguageTypes { get; }
 
         [ObservableProperty]
         private AppearanceType _selectedAppearanceType;
 
         [ObservableProperty]
         private BaseCurrencyType _selectedCurrencyType;
+
+        [ObservableProperty]
+        private LanguageType _selectedLanguageType;
 
         [ObservableProperty]
         private bool _isLoading;
@@ -41,6 +45,7 @@ namespace FinTrackForWindows.ViewModels
 
             AppearanceTypes = new ObservableCollection<AppearanceType>(Enum.GetValues<AppearanceType>());
             CurrencyTypes = new ObservableCollection<BaseCurrencyType>(Enum.GetValues<BaseCurrencyType>());
+            LanguageTypes = new ObservableCollection<LanguageType>(Enum.GetValues<LanguageType>());
 
             _userStore.UserChanged += OnUserChanged;
             LoadDataFromStore();
@@ -58,6 +63,7 @@ namespace FinTrackForWindows.ViewModels
             {
                 SelectedAppearanceType = _userStore.CurrentUser.Thema;
                 SelectedCurrencyType = _userStore.CurrentUser.Currency;
+                SelectedLanguageType = _userStore.CurrentUser.Language;
             }
             IsLoading = false;
         }
