@@ -5,7 +5,6 @@ using FinTrackForWindows.Services.AppInNotifications;
 using FinTrackForWindows.Services.Dialog;
 using FinTrackForWindows.Services.Users;
 using Microsoft.Extensions.Logging;
-using System.Linq;
 
 namespace FinTrackForWindows.ViewModels
 {

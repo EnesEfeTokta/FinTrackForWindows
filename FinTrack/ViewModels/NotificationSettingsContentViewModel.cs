@@ -6,7 +6,6 @@ using FinTrackForWindows.Models.Settings;
 using FinTrackForWindows.Services.Users;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace FinTrackForWindows.ViewModels
 {

@@ -6,9 +6,7 @@ using FinTrackForWindows.Services.AppInNotifications;
 using FinTrackForWindows.Services.ApplySettings;
 using FinTrackForWindows.Services.Users;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 
 namespace FinTrackForWindows.ViewModels
 {
@@ -39,7 +37,7 @@ namespace FinTrackForWindows.ViewModels
         private readonly IAppInNotificationService _appInNotificationService;
         private readonly IApplySettingsService _applySettingsService;
 
-        public AppSettingsContentViewModel(ILogger<AppSettingsContentViewModel> logger, 
+        public AppSettingsContentViewModel(ILogger<AppSettingsContentViewModel> logger,
             IUserStore userStore, IAppInNotificationService appInNotificationService,
             IApplySettingsService applySettingsService)
         {

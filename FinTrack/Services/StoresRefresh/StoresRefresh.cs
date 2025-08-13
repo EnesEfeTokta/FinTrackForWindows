@@ -22,9 +22,9 @@ namespace FinTrackForWindows.Services.StoresRefresh
         public event Action? RefreshStarted;
         public event Action<bool>? RefreshCompleted;
 
-        public StoresRefresh(IAccountStore accountStore, 
-            IBudgetStore budgetStore, 
-            ITransactionStore transactionStore, 
+        public StoresRefresh(IAccountStore accountStore,
+            IBudgetStore budgetStore,
+            ITransactionStore transactionStore,
             IDebtStore debtStore,
             IMembershipStore membershipStore,
             ICurrenciesStore currenciesStore,
