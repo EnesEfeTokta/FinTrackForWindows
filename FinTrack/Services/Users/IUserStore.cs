@@ -1,4 +1,5 @@
-﻿using FinTrackForWindows.Models.User;
+﻿using FinTrackForWindows.Dtos.SettingsDtos;
+using FinTrackForWindows.Models.User;
 
 namespace FinTrackForWindows.Services.Users
 {
@@ -7,7 +8,15 @@ namespace FinTrackForWindows.Services.Users
         UserModel? CurrentUser { get; }
         event Action? UserChanged;
         Task LoadCurrentUserAsync();
-        Task<bool> UpdateUserAsync(UserModel updatedUserData);
+
+        Task<bool> UpdateProfilePictureAsync(UpdateProfilePictureDto pictureDto);
+        Task<bool> UpdateUserNameAsync(UpdateUserNameDto nameDto);
+        Task<bool> UpdateUserPasswordAsync(UpdateUserPasswordDto passwordDto);
+        Task RequestEmailChangeOtpAsync();
+        Task<bool> UpdateUserEmailAsync(UpdateUserEmailDto emailDto);
+
+        Task<bool> UpdateAppSettingsAsync(UserAppSettingsUpdateDto settingsDto);
+        Task<bool> UpdateNotificationSettingsAsync(UserNotificationSettingsUpdateDto settingsDto);
 
         void ClearCurrentUser();
     }

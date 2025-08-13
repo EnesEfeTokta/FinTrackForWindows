@@ -34,7 +34,7 @@ namespace FinTrackForWindows.Models.Transaction
                 return;
             }
 
-            var createDto = new TransactionCategoryDto
+            var createDto = new TransactionCategoryCreateDto
             {
                 Name = this.Name,
                 Type = this.Type

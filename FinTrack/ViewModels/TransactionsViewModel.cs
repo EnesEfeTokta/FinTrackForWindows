@@ -523,9 +523,7 @@ namespace FinTrackForWindows.ViewModels
 
         private async Task LoadData()
         {
-            await _accountStore.LoadAccountsAsync();
             await LoadCategories();
-            await _transactionStore.LoadTransactionsAsync();
         }
     }
 }

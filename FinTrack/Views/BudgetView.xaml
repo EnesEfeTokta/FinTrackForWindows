@@ -23,7 +23,7 @@
         <Border Grid.Column="0" Style="{StaticResource DashboardCardStyle}" Margin="0,0,20,0">
             <DockPanel>
                 <StackPanel DockPanel.Dock="Top">
-                    <TextBlock Text="Current Budgets" Style="{StaticResource CardTitleTextStyle}"/>
+                    <TextBlock Text="{helpers:Translate My_Budgets_Title}" Style="{StaticResource CardTitleTextStyle}"/>
                     <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,20" Opacity="0.5"/>
 
                     <Expander Header="Filter" IsExpanded="True" Style="{StaticResource ModernExpanderStyle}" Margin="0,0,0,15">
@@ -35,12 +35,12 @@
                                 </Grid.ColumnDefinitions>
 
                                 <StackPanel Grid.Column="0" Margin="0,0,10,10">
-                                    <TextBlock Text="SEARCH BY NAME" Style="{StaticResource LabelTextStyle}"/>
+                                    <TextBlock Text="{helpers:Translate Filter_By_Name}" Style="{StaticResource LabelTextStyle}"/>
                                     <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding FilterByName, UpdateSourceTrigger=PropertyChanged}"/>
                                 </StackPanel>
 
                                 <StackPanel Grid.Column="1" Margin="0,0,0,10">
-                                    <TextBlock Text="CATEGORY" Style="{StaticResource LabelTextStyle}"/>
+                                    <TextBlock Text="{helpers:Translate Category_Name}" Style="{StaticResource LabelTextStyle}"/>
                                     <ComboBox Style="{StaticResource ModernComboBoxStyle}" ItemsSource="{Binding CategoriesForFilter}" SelectedItem="{Binding SelectedFilterCategory}"/>
                                 </StackPanel>
                             </Grid>
@@ -53,16 +53,16 @@
                                 </Grid.ColumnDefinitions>
 
                                 <StackPanel Grid.Column="0" Margin="0,0,5,0">
-                                    <TextBlock Text="MIN. AMOUNT" Style="{StaticResource LabelTextStyle}"/>
+                                    <TextBlock Text="{helpers:Translate Min_Balance}" Style="{StaticResource LabelTextStyle}"/>
                                     <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding FilterByMinAmount, UpdateSourceTrigger=PropertyChanged}"/>
                                 </StackPanel>
 
                                 <StackPanel Grid.Column="1" Margin="5,0,5,0">
-                                    <TextBlock Text="MAX. AMOUNT" Style="{StaticResource LabelTextStyle}"/>
+                                    <TextBlock Text="{helpers:Translate Max_Balance}" Style="{StaticResource LabelTextStyle}"/>
                                     <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding FilterByMaxAmount, UpdateSourceTrigger=PropertyChanged}"/>
                                 </StackPanel>
 
-                                <Button Grid.Column="2" Content="Clear" Style="{StaticResource LinkButtonStyle}"
+                                <Button Grid.Column="2" Content="{helpers:Translate Clear_From}" Style="{StaticResource LinkButtonStyle}"
                                         VerticalAlignment="Bottom" Margin="10,0,0,3"
                                         Command="{Binding ClearFiltersCommand}"
                                         Visibility="{Binding IsFilterActive, Converter={StaticResource BooleanToVisibilityConverter}}"/>
@@ -110,7 +110,7 @@
                                                     <TextBlock Text="{Binding ReachedAmountDisplayText}" 
                                                                 Foreground="White" FontWeight="SemiBold"
                                                                 Visibility="{Binding IsEditingReachedAmount, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=invert}"
-                                                                ToolTip="Click to edit">
+                                                                ToolTip="{helpers:Translate Click_To_Edit}">
                                                         <TextBlock.InputBindings>
                                                             <MouseBinding MouseAction="LeftClick" 
                                                                 Command="{Binding DataContext.StartEditReachedAmountCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
@@ -138,12 +138,12 @@
                                         </StackPanel>
 
                                         <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="15,0,0,0">
-                                            <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Edit"
+                                            <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="{helpers:Translate Edit}"
                                                     Command="{Binding DataContext.PrepareToEditBudgetCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
                                                     CommandParameter="{Binding}">
                                                 <Image Source="/Assets/Images/Icons/edit.png" Width="16" Height="16"/>
                                             </Button>
-                                            <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="Delete" Margin="5,0,0,0"
+                                            <Button Style="{StaticResource IconOnlyButtonStyle}" ToolTip="{helpers:Translate Delete}" Margin="5,0,0,0"
                                                     Command="{Binding DataContext.DeleteBudgetCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
                                                     CommandParameter="{Binding}">
                                                 <Image Source="/Assets/Images/Icons/delete.png" Width="16" Height="16"/>
@@ -155,7 +155,7 @@
                         </ListView.ItemTemplate>
                     </ListView>
 
-                    <TextBlock Text="No budgets found to display." 
+                    <TextBlock Text="{helpers:Translate No_Budgets}" 
                                HorizontalAlignment="Center" VerticalAlignment="Center"
                                FontSize="16" Foreground="{StaticResource TopBarTextSecondaryBrush}"
                                Visibility="{Binding HasFilteredBudgets, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=invert}"/>
@@ -169,35 +169,35 @@
                     <TextBlock Text="{Binding FormTitle}" Style="{StaticResource CardTitleTextStyle}"/>
                     <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,20" Opacity="0.5"/>
 
-                    <TextBlock Text="BUDGET NAME" Style="{StaticResource LabelTextStyle}"/>
+                    <TextBlock Text="{helpers:Translate Budet_Name}" Style="{StaticResource LabelTextStyle}"/>
                     <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding SelectedBudget.Name, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
 
-                    <TextBlock Text="TARGET AMOUNT" Style="{StaticResource LabelTextStyle}"/>
+                    <TextBlock Text="{helpers:Translate Target_Amount}" Style="{StaticResource LabelTextStyle}"/>
                     <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding SelectedBudget.AllocatedAmount, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}" Margin="0,0,0,15"/>
 
-                    <TextBlock Text="REACHED AMOUNT" Style="{StaticResource LabelTextStyle}"/>
+                    <TextBlock Text="{helpers:Translate Reached_Amount}" Style="{StaticResource LabelTextStyle}"/>
                     <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding SelectedBudget.ReachedAmount, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}" Margin="0,0,0,15"/>
 
-                    <TextBlock Text="CURRENCY" Style="{StaticResource LabelTextStyle}"/>
+                    <TextBlock Text="{helpers:Translate Currency}" Style="{StaticResource LabelTextStyle}"/>
                     <ComboBox Style="{StaticResource ModernComboBoxStyle}" ItemsSource="{Binding CurrencyTypes}" SelectedItem="{Binding SelectedBudget.Currency, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
 
-                    <TextBlock Text="CATEGORY" Style="{StaticResource LabelTextStyle}"/>
+                    <TextBlock Text="{helpers:Translate Category}" Style="{StaticResource LabelTextStyle}"/>
                     <ComboBox Style="{StaticResource EditableModernComboBoxStyle}" IsEditable="True" IsTextSearchEnabled="True"
                               ItemsSource="{Binding CategoriesForForm}" Text="{Binding SelectedBudget.Category, UpdateSourceTrigger=PropertyChanged}"
-                              Margin="0,0,0,15" ToolTip="Select an existing category or type to create a new one"/>
+                              Margin="0,0,0,15" ToolTip="{helpers:Translate Category_ToolTip}"/>
 
-                    <TextBlock Text="DESCRIPTION (OPTIONAL)" Style="{StaticResource LabelTextStyle}"/>
+                    <TextBlock Text="{helpers:Translate Description}" Style="{StaticResource LabelTextStyle}"/>
                     <TextBox Style="{StaticResource ModernTextBoxStyle}" Height="80" TextWrapping="Wrap" AcceptsReturn="True"
                              Text="{Binding SelectedBudget.Description, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
 
-                    <TextBlock Text="START DATE" Style="{StaticResource LabelTextStyle}"/>
+                    <TextBlock Text="{helpers:Translate Start_Date}" Style="{StaticResource LabelTextStyle}"/>
                     <DatePicker Style="{StaticResource ModernDatePickerStyle}" SelectedDate="{Binding SelectedBudget.StartDate, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
 
-                    <TextBlock Text="END DATE" Style="{StaticResource LabelTextStyle}"/>
+                    <TextBlock Text="{helpers:Translate End_Date}" Style="{StaticResource LabelTextStyle}"/>
                     <DatePicker Style="{StaticResource ModernDatePickerStyle}" SelectedDate="{Binding SelectedBudget.EndDate, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,25"/>
 
                     <Button Content="{Binding SaveButtonText}" Command="{Binding SaveBudgetCommand}" Style="{StaticResource PrimaryButtonStyle}"/>
-                    <Button Content="Clear Form" Command="{Binding PrepareForNewBudgetCommand}" Style="{StaticResource LinkButtonStyle}" HorizontalAlignment="Right" Margin="0,10,0,0"/>
+                    <Button Content="{helpers:Translate Clear_Form}" Command="{Binding PrepareForNewBudgetCommand}" Style="{StaticResource LinkButtonStyle}" HorizontalAlignment="Right" Margin="0,10,0,0"/>
                 </StackPanel>
             </Border>
         </ScrollViewer>

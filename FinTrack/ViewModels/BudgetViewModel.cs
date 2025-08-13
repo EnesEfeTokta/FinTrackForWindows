@@ -72,7 +72,6 @@ namespace FinTrackForWindows.ViewModels
         private async Task InitializeViewModelAsync()
         {
             await LoadCategoriesAsync();
-            await _budgetStore.LoadBudgetsAsync();
 
             PrepareForNewBudget();
         }

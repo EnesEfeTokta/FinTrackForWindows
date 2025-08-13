@@ -18,7 +18,7 @@
             <TextBlock Text="New Password" Style="{StaticResource LabelTextStyle}"/>
             <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding NewPassword}" Margin="0,0,0,15"/>
 
-            <Button Content="SAVE CHANGES" Command="{Binding SecuritySettingsContentSaveChangesCommand}" 
+            <Button Content="SAVE CHANGES" Command="{Binding SaveChangesCommand}" 
                     Style="{StaticResource PrimaryButtonStyle}"/>
         </StackPanel>
     </Border>

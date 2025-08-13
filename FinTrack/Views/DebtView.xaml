@@ -245,7 +245,7 @@
                                                 </StackPanel>
 
                                                 <StackPanel HorizontalAlignment="Right" VerticalAlignment="Bottom">
-                                                    <Button Content="Upload Approval Video" Style="{StaticResource AccentButtonStyle}" 
+                                                    <Button Content="Upload Approval Video" Style="{StaticResource PrimaryButtonStyle}" 
                                                             Visibility="{Binding IsActionRequiredForBorrower, Converter={StaticResource BooleanToVisibilityConverter}}"
                                                             Command="{Binding DataContext.UploadVideoCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                             CommandParameter="{Binding}"/>

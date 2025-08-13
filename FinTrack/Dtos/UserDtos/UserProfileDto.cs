@@ -1,8 +1,8 @@
 ﻿using FinTrackForWindows.Enums;
 
-namespace FinTrackForWindows.Models.User
+namespace FinTrackForWindows.Dtos.UserDtos
 {
-    public class UserModel
+    public class UserProfileDto
     {
         // Temel Bilgiler
         public int Id { get; set; }

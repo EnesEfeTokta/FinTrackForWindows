@@ -6,5 +6,6 @@ namespace FinTrackForWindows.Dtos.SettingsDtos
     {
         public AppearanceType Appearance { get; set; }
         public BaseCurrencyType Currency { get; set; }
+        public LanguageType Language { get; set; }
     }
 }

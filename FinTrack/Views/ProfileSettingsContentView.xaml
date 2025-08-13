@@ -3,26 +3,74 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:vm="clr-namespace:FinTrackForWindows.ViewModels"
+             xmlns:helpers="clr-namespace:FinTrackForWindows.Helpers"
              mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance Type=vm:ProfileSettingsContentViewModel, IsDesignTimeCreatable=True}"
              d:DesignHeight="450" d:DesignWidth="800">
-             
+
+    <UserControl.Resources>
+        <helpers:InvertedBooleanConverter x:Key="InvertedBooleanConverter"/>
+    </UserControl.Resources>
+
     <Border Style="{StaticResource DashboardCardStyle}">
         <StackPanel>
             <TextBlock Text="Profile Settings" Style="{StaticResource CardTitleTextStyle}"/>
             <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" 
                     Margin="0,5,0,20" Opacity="0.5"/>
 
+            <!-- FIRST NAME & LAST NAME -->
             <TextBlock Text="FULL NAME" Style="{StaticResource LabelTextStyle}"/>
-            <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding FullName}" Margin="0,0,0,15"/>
+            <Grid Margin="0,5,0,15">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
+                <StackPanel Grid.Column="0" Margin="0,0,5,0">
+                    <TextBlock Text="First Name" Style="{StaticResource LabelTextStyle}" Opacity="0.7"/>
+                    <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding FirstName, UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Margin="5,0,0,0">
+                    <TextBlock Text="Last Name" Style="{StaticResource LabelTextStyle}" Opacity="0.7"/>
+                    <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding LastName, UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- EMAIL -->
             <TextBlock Text="EMAIL" Style="{StaticResource LabelTextStyle}"/>
-            <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding Email}" Margin="0,0,0,15"/>
+            <Grid Margin="0,5,0,15">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
 
+                <TextBox Grid.Column="0" 
+                         Style="{StaticResource ModernTextBoxStyle}" 
+                         Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}" 
+                         Margin="0,0,10,0" 
+                         VerticalContentAlignment="Center"/>
+
+                <Button Grid.Column="1" 
+                        Content="Change Email" 
+                        Command="{Binding RequestEmailChangeCommand}" 
+                        Style="{StaticResource SecondaryButtonStyle}" 
+                        VerticalAlignment="Center"/>
+            </Grid>
+
+            <!-- PROFILE PHOTO URL -->
             <TextBlock Text="PROFILE PHOTO URL" Style="{StaticResource LabelTextStyle}"/>
-            <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding ProfilePhotoUrl}" Margin="0,0,0,15"/>
+            <TextBox Style="{StaticResource ModernTextBoxStyle}" 
+                     Text="{Binding ProfilePhotoUrl, UpdateSourceTrigger=PropertyChanged}" 
+                     Margin="0,5,0,20"/>
 
-            <Button Content="SAVE CHANGES" Command="{Binding ProfileSettingsContentSaveChangesCommand}" 
-                    Style="{StaticResource PrimaryButtonStyle}"/>
+            <!-- SAVE BUTTON -->
+            <Button Content="SAVE CHANGES" 
+                    Command="{Binding SaveChangesCommand}" 
+                    IsEnabled="{Binding IsSaving, Converter={StaticResource InvertedBooleanConverter}}"
+                    Style="{StaticResource PrimaryButtonStyle}" 
+                    Margin="0,20,0,0"/>
         </StackPanel>
     </Border>
 </UserControl>

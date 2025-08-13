@@ -1,53 +1,50 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <!-- 1. RENK PALETİ ve TEMEL KAYNAKLAR -->
-    <SolidColorBrush x:Key="BackgroundBrush" Color="#0A0E14"/>
-    <SolidColorBrush x:Key="CardBackgroundBrush" Color="#2A2D4D"/> <!-- Unified definition -->
-    <SolidColorBrush x:Key="BorderBrush" Color="#afb2b6ff"/>
+    <SolidColorBrush x:Key="BackgroundBrush" Color="#0D1117"/>
+    <SolidColorBrush x:Key="MainBackgroundBrush" Color="#0D1117"/>
+    <SolidColorBrush x:Key="CardBackgroundBrush" Color="#161B22"/>
+    <SolidColorBrush x:Key="DashboardCardBackground" Color="#161B22"/>
+    <SolidColorBrush x:Key="TopBarBackgroundBrush" Color="#161B22"/>
+    <SolidColorBrush x:Key="CardDarkerBackgroundBrush" Color="#010409"/>
+
+    <SolidColorBrush x:Key="BorderBrush" Color="#30363D"/>
+
+    <SolidColorBrush x:Key="TextBrush" Color="#E6EDF3"/>
+    <SolidColorBrush x:Key="TopBarTextPrimaryBrush" Color="#E6EDF3"/>
+    <SolidColorBrush x:Key="SecondaryTextBrush" Color="#7D8590"/>
+    <SolidColorBrush x:Key="TopBarTextSecondaryBrush" Color="#7D8590"/>
+
     <SolidColorBrush x:Key="PrimaryButtonBrush" Color="#238636"/>
     <SolidColorBrush x:Key="PrimaryButtonHoverBrush" Color="#2EA043"/>
-    <SolidColorBrush x:Key="PrimaryButtonPressedBrush" Color="#1C6E2C"/> <!-- Darker shade for pressed state -->
-    <SolidColorBrush x:Key="TextBrush" Color="#C9D1D9"/>
-    <SolidColorBrush x:Key="SecondaryTextBrush" Color="#e2e8efff"/>
-    <SolidColorBrush x:Key="ErrorBrush" Color="#F85149"/>
+    <SolidColorBrush x:Key="PrimaryButtonPressedBrush" Color="#1A7F37"/>
+
     <SolidColorBrush x:Key="AccentBrush" Color="#58A6FF"/>
+    <SolidColorBrush x:Key="PrimaryBrush" Color="#58A6FF"/>
+    <Color x:Key="PrimaryColorValue">#58A6FF</Color>
+    <SolidColorBrush x:Key="TopBarAccentBrush" Color="#58A6FF"/>
 
-    <SolidColorBrush x:Key="PrimaryBrush" Color="#FF58A6FF"/>
-    <Color x:Key="PrimaryColorValue">#FF58A6FF</Color>
+    <SolidColorBrush x:Key="ErrorBrush" Color="#F85149"/>
+    <SolidColorBrush x:Key="StatusRedBrush" Color="#F85149"/>
+    <SolidColorBrush x:Key="StatusGreenBrush" Color="#3FB950"/>
+    <SolidColorBrush x:Key="BotMessageBackgroundBrush" Color="#21262D"/>
+    <SolidColorBrush x:Key="UserMessageBackgroundBrush" Color="#1F6FEB"/>
+    
+    <SolidColorBrush x:Key="PrimaryAccentBrush" Color="#A371F7"/>
+    <SolidColorBrush x:Key="SecondaryAccentBrush" Color="#F778BA"/>
+    <SolidColorBrush x:Key="AccentPinkBrush" Color="#F778BA"/>
+    <SolidColorBrush x:Key="AccentOrangeBrush" Color="#D29922"/>
+    <SolidColorBrush x:Key="AccentBlueBrush" Color="#58A6FF"/>
+    <SolidColorBrush x:Key="AccentGreenBrush" Color="#3FB950"/>
 
-    <SolidColorBrush x:Key="BotMessageBackgroundBrush" Color="#2C2F3B"/>
-    <SolidColorBrush x:Key="UserMessageBackgroundBrush" Color="#0078D7"/>
+    <SolidColorBrush x:Key="ProgressBarBackgroundBrush" Color="#21262D"/>
 
-    <SolidColorBrush x:Key="StatusGreenBrush" Color="#4CAF50"/>
-    <SolidColorBrush x:Key="StatusRedBrush" Color="#F44336"/>
-    <SolidColorBrush x:Key="CardDarkerBackgroundBrush" Color="#21243B"/> <!-- For nested cards -->
-    <SolidColorBrush x:Key="PrimaryAccentBrush" Color="#8A2BE2"/> <!-- Purple -->
-    <SolidColorBrush x:Key="SecondaryAccentBrush" Color="#FF007F"/> <!-- Bright Pink -->
-
-    <SolidColorBrush x:Key="MainBackgroundBrush" Color="#1E203B"/>
-
-    <SolidColorBrush x:Key="DashboardCardBackground" Color="#2A2F3D"/>
-
-    <!-- Renk Fırçaları -->
-    <SolidColorBrush x:Key="TopBarBackgroundBrush" Color="#2A2D4D"/>
-    <SolidColorBrush x:Key="TopBarTextPrimaryBrush" Color="#FFFFFF"/>
-    <SolidColorBrush x:Key="TopBarTextSecondaryBrush" Color="#A8A9B5"/>
-    <SolidColorBrush x:Key="TopBarAccentBrush" Color="#00E0C6"/> <!-- Neon Teal -->
-
-    <!-- Kartlar için Yeni Renkler -->
-    <SolidColorBrush x:Key="AccentPinkBrush" Color="#FF4081"/>
-    <SolidColorBrush x:Key="AccentOrangeBrush" Color="#FFAB40"/>
-    <SolidColorBrush x:Key="AccentBlueBrush" Color="#448AFF"/>
-    <SolidColorBrush x:Key="AccentGreenBrush" Color="#00E676"/> <!-- Matches Neon Teal -->
-    <SolidColorBrush x:Key="ProgressBarBackgroundBrush" Color="#404467"/>
-
-    <!-- Varsayılan Değerler -->
+    <!-- Varsayılan Değerler (Değiştirilmedi) -->
     <FontFamily x:Key="DefaultFont">Segoe UI</FontFamily>
     <CornerRadius x:Key="DefaultCornerRadius">6</CornerRadius>
     <Thickness x:Key="DefaultPadding" Left="15" Top="8" Right="15" Bottom="8"/>
 
-    <!-- Ana Başlık Stili -->
+    <!-- Ana Başlık Stili (Değiştirilmedi, yeni renkleri otomatik alır) -->
     <Style x:Key="HeaderTextStyle" TargetType="TextBlock">
         <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
         <Setter Property="FontFamily" Value="{StaticResource DefaultFont}"/>
@@ -57,13 +54,13 @@
         <Setter Property="Margin" Value="0,0,0,5"/>
     </Style>
 
-    <!-- Üyelik Tipi için Gradyan Fırçası -->
+    <!-- Üyelik Tipi için Gradyan Fırçası (Yeni renklerle güncellendi) -->
     <LinearGradientBrush x:Key="NeonGradientBrush" StartPoint="0,0.5" EndPoint="1,0.5">
-        <GradientStop Color="#00E0C6" Offset="0.0" />
-        <GradientStop Color="#39A7FF" Offset="1.0" />
+        <GradientStop Color="#1F6FEB" Offset="0.0" />
+        <GradientStop Color="#58A6FF" Offset="1.0" />
     </LinearGradientBrush>
 
-    <!-- Alt Başlık/Açıklama Stili -->
+    <!-- Alt Başlık/Açıklama Stili (Değiştirilmedi, yeni renkleri otomatik alır) -->
     <Style x:Key="SubHeaderTextStyle" TargetType="TextBlock">
         <Setter Property="Foreground" Value="{StaticResource SecondaryTextBrush}"/>
         <Setter Property="FontFamily" Value="{StaticResource DefaultFont}"/>
@@ -72,22 +69,22 @@
         <Setter Property="Margin" Value="0,0,0,25"/>
     </Style>
 
-    <!-- "Üyelik" Kartları için Gradyan -->
+    <!-- "Üyelik" Kartları için Gradyan (Yeni renklerle güncellendi) -->
     <LinearGradientBrush x:Key="MembershipAccentGradientBrush" StartPoint="0,0.5" EndPoint="1,0.5">
-        <GradientStop Color="#5170FF" Offset="0.0" />
-        <GradientStop Color="#FF66C4" Offset="1.0" />
+        <GradientStop Color="{Binding Source={StaticResource PrimaryAccentBrush}, Path=Color}" Offset="0.0" />
+        <GradientStop Color="{Binding Source={StaticResource AccentBlueBrush}, Path=Color}" Offset="1.0" />
     </LinearGradientBrush>
 
-    <!-- "Borçlar" Kartları için Gradyan -->
+    <!-- "Borçlar" Kartları için Gradyan (Yeni renklerle güncellendi) -->
     <LinearGradientBrush x:Key="DebtAccentGradientBrush" StartPoint="0,0.5" EndPoint="1,0.5">
-        <GradientStop Color="#8C52FF" Offset="0.0" />
-        <GradientStop Color="#FF8585" Offset="1.0" />
+        <GradientStop Color="{Binding Source={StaticResource AccentOrangeBrush}, Path=Color}" Offset="0.0" />
+        <GradientStop Color="{Binding Source={StaticResource StatusRedBrush}, Path=Color}" Offset="1.0" />
     </LinearGradientBrush>
 
-    <!-- Hesapların Toplamı için Gradyan -->
+    <!-- Hesapların Toplamı için Gradyan (Yeni renklerle güncellendi) -->
     <LinearGradientBrush x:Key="TotalBalanceGradientBrush" StartPoint="0,0.5" EndPoint="1,0.5">
-        <GradientStop Color="#33FF00" Offset="0.0" />
-        <GradientStop Color="#FF0000" Offset="1.0" />
+        <GradientStop Color="{Binding Source={StaticResource StatusGreenBrush}, Path=Color}" Offset="0.0" />
+        <GradientStop Color="{Binding Source={StaticResource StatusRedBrush}, Path=Color}" Offset="1.0" />
     </LinearGradientBrush>
 
     <!-- "İşlemler" ve "Raporlar" Etiket Stili -->

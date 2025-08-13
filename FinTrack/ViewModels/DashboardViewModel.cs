@@ -120,25 +120,17 @@ namespace FinTrackForWindows.ViewModels
             _transactionStore.TransactionsChanged += OnTransactionsChanged;
             _membershipStore.CurrentUserMembershipChanged += OnMembershipChanged;
             _debtStore.DebtsChanged += OnDebtsChanged;
+            _currenciesStore.CurrenciesChanged += OnCurrenciesChanged;
 
             if (SessionManager.IsLoggedIn)
             {
-                _logger.LogInformation("Kullanıcı zaten giriş yapmış. DashboardViewModel verileri yüklüyor.");
+                _logger.LogInformation("The user is already logged in. DashboardViewModel is loading data.");
                 _ = LoadInitialDataAsync();
             }
         }
 
         private async Task LoadInitialDataAsync()
         {
-            await Task.WhenAll(
-                _budgetStore.LoadBudgetsAsync(),
-                _accountStore.LoadAccountsAsync(),
-                _transactionStore.LoadTransactionsAsync(),
-                _currenciesStore.LoadCurrenciesAsync(),
-                _membershipStore.LoadAllMembershipDataAsync(),
-                _debtStore.LoadDebtsAsync()
-            );
-
             RefreshDashboardBudgets();
             RefreshDashboardAccounts();
             RefreshDashboardTransactions();
@@ -390,6 +382,16 @@ namespace FinTrackForWindows.ViewModels
                     ToCurrencyImageHeight = 20
                 });
             }
+        }
+
+        private void OnCurrenciesChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                _logger.LogInformation("CurrenciesStore changed, refreshing dashboard currencies and total balance.");
+                RefreshDashboardCurrencies();
+                _ = CalculateTotalBalance();
+            });
         }
 
         // ------
