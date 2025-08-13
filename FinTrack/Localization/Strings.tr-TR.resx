@@ -147,4 +147,79 @@
   <data name="My_Budgets_Title" xml:space="preserve">
     <value>Bütçelerim</value>
   </data>
+  <data name="Filter_By_Name" xml:space="preserve">
+    <value>İsime Göre Filtrele</value>
+  </data>
+  <data name="Min_Balance" xml:space="preserve">
+    <value>Minimum Değer</value>
+  </data>
+  <data name="Max_Balance" xml:space="preserve">
+    <value>Maksimum Değer</value>
+  </data>
+  <data name="Account_Name" xml:space="preserve">
+    <value>Hesap Adı</value>
+  </data>
+  <data name="Account_Type" xml:space="preserve">
+    <value>Hesap Türü</value>
+  </data>
+  <data name="Currency" xml:space="preserve">
+    <value>Para Birimi</value>
+  </data>
+  <data name="Category_Name" xml:space="preserve">
+    <value>Kategori Adı</value>
+  </data>
+  <data name="Transaction_Type" xml:space="preserve">
+    <value>İşlem Türü</value>
+  </data>
+  <data name="Income" xml:space="preserve">
+    <value>Gelir</value>
+  </data>
+  <data name="Expense" xml:space="preserve">
+    <value>Gider</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Kaydet</value>
+  </data>
+  <data name="Clear_Form" xml:space="preserve">
+    <value>Formu Temizle</value>
+  </data>
+  <data name="Apperance" xml:space="preserve">
+    <value>Görünüm</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Dil</value>
+  </data>
+  <data name="Click_To_Edit" xml:space="preserve">
+    <value>Düzenlemek için tıkla</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Sil</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Düzenle</value>
+  </data>
+  <data name="No_Budgets" xml:space="preserve">
+    <value>Görüntülenebilecek bütçe bulunamadı.</value>
+  </data>
+  <data name="Budget_Name" xml:space="preserve">
+    <value>Bütçe Adı</value>
+  </data>
+  <data name="Target_Amount" xml:space="preserve">
+    <value>Hedef Miktar</value>
+  </data>
+  <data name="Reached_Amount" xml:space="preserve">
+    <value>Ulaşılan Miktar</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Açıklama</value>
+  </data>
+  <data name="Start_Date" xml:space="preserve">
+    <value>Başlangıç Tarihi</value>
+  </data>
+  <data name="End_Date" xml:space="preserve">
+    <value>Bitiş Tarihi</value>
+  </data>
+  <data name="Category_ToolTip" xml:space="preserve">
+    <value>Mevcut bir kategori veya tür seçin veya yeni bir tane oluşturun.</value>
+  </data>
 </root>

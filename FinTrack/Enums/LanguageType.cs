@@ -7,8 +7,8 @@ namespace FinTrackForWindows.Enums
         [Description("Turkish")]
         tr_TR,
 
-        [Description("English")]
-        en_EN,
+        [Description("English - US")]
+        en_US,
 
         [Description("German")]
         de_DE,

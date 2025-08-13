@@ -1,9 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
 using FinTrackForWindows.Core;
+using FinTrackForWindows.Helpers;
 using FinTrackForWindows.Services;
 using FinTrackForWindows.Services.Accounts;
 using FinTrackForWindows.Services.Api;
 using FinTrackForWindows.Services.AppInNotifications;
+using FinTrackForWindows.Services.ApplySettings;
 using FinTrackForWindows.Services.Budgets;
 using FinTrackForWindows.Services.Camera;
 using FinTrackForWindows.Services.Currencies;
@@ -20,6 +22,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
+using System;
 using System.Windows;
 
 namespace FinTrackForWindows
@@ -96,6 +99,7 @@ namespace FinTrackForWindows
             services.AddSingleton<IReportStore, ReportStore>();
             services.AddSingleton<IUserStore, UserStore>();
 
+            services.AddSingleton<IApplySettingsService, ApplySettingsService>();
             services.AddTransient<ICameraService, CameraService>();
             services.AddSingleton<IDialogService, WpfDialogService>();
             services.AddSingleton<IStoresRefresh, StoresRefresh>();

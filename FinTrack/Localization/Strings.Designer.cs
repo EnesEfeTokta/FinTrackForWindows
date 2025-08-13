@@ -61,11 +61,47 @@ namespace FinTrackForWindows.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Account Name.
+        /// </summary>
+        internal static string Account_Name {
+            get {
+                return ResourceManager.GetString("Account_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Account_Type.
+        /// </summary>
+        internal static string Account_Type {
+            get {
+                return ResourceManager.GetString("Account_Type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Accounts.
         /// </summary>
         internal static string Accounts_Nav_Title {
             get {
                 return ResourceManager.GetString("Accounts_Nav_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Apperance.
+        /// </summary>
+        internal static string Apperance {
+            get {
+                return ResourceManager.GetString("Apperance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Budget_Name.
+        /// </summary>
+        internal static string Budget_Name {
+            get {
+                return ResourceManager.GetString("Budget_Name", resourceCulture);
             }
         }
         
@@ -79,11 +115,56 @@ namespace FinTrackForWindows.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Category_Name.
+        /// </summary>
+        internal static string Category_Name {
+            get {
+                return ResourceManager.GetString("Category_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select an existing category or type to create a new one..
+        /// </summary>
+        internal static string Category_ToolTip {
+            get {
+                return ResourceManager.GetString("Category_ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clear Form.
+        /// </summary>
+        internal static string Clear_Form {
+            get {
+                return ResourceManager.GetString("Clear_Form", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Click to edit.
+        /// </summary>
+        internal static string Click_To_Edit {
+            get {
+                return ResourceManager.GetString("Click_To_Edit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Currencies.
         /// </summary>
         internal static string Currencies_Nav_Title {
             get {
                 return ResourceManager.GetString("Currencies_Nav_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Currency.
+        /// </summary>
+        internal static string Currency {
+            get {
+                return ResourceManager.GetString("Currency", resourceCulture);
             }
         }
         
@@ -106,6 +187,60 @@ namespace FinTrackForWindows.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        internal static string Delete {
+            get {
+                return ResourceManager.GetString("Delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Description.
+        /// </summary>
+        internal static string Description {
+            get {
+                return ResourceManager.GetString("Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit.
+        /// </summary>
+        internal static string Edit {
+            get {
+                return ResourceManager.GetString("Edit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to End Date.
+        /// </summary>
+        internal static string End_Date {
+            get {
+                return ResourceManager.GetString("End_Date", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expense.
+        /// </summary>
+        internal static string Expense {
+            get {
+                return ResourceManager.GetString("Expense", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Filter By Name.
+        /// </summary>
+        internal static string Filter_By_Name {
+            get {
+                return ResourceManager.GetString("Filter_By_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to FinBot.
         /// </summary>
         internal static string FinBot_Nav_Title {
@@ -115,7 +250,43 @@ namespace FinTrackForWindows.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to My accounts.
+        ///   Looks up a localized string similar to Income.
+        /// </summary>
+        internal static string Income {
+            get {
+                return ResourceManager.GetString("Income", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Language.
+        /// </summary>
+        internal static string Language {
+            get {
+                return ResourceManager.GetString("Language", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Max Balance.
+        /// </summary>
+        internal static string Max_Balance {
+            get {
+                return ResourceManager.GetString("Max_Balance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Min Balance.
+        /// </summary>
+        internal static string Min_Balance {
+            get {
+                return ResourceManager.GetString("Min_Balance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to My Accounts.
         /// </summary>
         internal static string My_Accounts_Title {
             get {
@@ -133,11 +304,65 @@ namespace FinTrackForWindows.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No budget found to display..
+        /// </summary>
+        internal static string No_Budgets {
+            get {
+                return ResourceManager.GetString("No_Budgets", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reached Amount.
+        /// </summary>
+        internal static string Reached_Amount {
+            get {
+                return ResourceManager.GetString("Reached_Amount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Reports.
         /// </summary>
         internal static string Reports_Nav_Title {
             get {
                 return ResourceManager.GetString("Reports_Nav_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save.
+        /// </summary>
+        internal static string Save {
+            get {
+                return ResourceManager.GetString("Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start Date.
+        /// </summary>
+        internal static string Start_Date {
+            get {
+                return ResourceManager.GetString("Start_Date", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Target Amount.
+        /// </summary>
+        internal static string Target_Amount {
+            get {
+                return ResourceManager.GetString("Target_Amount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Transaction_Type.
+        /// </summary>
+        internal static string Transaction_Type {
+            get {
+                return ResourceManager.GetString("Transaction_Type", resourceCulture);
             }
         }
         

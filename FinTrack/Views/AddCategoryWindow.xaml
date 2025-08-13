@@ -19,18 +19,18 @@
     </Window.Resources>
 
     <StackPanel Margin="25">
-        <TextBlock Text="KATEGORİ ADI" Style="{StaticResource LabelTextStyle}"/>
+        <TextBlock Text="{helpers:Translate Category_Name}" Style="{StaticResource LabelTextStyle}"/>
         <TextBox Style="{StaticResource ModernTextBoxStyle}" 
                  Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,20"/>
 
-        <TextBlock Text="İŞLEM TÜRÜ" Style="{StaticResource LabelTextStyle}"/>
+        <TextBlock Text="{helpers:Translate Transaction_Type}" Style="{StaticResource LabelTextStyle}"/>
         <StackPanel Orientation="Horizontal" Margin="0,5,0,25">
-            <RadioButton Content="Gelir" GroupName="TransactionType" Margin="0,0,20,0" Foreground="White"
+            <RadioButton Content="{helpers:Translate Income}" GroupName="TransactionType" Margin="0,0,20,0" Foreground="White"
                          IsChecked="{Binding Type, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static enums:TransactionType.Income}}"/>
-            <RadioButton Content="Gider" GroupName="TransactionType" Foreground="White"
+            <RadioButton Content="{helpers:Translate Expense}" GroupName="TransactionType" Foreground="White"
                          IsChecked="{Binding Type, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static enums:TransactionType.Expense}}"/>
         </StackPanel>
 
-        <Button Content="KAYDET" Command="{Binding SaveCommand}" Style="{StaticResource PrimaryButtonStyle}"/>
+        <Button Content="{helpers:Translate Save}" Command="{Binding SaveCommand}" Style="{StaticResource PrimaryButtonStyle}"/>
     </StackPanel>
 </Window>

@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using FinTrackForWindows.Dtos.SettingsDtos;
 using FinTrackForWindows.Enums;
 using FinTrackForWindows.Services.AppInNotifications;
+using FinTrackForWindows.Services.ApplySettings;
 using FinTrackForWindows.Services.Users;
 using Microsoft.Extensions.Logging;
 using System;
@@ -36,12 +37,16 @@ namespace FinTrackForWindows.ViewModels
         private readonly ILogger<AppSettingsContentViewModel> _logger;
         private readonly IUserStore _userStore;
         private readonly IAppInNotificationService _appInNotificationService;
+        private readonly IApplySettingsService _applySettingsService;
 
-        public AppSettingsContentViewModel(ILogger<AppSettingsContentViewModel> logger, IUserStore userStore, IAppInNotificationService appInNotificationService)
+        public AppSettingsContentViewModel(ILogger<AppSettingsContentViewModel> logger, 
+            IUserStore userStore, IAppInNotificationService appInNotificationService,
+            IApplySettingsService applySettingsService)
         {
             _logger = logger;
             _userStore = userStore;
             _appInNotificationService = appInNotificationService;
+            _applySettingsService = applySettingsService;
 
             AppearanceTypes = new ObservableCollection<AppearanceType>(Enum.GetValues<AppearanceType>());
             CurrencyTypes = new ObservableCollection<BaseCurrencyType>(Enum.GetValues<BaseCurrencyType>());
@@ -77,7 +82,8 @@ namespace FinTrackForWindows.ViewModels
                 var settingsToUpdate = new UserAppSettingsUpdateDto
                 {
                     Appearance = SelectedAppearanceType,
-                    Currency = SelectedCurrencyType
+                    Currency = SelectedCurrencyType,
+                    Language = SelectedLanguageType,
                 };
 
                 bool success = await _userStore.UpdateAppSettingsAsync(settingsToUpdate);
@@ -85,6 +91,10 @@ namespace FinTrackForWindows.ViewModels
                 {
                     _logger.LogInformation("Application settings have been updated by the user.");
                     _appInNotificationService.ShowSuccess("Application settings saved successfully!");
+
+                    _applySettingsService.AppearanceApply();
+                    _applySettingsService.BaseCurrencyApply();
+                    _applySettingsService.LanguageApply();
                 }
                 else
                 {

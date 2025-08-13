@@ -147,4 +147,79 @@
   <data name="My_Budgets_Title" xml:space="preserve">
     <value>Meine Budgets</value>
   </data>
+  <data name="Filter_By_Name" xml:space="preserve">
+    <value>Nach Name Filtern</value>
+  </data>
+  <data name="Min_Balance" xml:space="preserve">
+    <value>Mindestguthaben</value>
+  </data>
+  <data name="Max_Balance" xml:space="preserve">
+    <value>Maximaler Kontostand</value>
+  </data>
+  <data name="Account_Name" xml:space="preserve">
+    <value>Kontoname</value>
+  </data>
+  <data name="Account_Type" xml:space="preserve">
+    <value>Kontotyp</value>
+  </data>
+  <data name="Currency" xml:space="preserve">
+    <value>Devisen</value>
+  </data>
+  <data name="Category_Name" xml:space="preserve">
+    <value>Kategoriebezeichnung</value>
+  </data>
+  <data name="Transaction_Type" xml:space="preserve">
+    <value>Transaktionsart</value>
+  </data>
+  <data name="Income" xml:space="preserve">
+    <value>Einkommen</value>
+  </data>
+  <data name="Expense" xml:space="preserve">
+    <value>Ausgaben</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Speichern</value>
+  </data>
+  <data name="Clear_Form" xml:space="preserve">
+    <value>Formular Löschen</value>
+  </data>
+  <data name="Apperance" xml:space="preserve">
+    <value>Aussehen</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Sprache</value>
+  </data>
+  <data name="Click_To_Edit" xml:space="preserve">
+    <value>Zum Bearbeiten anklicken</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Löschen</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Bearbeiten</value>
+  </data>
+  <data name="No_Budgets" xml:space="preserve">
+    <value>Es wurde kein anzeigbares Budget gefunden.</value>
+  </data>
+  <data name="Budget_Name" xml:space="preserve">
+    <value>Budget Name</value>
+  </data>
+  <data name="Target_Amount" xml:space="preserve">
+    <value>Zielmenge</value>
+  </data>
+  <data name="Reached_Amount" xml:space="preserve">
+    <value>Erreichte Menge</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Erklärung</value>
+  </data>
+  <data name="Start_Date" xml:space="preserve">
+    <value>Startdatum</value>
+  </data>
+  <data name="End_Date" xml:space="preserve">
+    <value>Enddatum</value>
+  </data>
+  <data name="Category_ToolTip" xml:space="preserve">
+    <value>Wählen Sie eine vorhandene Kategorie oder einen Typ aus, um eine neue Kategorie oder einen neuen Typ zu erstellen.</value>
+  </data>
 </root>

@@ -124,7 +124,7 @@
     <value>FinBot</value>
   </data>
   <data name="Dashboard_Nav_Title" xml:space="preserve">
-    <value>Panneau de contrôle</value>
+    <value>Panneau de Contrôle</value>
   </data>
   <data name="Accounts_Nav_Title" xml:space="preserve">
     <value>Comptes</value>
@@ -146,5 +146,80 @@
   </data>
   <data name="My_Budgets_Title" xml:space="preserve">
     <value>Mes budgets</value>
+  </data>
+  <data name="Filter_By_Name" xml:space="preserve">
+    <value>Filtrer Par Nom</value>
+  </data>
+  <data name="Min_Balance" xml:space="preserve">
+    <value>Solde Minimum</value>
+  </data>
+  <data name="Max_Balance" xml:space="preserve">
+    <value>Solde Maximal</value>
+  </data>
+  <data name="Account_Name" xml:space="preserve">
+    <value>Nom du Compte</value>
+  </data>
+  <data name="Account_Type" xml:space="preserve">
+    <value>Type de Compte</value>
+  </data>
+  <data name="Currency" xml:space="preserve">
+    <value>Devise</value>
+  </data>
+  <data name="Category_Name" xml:space="preserve">
+    <value>Nom de la Catégorie</value>
+  </data>
+  <data name="Transaction_Type" xml:space="preserve">
+    <value>Type d'opération</value>
+  </data>
+  <data name="Income" xml:space="preserve">
+    <value>Revenu</value>
+  </data>
+  <data name="Expense" xml:space="preserve">
+    <value>Dépense</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Enregistrer</value>
+  </data>
+  <data name="Clear_Form" xml:space="preserve">
+    <value>Effacer le Formulaire</value>
+  </data>
+  <data name="Apperance" xml:space="preserve">
+    <value>Apparence</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Langue</value>
+  </data>
+  <data name="Click_To_Edit" xml:space="preserve">
+    <value>Cliquez pour modifier</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Modifier</value>
+  </data>
+  <data name="No_Budgets" xml:space="preserve">
+    <value>Aucun budget disponible n'a été trouvé.</value>
+  </data>
+  <data name="Budget_Name" xml:space="preserve">
+    <value>Nom du Budget</value>
+  </data>
+  <data name="Target_Amount" xml:space="preserve">
+    <value>Quantité Cible</value>
+  </data>
+  <data name="Reached_Amount" xml:space="preserve">
+    <value>Quantité Atteinte</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Explication</value>
+  </data>
+  <data name="Start_Date" xml:space="preserve">
+    <value>Date de Début</value>
+  </data>
+  <data name="End_Date" xml:space="preserve">
+    <value>Date de fin</value>
+  </data>
+  <data name="Category_ToolTip" xml:space="preserve">
+    <value>Sélectionnez une catégorie ou un type existant pour en créer un nouveau.</value>
   </data>
 </root>

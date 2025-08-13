@@ -139,12 +139,87 @@
     <value>Currencies</value>
   </data>
   <data name="My_Accounts_Title" xml:space="preserve">
-    <value>My accounts</value>
+    <value>My Accounts</value>
   </data>
   <data name="Debts_Nav_Title" xml:space="preserve">
     <value>Debts</value>
   </data>
   <data name="My_Budgets_Title" xml:space="preserve">
     <value>My Budgets</value>
+  </data>
+  <data name="Filter_By_Name" xml:space="preserve">
+    <value>Filter By Name</value>
+  </data>
+  <data name="Min_Balance" xml:space="preserve">
+    <value>Min Balance</value>
+  </data>
+  <data name="Max_Balance" xml:space="preserve">
+    <value>Max Balance</value>
+  </data>
+  <data name="Account_Name" xml:space="preserve">
+    <value>Account Name</value>
+  </data>
+  <data name="Account_Type" xml:space="preserve">
+    <value>Account_Type</value>
+  </data>
+  <data name="Currency" xml:space="preserve">
+    <value>Currency</value>
+  </data>
+  <data name="Category_Name" xml:space="preserve">
+    <value>Category_Name</value>
+  </data>
+  <data name="Transaction_Type" xml:space="preserve">
+    <value>Transaction_Type</value>
+  </data>
+  <data name="Income" xml:space="preserve">
+    <value>Income</value>
+  </data>
+  <data name="Expense" xml:space="preserve">
+    <value>Expense</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Clear_Form" xml:space="preserve">
+    <value>Clear Form</value>
+  </data>
+  <data name="Apperance" xml:space="preserve">
+    <value>Apperance</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="Click_To_Edit" xml:space="preserve">
+    <value>Click to edit</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="No_Budgets" xml:space="preserve">
+    <value>No budget found to display.</value>
+  </data>
+  <data name="Budget_Name" xml:space="preserve">
+    <value>Budget_Name</value>
+  </data>
+  <data name="Target_Amount" xml:space="preserve">
+    <value>Target Amount</value>
+  </data>
+  <data name="Reached_Amount" xml:space="preserve">
+    <value>Reached Amount</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="Start_Date" xml:space="preserve">
+    <value>Start Date</value>
+  </data>
+  <data name="End_Date" xml:space="preserve">
+    <value>End Date</value>
+  </data>
+  <data name="Category_ToolTip" xml:space="preserve">
+    <value>Select an existing category or type to create a new one.</value>
   </data>
 </root>

@@ -1,7 +1,9 @@
 ﻿using FinTrackForWindows.Dtos.SettingsDtos;
 using FinTrackForWindows.Dtos.UserDtos;
+using FinTrackForWindows.Helpers;
 using FinTrackForWindows.Models.User;
 using FinTrackForWindows.Services.Api;
+using FinTrackForWindows.Services.ApplySettings;
 
 namespace FinTrackForWindows.Services.Users
 {
@@ -13,9 +15,12 @@ namespace FinTrackForWindows.Services.Users
         public UserModel? CurrentUser => _currentUser;
         public event Action? UserChanged;
 
-        public UserStore(IApiService apiService)
+        private readonly IApplySettingsService _applySettingsService;
+
+        public UserStore(IApiService apiService, IApplySettingsService applySettingsService)
         {
             _apiService = apiService;
+            _applySettingsService = applySettingsService;
         }
 
         public async Task LoadCurrentUserAsync()
@@ -27,6 +32,7 @@ namespace FinTrackForWindows.Services.Users
                 if (userProfile != null)
                 {
                     _currentUser = MapProfileDtoToUserModel(userProfile);
+                    TranslationManager.Initialize(_applySettingsService, this);
                     OnUserChanged();
                 }
             }
@@ -163,6 +169,8 @@ namespace FinTrackForWindows.Services.Users
                 CurrentUser.Thema = settingsDto.Appearance;
                 CurrentUser.Currency = settingsDto.Currency;
                 CurrentUser.Language = settingsDto.Language;
+
+                TranslationManager.Initialize(_applySettingsService, this);
                 OnUserChanged();
                 return true;
             }
