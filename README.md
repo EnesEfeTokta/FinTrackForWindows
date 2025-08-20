@@ -107,12 +107,22 @@ FinTrack/
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/EnesEfeTokta/FinTrack.git
-    cd FinTrack
+    git clone https://github.com/EnesEfeTokta/FinTrackForWindows.git
+    cd FinTrackForWindows
     ```
 
-2.  **Open in Visual Studio:**
-    Open the `FinTrack/FinTrack.sln` file in Visual Studio.
+2.  **Quick Setup (Windows):**
+    Run the setup script to verify your environment:
+    ```powershell
+    .\setup.bat
+    ```
+    Or on Unix-like systems:
+    ```bash
+    ./setup.sh
+    ```
+
+3.  **Open in Visual Studio:**
+    Open the `FinTrackForWindows.sln` file in Visual Studio 2022.
 
 3.  **Restore Dependencies:**
     Visual Studio should automatically restore the NuGet packages. If not, open the Package Manager Console and run:

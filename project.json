@@ -1,0 +1,69 @@
+{
+  "project": {
+    "name": "FinTrack for Windows",
+    "version": "1.0.0",
+    "description": "Personal Finance Management Application for Windows",
+    "framework": ".NET 8.0",
+    "platform": "Windows",
+    "ui": "WPF",
+    "pattern": "MVVM",
+    "database": "SQLite",
+    "license": "MIT"
+  },
+  "structure": {
+    "solution": "FinTrackForWindows.sln",
+    "mainProject": "FinTrack/FinTrackForWindows.csproj",
+    "folders": {
+      "Core": "Core logic, services, and base classes",
+      "Data": "Entity Framework DbContext",
+      "Dtos": "Data Transfer Objects for API/UI communication",
+      "Enums": "Application-specific enumerations",
+      "Helpers": "Converters and UI assistants",
+      "Models": "Domain models and entities",
+      "Services": "Business logic services",
+      "ViewModels": "ViewModels for each View, containing presentation logic",
+      "Views": "WPF Windows and UserControls (the UI)",
+      "Styles": "XAML styles and resources"
+    }
+  },
+  "requirements": {
+    "development": {
+      "os": "Windows 10/11",
+      "ide": "Visual Studio 2022",
+      "workload": "WPF",
+      "sdk": ".NET 8.0 SDK"
+    },
+    "runtime": {
+      "os": "Windows 10/11",
+      "framework": ".NET 8.0 Runtime"
+    }
+  },
+  "features": {
+    "core": [
+      "Transaction Tracking",
+      "Smart Reporting", 
+      "Budget Management",
+      "Visual Analysis",
+      "Secure Local Storage",
+      "Modern UI"
+    ],
+    "technical": [
+      "MVVM Pattern",
+      "Entity Framework Core",
+      "SQLite Database",
+      "WPF UI Framework",
+      "LiveCharts2 for Data Visualization",
+      "Serilog for Logging",
+      "JWT Authentication"
+    ]
+  },
+  "scripts": {
+    "setup": {
+      "windows": "setup.bat",
+      "unix": "setup.sh"
+    },
+    "build": "dotnet build FinTrack/FinTrackForWindows.csproj",
+    "restore": "dotnet restore FinTrack/FinTrackForWindows.csproj",
+    "clean": "dotnet clean FinTrack/FinTrackForWindows.csproj"
+  }
+}
