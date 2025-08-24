@@ -222,4 +222,97 @@
   <data name="Category_ToolTip" xml:space="preserve">
     <value>Sélectionnez une catégorie ou un type existant pour en créer un nouveau.</value>
   </data>
+  <data name="All_Rates" xml:space="preserve">
+    <value>Tous les Tarifs</value>
+  </data>
+  <data name="Daily_Low" xml:space="preserve">
+    <value>Bas Quotidien</value>
+  </data>
+  <data name="Daily_High" xml:space="preserve">
+    <value>Massimo giornaliero</value>
+  </data>
+  <data name="Daily_Change" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Weekly_Change" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Monthly_Change" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Period_High" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Period_Low" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Average_Rate" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Current_Position_Period" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Daily_Trend_Distribution" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Loading_Details" xml:space="preserve">
+    <value />
+  </data>
+  <data name="No_Select_Currency" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Period_Analysis" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Total" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Membership_Nav_Title" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Membership_Start" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Membership_Renewal" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Membership_Fee" xml:space="preserve">
+    <value />
+  </data>
+  <data name="No_Debts" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Create_Debts" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Borrowers_Email_Address" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Amount" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Final_Payment_Date" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Send" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Pending_Offers" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Sent_You_Debt_Offer" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Due" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Reject" xml:space="preserve">
+    <value />
+  </data>
 </root>

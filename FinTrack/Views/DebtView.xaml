@@ -29,7 +29,7 @@
 
         <Border Grid.ColumnSpan="2" Background="#80000000" CornerRadius="10" Panel.ZIndex="10"
                 Visibility="{Binding DebtStore.IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <TextBlock Text="Yükleniyor..." Foreground="White" FontSize="24"
+            <TextBlock Text="{helpers:Translate Loading...}" Foreground="White" FontSize="24"
                        HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </Border>
 
@@ -37,15 +37,15 @@
             <StackPanel>
                 <Border Style="{StaticResource DashboardCardStyle}">
                     <StackPanel>
-                        <TextBlock Text="Create a New Debt Proposal" Style="{StaticResource CardTitleTextStyle}"/>
+                        <TextBlock Text="{helpers:Translate Create_Debts}" Style="{StaticResource CardTitleTextStyle}"/>
                         <Border Style="{StaticResource CardSeparatorStyle}"/>
-                        <TextBlock Text="BORROWER'S E-MAIL ADDRESS" Style="{StaticResource LabelTextStyle}"/>
+                        <TextBlock Text="{helpers:Translate Borrowers_Email_Address}" Style="{StaticResource LabelTextStyle}"/>
                         <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding NewProposalBorrowerEmail, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
-                        <TextBlock Text="DESCRIPTION" Style="{StaticResource LabelTextStyle}"/>
+                        <TextBlock Text="{helpers:Translate Description}" Style="{StaticResource LabelTextStyle}"/>
                         <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding NewProposalDescription, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15" MinHeight="60" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"/>
-                        <TextBlock Text="AMOUNT OF DEBT" Style="{StaticResource LabelTextStyle}"/>
+                        <TextBlock Text="{helpers:Translate Amount}" Style="{StaticResource LabelTextStyle}"/>
                         <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding NewProposalAmount, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}" Margin="0,0,0,15"/>
-                        <TextBlock Text="CURRENCY" Style="{StaticResource LabelTextStyle}"/>
+                        <TextBlock Text="{helpers:Translate Currency}" Style="{StaticResource LabelTextStyle}"/>
                         <ComboBox SelectedIndex="0" Style="{StaticResource ModernComboBoxStyle}" Margin="0,0,0,15"
                             ItemsSource="{Binding CurrencyTypes}" SelectedItem="{Binding NewCurrencyType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                             <ComboBox.ItemTemplate>
@@ -54,15 +54,15 @@
                                 </DataTemplate>
                             </ComboBox.ItemTemplate>
                         </ComboBox>
-                        <TextBlock Text="FINAL PAYMENT DATE" Style="{StaticResource LabelTextStyle}"/>
+                        <TextBlock Text="{helpers:Translate Final_Payment_Date}" Style="{StaticResource LabelTextStyle}"/>
                         <DatePicker SelectedDate="{Binding NewProposalDueDate}" Style="{StaticResource ModernDatePickerStyle}" Margin="0,0,0,25"/>
-                        <Button Content="SEND OFFER" Style="{StaticResource PrimaryButtonStyle}" Command="{Binding SendOfferCommand}"/>
+                        <Button Content="{helpers:Translate Send}" Style="{StaticResource PrimaryButtonStyle}" Command="{Binding SendOfferCommand}"/>
                     </StackPanel>
                 </Border>
 
                 <Border Style="{StaticResource DashboardCardStyle}" Margin="0,20,0,0">
                     <StackPanel>
-                        <TextBlock Text="Pending Offers" Style="{StaticResource CardTitleTextStyle}"/>
+                        <TextBlock Text="{helpers:Translate Pending_Offers}" Style="{StaticResource CardTitleTextStyle}"/>
                         <Border Style="{StaticResource CardSeparatorStyle}"/>
                         <ItemsControl ItemsSource="{Binding DebtStore.PendingOffers}">
                             <ItemsControl.ItemTemplate>
@@ -71,16 +71,19 @@
                                         <StackPanel>
                                             <TextBlock Foreground="White" TextWrapping="Wrap">
                                                 <Run Text="{Binding LenderName}" FontWeight="Bold"/>
-                                                <Run Text="sent you a debt offer."/>
+                                                <Run Text="{helpers:Translate Sent_You_Debt_Offer}"/>
                                             </TextBlock>
                                             <TextBlock Foreground="{StaticResource TopBarTextSecondaryBrush}" Margin="0,5,0,10">
-                                                <Run Text="Amount:"/>
+                                                <Run Text="{helpers:Translate Amount}"/>
+                                                <Run Text=":"/>
                                                 <Run Text="{Binding Amount, StringFormat={}{0:N2} TRY}"/>
-                                                <Run Text="| Due:"/>
+                                                <Run Text="| "/>
+                                                <Run Text="{helpers:Translate Due}"/>
+                                                <Run Text=":"/>
                                                 <Run Text="{Binding DueDate, StringFormat=dd.MM.yyyy}"/>
                                             </TextBlock>
                                             <StackPanel Orientation="Horizontal">
-                                                <Button Content="Confirm" Style="{StaticResource SuccessButtonStyle}" Width="80"
+                                                <Button Content="{helpers:Translate Confirm}" Style="{StaticResource SuccessButtonStyle}" Width="80"
                                                         Command="{Binding DataContext.RespondToOfferCommand, RelativeSource={RelativeSource AncestorType=UserControl}}">
                                                     <Button.CommandParameter>
                                                         <MultiBinding Converter="{StaticResource ObjectArrayConverter}">
@@ -89,7 +92,7 @@
                                                         </MultiBinding>
                                                     </Button.CommandParameter>
                                                 </Button>
-                                                <Button Content="Reject" Style="{StaticResource DangerButtonStyle}" Width="80" Margin="10,0,0,0"
+                                                <Button Content="{helpers:Translate Reject}" Style="{StaticResource DangerButtonStyle}" Width="80" Margin="10,0,0,0"
                                                         Command="{Binding DataContext.RespondToOfferCommand, RelativeSource={RelativeSource AncestorType=UserControl}}">
                                                     <Button.CommandParameter>
                                                         <MultiBinding Converter="{StaticResource ObjectArrayConverter}">

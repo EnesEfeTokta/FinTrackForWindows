@@ -62,7 +62,7 @@
 
         <Border Grid.Column="0" Style="{StaticResource DashboardCardStyle}" Margin="0,0,20,0">
             <DockPanel>
-                <TextBlock DockPanel.Dock="Top" Text="All Rates" Style="{StaticResource CardTitleTextStyle}"/>
+                <TextBlock DockPanel.Dock="Top" Text="{helpers:Translate All_Rates}" Style="{StaticResource CardTitleTextStyle}"/>
                 <Border DockPanel.Dock="Top" BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,15" Opacity="0.5"/>
                 <TextBox DockPanel.Dock="Top" Text="{Binding CurrencySearch, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ModernTextBoxStyle}" Margin="0,0,0,15"/>
 
@@ -152,41 +152,41 @@
 
                         <UniformGrid Columns="2" Margin="0,25,0,0">
                             <StackPanel>
-                                <TextBlock Text="DAILY LOW" Style="{StaticResource LabelTextStyle}"/>
+                                <TextBlock Text="{helpers:Translate Daily_Low}" Style="{StaticResource LabelTextStyle}"/>
                                 <TextBlock Text="{Binding DailyLow}" FontSize="18" Foreground="White"/>
                             </StackPanel>
                             <StackPanel>
-                                <TextBlock Text="DAILY HIGH" Style="{StaticResource LabelTextStyle}"/>
+                                <TextBlock Text="{helpers:Translate Daily_High}" Style="{StaticResource LabelTextStyle}"/>
                                 <TextBlock Text="{Binding DailyHigh}" FontSize="18" Foreground="White"/>
                             </StackPanel>
                             <StackPanel Margin="0,20,0,0">
-                                <TextBlock Text="DAILY CHANGE" Style="{StaticResource LabelTextStyle}"/>
+                                <TextBlock Text="{helpers:Translate Daily_Change}" Style="{StaticResource LabelTextStyle}"/>
                                 <TextBlock Text="{Binding DailyChange}" FontSize="18" Foreground="{Binding DailyChangeForeground}"/>
                             </StackPanel>
                             <StackPanel Margin="0,20,0,0">
-                                <TextBlock Text="WEEKLY CHANGE" Style="{StaticResource LabelTextStyle}"/>
+                                <TextBlock Text="{helpers:Translate Weekly_Change}" Style="{StaticResource LabelTextStyle}"/>
                                 <TextBlock Text="{Binding WeeklyChange}" FontSize="18" Foreground="{Binding WeeklyChangeForeground}"/>
                             </StackPanel>
                             <StackPanel Margin="0,20,0,0">
-                                <TextBlock Text="MONTHLY CHANGE" Style="{StaticResource LabelTextStyle}"/>
+                                <TextBlock Text="{helpers:Translate Monthly_Change}" Style="{StaticResource LabelTextStyle}"/>
                                 <TextBlock Text="{Binding MonthlyChange}" FontSize="18" Foreground="{Binding MonthlyChangeForeground}"/>
                             </StackPanel>
                         </UniformGrid>
 
-                        <TextBlock Text="Period Analysis" Style="{StaticResource CardTitleTextStyle}" FontSize="16" Margin="0,30,0,15"/>
+                        <TextBlock Text="{helpers:Translate Period_Analysis}" Style="{StaticResource CardTitleTextStyle}" FontSize="16" Margin="0,30,0,15"/>
                         <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,0,0,20" Opacity="0.5"/>
 
                         <UniformGrid Columns="3" Margin="0,0,0,20">
                             <StackPanel>
-                                <TextBlock Text="PERIOD HIGH" Style="{StaticResource LabelTextStyle}"/>
+                                <TextBlock Text="{helpers:Translate Period_High}" Style="{StaticResource LabelTextStyle}"/>
                                 <TextBlock Text="{Binding DataContext.PeriodHighText, ElementName=currenciesViewRoot}" FontSize="18" Foreground="White"/>
                             </StackPanel>
                             <StackPanel>
-                                <TextBlock Text="PERIOD LOW" Style="{StaticResource LabelTextStyle}"/>
+                                <TextBlock Text="{helpers:Translate Period_Low}" Style="{StaticResource LabelTextStyle}"/>
                                 <TextBlock Text="{Binding DataContext.PeriodLowText, ElementName=currenciesViewRoot}" FontSize="18" Foreground="White"/>
                             </StackPanel>
                             <StackPanel>
-                                <TextBlock Text="AVERAGE RATE" Style="{StaticResource LabelTextStyle}"/>
+                                <TextBlock Text="{helpers:Translate Average_Rate}" Style="{StaticResource LabelTextStyle}"/>
                                 <TextBlock Text="{Binding DataContext.AverageRateText, ElementName=currenciesViewRoot}" FontSize="18" Foreground="White"/>
                             </StackPanel>
                         </UniformGrid>
@@ -194,7 +194,7 @@
                         <UniformGrid Columns="2" Margin="0,10,0,0">
                             <Border Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10" Padding="15" Margin="0,0,10,0">
                                 <StackPanel>
-                                    <TextBlock Text="Current Position in Period" Style="{StaticResource LabelTextStyle}" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                                    <TextBlock Text="{helpers:Translate Current_Position_Period}" Style="{StaticResource LabelTextStyle}" HorizontalAlignment="Center" Margin="0,0,0,10"/>
                                     <lvc:PieChart
                                         Height="180"
                                         Series="{Binding DataContext.GaugeSeries, ElementName=currenciesViewRoot}"
@@ -208,7 +208,7 @@
 
                             <Border Background="{StaticResource CardDarkerBackgroundBrush}" CornerRadius="10" Padding="15" Margin="10,0,0,0">
                                 <StackPanel>
-                                    <TextBlock Text="Daily Trend Distribution" Style="{StaticResource LabelTextStyle}" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                                    <TextBlock Text="{helpers:Translate Daily_Trend_Distribution}" Style="{StaticResource LabelTextStyle}" HorizontalAlignment="Center" Margin="0,0,0,10"/>
                                     <lvc:PieChart
                                         Height="180"
                                         Series="{Binding DataContext.PieSeries, ElementName=currenciesViewRoot}"
@@ -228,13 +228,13 @@
                     Visibility="{Binding IsLoadingDetails, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                     <ProgressBar IsIndeterminate="True" Width="80" Height="80" Style="{StaticResource MaterialDesignCircularProgressBar}"/>
-                    <TextBlock Text="Loading Details..." Foreground="White" Margin="0,15,0,0" FontSize="16"/>
+                    <TextBlock Text="{helpers:Translate Loading_Details}" Foreground="White" Margin="0,15,0,0" FontSize="16"/>
                 </StackPanel>
             </Border>
 
             <Border Style="{StaticResource DashboardCardStyle}"
                     Visibility="{Binding IsCurrencySelected, Converter={StaticResource InvertedBooleanToVisibilityConverter}}">
-                <TextBlock Text="Please select a currency from the list to see details." 
+                <TextBlock Text="{helpers:Translate No_Select_Currency}" 
                            Foreground="{StaticResource TopBarTextSecondaryBrush}" 
                            FontSize="18"
                            VerticalAlignment="Center"

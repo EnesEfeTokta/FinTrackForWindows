@@ -88,11 +88,47 @@ namespace FinTrackForWindows.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to All Rates.
+        /// </summary>
+        internal static string All_Rates {
+            get {
+                return ResourceManager.GetString("All_Rates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Amount.
+        /// </summary>
+        internal static string Amount {
+            get {
+                return ResourceManager.GetString("Amount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Apperance.
         /// </summary>
         internal static string Apperance {
             get {
                 return ResourceManager.GetString("Apperance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Average Rate.
+        /// </summary>
+        internal static string Average_Rate {
+            get {
+                return ResourceManager.GetString("Average_Rate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Borrower&apos;s Email Address.
+        /// </summary>
+        internal static string Borrowers_Email_Address {
+            get {
+                return ResourceManager.GetString("Borrowers_Email_Address", resourceCulture);
             }
         }
         
@@ -151,6 +187,24 @@ namespace FinTrackForWindows.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Confirm.
+        /// </summary>
+        internal static string Confirm {
+            get {
+                return ResourceManager.GetString("Confirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create a New Debt Proposal.
+        /// </summary>
+        internal static string Create_Debts {
+            get {
+                return ResourceManager.GetString("Create_Debts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Currencies.
         /// </summary>
         internal static string Currencies_Nav_Title {
@@ -165,6 +219,51 @@ namespace FinTrackForWindows.Localization {
         internal static string Currency {
             get {
                 return ResourceManager.GetString("Currency", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Current Position in Period.
+        /// </summary>
+        internal static string Current_Position_Period {
+            get {
+                return ResourceManager.GetString("Current_Position_Period", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Weekly Change.
+        /// </summary>
+        internal static string Daily_Change {
+            get {
+                return ResourceManager.GetString("Daily_Change", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Daily High.
+        /// </summary>
+        internal static string Daily_High {
+            get {
+                return ResourceManager.GetString("Daily_High", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Daily Low.
+        /// </summary>
+        internal static string Daily_Low {
+            get {
+                return ResourceManager.GetString("Daily_Low", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Daily Trend Distribution.
+        /// </summary>
+        internal static string Daily_Trend_Distribution {
+            get {
+                return ResourceManager.GetString("Daily_Trend_Distribution", resourceCulture);
             }
         }
         
@@ -205,6 +304,15 @@ namespace FinTrackForWindows.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Due.
+        /// </summary>
+        internal static string Due {
+            get {
+                return ResourceManager.GetString("Due", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Edit.
         /// </summary>
         internal static string Edit {
@@ -241,6 +349,15 @@ namespace FinTrackForWindows.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Final Payment Date.
+        /// </summary>
+        internal static string Final_Payment_Date {
+            get {
+                return ResourceManager.GetString("Final_Payment_Date", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to FinBot.
         /// </summary>
         internal static string FinBot_Nav_Title {
@@ -268,6 +385,24 @@ namespace FinTrackForWindows.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Loading....
+        /// </summary>
+        internal static string Loading {
+            get {
+                return ResourceManager.GetString("Loading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Loading Details....
+        /// </summary>
+        internal static string Loading_Details {
+            get {
+                return ResourceManager.GetString("Loading_Details", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Max Balance.
         /// </summary>
         internal static string Max_Balance {
@@ -277,11 +412,56 @@ namespace FinTrackForWindows.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Membership Fee.
+        /// </summary>
+        internal static string Membership_Fee {
+            get {
+                return ResourceManager.GetString("Membership_Fee", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Membership.
+        /// </summary>
+        internal static string Membership_Nav_Title {
+            get {
+                return ResourceManager.GetString("Membership_Nav_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Membership Renewal.
+        /// </summary>
+        internal static string Membership_Renewal {
+            get {
+                return ResourceManager.GetString("Membership_Renewal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Membership Start.
+        /// </summary>
+        internal static string Membership_Start {
+            get {
+                return ResourceManager.GetString("Membership_Start", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Min Balance.
         /// </summary>
         internal static string Min_Balance {
             get {
                 return ResourceManager.GetString("Min_Balance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Monthly Change.
+        /// </summary>
+        internal static string Monthly_Change {
+            get {
+                return ResourceManager.GetString("Monthly_Change", resourceCulture);
             }
         }
         
@@ -313,11 +493,74 @@ namespace FinTrackForWindows.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No debts....
+        /// </summary>
+        internal static string No_Debts {
+            get {
+                return ResourceManager.GetString("No_Debts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please select a currency from the list to see details..
+        /// </summary>
+        internal static string No_Select_Currency {
+            get {
+                return ResourceManager.GetString("No_Select_Currency", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pending Offers.
+        /// </summary>
+        internal static string Pending_Offers {
+            get {
+                return ResourceManager.GetString("Pending_Offers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Period Analysis.
+        /// </summary>
+        internal static string Period_Analysis {
+            get {
+                return ResourceManager.GetString("Period_Analysis", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Period High.
+        /// </summary>
+        internal static string Period_High {
+            get {
+                return ResourceManager.GetString("Period_High", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Period Low.
+        /// </summary>
+        internal static string Period_Low {
+            get {
+                return ResourceManager.GetString("Period_Low", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Reached Amount.
         /// </summary>
         internal static string Reached_Amount {
             get {
                 return ResourceManager.GetString("Reached_Amount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reject.
+        /// </summary>
+        internal static string Reject {
+            get {
+                return ResourceManager.GetString("Reject", resourceCulture);
             }
         }
         
@@ -340,6 +583,24 @@ namespace FinTrackForWindows.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Send.
+        /// </summary>
+        internal static string Send {
+            get {
+                return ResourceManager.GetString("Send", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sent you a debt offer..
+        /// </summary>
+        internal static string Sent_You_Debt_Offer {
+            get {
+                return ResourceManager.GetString("Sent_You_Debt_Offer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Start Date.
         /// </summary>
         internal static string Start_Date {
@@ -358,6 +619,15 @@ namespace FinTrackForWindows.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Total.
+        /// </summary>
+        internal static string Total {
+            get {
+                return ResourceManager.GetString("Total", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Transaction_Type.
         /// </summary>
         internal static string Transaction_Type {
@@ -372,6 +642,15 @@ namespace FinTrackForWindows.Localization {
         internal static string Transactions_Nav_Title {
             get {
                 return ResourceManager.GetString("Transactions_Nav_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Weekly Change.
+        /// </summary>
+        internal static string Weekly_Change {
+            get {
+                return ResourceManager.GetString("Weekly_Change", resourceCulture);
             }
         }
     }
