@@ -1,6 +1,6 @@
-# FinTrack - WPF Personal Finance Tracker
+# **FinTrack - WPF Personal Finance Tracker**
 
-FinTrack is a modern, user-friendly desktop application for personal finance management, built with WPF and .NET 8. It helps you track income, expenses, and investments to achieve your financial goals.
+FinTrack is a modern, user-friendly desktop application for personal finance management, built with WPF and .NET 8. It helps you track your income, expenses, and budgets to achieve your financial goals.
 
 ![License](https://img.shields.io/badge/license-GPL-blue.svg)
 ![.NET](https://img.shields.io/badge/.NET-8.0-purple.svg)
@@ -16,14 +16,15 @@ FinTrack is a modern, user-friendly desktop application for personal finance man
 - [Getting-Started](#getting-started)
 - [Contributing](#contributing)
 - [License](#license)
+- [Contact](#contact)
 
 ## Overview
 
-FinTrack provides a comprehensive solution for tracking daily financial transactions, creating budgets, and generating insightful reports. It is developed using C# with a modern .NET 8 stack, utilizing a local SQLite database for secure data storage. The application follows the MVVM design pattern for a clean and maintainable codebase.
+FinTrack provides a comprehensive solution for tracking daily financial transactions, creating budgets, and generating insightful reports. It is developed using C# with a modern .NET 8 stack. The application uses a local **SQLite** database for secure data storage and follows the **MVVM (Model-View-ViewModel)** design pattern for a clean and maintainable codebase.
 
-Please click on the image to watch the video on YouTube.
+Click on the image to watch the promotional video on YouTube.
 
-[<img src="https://t.ctcdn.com.br/gbO3hsV5DRUS3MYFIL0-vgDJtYk=/640x360/smart/i533291.png" width="50%">](https://youtu.be/0r24kuKRQ6A)
+[<img src="https://i.ytimg.com/vi/0r24kuKRQ6A/hq720.jpg" width="60%">](https://youtu.be/EMGObq-SWrA)
 
 ### Design Philosophy
 
@@ -38,9 +39,9 @@ Please click on the image to watch the video on YouTube.
 
 -  **Transaction Tracking**: Categorize and monitor all your financial activities.
 -  **Smart Reporting**: Generate reports to analyze financial trends.
--  **Budget Management**: Set budget limits for categories with alerts.
+-  **Budget Management**: Set budget limits for categories and receive alerts.
 -  **Visual Analysis**: Interactive charts and a dashboard to visualize spending.
--  **Secure Local Storage**: Data is stored locally in an SQLite database.
+-  **Secure Local Storage**: Data is stored securely in a local SQLite database.
 -  **Modern UI**: A clean and responsive user interface built with WPF.
 
 ### Technical Features
@@ -55,7 +56,7 @@ Please click on the image to watch the video on YouTube.
 
 ## Technology Stack
 
-### Backend & Core
+### Core & Data
 -   **Framework**: .NET 8.0
 -   **ORM**: Entity Framework Core
 -   **Database**: SQLite
@@ -64,16 +65,15 @@ Please click on the image to watch the video on YouTube.
 -   **JSON Serialization**: Newtonsoft.Json
 -   **Authentication**: System.IdentityModel.Tokens.Jwt
 
-### Frontend
+### UI & Visualization
 -   **UI Framework**: WPF (Windows Presentation Foundation)
--   **Charting**: LiveChartsCore.SkiaSharpView.WPF
+-   **Charting Library**: LiveChartsCore.SkiaSharpView.WPF
 -   **Styling**: Custom modern styles (see `Styles/ModernStyles.xaml`)
 
 ### Development Tools
 -   **IDE**: Visual Studio 2022
 -   **Package Manager**: NuGet
 -   **Version Control**: Git & GitHub
--   **CI/CD**: GitHub Actions
 
 ## Project Structure
 
@@ -100,7 +100,7 @@ FinTrack/
 ### Prerequisites
 
 -   .NET 8.0 SDK
--   Visual Studio 2022 (with WPF workload)
+-   Visual Studio 2022 (with the WPF workload installed)
 -   Git
 
 ### Installation & Running
@@ -129,7 +129,7 @@ Contributions are welcome! If you'd like to contribute, please follow these step
 
 1.  **Fork** the repository.
 2.  Create a new **feature branch** (`git checkout -b feature/YourAmazingFeature`).
-3.  **Commit** your changes (`git commit -m 'Add some AmazingFeature'`).
+3.  **Commit** your changes (`git commit -m 'feat: Add some AmazingFeature'`).
 4.  **Push** to the branch (`git push origin feature/YourAmazingFeature`).
 5.  Open a **Pull Request**.
 
@@ -137,4 +137,10 @@ Please ensure your code adheres to the existing style and that you provide clear
 
 ## 📄 License
 
-This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the **GPL-3.0 License**. See the [LICENSE](LICENSE) file for details.
+
+## 📞 Contact
+
+-   **Project Owner:** Enes Efe Tokta
+-   **Email:** [enesefetokta@gmail.com](mailto:enesefetokta@gmail.com)
+-   **LinkedIn:** [https://www.linkedin.com/in/enes-efe-tokta/](https://www.linkedin.com/in/enes-efe-tokta/)
