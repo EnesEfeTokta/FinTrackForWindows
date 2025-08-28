@@ -32,7 +32,7 @@
 
             <Border Grid.Row="0" Style="{StaticResource DashboardCardStyle}">
                 <StackPanel>
-                    <TextBlock Text="Budgets" Style="{StaticResource CardTitleTextStyle}" Margin="0,0,0,15"/>
+                    <TextBlock Text="{helpers:Translate Budgets_Nav_Title}" Style="{StaticResource CardTitleTextStyle}" Margin="0,0,0,15"/>
                     <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,20" Opacity="0.5"/>
                     <ItemsControl ItemsSource="{Binding Budgets_DashboardView_ItemsControl}">
                         <ItemsControl.ItemsPanel>
@@ -58,7 +58,7 @@
 
             <Border Grid.Row="1" Style="{StaticResource DashboardCardStyle}">
                 <StackPanel>
-                    <TextBlock Text="Currencies" Style="{StaticResource CardTitleTextStyle}" Margin="0,0,0,15"/>
+                    <TextBlock Text="{helpers:Translate Currencies_Nav_Title}" Style="{StaticResource CardTitleTextStyle}" Margin="0,0,0,15"/>
                     <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,20" Opacity="0.5"/>
                     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                         <ItemsControl ItemsSource="{Binding CurrencyRates_DashboardView_ItemsControl}" AlternationCount="2147483647">
@@ -121,7 +121,7 @@
                     </Grid.RowDefinitions>
 
                     <StackPanel Grid.Row="0">
-                        <TextBlock Text="Accounts" Style="{StaticResource CardTitleTextStyle}" HorizontalAlignment="Left" />
+                        <TextBlock Text="{helpers:Translate Accounts_Nav_Title}" Style="{StaticResource CardTitleTextStyle}" HorizontalAlignment="Left" />
                         <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" 
                     BorderThickness="0,1,0,0" 
                     Opacity="0.5" 
@@ -129,7 +129,7 @@
                     </StackPanel>
 
                     <Grid Grid.Row="1" Margin="0,10,0,10">
-                        <TextBlock Text="Total:" 
+                        <TextBlock Text="{helpers:Translate Total}" 
                        Foreground="{StaticResource TopBarTextSecondaryBrush}" 
                        FontSize="12" 
                        VerticalAlignment="Center" 
@@ -189,7 +189,7 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Row="0" Text="Transactions" Style="{StaticResource CardTitleTextStyle}"/>
+                    <TextBlock Grid.Row="0" Text="{helpers:Translate Transactions_Nav_Title}" Style="{StaticResource CardTitleTextStyle}"/>
 
                     <Border Grid.Row="1" BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,0" Opacity="0.5"/>
                     
@@ -222,7 +222,7 @@
 
             <Border Grid.Row="2" Style="{StaticResource DashboardCardStyle}">
                 <StackPanel>
-                    <TextBlock Text="Membership" Style="{StaticResource CardTitleTextStyle}"/>
+                    <TextBlock Text="{helpers:Translate Membership_Nav_Title}" Style="{StaticResource CardTitleTextStyle}"/>
                     <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,20" Opacity="0.5"/>
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -234,15 +234,24 @@
                         </Border>
                         <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="20,0,0,0">
                             <Grid>
-                                <TextBlock Text="Membership Start:" Foreground="{StaticResource TopBarTextPrimaryBrush}"/>
+                                <TextBlock Foreground="{StaticResource TopBarTextPrimaryBrush}">
+                                    <Run Text="{helpers:Translate Membership_Start}"/>
+                                    <Run Text=":"/>
+                                </TextBlock>
                                 <TextBlock Text="{Binding CurrentMembership_DashboardView_Multiple.StartDate}" HorizontalAlignment="Right" Foreground="{StaticResource TopBarTextPrimaryBrush}"/>
                             </Grid>
                             <Grid Margin="0,5,0,0">
-                                <TextBlock Text="Membership Renewal:" Foreground="{StaticResource TopBarTextPrimaryBrush}"/>
+                                <TextBlock Foreground="{StaticResource TopBarTextPrimaryBrush}">
+                                    <Run Text="{helpers:Translate Membership_Renewal}"/>
+                                    <Run Text=":"/>
+                                </TextBlock>
                                 <TextBlock Text="{Binding CurrentMembership_DashboardView_Multiple.RenewalDate}" HorizontalAlignment="Right" Foreground="{StaticResource TopBarTextPrimaryBrush}"/>
                             </Grid>
                             <Grid Margin="0,5,0,0">
-                                <TextBlock Text="Membership Fee:" Foreground="{StaticResource TopBarTextPrimaryBrush}"/>
+                                <TextBlock Foreground="{StaticResource TopBarTextPrimaryBrush}">
+                                    <Run Text="{helpers:Translate Membership_Fee}"/>
+                                    <Run Text=":"/>
+                                </TextBlock>
                                 <TextBlock Text="{Binding CurrentMembership_DashboardView_Multiple.Price}" HorizontalAlignment="Right" Foreground="{StaticResource TopBarTextPrimaryBrush}"/>
                             </Grid>
                         </StackPanel>
@@ -259,7 +268,7 @@
             </Grid.RowDefinitions>
             <Border Grid.Row="0" Style="{StaticResource DashboardCardStyle}">
                 <StackPanel>
-                    <TextBlock Text="Active Debts" Style="{StaticResource CardTitleTextStyle}"/>
+                    <TextBlock Text="{helpers:Translate Debts_Nav_Title}" Style="{StaticResource CardTitleTextStyle}"/>
                     <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,20" Opacity="0.5"/>
 
                     <Border Background="{StaticResource DebtAccentGradientBrush}" CornerRadius="15" Padding="15,20"
@@ -307,7 +316,7 @@
                         </StackPanel>
                     </Border>
 
-                    <TextBlock Text="No active debts." Foreground="{StaticResource TopBarTextSecondaryBrush}" 
+                    <TextBlock Text="{helpers:Translate No_Debts}" Foreground="{StaticResource TopBarTextSecondaryBrush}" 
                    HorizontalAlignment="Center" VerticalAlignment="Center"
                    Visibility="{Binding CurrentActiveDebt, Converter={StaticResource NullToVisibilityInverseConverter}, ConverterParameter=inverse}">
                     </TextBlock>
@@ -323,7 +332,7 @@
                     </Grid.RowDefinitions>
 
                     <StackPanel Grid.Row="0">
-                        <TextBlock Text="Reports" Style="{StaticResource CardTitleTextStyle}"/>
+                        <TextBlock Text="{helpers:Translate Reports_Nav_Title}" Style="{StaticResource CardTitleTextStyle}"/>
                         <Border BorderBrush="{StaticResource TopBarTextSecondaryBrush}" BorderThickness="0,0,0,1" Margin="0,5,0,20" Opacity="0.5"/>
                     </StackPanel>
 

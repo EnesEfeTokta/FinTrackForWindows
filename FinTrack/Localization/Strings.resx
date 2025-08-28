@@ -222,4 +222,97 @@
   <data name="Category_ToolTip" xml:space="preserve">
     <value>Select an existing category or type to create a new one.</value>
   </data>
+  <data name="All_Rates" xml:space="preserve">
+    <value>All Rates</value>
+  </data>
+  <data name="Daily_Low" xml:space="preserve">
+    <value>Daily Low</value>
+  </data>
+  <data name="Daily_High" xml:space="preserve">
+    <value>Daily High</value>
+  </data>
+  <data name="Daily_Change" xml:space="preserve">
+    <value>Weekly Change</value>
+  </data>
+  <data name="Weekly_Change" xml:space="preserve">
+    <value>Weekly Change</value>
+  </data>
+  <data name="Monthly_Change" xml:space="preserve">
+    <value>Monthly Change</value>
+  </data>
+  <data name="Period_High" xml:space="preserve">
+    <value>Period High</value>
+  </data>
+  <data name="Period_Low" xml:space="preserve">
+    <value>Period Low</value>
+  </data>
+  <data name="Average_Rate" xml:space="preserve">
+    <value>Average Rate</value>
+  </data>
+  <data name="Current_Position_Period" xml:space="preserve">
+    <value>Current Position in Period</value>
+  </data>
+  <data name="Daily_Trend_Distribution" xml:space="preserve">
+    <value>Daily Trend Distribution</value>
+  </data>
+  <data name="Loading_Details" xml:space="preserve">
+    <value>Loading Details...</value>
+  </data>
+  <data name="No_Select_Currency" xml:space="preserve">
+    <value>Please select a currency from the list to see details.</value>
+  </data>
+  <data name="Period_Analysis" xml:space="preserve">
+    <value>Period Analysis</value>
+  </data>
+  <data name="Total" xml:space="preserve">
+    <value>Total</value>
+  </data>
+  <data name="Membership_Nav_Title" xml:space="preserve">
+    <value>Membership</value>
+  </data>
+  <data name="Membership_Start" xml:space="preserve">
+    <value>Membership Start</value>
+  </data>
+  <data name="Membership_Renewal" xml:space="preserve">
+    <value>Membership Renewal</value>
+  </data>
+  <data name="Membership_Fee" xml:space="preserve">
+    <value>Membership Fee</value>
+  </data>
+  <data name="No_Debts" xml:space="preserve">
+    <value>No debts...</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Loading...</value>
+  </data>
+  <data name="Create_Debts" xml:space="preserve">
+    <value>Create a New Debt Proposal</value>
+  </data>
+  <data name="Borrowers_Email_Address" xml:space="preserve">
+    <value>Borrower's Email Address</value>
+  </data>
+  <data name="Amount" xml:space="preserve">
+    <value>Amount</value>
+  </data>
+  <data name="Final_Payment_Date" xml:space="preserve">
+    <value>Final Payment Date</value>
+  </data>
+  <data name="Send" xml:space="preserve">
+    <value>Send</value>
+  </data>
+  <data name="Pending_Offers" xml:space="preserve">
+    <value>Pending Offers</value>
+  </data>
+  <data name="Sent_You_Debt_Offer" xml:space="preserve">
+    <value>Sent you a debt offer.</value>
+  </data>
+  <data name="Due" xml:space="preserve">
+    <value>Due</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
+  <data name="Reject" xml:space="preserve">
+    <value>Reject</value>
+  </data>
 </root>

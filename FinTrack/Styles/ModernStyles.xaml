@@ -142,8 +142,6 @@
     <Setter Property="Margin" Value="10"/>
     <Setter Property="Padding" Value="15"/>
     
-    <!-- 1. ADIM: Animasyonun hedef alabilmesi için bir RenderTransform ekliyoruz. -->
-    <!-- Başlangıçta ölçek 1.0 (normal boyut) olarak ayarlanır. -->
     <Setter Property="RenderTransform">
         <Setter.Value>
             <ScaleTransform ScaleX="1.0" ScaleY="1.0" CenterX="0.5" CenterY="0.5"/>

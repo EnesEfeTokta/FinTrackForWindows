@@ -110,7 +110,7 @@ namespace FinTrackForWindows
             await _host.StartAsync();
 
             var logger = _host.Services.GetRequiredService<ILogger<App>>();
-            logger.LogInformation("Uygulama başlatıldı ve Host çalışıyor.");
+            logger.LogInformation("Application started and Host is running.");
 
             var window = _host.Services.GetRequiredService<AuthenticatorWindow>();
             window.Show();
@@ -123,9 +123,9 @@ namespace FinTrackForWindows
             DispatcherUnhandledException += (sender, e) =>
             {
                 var logger = _host.Services.GetRequiredService<ILogger<App>>();
-                logger.LogCritical(e.Exception, "YAKALANAMAYAN UI HATASI!");
+                logger.LogCritical(e.Exception, "UNHANDLED UI EXCEPTION!");
 
-                MessageBox.Show("Beklenmedik bir hata oluştu. Uygulama kapanacak. Detaylar log dosyasına yazıldı.", "Kritik Hata", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("An unexpected error occurred. The application will close. Details have been written to the log file.", "Critical Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 e.Handled = true;
                 Shutdown();
             };
@@ -133,7 +133,7 @@ namespace FinTrackForWindows
             AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
             {
                 var logger = _host.Services.GetRequiredService<ILogger<App>>();
-                logger.LogCritical(e.ExceptionObject as Exception, "YAKALANAMAYAN ARKA PLAN HATASI!");
+                logger.LogCritical(e.ExceptionObject as Exception, "UNHANDLED BACKGROUND EXCEPTION!");
             };
         }
 

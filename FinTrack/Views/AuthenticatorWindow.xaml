@@ -6,10 +6,9 @@
         xmlns:views="clr-namespace:FinTrackForWindows.Views"
         xmlns:viewmodels="clr-namespace:FinTrackForWindows.ViewModels"
         mc:Ignorable="d"
-        Title="FinTrack" Height="600" Width="450"
+        Title="FinTrack" Height="620" Width="450"
         WindowStartupLocation="CenterScreen"
-
-    WindowStyle="None" 
+        WindowStyle="None" 
         AllowsTransparency="True" 
         Background="Transparent"
         ResizeMode="NoResize">
@@ -35,7 +34,16 @@
     <Border Background="{StaticResource BackgroundBrush}" 
             CornerRadius="12"
             BorderBrush="{StaticResource BorderBrush}"
-            BorderThickness="1">
+            BorderThickness="1"
+            Margin="20">
+
+        <Border.Effect>
+            <DropShadowEffect Color="Green"          
+                              BlurRadius="30"       
+                              ShadowDepth="0"       
+                              Opacity="0.85"
+                              RenderingBias="Quality"/>
+        </Border.Effect>
 
         <Grid>
             <Grid.RowDefinitions>
@@ -47,13 +55,13 @@
                 <StackPanel Orientation="Horizontal" 
                             HorizontalAlignment="Right" VerticalAlignment="Top" 
                             Margin="0,5,5,0">
-                    
+
                     <Button Content="—" ToolTip="Minimize" Width="35" Height="30" 
                             Style="{StaticResource LinkButtonStyle}" Click="MinimizeButton_Click"/>
-                    
+
                     <Button Content="✕" ToolTip="Close" Width="35" Height="30" 
                             Style="{StaticResource LinkButtonStyle}" Click="CloseButton_Click"/>
-                    
+
                 </StackPanel>
             </Grid>
 
